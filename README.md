@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/antoniopisanell/sdp-bootcamp.svg?branch=master)](https://travis-ci.org/antoniopisanell/sdp-bootcamp)
-[![Maintainability](https://api.codeclimate.com/v1/badges/cd61dff6269277e9888d/maintainability)](https://codeclimate.com/github/antoniopisanell/sdp-bootcamp/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/cd61dff6269277e9888d/test_coverage)](https://codeclimate.com/github/antoniopisanell/sdp-bootcamp/test_coverage)
+[![Build Status](https://travis-ci.org/ayman-mezghani/MusiConnect.svg?branch=master)](https://travis-ci.org/ayman-mezghani/MusiConnect)
+[![Maintainability](https://api.codeclimate.com/v1/badges/7d48f8b222b5301a9c7d/maintainability)](https://codeclimate.com/github/ayman-mezghani/MusiConnect/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/7d48f8b222b5301a9c7d/test_coverage)](https://codeclimate.com/github/ayman-mezghani/MusiConnect/test_coverage)
 
 # SDP Proposal - Team \# 13
 
