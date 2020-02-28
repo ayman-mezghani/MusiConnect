@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Button button = (Button) findViewById(R.id.mainGoButton);
+        final Button button = findViewById(R.id.mainGoButton);
         button.setOnClickListener(v -> mainGoButton());
     }
 
