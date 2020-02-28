@@ -17,6 +17,9 @@ public class MainActivity extends AppCompatActivity {
 
         final Button button = (Button) findViewById(R.id.mainGoButton);
         button.setOnClickListener(v -> mainGoButton());
+
+        final Button mapButton = (Button) findViewById(R.id.mapButton);
+        mapButton.setOnClickListener(v -> mapButton());
     }
 
     private void mainGoButton(){
@@ -26,5 +29,12 @@ public class MainActivity extends AppCompatActivity {
         myIntent.putExtra("msg", "Hello " + e.getText().toString() + "!"); //Optional parameters
         MainActivity.this.startActivity(myIntent);
     }
+
+    private void mapButton(){
+        Intent myIntent = new Intent(MainActivity.this, MapsActivity.class);
+        MainActivity.this.startActivity(myIntent);
+    }
+
+
 
 }
