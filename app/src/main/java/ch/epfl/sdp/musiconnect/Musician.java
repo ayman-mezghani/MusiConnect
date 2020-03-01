@@ -12,12 +12,16 @@ public class Musician {
     private String emailAddress;
     private String videoURL;
     private Map<Instrument, Level> instruments;
+    private String location; // TODO : Setter and getter methods for location
 
     private int maxNameLength = 16;
     private int minAge = 8;
     private int maxAge = 128;
     private int maxEmailAddressLength = 64;
     private int maxVideoURLLength = 256;
+
+
+    // TODO : Constructor for Musician
 
 
     public void setFirstName(String newFirstName) {
@@ -146,5 +150,8 @@ public class Musician {
     public Set<Instrument> setOfInstruments() {
         return instruments.keySet();
     }
+
+
+    // TODO : Override toString() method
 
 }
