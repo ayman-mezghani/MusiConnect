@@ -108,11 +108,11 @@ public class Band {
 
     @Override
     public String toString() {
-        String tmp = bandName + "\n";
-        tmp = tmp + "    " + getLeaderFirstName() + getLeaderLastName() + " (Leader)\n";
+        String tmp = getBandName() + "\n";
+        tmp += "    " + getLeaderFirstName() + " " + getLeaderLastName() + " (Leader)\n";
         for (Musician member : members) {
             if (!isLeader(member)) {
-                tmp = tmp + "    " + member.getFirstName() + member.getLastName() + "\n";
+                tmp += "    " + member.getFirstName() + " " + member.getLastName() + "\n";
             }
         }
 

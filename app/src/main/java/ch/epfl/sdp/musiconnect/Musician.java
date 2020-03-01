@@ -8,7 +8,7 @@ public class Musician {
     private String firstName;
     private String lastName;
     private String userName;
-    private int age;
+    private int age; // TODO : Change 'age' into 'birthday' and add new methods
     private String emailAddress;
     private String videoURL;
     private Map<Instrument, Level> instruments;
@@ -21,7 +21,14 @@ public class Musician {
     private int maxVideoURLLength = 256;
 
 
-    // TODO : Constructor for Musician
+    public Musician(String newFirstName, String newLastName, String newUserName, int newAge, String newEmailAddress, String newVideoURL) {
+        setFirstName(newFirstName);
+        setLastName(newLastName);
+        setUserName(newUserName);
+        setAge(newAge);
+        setEmailAddress(newEmailAddress);
+        setVideoURL(newVideoURL);
+    }
 
 
     public void setFirstName(String newFirstName) {
@@ -152,6 +159,14 @@ public class Musician {
     }
 
 
-    // TODO : Override toString() method
+    @Override
+    public String toString() {
+        String tmp = getFirstName() + " " + getLastName() + ", " + getAge() + "\n";
+        for (Instrument instrument : setOfInstruments()) {
+            tmp += "    " + instrument + " -> level " + getLevel(instrument) + "\n";
+        }
+
+        return tmp;
+    }
 
 }
