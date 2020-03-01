@@ -5,13 +5,13 @@
         android:id="@+id/search"
         android:icon="@android:drawable/ic_menu_search"
         android:title="@string/search"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/help"
         android:icon="@android:drawable/ic_menu_help"
         android:title="@string/help"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item android:id="@+id/my_profile"
         android:title="@string/my_profile"
