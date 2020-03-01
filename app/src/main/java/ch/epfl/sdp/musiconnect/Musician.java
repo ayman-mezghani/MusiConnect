@@ -1,5 +1,6 @@
 package ch.epfl.sdp.musiconnect;
 
+import java.util.Map;
 import java.util.Set;
 
 public class Musician {
@@ -10,41 +11,58 @@ public class Musician {
     private int age;
     private String emailAddress;
     private String videoURL;
-    private Set<Instrument> instruments;
+    private Map<Instrument, Level> instruments;
+
+    private int maxNameLength = 16;
+    private int minAge = 8;
+    private int maxAge = 128;
+    private int maxEmailAddressLength = 64;
+    private int maxVideoURLLength = 256;
 
 
     public void setFirstName(String newFirstName) {
-        // TODO : Conditions on the new first name
+        if (newFirstName.length() > maxNameLength) {
+            throw new IllegalArgumentException("First name too long");
+        }
+
         firstName = newFirstName;
     }
 
     public String getFirstName() {
-        // TODO : Return a copy of the first name?
         return firstName;
     }
 
     public void setLastName(String newLastName) {
-        // TODO : Conditions on the new last name
+        if (newLastName.length() > maxNameLength) {
+            throw new IllegalArgumentException("Last name too long");
+        }
+
         lastName = newLastName;
     }
 
     public String getLastName() {
-        // TODO : Return a copy of the last name?
         return lastName;
     }
 
     public void setUserName(String newUserName) {
-        // TODO : Conditions on the new user name
+        if (newUserName.length() > maxNameLength) {
+            throw new IllegalArgumentException("User name too long");
+        }
+
         userName = newUserName;
     }
 
     public String getUserName() {
-        // TODO : Return a copy of the user name?
         return userName;
     }
 
     public void setAge(int newAge) {
-        // TODO : Conditions on the new age
+        if (newAge < minAge) {
+            throw new IllegalArgumentException("Age too low");
+        } else if (newAge > maxAge) {
+            throw new IllegalArgumentException("Age too high");
+        }
+
         age = newAge;
     }
 
@@ -53,23 +71,80 @@ public class Musician {
     }
 
     public void setEmailAddress(String newEmailAddress) {
-        // TODO : Conditions on the new email address
+        if (newEmailAddress.length() > maxEmailAddressLength) {
+            throw new IllegalArgumentException("Email address too long");
+        }
+
         emailAddress = newEmailAddress;
     }
 
     public String getEmailAddress() {
-        // TODO : Return a copy of the email address?
         return emailAddress;
     }
 
     public void setVideoURL(String newVideoURL) {
-        // TODO : Conditions on the new video URL
+        if (newVideoURL.length() > maxVideoURLLength) {
+            throw new IllegalArgumentException("Video URL too long");
+        }
+
         videoURL = newVideoURL;
     }
 
     public String getVideoURL() {
-        // TODO : Return a copy of the video URL?
         return videoURL;
+    }
+
+    public void addInstrument(Instrument instrument, Level level) {
+        if (containsInstrument(instrument)) {
+            throw new IllegalArgumentException("Instrument already exists");
+        }
+
+        instruments.put(instrument, level);
+    }
+
+    public void removeInstrument(Instrument instrument) {
+        if (!containsInstrument(instrument)) {
+            throw new IllegalArgumentException("Instrument does not exist");
+        }
+
+        instruments.remove(instrument);
+    }
+
+    public void removeAllInstruments() {
+        instruments.clear();
+    }
+
+    public boolean containsAnyInstrument() {
+        return !instruments.isEmpty();
+    }
+
+    public int numberOfInstruments() {
+        return instruments.size();
+    }
+
+    public boolean containsInstrument(Instrument instrument) {
+        return instruments.containsKey(instrument);
+    }
+
+    public Level getLevel(Instrument instrument) {
+        if (!containsInstrument(instrument)) {
+            throw new IllegalArgumentException("Instrument does not exist");
+        }
+
+        return instruments.get(instrument);
+    }
+
+    public void changeLevel(Instrument instrument, Level level) {
+        if (!containsInstrument(instrument)) {
+            throw new IllegalArgumentException("Instrument does not exist");
+        }
+
+        removeInstrument(instrument);
+        addInstrument(instrument, level);
+    }
+
+    public Set<Instrument> setOfInstruments() {
+        return instruments.keySet();
     }
 
 }
