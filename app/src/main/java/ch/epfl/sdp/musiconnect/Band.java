@@ -1,6 +1,7 @@
 package ch.epfl.sdp.musiconnect;
 
 import java.util.Set;
+import java.util.HashSet;
 
 public class Band {
 
@@ -17,6 +18,7 @@ public class Band {
 
     public Band(String newBandName, Musician newLeader, String newVideoURL) {
         setBandName(newBandName);
+        members = new HashSet<Musician>();
         addMember(newLeader);
         setLeader(newLeader);
         setVideoURL(newVideoURL);

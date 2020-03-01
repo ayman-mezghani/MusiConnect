@@ -1,6 +1,7 @@
 package ch.epfl.sdp.musiconnect;
 
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Set;
 
 public class Musician {
@@ -28,6 +29,7 @@ public class Musician {
         setAge(newAge);
         setEmailAddress(newEmailAddress);
         setVideoURL(newVideoURL);
+        instruments = new HashMap<Instrument, Level>();
     }
 
 
