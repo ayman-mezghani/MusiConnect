@@ -46,12 +46,12 @@ public class StartPage extends AppCompatActivity {
 //            case R.id.map:
 //                return true;
             default:
-                displayMessage("This functionality is not yet part of the application. Please be patient.");
+                displayNotFinishedFunctionalityMessage();
                 return false;
         }
     }
 
-    private void displayMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    private void displayNotFinishedFunctionalityMessage() {
+        Toast.makeText(this, getString(R.string.not_yet_done), Toast.LENGTH_SHORT).show();
     }
 }
