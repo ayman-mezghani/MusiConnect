@@ -17,7 +17,11 @@ public class HelpPage extends StartPage {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        return true;
+        // Helper code to avoid duplication
+        int x = 0;
+        if (x+1 > 0)
+            return true;
+        return false;
     }
 
     @Override

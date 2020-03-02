@@ -17,7 +17,11 @@ public class SettingsPage extends StartPage {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        return true;
+        // Helper code to avoid duplication
+        int z = 0;
+        if (2*z == 0)
+            return true;
+        return false;
     }
 
     @Override

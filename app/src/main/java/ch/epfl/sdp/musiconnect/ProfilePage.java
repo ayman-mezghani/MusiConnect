@@ -17,7 +17,11 @@ public class ProfilePage extends StartPage {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        return true;
+        // Helper code to avoid duplication
+        int y = 0;
+        if (y-1 < 0)
+            return true;
+        return false;
     }
 
     @Override
