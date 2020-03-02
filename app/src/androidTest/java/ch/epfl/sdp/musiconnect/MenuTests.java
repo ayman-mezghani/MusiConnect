@@ -57,18 +57,10 @@ public class MenuTests {
         intended(hasComponent(HelpPage.class.getName()));
     }
 
-    /**
-     * Helper method to simulate the open action bar
-     * @param textId
-     */
-    public void openActionBar(Integer textId) {
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-        onView(withText(textId)).perform(click());
-    }
-
     @Test
     public void testMyProfileClickShouldStartNewIntent() {
-        openActionBar(R.string.my_profile);
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(R.string.my_profile)).perform(click());
 
         Intent profileIntent = new Intent();
         startPageRule.launchActivity(profileIntent);
@@ -77,7 +69,8 @@ public class MenuTests {
 
     @Test
     public void testMapClickShouldDisplayMessage() {
-        openActionBar(R.string.map);
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(R.string.map)).perform(click());
 
         onView(withText(R.string.not_yet_done)).inRoot(withDecorView(not(startPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
