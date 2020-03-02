@@ -36,7 +36,9 @@ public class Musician {
 
 
     public void setFirstName(String newFirstName) {
-        if (newFirstName.length() > MAX_NAME_LENGTH) {
+        if (newFirstName.isEmpty()) {
+            throw new IllegalArgumentException("First name can not be empty");
+        } else if (newFirstName.length() > MAX_NAME_LENGTH) {
             throw new IllegalArgumentException("First name too long");
         }
 
@@ -48,7 +50,9 @@ public class Musician {
     }
 
     public void setLastName(String newLastName) {
-        if (newLastName.length() > MAX_NAME_LENGTH) {
+        if (newLastName.isEmpty()) {
+            throw new IllegalArgumentException("Last name can not be empty");
+        } else if (newLastName.length() > MAX_NAME_LENGTH) {
             throw new IllegalArgumentException("Last name too long");
         }
 
@@ -60,7 +64,9 @@ public class Musician {
     }
 
     public void setUserName(String newUserName) {
-        if (newUserName.length() > MAX_NAME_LENGTH) {
+        if (newUserName.isEmpty()) {
+            throw new IllegalArgumentException("User name can not be empty");
+        } else if (newUserName.length() > MAX_NAME_LENGTH) {
             throw new IllegalArgumentException("User name too long");
         }
 
@@ -75,7 +81,7 @@ public class Musician {
         Date currentDate = new Date();
 
         if (newBirthday.after(currentDate)) {
-            throw new IllegalArgumentException("Birthday is not happened yet");
+            throw new IllegalArgumentException("Birthday has not happened yet");
         }
 
         int currentAge = currentDate.getYear() - newBirthday.getYear();
@@ -108,8 +114,12 @@ public class Musician {
     }
 
     public void setEmailAddress(String newEmailAddress) {
-        if (newEmailAddress.length() > MAX_EMAIL_ADDRESS_LENGTH) {
+        if (newEmailAddress.isEmpty()) {
+            throw new IllegalArgumentException("Email address can not be empty");
+        } else if (newEmailAddress.length() > MAX_EMAIL_ADDRESS_LENGTH) {
             throw new IllegalArgumentException("Email address too long");
+        } else if (!(newEmailAddress.endsWith("@gmail.com") || newEmailAddress.endsWith("@epfl.ch"))) {
+            throw new IllegalArgumentException("Email address format not valid");
         }
 
         emailAddress = newEmailAddress;
@@ -128,6 +138,10 @@ public class Musician {
     }
 
     public String getVideoURL() {
+        if (videoURL.isEmpty()) {
+            throw new Error("No video URL is present");
+        }
+
         return videoURL;
     }
 

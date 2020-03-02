@@ -5,18 +5,25 @@ public class Location {
     private double latitude;
     private double longitude;
 
+    private static final double MAX_LATITUDE_VALUE = 90.0;
+    private static final double MAX_LONGITUDE_VALUE = 180.0;
+
 
     public Location(double newLatitude, double newLongitude) {
-        latitude = newLatitude;
-        longitude = newLongitude;
+        setLatitude(newLatitude);
+        setLongitude(newLongitude);
     }
 
     public Location(Location newLocation) {
-        new Location(newLocation.getLatitude(), newLocation.getLongitude());
+        this(newLocation.getLatitude(), newLocation.getLongitude());
     }
 
 
     public void setLatitude(double newLatitude) {
+        if (newLatitude < -MAX_LATITUDE_VALUE || MAX_LATITUDE_VALUE < newLatitude) {
+            throw new IllegalArgumentException("Latitude value not valid");
+        }
+
         latitude = newLatitude;
     }
 
@@ -25,6 +32,10 @@ public class Location {
     }
 
     public void setLongitude(double newLongitude) {
+        if (newLongitude <= -MAX_LONGITUDE_VALUE || MAX_LONGITUDE_VALUE < newLongitude) {
+            throw new IllegalArgumentException("Longitude value not valid");
+        }
+
         longitude = newLongitude;
     }
 
@@ -33,8 +44,8 @@ public class Location {
     }
 
     public void setLocation(Location newLocation) {
-        latitude = newLocation.getLatitude();
-        longitude = newLocation.getLongitude();
+        setLatitude(newLocation.getLatitude());
+        setLongitude(newLocation.getLongitude());
     }
 
     public Location getLocation() {

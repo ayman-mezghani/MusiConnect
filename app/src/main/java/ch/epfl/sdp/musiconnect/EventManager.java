@@ -32,9 +32,23 @@ public class EventManager {
         location = null;
     }
 
+    public EventManager(String newFirstName, String newLastName, String newUserName, String newEmailAddress) {
+        setFirstName(newFirstName);
+        setLastName(newLastName);
+        setUserName(newUserName);
+        setEmailAddress(newEmailAddress);
+        eventName = "";
+        eventDate = null;
+        musicians = new HashSet<Musician>();
+        bands = new HashSet<Band>();
+        location = null;
+    }
+
 
     public void setFirstName(String newFirstName) {
-        if (newFirstName.length() > MAX_NAME_LENGTH) {
+        if (newFirstName.isEmpty()) {
+            throw new IllegalArgumentException("First name can not be empty");
+        } else if (newFirstName.length() > MAX_NAME_LENGTH) {
             throw new IllegalArgumentException("First name too long");
         }
 
@@ -46,7 +60,9 @@ public class EventManager {
     }
 
     public void setLastName(String newLastName) {
-        if (newLastName.length() > MAX_NAME_LENGTH) {
+        if (newLastName.isEmpty()) {
+            throw new IllegalArgumentException("Last name can not be empty");
+        } else if (newLastName.length() > MAX_NAME_LENGTH) {
             throw new IllegalArgumentException("Last name too long");
         }
 
@@ -58,7 +74,9 @@ public class EventManager {
     }
 
     public void setUserName(String newUserName) {
-        if (newUserName.length() > MAX_NAME_LENGTH) {
+        if (newUserName.isEmpty()) {
+            throw new IllegalArgumentException("User name can not be empty");
+        } else if (newUserName.length() > MAX_NAME_LENGTH) {
             throw new IllegalArgumentException("User name too long");
         }
 
@@ -70,8 +88,12 @@ public class EventManager {
     }
 
     public void setEmailAddress(String newEmailAddress) {
-        if (newEmailAddress.length() > MAX_EMAIL_ADDRESS_LENGTH) {
+        if (newEmailAddress.isEmpty()) {
+            throw new IllegalArgumentException("Email address can not be empty");
+        } else if (newEmailAddress.length() > MAX_EMAIL_ADDRESS_LENGTH) {
             throw new IllegalArgumentException("Email address too long");
+        } else if (!(newEmailAddress.endsWith("@gmail.com") || newEmailAddress.endsWith("@epfl.ch"))) {
+            throw new IllegalArgumentException("Email address format not valid");
         }
 
         emailAddress = newEmailAddress;
@@ -90,6 +112,10 @@ public class EventManager {
     }
 
     public String getEventName() {
+        if (eventName.isEmpty()) {
+            throw new Error("Event name is not known");
+        }
+
         return eventName;
     }
 

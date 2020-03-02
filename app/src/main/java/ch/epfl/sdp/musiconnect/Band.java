@@ -26,7 +26,9 @@ public class Band {
 
 
     public void setBandName(String newBandName) {
-        if (newBandName.length() > MAX_NAME_LENGTH) {
+        if (newBandName.isEmpty()) {
+            throw new IllegalArgumentException("Band name can not be empty");
+        } else if (newBandName.length() > MAX_NAME_LENGTH) {
             throw new IllegalArgumentException("Band name too long");
         }
 
@@ -104,6 +106,10 @@ public class Band {
     }
 
     public String getVideoURL() {
+        if (videoURL.isEmpty()) {
+            throw new Error("No video URL is present");
+        }
+
         return videoURL;
     }
 
