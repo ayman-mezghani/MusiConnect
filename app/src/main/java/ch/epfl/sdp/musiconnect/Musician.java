@@ -88,7 +88,7 @@ public class Musician {
             throw new IllegalArgumentException("Age too high");
         }
 
-        birthday = newBirthday;
+        birthday = new Date(newBirthday.getYear(), newBirthday.getMonth(), newBirthday.getDate());
     }
 
     public Date getBirthday() {

@@ -1,5 +1,6 @@
 package ch.epfl.sdp.musiconnect;
 
+import java.util.Date;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -8,23 +9,24 @@ public class EventManager {
     private String firstName;
     private String lastName;
     private String userName;
-    private String eventName;
     private String emailAddress;
+    private String eventName;
+    private Date eventDate;
     private Set<Musician> musicians;
     private Set<Band> bands;
     private String location; // TODO : Setter and getter methods for location
-    // TODO : Add an eventDate with all the necessary methods
 
     private static final int MAX_NAME_LENGTH = 16;
     private static final int MAX_EMAIL_ADDRESS_LENGTH = 64;
 
 
-    public EventManager(String newFirstName, String newLastName, String newUserName, String newEventName, String newEmailAddress) {
+    public EventManager(String newFirstName, String newLastName, String newUserName, String newEmailAddress, String newEventName, Date newEventDate) {
         setFirstName(newFirstName);
         setLastName(newLastName);
         setUserName(newUserName);
-        setEventName(newEventName);
         setEmailAddress(newEmailAddress);
+        setEventName(newEventName);
+        setEventDate(newEventDate);
         musicians = new HashSet<Musician>();
         bands = new HashSet<Band>();
     }
@@ -66,6 +68,18 @@ public class EventManager {
         return userName;
     }
 
+    public void setEmailAddress(String newEmailAddress) {
+        if (newEmailAddress.length() > MAX_EMAIL_ADDRESS_LENGTH) {
+            throw new IllegalArgumentException("Email address too long");
+        }
+
+        emailAddress = newEmailAddress;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
     public void setEventName(String newEventName) {
         if (newEventName.length() > MAX_NAME_LENGTH) {
             throw new IllegalArgumentException("Event name too long");
@@ -78,16 +92,12 @@ public class EventManager {
         return eventName;
     }
 
-    public void setEmailAddress(String newEmailAddress) {
-        if (newEmailAddress.length() > MAX_EMAIL_ADDRESS_LENGTH) {
-            throw new IllegalArgumentException("Email address too long");
-        }
-
-        emailAddress = newEmailAddress;
+    public void setEventDate(Date newEventDate) {
+        eventDate = new Date(newEventDate.getYear(), newEventDate.getMonth(), newEventDate.getDate(), newEventDate.getHours(), newEventDate.getMinutes());
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
+    public Date getEventDate() {
+        return new Date(eventDate.getYear(), eventDate.getMonth(), eventDate.getDate(), eventDate.getHours(), eventDate.getMinutes());
     }
 
     public void addMusician(Musician musician) {
