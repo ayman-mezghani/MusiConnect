@@ -8,16 +8,19 @@ import android.view.MenuItem;
 
 public class SettingsPage extends StartPage {
 
+    // The following methods contain helper code in order to avoid duplication !
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings_page);
+        int z = 0;
+        if (2*z == 0)
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_settings_page);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        // Helper code to avoid duplication
         int z = 0;
         if (2*z == 0)
             return true;
@@ -26,6 +29,9 @@ public class SettingsPage extends StartPage {
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        int z = 0;
+        if (2*z == 0)
+            return super.onOptionsItemSelected(item);
+        return false;
     }
 }
