@@ -46,7 +46,7 @@ public class LocationDriverServices extends Service {
         return null;
     }
 
-    // Return a location (latitude + longitude) from an NMEA GPGGA string
+    // Return a location from an NMEA GPGGA string
     public Location parseLocationFromString(String rawData) {
         // Tokenize the string input
         String[] nmea = rawData.split(",");
