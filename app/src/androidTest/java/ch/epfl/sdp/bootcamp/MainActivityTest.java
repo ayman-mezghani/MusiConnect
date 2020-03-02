@@ -1,9 +1,16 @@
 package ch.epfl.sdp.bootcamp;
 
+import android.content.Context;
+import android.content.Intent;
+
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.ViewAssertion;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.SdkSuppress;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +26,13 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.assertThat;
+
+import org.junit.Before;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.By;
+import androidx.test.uiautomator.Until;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
@@ -32,8 +46,6 @@ public class MainActivityTest {
         //onView(withId(R.id.greetingMessage)).check(matches(withText("Hello from my unit test!")));
     }
 
-    @Test
-    public void testMapsOpens(){
-        onView(withId(R.id.mapButton)).perform(click());
-    }
+
 }
+
