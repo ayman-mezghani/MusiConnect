@@ -1,5 +1,6 @@
 package ch.epfl.sdp.musiconnect;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
@@ -9,24 +10,24 @@ public class Musician {
     private String firstName;
     private String lastName;
     private String userName;
-    private int age; // TODO : Change 'age' into 'birthday' and add new methods
+    private Date birthday;
     private String emailAddress;
     private String videoURL;
     private Map<Instrument, Level> instruments;
     private String location; // TODO : Setter and getter methods for location
 
-    private int maxNameLength = 16;
-    private int minAge = 8;
-    private int maxAge = 128;
-    private int maxEmailAddressLength = 64;
-    private int maxVideoURLLength = 256;
+    private static final int MAX_NAME_LENGTH = 16;
+    private static final int MIN_AGE = 12;
+    private static final int MAX_AGE = 120;
+    private static final int MAX_EMAIL_ADDRESS_LENGTH = 64;
+    private static final int MAX_VIDEO_URL_LENGTH = 256;
 
 
-    public Musician(String newFirstName, String newLastName, String newUserName, int newAge, String newEmailAddress, String newVideoURL) {
+    public Musician(String newFirstName, String newLastName, String newUserName, Date newBirthday, String newEmailAddress, String newVideoURL) {
         setFirstName(newFirstName);
         setLastName(newLastName);
         setUserName(newUserName);
-        setAge(newAge);
+        setBirthday(newBirthday);
         setEmailAddress(newEmailAddress);
         setVideoURL(newVideoURL);
         instruments = new HashMap<Instrument, Level>();
@@ -34,7 +35,7 @@ public class Musician {
 
 
     public void setFirstName(String newFirstName) {
-        if (newFirstName.length() > maxNameLength) {
+        if (newFirstName.length() > MAX_NAME_LENGTH) {
             throw new IllegalArgumentException("First name too long");
         }
 
@@ -46,7 +47,7 @@ public class Musician {
     }
 
     public void setLastName(String newLastName) {
-        if (newLastName.length() > maxNameLength) {
+        if (newLastName.length() > MAX_NAME_LENGTH) {
             throw new IllegalArgumentException("Last name too long");
         }
 
@@ -58,7 +59,7 @@ public class Musician {
     }
 
     public void setUserName(String newUserName) {
-        if (newUserName.length() > maxNameLength) {
+        if (newUserName.length() > MAX_NAME_LENGTH) {
             throw new IllegalArgumentException("User name too long");
         }
 
@@ -69,22 +70,44 @@ public class Musician {
         return userName;
     }
 
-    public void setAge(int newAge) {
-        if (newAge < minAge) {
+    public void setBirthday(Date newBirthday) {
+        Date currentDate = new Date();
+
+        if (newBirthday.after(currentDate)) {
+            throw new IllegalArgumentException("Birthday is not happened yet");
+        }
+
+        int currentAge = currentDate.getYear() - newBirthday.getYear();
+        if (currentDate.getMonth() < newBirthday.getMonth() || currentDate.getMonth() == newBirthday.getMonth() && currentDate.getDate() < newBirthday.getDate()) {
+            --currentAge;
+        }
+
+        if (currentAge < MIN_AGE) {
             throw new IllegalArgumentException("Age too low");
-        } else if (newAge > maxAge) {
+        } else if (currentAge > MAX_AGE) {
             throw new IllegalArgumentException("Age too high");
         }
 
-        age = newAge;
+        birthday = newBirthday;
+    }
+
+    public Date getBirthday() {
+        return new Date(birthday.getYear(), birthday.getMonth(), birthday.getDate());
     }
 
     public int getAge() {
-        return age;
+        Date currentDate = new Date();
+
+        int currentAge = currentDate.getYear() - birthday.getYear();
+        if (currentDate.getMonth() < birthday.getMonth() || currentDate.getMonth() == birthday.getMonth() && currentDate.getDate() < birthday.getDate()) {
+            --currentAge;
+        }
+
+        return currentAge;
     }
 
     public void setEmailAddress(String newEmailAddress) {
-        if (newEmailAddress.length() > maxEmailAddressLength) {
+        if (newEmailAddress.length() > MAX_EMAIL_ADDRESS_LENGTH) {
             throw new IllegalArgumentException("Email address too long");
         }
 
@@ -96,7 +119,7 @@ public class Musician {
     }
 
     public void setVideoURL(String newVideoURL) {
-        if (newVideoURL.length() > maxVideoURLLength) {
+        if (newVideoURL.length() > MAX_VIDEO_URL_LENGTH) {
             throw new IllegalArgumentException("Video URL too long");
         }
 

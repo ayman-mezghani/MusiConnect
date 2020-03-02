@@ -13,9 +13,10 @@ public class EventManager {
     private Set<Musician> musicians;
     private Set<Band> bands;
     private String location; // TODO : Setter and getter methods for location
+    // TODO : Add an eventDate with all the necessary methods
 
-    private int maxNameLength = 16;
-    private int maxEmailAddressLength = 64;
+    private static final int MAX_NAME_LENGTH = 16;
+    private static final int MAX_EMAIL_ADDRESS_LENGTH = 64;
 
 
     public EventManager(String newFirstName, String newLastName, String newUserName, String newEventName, String newEmailAddress) {
@@ -30,7 +31,7 @@ public class EventManager {
 
 
     public void setFirstName(String newFirstName) {
-        if (newFirstName.length() > maxNameLength) {
+        if (newFirstName.length() > MAX_NAME_LENGTH) {
             throw new IllegalArgumentException("First name too long");
         }
 
@@ -42,7 +43,7 @@ public class EventManager {
     }
 
     public void setLastName(String newLastName) {
-        if (newLastName.length() > maxNameLength) {
+        if (newLastName.length() > MAX_NAME_LENGTH) {
             throw new IllegalArgumentException("Last name too long");
         }
 
@@ -54,7 +55,7 @@ public class EventManager {
     }
 
     public void setUserName(String newUserName) {
-        if (newUserName.length() > maxNameLength) {
+        if (newUserName.length() > MAX_NAME_LENGTH) {
             throw new IllegalArgumentException("User name too long");
         }
 
@@ -66,7 +67,7 @@ public class EventManager {
     }
 
     public void setEventName(String newEventName) {
-        if (newEventName.length() > maxNameLength) {
+        if (newEventName.length() > MAX_NAME_LENGTH) {
             throw new IllegalArgumentException("Event name too long");
         }
 
@@ -78,7 +79,7 @@ public class EventManager {
     }
 
     public void setEmailAddress(String newEmailAddress) {
-        if (newEmailAddress.length() > maxEmailAddressLength) {
+        if (newEmailAddress.length() > MAX_EMAIL_ADDRESS_LENGTH) {
             throw new IllegalArgumentException("Email address too long");
         }
 

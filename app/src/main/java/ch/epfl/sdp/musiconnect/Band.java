@@ -11,9 +11,8 @@ public class Band {
     private String videoURL;
     private String location; // TODO : Setter and getter methods for location
 
-    private int maxNameLength = 16;
-    private int maxEmailAddressLength = 64;
-    private int maxVideoURLLength = 256;
+    private static final int MAX_NAME_LENGTH = 16;
+    private static final int MAX_VIDEO_URL_LENGTH = 256;
 
 
     public Band(String newBandName, Musician newLeader, String newVideoURL) {
@@ -26,7 +25,7 @@ public class Band {
 
 
     public void setBandName(String newBandName) {
-        if (newBandName.length() > maxNameLength) {
+        if (newBandName.length() > MAX_NAME_LENGTH) {
             throw new IllegalArgumentException("Band name too long");
         }
 
@@ -96,7 +95,7 @@ public class Band {
     }
 
     public void setVideoURL(String newVideoURL) {
-        if (newVideoURL.length() > maxVideoURLLength) {
+        if (newVideoURL.length() > MAX_VIDEO_URL_LENGTH) {
             throw new IllegalArgumentException("Video URL too long");
         }
 
