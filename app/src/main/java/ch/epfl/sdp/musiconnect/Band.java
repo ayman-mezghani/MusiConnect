@@ -9,18 +9,19 @@ public class Band {
     private Musician leader;
     private Set<Musician> members;
     private String videoURL;
-    private String location; // TODO : Setter and getter methods for location
+    private Location location;
 
     private static final int MAX_NAME_LENGTH = 16;
-    private static final int MAX_VIDEO_URL_LENGTH = 256;
+    private static final int MAX_VIDEO_URL_LENGTH = 2048;
 
 
-    public Band(String newBandName, Musician newLeader, String newVideoURL) {
+    public Band(String newBandName, Musician newLeader) {
         setBandName(newBandName);
         members = new HashSet<Musician>();
         addMember(newLeader);
         setLeader(newLeader);
-        setVideoURL(newVideoURL);
+        videoURL = "";
+        location = null;
     }
 
 
@@ -104,6 +105,14 @@ public class Band {
 
     public String getVideoURL() {
         return videoURL;
+    }
+
+    public void setLocation(Location newLocation) {
+        location.setLocation(newLocation);
+    }
+
+    public Location getLocation() {
+        return location.getLocation();
     }
 
 

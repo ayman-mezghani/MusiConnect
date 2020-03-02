@@ -14,7 +14,7 @@ public class EventManager {
     private Date eventDate;
     private Set<Musician> musicians;
     private Set<Band> bands;
-    private String location; // TODO : Setter and getter methods for location
+    private Location location;
 
     private static final int MAX_NAME_LENGTH = 16;
     private static final int MAX_EMAIL_ADDRESS_LENGTH = 64;
@@ -29,6 +29,7 @@ public class EventManager {
         setEventDate(newEventDate);
         musicians = new HashSet<Musician>();
         bands = new HashSet<Band>();
+        location = null;
     }
 
 
@@ -166,6 +167,14 @@ public class EventManager {
 
     public boolean containsBand(Band band) {
         return bands.contains(band);
+    }
+
+    public void setLocation(Location newLocation) {
+        location.setLocation(newLocation);
+    }
+
+    public Location getLocation() {
+        return location.getLocation();
     }
 
 

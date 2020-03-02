@@ -14,23 +14,24 @@ public class Musician {
     private String emailAddress;
     private String videoURL;
     private Map<Instrument, Level> instruments;
-    private String location; // TODO : Setter and getter methods for location
+    private Location location;
 
     private static final int MAX_NAME_LENGTH = 16;
-    private static final int MIN_AGE = 12;
+    private static final int MIN_AGE = 13;
     private static final int MAX_AGE = 120;
     private static final int MAX_EMAIL_ADDRESS_LENGTH = 64;
-    private static final int MAX_VIDEO_URL_LENGTH = 256;
+    private static final int MAX_VIDEO_URL_LENGTH = 2048;
 
 
-    public Musician(String newFirstName, String newLastName, String newUserName, Date newBirthday, String newEmailAddress, String newVideoURL) {
+    public Musician(String newFirstName, String newLastName, String newUserName, Date newBirthday, String newEmailAddress) {
         setFirstName(newFirstName);
         setLastName(newLastName);
         setUserName(newUserName);
         setBirthday(newBirthday);
         setEmailAddress(newEmailAddress);
-        setVideoURL(newVideoURL);
+        videoURL = "";
         instruments = new HashMap<Instrument, Level>();
+        location = null;
     }
 
 
@@ -181,6 +182,14 @@ public class Musician {
 
     public Set<Instrument> setOfInstruments() {
         return instruments.keySet();
+    }
+
+    public void setLocation(Location newLocation) {
+        location.setLocation(newLocation);
+    }
+
+    public Location getLocation() {
+        return location.getLocation();
     }
 
 
