@@ -61,4 +61,4 @@ build/
 atlassian-ide-plugin.xml
 @printminion
 
-app/google-services.json
+#app/google-services.json
