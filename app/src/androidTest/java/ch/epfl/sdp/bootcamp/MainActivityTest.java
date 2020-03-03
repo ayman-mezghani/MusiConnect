@@ -43,7 +43,7 @@ public class MainActivityTest {
     public void testCanGreetUsers() {
         onView(withId(R.id.mainName)).perform(typeText("from my unit test")).perform(closeSoftKeyboard());
         onView(withId(R.id.mainGoButton)).perform(click());
-        //onView(withId(R.id.greetingMessage)).check(matches(withText("Hello from my unit test!")));
+        onView(withId(R.id.greetingMessage)).check(matches(withText("Hello Namefrom my unit test!")));
     }
 
 

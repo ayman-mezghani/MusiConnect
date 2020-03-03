@@ -8,12 +8,16 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private UiSettings mUiSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +42,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mUiSettings = mMap.getUiSettings();
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        //Set UI settings
+        mUiSettings.setZoomControlsEnabled(true);
+
+        // Get Main marker information
+        Bundle extras = getIntent().getExtras();
+        double lat = extras.getDouble("lat");
+        double lon = extras.getDouble("lon");
+        String markerName = extras.getString("markerName");
+        LatLng marker = new LatLng(lat,lon);
+        mMap.addMarker(new MarkerOptions().position(marker).title(markerName));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
+
+        //add circle around sydney
+        CircleOptions circleOptions = new CircleOptions()
+                .center(marker)
+                .radius(5000); // In meters
+
+        Circle circle = mMap.addCircle(circleOptions);
     }
 }

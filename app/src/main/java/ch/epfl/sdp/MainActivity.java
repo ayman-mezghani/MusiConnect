@@ -8,6 +8,8 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import static java.lang.Double.parseDouble;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -32,6 +34,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void mapButton(){
         Intent myIntent = new Intent(MainActivity.this, MapsActivity.class);
+        double lat = Double.parseDouble(((EditText)findViewById(R.id.lat)).getText().toString());
+        double lon = Double.parseDouble(((EditText)findViewById(R.id.lon)).getText().toString());
+        String markerName = ((EditText)findViewById(R.id.markerName)).getText().toString();
+        myIntent.putExtra("lat", lat);
+        myIntent.putExtra("lon", lon);
+        myIntent.putExtra("markerName", markerName);
         MainActivity.this.startActivity(myIntent);
     }
 
