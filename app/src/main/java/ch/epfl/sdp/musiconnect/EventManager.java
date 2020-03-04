@@ -1,6 +1,5 @@
 package ch.epfl.sdp.musiconnect;
 
-import java.util.Date;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -10,8 +9,9 @@ public class EventManager {
     private String lastName;
     private String userName;
     private String emailAddress;
+    private MyDate joinDate;
     private String eventName;
-    private Date eventDate;
+    private MyDate eventDate;
     private Set<Musician> musicians;
     private Set<Band> bands;
     private Location location;
@@ -19,29 +19,25 @@ public class EventManager {
     private static final int MAX_NAME_LENGTH = 16;
     private static final int MAX_EMAIL_ADDRESS_LENGTH = 64;
 
+    private static final double EPFL_LATITUDE = 46.5185941;
+    private static final double EPFL_LONGITUDE = 6.5618969;
 
-    public EventManager(String newFirstName, String newLastName, String newUserName, String newEmailAddress, String newEventName, Date newEventDate) {
+
+    public EventManager(String newFirstName, String newLastName, String newUserName, String newEmailAddress, String newEventName, MyDate newEventDate) {
         setFirstName(newFirstName);
         setLastName(newLastName);
         setUserName(newUserName);
         setEmailAddress(newEmailAddress);
+        joinDate = new MyDate();
         setEventName(newEventName);
         setEventDate(newEventDate);
         musicians = new HashSet<Musician>();
         bands = new HashSet<Band>();
-        location = null;
+        location = new Location(EPFL_LATITUDE, EPFL_LONGITUDE);
     }
 
     public EventManager(String newFirstName, String newLastName, String newUserName, String newEmailAddress) {
-        setFirstName(newFirstName);
-        setLastName(newLastName);
-        setUserName(newUserName);
-        setEmailAddress(newEmailAddress);
-        eventName = "";
-        eventDate = null;
-        musicians = new HashSet<Musician>();
-        bands = new HashSet<Band>();
-        location = null;
+        this(newFirstName, newLastName, newUserName, newEmailAddress, "", new MyDate());
     }
 
 
@@ -103,6 +99,10 @@ public class EventManager {
         return emailAddress;
     }
 
+    public MyDate getJoinDate() {
+        return new MyDate(joinDate);
+    }
+
     public void setEventName(String newEventName) {
         if (newEventName.length() > MAX_NAME_LENGTH) {
             throw new IllegalArgumentException("Event name too long");
@@ -119,12 +119,12 @@ public class EventManager {
         return eventName;
     }
 
-    public void setEventDate(Date newEventDate) {
-        eventDate = new Date(newEventDate.getYear(), newEventDate.getMonth(), newEventDate.getDate(), newEventDate.getHours(), newEventDate.getMinutes());
+    public void setEventDate(MyDate newEventDate) {
+        eventDate = new MyDate(newEventDate.getYear(), newEventDate.getMonth(), newEventDate.getDate(), newEventDate.getHours(), newEventDate.getMinutes());
     }
 
-    public Date getEventDate() {
-        return new Date(eventDate.getYear(), eventDate.getMonth(), eventDate.getDate(), eventDate.getHours(), eventDate.getMinutes());
+    public MyDate getEventDate() {
+        return new MyDate(eventDate.getYear(), eventDate.getMonth(), eventDate.getDate(), eventDate.getHours(), eventDate.getMinutes());
     }
 
     public void addMusician(Musician musician) {
@@ -161,6 +161,10 @@ public class EventManager {
         return musicians.contains(musician);
     }
 
+    public Set<Musician> setOfMusicians() {
+        return new HashSet<Musician>(musicians);
+    }
+
     public void addBand(Band band) {
         if (band == null) {
             throw new IllegalArgumentException("Band is invalid");
@@ -195,6 +199,10 @@ public class EventManager {
         return bands.contains(band);
     }
 
+    public Set<Band> setOfBands() {
+        return new HashSet<Band>(bands);
+    }
+
     public void setLocation(Location newLocation) {
         location.setLocation(newLocation);
     }
@@ -206,7 +214,17 @@ public class EventManager {
 
     @Override
     public String toString() {
-        String tmp = getEventName() + " (Organizer: " + getFirstName() + " " + getLastName() + ")\n";
+        String tmp;
+
+        try {
+            String eventName = getEventName();
+            tmp = eventName;
+        } catch (Error error) {
+            tmp = "Event";
+        }
+
+        tmp += " (Organizer: " + getFirstName() + " " + getLastName() + ")\n";
+
         if (containsAnyMusician()) {
             tmp += "Musicians:\n";
             for (Musician musician : musicians) {

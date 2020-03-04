@@ -1,6 +1,5 @@
 package ch.epfl.sdp.musiconnect;
 
-import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
@@ -10,8 +9,9 @@ public class Musician {
     private String firstName;
     private String lastName;
     private String userName;
-    private Date birthday;
+    private MyDate birthday;
     private String emailAddress;
+    private MyDate joinDate;
     private String videoURL;
     private Map<Instrument, Level> instruments;
     private Location location;
@@ -22,16 +22,20 @@ public class Musician {
     private static final int MAX_EMAIL_ADDRESS_LENGTH = 64;
     private static final int MAX_VIDEO_URL_LENGTH = 2048;
 
+    private static final double EPFL_LATITUDE = 46.5185941;
+    private static final double EPFL_LONGITUDE = 6.5618969;
 
-    public Musician(String newFirstName, String newLastName, String newUserName, Date newBirthday, String newEmailAddress) {
+
+    public Musician(String newFirstName, String newLastName, String newUserName, MyDate newBirthday, String newEmailAddress) {
         setFirstName(newFirstName);
         setLastName(newLastName);
         setUserName(newUserName);
         setBirthday(newBirthday);
         setEmailAddress(newEmailAddress);
+        joinDate = new MyDate();
         videoURL = "";
         instruments = new HashMap<Instrument, Level>();
-        location = null;
+        location = new Location(EPFL_LATITUDE, EPFL_LONGITUDE);
     }
 
 
@@ -77,8 +81,8 @@ public class Musician {
         return userName;
     }
 
-    public void setBirthday(Date newBirthday) {
-        Date currentDate = new Date();
+    public void setBirthday(MyDate newBirthday) {
+        MyDate currentDate = new MyDate();
 
         if (newBirthday.after(currentDate)) {
             throw new IllegalArgumentException("Birthday has not happened yet");
@@ -95,15 +99,15 @@ public class Musician {
             throw new IllegalArgumentException("Age too high");
         }
 
-        birthday = new Date(newBirthday.getYear(), newBirthday.getMonth(), newBirthday.getDate());
+        birthday = new MyDate(newBirthday.getYear(), newBirthday.getMonth(), newBirthday.getDate());
     }
 
-    public Date getBirthday() {
-        return new Date(birthday.getYear(), birthday.getMonth(), birthday.getDate());
+    public MyDate getBirthday() {
+        return new MyDate(birthday.getYear(), birthday.getMonth(), birthday.getDate());
     }
 
     public int getAge() {
-        Date currentDate = new Date();
+        MyDate currentDate = new MyDate();
 
         int currentAge = currentDate.getYear() - birthday.getYear();
         if (currentDate.getMonth() < birthday.getMonth() || currentDate.getMonth() == birthday.getMonth() && currentDate.getDate() < birthday.getDate()) {
@@ -127,6 +131,10 @@ public class Musician {
 
     public String getEmailAddress() {
         return emailAddress;
+    }
+
+    public MyDate getJoinDate() {
+        return new MyDate(joinDate);
     }
 
     public void setVideoURL(String newVideoURL) {

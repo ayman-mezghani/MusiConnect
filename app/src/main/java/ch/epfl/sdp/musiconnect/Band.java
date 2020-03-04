@@ -8,11 +8,15 @@ public class Band {
     private String bandName;
     private Musician leader;
     private Set<Musician> members;
+    private MyDate joinDate;
     private String videoURL;
     private Location location;
 
     private static final int MAX_NAME_LENGTH = 16;
     private static final int MAX_VIDEO_URL_LENGTH = 2048;
+
+    private static final double EPFL_LATITUDE = 46.5185941;
+    private static final double EPFL_LONGITUDE = 6.5618969;
 
 
     public Band(String newBandName, Musician newLeader) {
@@ -20,8 +24,9 @@ public class Band {
         members = new HashSet<Musician>();
         addMember(newLeader);
         setLeader(newLeader);
+        joinDate = new MyDate();
         videoURL = "";
-        location = null;
+        location = new Location(EPFL_LATITUDE, EPFL_LONGITUDE);
     }
 
 
@@ -95,6 +100,14 @@ public class Band {
 
     public boolean containsMember(Musician member) {
         return members.contains(member);
+    }
+
+    public Set<Musician> setOfMembers() {
+        return new HashSet<Musician>(members);
+    }
+
+    public MyDate getJoinDate() {
+        return new MyDate(joinDate);
     }
 
     public void setVideoURL(String newVideoURL) {

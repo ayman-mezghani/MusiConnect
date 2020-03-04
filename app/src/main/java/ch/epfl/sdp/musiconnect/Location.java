@@ -54,6 +54,21 @@ public class Location {
 
 
     @Override
+    public boolean equals(Object that) {
+        if (this == that) {
+            return true;
+        } else if (that instanceof Location) {
+            Location thatLocation = (Location) that;
+
+            if (latitude == thatLocation.getLatitude() && longitude == thatLocation.getLongitude()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
     public String toString() {
         return "Location: (" + getLatitude() + ", " + getLongitude() + ")\n";
     }
