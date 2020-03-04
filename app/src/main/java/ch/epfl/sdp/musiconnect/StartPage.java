@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import ch.epfl.sdp.R;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,12 +11,6 @@ import android.widget.Toast;
 
 
 public class StartPage extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start_page);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

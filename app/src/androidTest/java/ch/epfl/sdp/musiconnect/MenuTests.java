@@ -57,10 +57,18 @@ public class MenuTests {
         intended(hasComponent(HelpPage.class.getName()));
     }
 
+    /**
+     * Helper method to avoid duplicate code
+     * @param stringId
+     */
+    private void openActionsMenu(int stringId) {
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(stringId)).perform(click());
+    }
+
     @Test
     public void testMyProfileClickShouldStartNewIntent() {
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-        onView(withText(R.string.my_profile)).perform(click());
+        openActionsMenu(R.string.my_profile);
 
         Intent profileIntent = new Intent();
         startPageRule.launchActivity(profileIntent);
@@ -69,16 +77,14 @@ public class MenuTests {
 
     @Test
     public void testMapClickShouldDisplayMessage() {
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-        onView(withText(R.string.map)).perform(click());
+        openActionsMenu(R.string.map);
 
         onView(withText(R.string.not_yet_done)).inRoot(withDecorView(not(startPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
     @Test
     public void testSettingsClickShouldStartNewIntent() {
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-        onView(withText(R.string.settings)).perform(click());
+        openActionsMenu(R.string.settings);
 
         Intent settingsIntent = new Intent();
         startPageRule.launchActivity(settingsIntent);
