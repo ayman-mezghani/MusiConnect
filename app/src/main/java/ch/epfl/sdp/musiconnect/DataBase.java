@@ -28,9 +28,9 @@ public class DataBase {
         this.db = FirebaseFirestore.getInstance();
     }
 
-    public void addData(Collection c, String docName) {
+    public void addDoc(Map m, String docName) {
         db.collection("users").document(docName)
-                .set(c)
+                .set(m)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -43,9 +43,10 @@ public class DataBase {
                         Log.w(TAG, "Error writing document", e);
                     }
                 });
+
     }
 
-    public void delete(String docName) {
+    public void deleteDoc(String docName) {
         db.collection("users").document(docName)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -62,7 +63,7 @@ public class DataBase {
                 });
     }
 
-    public void updateData(String docName, Map<String, Object> newValueMap) {
+    public void updateDoc(String docName, Map<String, Object> newValueMap) {
         db.collection("users").document(docName)
                 .update(newValueMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -77,9 +78,10 @@ public class DataBase {
                         Log.w(TAG, "Error updating document", e);
                     }
                 });
+
     }
 
-    public void deleteFields(String docName, List<String> fields) {
+    public void deleteFieldsinDoc(String docName, List<String> fields) {
         Map<String, Object> updates = new HashMap<>();
 
         for (String str : fields) {
@@ -128,7 +130,7 @@ public class DataBase {
     }
 
     public Map readSingleDoc(String docName) {
-        Map m = new HashMap();
+        Map m =
         db.collection("users").document(docName)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -147,13 +149,7 @@ public class DataBase {
                         }
                     }
                 })
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        Map d = documentSnapshot.toObject(Map.class);
-                        // TODO: 04/03/20
-                    }
-                });
-        return null;
+                .getResult().toObject(Map.class);
+        return m;
     }
 }
