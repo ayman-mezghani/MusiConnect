@@ -40,7 +40,6 @@ public class GoogleSignInTests {
     private static final String ACCOUNT_MAIL = "musiconnectsdp@gmail.com";
     private static final String ACCOUNT_PWD = "mcSDP2k20";
     private static final long DEFAULT_TIMEOUT = 1000 * 10;
-    private static boolean addedAccount = false;
 
     @Rule
     public final ActivityTestRule<MainActivity> mActivityRule =
@@ -62,35 +61,6 @@ public class GoogleSignInTests {
     public void before() throws Exception {
         Intents.init();
         mUiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-
-        if(!addedAccount) {
-            a_connectNewAccount();
-            addedAccount = true;
-        }
-
-        mActivityRule.launchActivity(null);
-        Thread.sleep(DEFAULT_TIMEOUT);
-    }
-
-    public void b_connectExistingAccountTest() throws Exception {
-        // to be deleted after merging
-        onView(withId(R.id.mainGoButton)).perform(click());
-        onView(withId(R.id.sign_in_button)).perform((click()));
-        if(addedAccount)
-            onView(withId(R.id.sign_in_button)).perform((click()));
-
-
-        // firstof all, test if the account doesnt exist yet on android device
-        UiObject loginButton = mUiDevice.findObject(new UiSelector().textContains(ACCOUNT_MAIL));
-        loginButton.waitForExists(DEFAULT_TIMEOUT);
-
-        if (loginButton.exists()) {
-            loginButton.click();
-
-            Thread.sleep(DEFAULT_TIMEOUT);
-
-            intended(hasComponent(GoogleResultActivity.class.getName()));
-        }
     }
 
     @Test
@@ -115,9 +85,6 @@ public class GoogleSignInTests {
         // to be deleted after merging
         onView(withId(R.id.mainGoButton)).perform(click());
         onView(withId(R.id.sign_in_button)).perform((click()));
-
-        if(addedAccount)
-            onView(withId(R.id.sign_in_button)).perform((click()));
 
 
         // firstof all, test if the account doesnt exist yet on android device
@@ -165,5 +132,27 @@ public class GoogleSignInTests {
             intended(hasComponent(GoogleResultActivity.class.getName()));
         }
     }
+
+    @Test
+    public void b_connectExistingAccountTest() throws Exception {
+        // to be deleted after merging
+        onView(withId(R.id.mainGoButton)).perform(click());
+        onView(withId(R.id.sign_in_button)).perform((click()));
+
+
+        // firstof all, test if the account doesnt exist yet on android device
+        UiObject loginButton = mUiDevice.findObject(new UiSelector().textContains(ACCOUNT_MAIL));
+        loginButton.waitForExists(DEFAULT_TIMEOUT);
+
+        if (loginButton.exists()) {
+            loginButton.click();
+
+            Thread.sleep(DEFAULT_TIMEOUT);
+
+            intended(hasComponent(GoogleResultActivity.class.getName()));
+        }
+    }
+
+
 }
 
