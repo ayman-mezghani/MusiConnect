@@ -45,7 +45,7 @@ public class MapsActivityTest {
         onView(withText("Map")).perform(click());
 
         UiObject marker = device.findObject(new UiSelector().descriptionContains("You"));
-        marker.waitForExists(5000);
+        marker.waitForExists(40000s);
         assertTrue(marker.exists());
 
     }
