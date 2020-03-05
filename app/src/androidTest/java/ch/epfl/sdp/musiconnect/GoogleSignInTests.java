@@ -42,12 +42,13 @@ public class GoogleSignInTests {
     private static final long DEFAULT_TIMEOUT = 1000 * 10;
 
     @Rule
+    public final ActivityTestRule<GoogleResultActivity> mGoogleResultActivity =
+            new ActivityTestRule<>(GoogleResultActivity.class);
+
+    @Rule
     public final ActivityTestRule<MainActivity> mActivityRule =
             new ActivityTestRule<>(MainActivity.class, false, true);
 
-    @Rule
-    public final ActivityTestRule<GoogleResultActivity> mGoogleResultActivity =
-            new ActivityTestRule<>(GoogleResultActivity.class);
 
     private UiDevice mUiDevice;
 
@@ -61,6 +62,7 @@ public class GoogleSignInTests {
     public void before() throws Exception {
         Intents.init();
         mUiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        mActivityRule.launchActivity(null);
     }
 
     @Test
@@ -78,59 +80,6 @@ public class GoogleSignInTests {
         Thread.sleep(DEFAULT_TIMEOUT);
 
         assertTrue(mGoogleResultActivity.getActivity().isDestroyed());
-    }
-
-    @Test()
-    public void a_connectNewAccount() throws Exception {
-        // to be deleted after merging
-        onView(withId(R.id.mainGoButton)).perform(click());
-        onView(withId(R.id.sign_in_button)).perform((click()));
-
-
-        // firstof all, test if the account doesnt exist yet on android device
-        UiObject loginButton = mUiDevice.findObject(new UiSelector().textContains(ACCOUNT_MAIL));
-        loginButton.waitForExists(DEFAULT_TIMEOUT);
-
-        if (!loginButton.exists()) {
-            loginButton = mUiDevice.findObject(new UiSelector().textContains("another account"));
-            loginButton.click();
-
-            mUiDevice.wait(Until.findObject(By.clazz(WebView.class)), DEFAULT_TIMEOUT);
-
-            UiObject emailInput = mUiDevice.findObject(new UiSelector()
-                    .instance(0)
-                    .className(EditText.class));
-
-            emailInput.waitForExists(DEFAULT_TIMEOUT);
-            emailInput.setText(ACCOUNT_MAIL);
-
-            UiObject btnNext = mUiDevice.findObject(new UiSelector().instance(2).className(Button.class));                // click on next Button
-            btnNext.waitForExists(DEFAULT_TIMEOUT);
-            btnNext.click();
-
-            Thread.sleep(DEFAULT_TIMEOUT);
-
-            UiObject pwdInput = mUiDevice.findObject(new UiSelector()
-                    .instance(0)
-                    .className(EditText.class));
-
-            pwdInput.waitForExists(DEFAULT_TIMEOUT);
-            pwdInput.setText(ACCOUNT_PWD);
-
-            btnNext = mUiDevice.findObject(new UiSelector().instance(1).className(Button.class));                // click on next Button
-            btnNext.waitForExists(DEFAULT_TIMEOUT);
-            btnNext.click();
-
-            Thread.sleep(DEFAULT_TIMEOUT);
-
-            btnNext = mUiDevice.findObject(new UiSelector().instance(0).className(Button.class));                // click on next Button
-            btnNext.waitForExists(DEFAULT_TIMEOUT);
-            btnNext.click();
-
-            Thread.sleep(DEFAULT_TIMEOUT);
-
-            intended(hasComponent(GoogleResultActivity.class.getName()));
-        }
     }
 
     @Test
