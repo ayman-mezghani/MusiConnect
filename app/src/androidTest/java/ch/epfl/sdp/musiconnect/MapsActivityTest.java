@@ -43,13 +43,9 @@ public class MapsActivityTest {
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText("Map")).perform(click());
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
         UiObject marker = device.findObject(new UiSelector().descriptionContains("You"));
-        marker.waitForExists(1000);
+        marker.waitForExists(5000);
         assertTrue(marker.exists());
 
     }
