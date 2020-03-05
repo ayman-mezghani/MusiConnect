@@ -28,7 +28,7 @@ public class DataBase {
         this.db = FirebaseFirestore.getInstance();
     }
 
-    public void addDoc(Map<String, ?> m, String docName) {
+    public void addDoc(Map<String, Object> m, String docName) {
         db.collection("users").document(docName).set(m)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -42,7 +42,6 @@ public class DataBase {
                         Log.w(TAG, "Error writing document", e);
                     }
                 });
-
     }
 
     public void deleteDoc(String docName) {
@@ -75,7 +74,6 @@ public class DataBase {
                         Log.w(TAG, "Error updating document", e);
                     }
                 });
-
     }
 
     public void deleteFieldsinDoc(String docName, List<String> fields) {
@@ -85,63 +83,6 @@ public class DataBase {
             updates.put(str, FieldValue.delete());
         }
 
-        db.collection("users").document(docName).update(updates)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                    }
-                });
-    }
-
-    public List<Map> readAllDocs() {
-        List<Map> res = new ArrayList<Map>();
-        db.collection("users").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    }
-                })
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if (!queryDocumentSnapshots.isEmpty()) {
-                            //List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
-                            for (DocumentSnapshot d : queryDocumentSnapshots.getDocuments()) {
-                                res.add(d.toObject(Map.class));
-                            }
-                        }
-                    }
-                });
-        return res;
-    }
-
-    public Map readSingleDoc(String docName) {
-        Map m =
-                db.collection("users").document(docName).get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot document = task.getResult();
-                                    if (document.exists()) {
-                                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-
-                                    } else {
-                                        Log.d(TAG, "No such document");
-                                    }
-                                } else {
-                                    Log.d(TAG, "get failed with ", task.getException());
-                                }
-                            }
-                        })
-                        .getResult().toObject(Map.class);
-        return m;
+        db.collection("users").document(docName).update(updates);
     }
 }

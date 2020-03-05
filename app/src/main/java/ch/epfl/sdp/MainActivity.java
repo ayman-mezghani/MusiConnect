@@ -8,6 +8,11 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import ch.epfl.sdp.musiconnect.DataBase;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -17,9 +22,10 @@ public class MainActivity extends AppCompatActivity {
 
         final Button button = (Button) findViewById(R.id.mainGoButton);
         button.setOnClickListener(v -> mainGoButton());
+
     }
 
-    private void mainGoButton(){
+    private void mainGoButton() {
         Intent myIntent = new Intent(MainActivity.this, GreetingActivity.class);
 
         EditText e = findViewById(R.id.mainName);
