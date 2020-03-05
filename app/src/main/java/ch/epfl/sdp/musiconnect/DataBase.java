@@ -49,7 +49,7 @@ public class DataBase {
         db.collection("users").document(docName).delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
+                    public void onSuccess(Void bVoid) {
                         Log.d(TAG, "DocumentSnapshot successfully deleted!");
                     }
                 })
@@ -102,7 +102,6 @@ public class DataBase {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
-
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -115,8 +114,7 @@ public class DataBase {
                         if (!queryDocumentSnapshots.isEmpty()) {
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
-                                Map m = d.toObject(Map.class);
-                                res.add(m);
+                                res.add(d.toObject(Map.class));
                             }
                         }
                     }
@@ -126,24 +124,24 @@ public class DataBase {
 
     public Map readSingleDoc(String docName) {
         Map m =
-        db.collection("users").document(docName).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                db.collection("users").document(docName).get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
 
-                            } else {
-                                Log.d(TAG, "No such document");
+                                    } else {
+                                        Log.d(TAG, "No such document");
+                                    }
+                                } else {
+                                    Log.d(TAG, "get failed with ", task.getException());
+                                }
                             }
-                        } else {
-                            Log.d(TAG, "get failed with ", task.getException());
-                        }
-                    }
-                })
-                .getResult().toObject(Map.class);
+                        })
+                        .getResult().toObject(Map.class);
         return m;
     }
 }
