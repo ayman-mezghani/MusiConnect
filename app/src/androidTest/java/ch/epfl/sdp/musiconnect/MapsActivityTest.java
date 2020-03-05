@@ -24,6 +24,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -38,7 +39,7 @@ public class MapsActivityTest {
 
 
     @Test
-    public void testMapsOpensWithDefaultSettings(){
+    public void testMapsOpensWithMainMarker(){
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText("Map")).perform(click());
@@ -48,13 +49,8 @@ public class MapsActivityTest {
             e.printStackTrace();
         }
         UiObject marker = device.findObject(new UiSelector().descriptionContains("You"));
-        try {
-            marker.click();
-            marker.clickTopLeft();
-            Rect rects = marker.getBounds();
-            device.click(rects.centerX(), rects.top - 30);
-        } catch (UiObjectNotFoundException e) {
-            e.printStackTrace();
-        }
+        marker.waitForExists(1000);
+        assertTrue(marker.exists());
+
     }
 }
