@@ -55,7 +55,7 @@ public class MainActivityTest {
         DataBase db = new DataBase();
         db.addDoc(user1, "user1");
         db.addDoc(user2, "user2");
-        //db.deleteDoc("hamma");
+        db.deleteDoc("am123");
         db.updateDoc("user1", new HashMap<String, Object>() {{ put("age", 31); }});
         db.deleteFieldsinDoc("user2", new ArrayList<String>() {{ add("rating"); }});
     }

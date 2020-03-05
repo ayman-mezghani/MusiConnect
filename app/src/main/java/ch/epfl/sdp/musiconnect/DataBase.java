@@ -28,9 +28,8 @@ public class DataBase {
         this.db = FirebaseFirestore.getInstance();
     }
 
-    public void addDoc(Map m, String docName) {
-        db.collection("users").document(docName)
-                .set(m)
+    public void addDoc(Map<String, ?> m, String docName) {
+        db.collection("users").document(docName).set(m)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -47,8 +46,7 @@ public class DataBase {
     }
 
     public void deleteDoc(String docName) {
-        db.collection("users").document(docName)
-                .delete()
+        db.collection("users").document(docName).delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -64,8 +62,7 @@ public class DataBase {
     }
 
     public void updateDoc(String docName, Map<String, Object> newValueMap) {
-        db.collection("users").document(docName)
-                .update(newValueMap)
+        db.collection("users").document(docName).update(newValueMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -88,8 +85,7 @@ public class DataBase {
             updates.put(str, FieldValue.delete());
         }
 
-        db.collection("users").document(docName)
-                .update(updates)
+        db.collection("users").document(docName).update(updates)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -99,8 +95,7 @@ public class DataBase {
 
     public List<Map> readAllDocs() {
         List<Map> res = new ArrayList<Map>();
-        db.collection("cities")
-                .get()
+        db.collection("users").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -131,8 +126,7 @@ public class DataBase {
 
     public Map readSingleDoc(String docName) {
         Map m =
-        db.collection("users").document(docName)
-                .get()
+        db.collection("users").document(docName).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
