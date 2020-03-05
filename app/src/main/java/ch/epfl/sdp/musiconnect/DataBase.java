@@ -65,7 +65,7 @@ public class DataBase {
         db.collection("users").document(docName).update(newValueMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
+                    public void onSuccess(Void cVoid) {
                         Log.d(TAG, "DocumentSnapshot successfully updated!");
                     }
                 })
@@ -112,8 +112,8 @@ public class DataBase {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         if (!queryDocumentSnapshots.isEmpty()) {
-                            List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
-                            for (DocumentSnapshot d : list) {
+                            //List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+                            for (DocumentSnapshot d : queryDocumentSnapshots.getDocuments()) {
                                 res.add(d.toObject(Map.class));
                             }
                         }
