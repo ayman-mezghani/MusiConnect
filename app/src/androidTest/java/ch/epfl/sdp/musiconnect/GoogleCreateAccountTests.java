@@ -21,6 +21,7 @@ import org.junit.Test;
 import ch.epfl.sdp.MainActivity;
 import ch.epfl.sdp.R;
 
+import static android.provider.Settings.System.getString;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.intent.Intents.intended;
@@ -31,7 +32,7 @@ public class GoogleCreateAccountTests {
     private UiDevice mUiDevice;
     private static final String ACCOUNT_MAIL = "musiconnectsdp@gmail.com";
     private static final String ACCOUNT_PWD = "mcSDP2k20";
-    private static final long DEFAULT_TIMEOUT = 1000 * 10;
+    private static final long DEFAULT_TIMEOUT = 1000 * 60;
 
     @Rule
     public final ActivityTestRule<GoogleResultActivity> mGoogleResultActivity =
@@ -57,7 +58,11 @@ public class GoogleCreateAccountTests {
     public void a_connectNewAccount() throws Exception {
         // to be deleted after merging
         onView(withId(R.id.mainGoButton)).perform(click());
-        onView(withId(R.id.sign_in_button)).perform((click()));
+        //onView(withId(R.id.sign_in_button)).perform((click()));
+        UiObject signin = mUiDevice.findObject(new UiSelector().textContains("sign in"));
+        signin.waitForExists(DEFAULT_TIMEOUT);
+        signin.click();
+
 
 
         // firstof all, test if the account doesnt exist yet on android device
