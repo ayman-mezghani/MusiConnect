@@ -10,6 +10,7 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
 import androidx.test.uiautomator.Until;
 
@@ -32,7 +33,7 @@ public class GoogleCreateAccountTests {
     private UiDevice mUiDevice;
     private static final String ACCOUNT_MAIL = "musiconnectsdp@gmail.com";
     private static final String ACCOUNT_PWD = "mcSDP2k20";
-    private static final long DEFAULT_TIMEOUT = 1000 * 60;
+    private static final long DEFAULT_TIMEOUT = 1000 * 120;
 
     @Rule
     public final ActivityTestRule<GoogleResultActivity> mGoogleResultActivity =
@@ -54,63 +55,54 @@ public class GoogleCreateAccountTests {
         mUiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
     }
 
+    private void buttonClick(UiObject btn){
+        btn.waitForExists(DEFAULT_TIMEOUT);
+
+        try {
+            btn.click();
+        } catch (UiObjectNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Test()
     public void a_connectNewAccount() throws Exception {
         // to be deleted after merging
         onView(withId(R.id.mainGoButton)).perform(click());
-        //onView(withId(R.id.sign_in_button)).perform((click()));
-        UiObject signin = mUiDevice.findObject(new UiSelector().textContains("sign in"));
-        signin.waitForExists(DEFAULT_TIMEOUT);
-        signin.click();
-
-
+        buttonClick(mUiDevice.findObject(new UiSelector().textContains("sign in")));
 
         // firstof all, test if the account doesnt exist yet on android device
         UiObject loginButton = mUiDevice.findObject(new UiSelector().textContains(ACCOUNT_MAIL));
         loginButton.waitForExists(DEFAULT_TIMEOUT);
 
         if (!loginButton.exists()) {
-            loginButton = mUiDevice.findObject(new UiSelector().textContains("another account"));
-            loginButton.click();
+            buttonClick(mUiDevice.findObject(new UiSelector().textContains("another account")));
 
             mUiDevice.wait(Until.findObject(By.clazz(WebView.class)), DEFAULT_TIMEOUT);
 
-            UiObject emailInput = mUiDevice.findObject(new UiSelector()
-                    .instance(0)
-                    .className(EditText.class));
+            UiObject emailInput = mUiDevice.findObject(new UiSelector().instance(0).className(EditText.class));
 
             emailInput.waitForExists(DEFAULT_TIMEOUT);
             emailInput.setText(ACCOUNT_MAIL);
 
-            UiObject btnNext = mUiDevice.findObject(new UiSelector().instance(2).className(Button.class));                // click on next Button
-            btnNext.waitForExists(DEFAULT_TIMEOUT);
-            btnNext.click();
-
+            buttonClick(mUiDevice.findObject(new UiSelector().instance(2).className(Button.class)));
             Thread.sleep(DEFAULT_TIMEOUT);
 
-            UiObject pwdInput = mUiDevice.findObject(new UiSelector()
-                    .instance(0)
-                    .className(EditText.class));
+            UiObject pwdInput = mUiDevice.findObject(new UiSelector().instance(0).className(EditText.class));
 
             pwdInput.waitForExists(DEFAULT_TIMEOUT);
             pwdInput.setText(ACCOUNT_PWD);
 
-            btnNext = mUiDevice.findObject(new UiSelector().instance(1).className(Button.class));                // click on next Button
-            btnNext.waitForExists(DEFAULT_TIMEOUT);
-            btnNext.click();
-
+            buttonClick(mUiDevice.findObject(new UiSelector().instance(1).className(Button.class)));
             Thread.sleep(DEFAULT_TIMEOUT);
 
-            btnNext = mUiDevice.findObject(new UiSelector().instance(0).className(Button.class));                // click on next Button
-            btnNext.waitForExists(DEFAULT_TIMEOUT);
-            btnNext.click();
-
+            buttonClick(mUiDevice.findObject(new UiSelector().instance(0).className(Button.class)));
             Thread.sleep(DEFAULT_TIMEOUT);
         }
-        else{
+        else
             loginButton.click();
-        }
 
+        Thread.sleep(DEFAULT_TIMEOUT);
         intended(hasComponent(GoogleResultActivity.class.getName()));
     }
 
