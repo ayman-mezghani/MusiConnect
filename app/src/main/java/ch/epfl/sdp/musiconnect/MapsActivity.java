@@ -1,4 +1,4 @@
-package ch.epfl.sdp;
+package ch.epfl.sdp.musiconnect;
 
 import androidx.fragment.app.FragmentActivity;
 
@@ -13,6 +13,8 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import ch.epfl.sdp.R;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
