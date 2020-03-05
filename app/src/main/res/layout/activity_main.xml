@@ -23,66 +23,62 @@
         android:id="@+id/mainGoButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="240dp"
-        android:layout_marginEnd="148dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="144dp"
         android:text="Main Go Button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/mainName" />
 
     <EditText
         android:id="@+id/mainName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="172dp"
-        android:layout_marginEnd="124dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="96dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
         android:id="@+id/mapButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="144dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="24dp"
         android:text="Map"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/markerName"
         app:layout_constraintTop_toBottomOf="@+id/markerName" />
 
     <EditText
         android:id="@+id/lat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
         android:layout_marginTop="52dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="-34"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/mainGoButton"
         app:layout_constraintTop_toBottomOf="@+id/mainGoButton" />
 
     <EditText
         android:id="@+id/lon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="151"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/lat"
         app:layout_constraintTop_toBottomOf="@+id/lat" />
 
     <EditText
         android:id="@+id/markerName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Marker in Sydney"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/lon"
         app:layout_constraintTop_toBottomOf="@+id/lon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
