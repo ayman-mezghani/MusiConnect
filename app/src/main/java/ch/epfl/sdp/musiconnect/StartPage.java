@@ -13,7 +13,9 @@ import android.widget.Toast;
 
 
 public class StartPage extends AppCompatActivity {
-
+    private double lat = -34;
+    private double lon = 151;
+    private String mainMarkerName = "You";
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -39,8 +41,9 @@ public class StartPage extends AppCompatActivity {
                 // In comments right now to avoid duplication
 //            case R.id.search:
 //                return true;
-//            case R.id.map:
-//                return true;
+            case R.id.map:
+                startMap();
+                return true;
             default:
                 displayNotFinishedFunctionalityMessage();
                 return false;
@@ -51,14 +54,12 @@ public class StartPage extends AppCompatActivity {
         Toast.makeText(this, getString(R.string.not_yet_done), Toast.LENGTH_SHORT).show();
     }
 
-    /*private void mapButton(){
+    private void startMap(){
         Intent myIntent = new Intent(StartPage.this, MapsActivity.class);
-        double lat = Double.parseDouble(((EditText)findViewById(R.id.lat)).getText().toString());
-        double lon = Double.parseDouble(((EditText)findViewById(R.id.lon)).getText().toString());
-        String markerName = ((EditText)findViewById(R.id.markerName)).getText().toString();
+
         myIntent.putExtra("lat", lat);
         myIntent.putExtra("lon", lon);
-        myIntent.putExtra("markerName", markerName);
+        myIntent.putExtra("mainMarkerName", mainMarkerName);
         StartPage.this.startActivity(myIntent);
-    }*/
+    }
 }

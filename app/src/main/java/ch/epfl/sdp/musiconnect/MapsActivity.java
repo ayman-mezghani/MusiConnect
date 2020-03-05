@@ -53,12 +53,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Bundle extras = getIntent().getExtras();
         double lat = extras.getDouble("lat");
         double lon = extras.getDouble("lon");
-        String markerName = extras.getString("markerName");
+        String markerName = extras.getString("mainMarkerName");
         LatLng marker = new LatLng(lat,lon);
         mMap.addMarker(new MarkerOptions().position(marker).title(markerName));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
 
-        //add circle around sydney
+        //add circle around main marker
         CircleOptions circleOptions = new CircleOptions()
                 .center(marker)
                 .radius(5000); // In meters

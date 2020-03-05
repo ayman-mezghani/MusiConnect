@@ -19,9 +19,11 @@ import org.junit.runner.RunWith;
 import ch.epfl.sdp.R;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -38,14 +40,14 @@ public class MapsActivityTest {
     @Test
     public void testMapsOpensWithDefaultSettings(){
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        ViewInteraction appCompatButton = onView(allOf(withId(R.id.mapButton), withText("Map")));
-        appCompatButton.perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText("Map")).perform(click());
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        UiObject marker = device.findObject(new UiSelector().descriptionContains("Marker in Sydney"));
+        UiObject marker = device.findObject(new UiSelector().descriptionContains("You"));
         try {
             marker.click();
             marker.clickTopLeft();
