@@ -57,6 +57,7 @@ public class UserLocationActivity extends AppCompatActivity
         permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         permissionsToRequest = requestedPermissions(permissions);
 
+        // Checks current API level
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (permissionsToRequest.size() > 0) {
                 requestPermissions(permissionsToRequest.toArray(
@@ -69,7 +70,15 @@ public class UserLocationActivity extends AppCompatActivity
                 addApi(LocationServices.API).
                 addConnectionCallbacks(this).
                 addOnConnectionFailedListener(this).build();
+
+
+
     }
+
+    public Location getLocation() {
+        return location;
+    }
+
 
     @Override
     protected void onStart() {
@@ -152,13 +161,10 @@ public class UserLocationActivity extends AppCompatActivity
         // Permissions ok, we get last location
         location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
 
-        /**
         // Displays location
         if (location != null) {
             locationTv.setText("Latitude : " + location.getLatitude() + "\nLongitude : " + location.getLongitude());
         }
-
-         */
 
         startLocationUpdates();
     }
@@ -189,48 +195,46 @@ public class UserLocationActivity extends AppCompatActivity
 
     @Override
     public void onLocationChanged(Location location) {
-        /**
         if (location != null) {
+            this.location.setLatitude(location.getLatitude());
+            this.location.setLongitude(location.getLongitude());
             locationTv.setText("Latitude : " + location.getLatitude() + "\nLongitude : " + location.getLongitude());
         }
-         */
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch(requestCode) {
-            case ALL_PERMISSIONS_RESULT:
-                for (String perm : permissionsToRequest) {
-                    if (!hasPermission(perm)) {
-                        permissionsRejected.add(perm);
-                    }
+        if (requestCode == ALL_PERMISSIONS_RESULT) {
+            for (String perm : permissionsToRequest) {
+                if (!hasPermission(perm)) {
+                    permissionsRejected.add(perm);
                 }
+            }
 
-                if (permissionsRejected.size() > 0) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (shouldShowRequestPermissionRationale(permissionsRejected.get(0))) {
-                            new AlertDialog.Builder(UserLocationActivity.this).
-                                    setMessage("These permissions are mandatory to get your location. You need to allow them.").
-                                    setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                                requestPermissions(permissionsRejected.
-                                                        toArray(new String[permissionsRejected.size()]), ALL_PERMISSIONS_RESULT);
-                                            }
+            if (permissionsRejected.size() > 0) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (shouldShowRequestPermissionRationale(permissionsRejected.get(0))) {
+                        new AlertDialog.Builder(UserLocationActivity.this).
+                                setMessage("These permissions are mandatory to get your location. You need to allow them.").
+                                setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                            requestPermissions(permissionsRejected.
+                                                    toArray(new String[permissionsRejected.size()]), ALL_PERMISSIONS_RESULT);
                                         }
-                                    }).setNegativeButton("Cancel", null).create().show();
+                                    }
+                                }).setNegativeButton("Cancel", null).create().show();
 
-                            return;
-                        }
-                    }
-                } else {
-                    if (googleApiClient != null) {
-                        googleApiClient.connect();
+                        return;
                     }
                 }
-
-                break;
+            } else {
+                if (googleApiClient != null) {
+                    googleApiClient.connect();
+                }
+            }
         }
     }
 }

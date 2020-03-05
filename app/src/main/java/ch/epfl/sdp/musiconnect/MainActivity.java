@@ -1,4 +1,4 @@
-package ch.epfl.sdp;
+package ch.epfl.sdp.musiconnect;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,7 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import ch.epfl.sdp.musiconnect.UserLocationActivity;
+import ch.epfl.sdp.R;
 
 public class MainActivity extends AppCompatActivity {
 
