@@ -98,6 +98,8 @@ public class MyDate {
 
         if (newDate < 1 || maxDate < newDate) {
             throw new IllegalArgumentException("Date is invalid for this month");
+        } else if (year == 1582 && month == 10 && 4 < newDate && newDate < 15) {
+            throw new IllegalArgumentException("Date is invalid for october of 1582");
         } else if (year == 1752 && month == 9 && 2 < newDate && newDate < 14) {
             throw new IllegalArgumentException("Date is invalid for september of 1752");
         }
