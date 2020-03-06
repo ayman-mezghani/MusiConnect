@@ -3,9 +3,11 @@ package ch.epfl.sdp.musiconnect;
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
@@ -19,6 +21,7 @@ import ch.epfl.sdp.R;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private View mapView;
     private UiSettings mUiSettings;
 
     @Override
@@ -28,6 +31,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        //mapView = mapFragment.getView();
         mapFragment.getMapAsync(this);
     }
 
@@ -64,5 +68,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .radius(5000); // In meters
 
         Circle circle = mMap.addCircle(circleOptions);
+
+        mMap.setContentDescription("Google Map Ready");
     }
 }
