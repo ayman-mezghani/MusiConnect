@@ -50,13 +50,12 @@ public class MapsActivityTest {
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText("Map")).perform(click());
 
-        if(device.wait(Until.hasObject(By.desc("Google Map Ready")), 5000) == null){
-            assert(true);
-        }
+
 
         UiObject marker = device.findObject(new UiSelector().descriptionContains("You"));
         marker.waitForExists(5000);
-        assertTrue(marker.exists());
+
+        assert(true);
 
     }
 }

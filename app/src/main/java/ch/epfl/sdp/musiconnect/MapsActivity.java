@@ -31,7 +31,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        //mapView = mapFragment.getView();
+        mapView = mapFragment.getView();
         mapFragment.getMapAsync(this);
     }
 
@@ -69,6 +69,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Circle circle = mMap.addCircle(circleOptions);
 
-        mMap.setContentDescription("Google Map Ready");
+        mapView.setContentDescription("Google Map Ready");
     }
 }
