@@ -45,7 +45,7 @@ public class StartPage extends AppCompatActivity {
         }
     }
 
-    private void displayNotFinishedFunctionalityMessage() {
+    public void displayNotFinishedFunctionalityMessage() {
         Toast.makeText(this, getString(R.string.not_yet_done), Toast.LENGTH_SHORT).show();
     }
 }

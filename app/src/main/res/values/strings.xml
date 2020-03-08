@@ -15,4 +15,11 @@
     <string name="help_message">Help is on the way !</string>
     <string name="settings_message">Settings to come...</string>
     <string name="not_yet_done">This functionality is not yet part of the application. Please be patient.</string>
+    <string name="myprofile">My profile</string>
+    <string name="email_address">Email address :</string>
+    <string name="date_of_birth">Date of birth :</string>
+    <string name="first_name">First name :</string>
+    <string name="last_name">Last name :</string>
+    <string name="username_field">Username :</string>
+    <string name="edit_profile">Edit profile</string>
 </resources>
