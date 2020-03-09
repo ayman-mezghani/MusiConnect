@@ -76,13 +76,28 @@ public class DataBase {
                 });
     }
 
-    public void deleteFieldsinDoc(String docName, List<String> fields) {
+    public void deleteFieldsInDoc(String docName, List<String> fields) {
         Map<String, Object> updates = new HashMap<>();
-
         for (String str : fields) {
             updates.put(str, FieldValue.delete());
         }
-
         db.collection("users").document(docName).update(updates);
+    }
+
+    public void readDoc(String docName, DbCallback dbCallback) {
+        db.collection("users").document(docName).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Map data = documentSnapshot.getData();
+                        dbCallback.onCallback(data);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error reading document", e);
+                    }
+                });
     }
 }

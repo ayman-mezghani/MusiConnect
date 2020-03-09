@@ -40,25 +40,4 @@ public class MainActivityTest {
         onView(withId(R.id.mainGoButton)).perform(click());
         //onView(withId(R.id.greetingMessage)).check(matches(withText("Hello from my unit test!")));
     }
-
-    private Map user1 = new HashMap() {{
-        put("name", "josh");
-        put("age", 30);
-    }};
-
-    private Map user2 = new HashMap() {{
-        put("name", "tom");
-        put("age", 40);
-        put("rating", 3.5);
-    }};
-
-    @Test
-    public void dbTest() {
-        DataBase db = new DataBase();
-        db.addDoc(user1, "user1");
-        db.addDoc(user2, "user2");
-        db.deleteDoc("am123");
-        db.updateDoc("user1", new HashMap<String, Object>() {{ put("age", 31); }});
-        db.deleteFieldsinDoc("user2", new ArrayList<String>() {{ add("rating"); }});
-    }
 }

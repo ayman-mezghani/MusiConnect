@@ -23,6 +23,14 @@ public class MainActivity extends AppCompatActivity {
         final Button button = (Button) findViewById(R.id.mainGoButton);
         button.setOnClickListener(v -> mainGoButton());
 
+/*        Map<String, Object> bob = new HashMap<String, Object>() {{
+            put("name", "jack");
+            put("rating", 3.5);
+        }};
+
+        DataBase db = new DataBase();
+        db.addDoc(bob, "jack");*/
+
     }
 
     private void mainGoButton() {
