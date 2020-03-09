@@ -38,8 +38,7 @@ import static junit.framework.TestCase.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class GoogleSignInTests {
     private static final String ACCOUNT_MAIL = "musiconnectsdp@gmail.com";
-    private static final String ACCOUNT_PWD = "mcSDP2k20";
-    private static final long DEFAULT_TIMEOUT = 1000 * 120;
+    private static final long DEFAULT_TIMEOUT = 1000 * 10;
 
     @Rule
     public final ActivityTestRule<GoogleResultActivity> mGoogleResultActivity =

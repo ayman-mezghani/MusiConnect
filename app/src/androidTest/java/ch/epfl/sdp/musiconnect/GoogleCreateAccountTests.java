@@ -11,6 +11,7 @@ import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
+import androidx.test.uiautomator.UiScrollable;
 import androidx.test.uiautomator.UiSelector;
 import androidx.test.uiautomator.Until;
 
@@ -33,7 +34,7 @@ public class GoogleCreateAccountTests {
     private UiDevice mUiDevice;
     private static final String ACCOUNT_MAIL = "musiconnectsdp@gmail.com";
     private static final String ACCOUNT_PWD = "mcSDP2k20";
-    private static final long DEFAULT_TIMEOUT = 1000 * 120;
+    private static final long DEFAULT_TIMEOUT = 1000 * 10;
 
     @Rule
     public final ActivityTestRule<GoogleResultActivity> mGoogleResultActivity =
@@ -59,7 +60,7 @@ public class GoogleCreateAccountTests {
         btn.waitForExists(DEFAULT_TIMEOUT);
 
         try {
-            btn.click();
+            btn.clickAndWaitForNewWindow(DEFAULT_TIMEOUT);
         } catch (UiObjectNotFoundException e) {
             e.printStackTrace();
         }
@@ -67,6 +68,7 @@ public class GoogleCreateAccountTests {
 
     @Test()
     public void a_connectNewAccount() throws Exception {
+        boolean noAccountInstalled = false;
         // to be deleted after merging
         onView(withId(R.id.mainGoButton)).perform(click());
         buttonClick(mUiDevice.findObject(new UiSelector().textContains("sign in")));
@@ -76,7 +78,13 @@ public class GoogleCreateAccountTests {
         loginButton.waitForExists(DEFAULT_TIMEOUT);
 
         if (!loginButton.exists()) {
-            buttonClick(mUiDevice.findObject(new UiSelector().textContains("another account")));
+            UiObject anotherAccount = mUiDevice.findObject(new UiSelector().textContains("another account"));
+            loginButton.waitForExists(DEFAULT_TIMEOUT);
+
+            if(anotherAccount.exists())
+                anotherAccount.click();
+            else
+                noAccountInstalled = true;
 
             mUiDevice.wait(Until.findObject(By.clazz(WebView.class)), DEFAULT_TIMEOUT);
 
@@ -85,24 +93,33 @@ public class GoogleCreateAccountTests {
             emailInput.waitForExists(DEFAULT_TIMEOUT);
             emailInput.setText(ACCOUNT_MAIL);
 
-            buttonClick(mUiDevice.findObject(new UiSelector().instance(2).className(Button.class)));
-            Thread.sleep(DEFAULT_TIMEOUT);
+            buttonClick(mUiDevice.findObject(new UiSelector().className(Button.class).textContains("Next")));
 
             UiObject pwdInput = mUiDevice.findObject(new UiSelector().instance(0).className(EditText.class));
 
             pwdInput.waitForExists(DEFAULT_TIMEOUT);
             pwdInput.setText(ACCOUNT_PWD);
 
-            buttonClick(mUiDevice.findObject(new UiSelector().instance(1).className(Button.class)));
-            Thread.sleep(DEFAULT_TIMEOUT);
+            buttonClick(mUiDevice.findObject(new UiSelector().className(Button.class).textContains("Next")));
 
-            buttonClick(mUiDevice.findObject(new UiSelector().instance(0).className(Button.class)));
-            Thread.sleep(DEFAULT_TIMEOUT);
+            UiScrollable appViews = new UiScrollable(new UiSelector().scrollable(true));
+            appViews.scrollForward(2);
+
+            buttonClick(mUiDevice.findObject(new UiSelector().className(Button.class).textContains("I agree")));
+
+            if(noAccountInstalled){
+                while(!appViews.scrollForward()){
+                    if(mUiDevice.findObject(new UiSelector().className(Button.class).textContains("Accept")).exists()){
+                        mUiDevice.findObject(new UiSelector().className(Button.class).textContains("Accept")).clickAndWaitForNewWindow(DEFAULT_TIMEOUT);
+                        break;
+                    }
+                }
+            }
         }
         else
-            loginButton.click();
+            loginButton.clickAndWaitForNewWindow(DEFAULT_TIMEOUT);
 
-        Thread.sleep(DEFAULT_TIMEOUT);
+        Thread.sleep(2*DEFAULT_TIMEOUT);
         intended(hasComponent(GoogleResultActivity.class.getName()));
     }
 
