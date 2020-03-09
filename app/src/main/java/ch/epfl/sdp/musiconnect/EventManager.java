@@ -3,112 +3,38 @@ package ch.epfl.sdp.musiconnect;
 import java.util.Set;
 import java.util.HashSet;
 
-public class EventManager {
+/**
+ * @author Manuel Pellegrini, EPFL
+ */
+public class EventManager extends Person {
 
-    private String firstName;
-    private String lastName;
-    private String userName;
-    private String emailAddress;
-    private MyDate joinDate;
     private String eventName;
     private MyDate eventDate;
     private Set<Musician> musicians;
     private Set<Band> bands;
-    private Location location;
 
-    private static final int MAX_NAME_LENGTH = 16;
-    private static final int MAX_EMAIL_ADDRESS_LENGTH = 64;
-
-    private static final double EPFL_LATITUDE = 46.5185941;
-    private static final double EPFL_LONGITUDE = 6.5618969;
+    private static final int MAX_EVENT_NAME_LENGTH = 16;
 
 
-    public EventManager(String newFirstName, String newLastName, String newUserName, String newEmailAddress, String newEventName, MyDate newEventDate) {
-        setFirstName(newFirstName);
-        setLastName(newLastName);
-        setUserName(newUserName);
-        setEmailAddress(newEmailAddress);
-        joinDate = new MyDate();
-        setEventName(newEventName);
-        setEventDate(newEventDate);
+    public EventManager(String firstName, String lastName, String userName, String emailAddress, MyDate birthday, String eventName, MyDate eventDate) {
+        super(firstName, lastName, userName, emailAddress, birthday);
+        setEventName(eventName);
+        setEventDate(eventDate);
         musicians = new HashSet<Musician>();
         bands = new HashSet<Band>();
-        location = new Location(EPFL_LATITUDE, EPFL_LONGITUDE);
     }
 
-    public EventManager(String newFirstName, String newLastName, String newUserName, String newEmailAddress) {
-        this(newFirstName, newLastName, newUserName, newEmailAddress, "", new MyDate());
+    public EventManager(String firstName, String lastName, String userName, String emailAddress, MyDate birthday) {
+        this(firstName, lastName, userName, emailAddress, birthday, "", new MyDate());
     }
 
 
-    public void setFirstName(String newFirstName) {
-        if (newFirstName.isEmpty()) {
-            throw new IllegalArgumentException("First name can not be empty");
-        } else if (newFirstName.length() > MAX_NAME_LENGTH) {
-            throw new IllegalArgumentException("First name too long");
-        }
-
-        firstName = newFirstName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setLastName(String newLastName) {
-        if (newLastName.isEmpty()) {
-            throw new IllegalArgumentException("Last name can not be empty");
-        } else if (newLastName.length() > MAX_NAME_LENGTH) {
-            throw new IllegalArgumentException("Last name too long");
-        }
-
-        lastName = newLastName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setUserName(String newUserName) {
-        if (newUserName.isEmpty()) {
-            throw new IllegalArgumentException("User name can not be empty");
-        } else if (newUserName.length() > MAX_NAME_LENGTH) {
-            throw new IllegalArgumentException("User name too long");
-        }
-
-        userName = newUserName;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setEmailAddress(String newEmailAddress) {
-        if (newEmailAddress.isEmpty()) {
-            throw new IllegalArgumentException("Email address can not be empty");
-        } else if (newEmailAddress.length() > MAX_EMAIL_ADDRESS_LENGTH) {
-            throw new IllegalArgumentException("Email address too long");
-        } else if (!(newEmailAddress.endsWith("@gmail.com") || newEmailAddress.endsWith("@epfl.ch"))) {
-            throw new IllegalArgumentException("Email address format not valid");
-        }
-
-        emailAddress = newEmailAddress;
-    }
-
-    public String getEmailAddress() {
-        return emailAddress;
-    }
-
-    public MyDate getJoinDate() {
-        return new MyDate(joinDate);
-    }
-
-    public void setEventName(String newEventName) {
-        if (newEventName.length() > MAX_NAME_LENGTH) {
+    public void setEventName(String eventName) {
+        if (eventName.length() > MAX_EVENT_NAME_LENGTH) {
             throw new IllegalArgumentException("Event name too long");
         }
 
-        eventName = newEventName;
+        this.eventName = eventName;
     }
 
     public String getEventName() {
@@ -119,17 +45,17 @@ public class EventManager {
         return eventName;
     }
 
-    public void setEventDate(MyDate newEventDate) {
-        eventDate = new MyDate(newEventDate.getYear(), newEventDate.getMonth(), newEventDate.getDate(), newEventDate.getHours(), newEventDate.getMinutes());
+    public void setEventDate(MyDate eventDate) {
+        this.eventDate = new MyDate(eventDate);
     }
 
     public MyDate getEventDate() {
-        return new MyDate(eventDate.getYear(), eventDate.getMonth(), eventDate.getDate(), eventDate.getHours(), eventDate.getMinutes());
+        return new MyDate(eventDate);
     }
 
     public void addMusician(Musician musician) {
         if (musician == null) {
-            throw new IllegalArgumentException("Musician is invalid");
+            throw new NullPointerException("Musician is invalid");
         } else if (containsMusician(musician)) {
             throw new IllegalArgumentException("Musician already exists");
         }
@@ -167,7 +93,7 @@ public class EventManager {
 
     public void addBand(Band band) {
         if (band == null) {
-            throw new IllegalArgumentException("Band is invalid");
+            throw new NullPointerException("Band is invalid");
         } else if (containsBand(band)) {
             throw new IllegalArgumentException("Band already exists");
         }
@@ -201,14 +127,6 @@ public class EventManager {
 
     public Set<Band> setOfBands() {
         return new HashSet<Band>(bands);
-    }
-
-    public void setLocation(Location newLocation) {
-        location.setLocation(newLocation);
-    }
-
-    public Location getLocation() {
-        return location.getLocation();
     }
 
 

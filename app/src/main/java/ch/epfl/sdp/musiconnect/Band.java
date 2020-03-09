@@ -3,55 +3,52 @@ package ch.epfl.sdp.musiconnect;
 import java.util.Set;
 import java.util.HashSet;
 
-public class Band {
+/**
+ * @author Manuel Pellegrini, EPFL
+ */
+public class Band extends User implements Performer {
 
     private String bandName;
     private Musician leader;
     private Set<Musician> members;
-    private MyDate joinDate;
     private String videoURL;
-    private Location location;
 
-    private static final int MAX_NAME_LENGTH = 16;
+    private static final int MAX_BAND_NAME_LENGTH = 16;
     private static final int MAX_VIDEO_URL_LENGTH = 2048;
 
-    private static final double EPFL_LATITUDE = 46.5185941;
-    private static final double EPFL_LONGITUDE = 6.5618969;
 
-
-    public Band(String newBandName, Musician newLeader) {
-        setBandName(newBandName);
+    public Band(String bandName, Musician leader) {
+        super();
+        setBandName(bandName);
         members = new HashSet<Musician>();
-        addMember(newLeader);
-        setLeader(newLeader);
-        joinDate = new MyDate();
+        addMember(leader);
+        setLeader(leader);
         videoURL = "";
-        location = new Location(EPFL_LATITUDE, EPFL_LONGITUDE);
     }
 
 
-    public void setBandName(String newBandName) {
-        if (newBandName.isEmpty()) {
-            throw new IllegalArgumentException("Band name can not be empty");
-        } else if (newBandName.length() > MAX_NAME_LENGTH) {
+    public void setBandName(String bandName) {
+        if (bandName.isEmpty()) {
+            throw new IllegalArgumentException("Band name cannot be empty");
+        } else if (bandName.length() > MAX_BAND_NAME_LENGTH) {
             throw new IllegalArgumentException("Band name too long");
         }
 
-        bandName = newBandName;
+        this.bandName = bandName;
     }
 
     public String getBandName() {
         return bandName;
     }
 
-    public void setLeader(Musician newLeader) {
-        if (newLeader == null) {
-            throw new IllegalArgumentException("Leader is invalid");
-        } else if (!containsMember(newLeader)) {
+    public void setLeader(Musician leader) {
+        if (leader == null) {
+            throw new NullPointerException("Leader is invalid");
+        } else if (!containsMember(leader)) {
             throw new IllegalArgumentException("Leader must already be member of the band");
         }
 
-        leader = newLeader;
+        this.leader = leader;
     }
 
     public boolean isLeader(Musician member) {
@@ -76,7 +73,7 @@ public class Band {
 
     public void addMember(Musician member) {
         if (member == null) {
-            throw new IllegalArgumentException("Member is invalid");
+            throw new NullPointerException("Member is invalid");
         } else if (containsMember(member)) {
             throw new IllegalArgumentException("Member already exists");
         }
@@ -106,16 +103,12 @@ public class Band {
         return new HashSet<Musician>(members);
     }
 
-    public MyDate getJoinDate() {
-        return new MyDate(joinDate);
-    }
-
-    public void setVideoURL(String newVideoURL) {
-        if (newVideoURL.length() > MAX_VIDEO_URL_LENGTH) {
+    public void setVideoURL(String videoURL) {
+        if (videoURL.length() > MAX_VIDEO_URL_LENGTH) {
             throw new IllegalArgumentException("Video URL too long");
         }
 
-        videoURL = newVideoURL;
+        this.videoURL = videoURL;
     }
 
     public String getVideoURL() {
@@ -124,14 +117,6 @@ public class Band {
         }
 
         return videoURL;
-    }
-
-    public void setLocation(Location newLocation) {
-        location.setLocation(newLocation);
-    }
-
-    public Location getLocation() {
-        return location.getLocation();
     }
 
 

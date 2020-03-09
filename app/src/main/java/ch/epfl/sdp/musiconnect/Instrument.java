@@ -1,5 +1,8 @@
 package ch.epfl.sdp.musiconnect;
 
+/**
+ * @author Manuel Pellegrini, EPFL
+ */
 public enum Instrument {
     ACCORDION,
     BAGPIPES,

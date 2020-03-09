@@ -6,6 +6,9 @@ import static org.junit.Assert.*;
 import java.util.Set;
 import java.util.HashSet;
 
+/**
+ * @author Manuel Pellegrini, EPFL
+ */
 public class UserProfileUnitTests {
 
     /**********************************************************/
@@ -20,7 +23,7 @@ public class UserProfileUnitTests {
         MyDate birthday = new MyDate(1940, 10, 9);
         int age = 79;
         String emailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(firstName, lastName, userName, birthday, emailAddress);
+        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
         MyDate currentDate = new MyDate();
 
         assertEquals(firstName, john.getFirstName());
@@ -39,7 +42,7 @@ public class UserProfileUnitTests {
         String userName = "JohnLennon";
         MyDate birthday = new MyDate(1940, 10, 9);
         String emailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(firstName, lastName, userName, birthday, emailAddress);
+        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         String newFirstName = "John Winston";
         john.setFirstName(newFirstName);
@@ -54,7 +57,7 @@ public class UserProfileUnitTests {
         String userName = "JohnLennon";
         MyDate birthday = new MyDate(1940, 10, 9);
         String emailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(firstName, lastName, userName, birthday, emailAddress);
+        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         String newLastName = "Ono Lennon";
         john.setLastName(newLastName);
@@ -69,7 +72,7 @@ public class UserProfileUnitTests {
         String userName = "JohnLennon";
         MyDate birthday = new MyDate(1940, 10, 9);
         String emailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(firstName, lastName, userName, birthday, emailAddress);
+        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         String newUserName = "JohnOnoLennon";
         john.setUserName(newUserName);
@@ -84,7 +87,7 @@ public class UserProfileUnitTests {
         String userName = "JohnLennon";
         MyDate birthday = new MyDate(1940, 10, 9);
         String emailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(firstName, lastName, userName, birthday, emailAddress);
+        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         MyDate newBirthday = new MyDate(1980, 12, 8);
         john.setBirthday(newBirthday);
@@ -99,7 +102,7 @@ public class UserProfileUnitTests {
         String userName = "JohnLennon";
         MyDate birthday = new MyDate(1940, 10, 9);
         String emailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(firstName, lastName, userName, birthday, emailAddress);
+        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         String newEmailAddress = "john.winston.lennon@gmail.com";
         john.setEmailAddress(newEmailAddress);
@@ -114,7 +117,7 @@ public class UserProfileUnitTests {
         String userName = "JohnLennon";
         MyDate birthday = new MyDate(1940, 10, 9);
         String emailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(firstName, lastName, userName, birthday, emailAddress);
+        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         String newVideoURL = "www.john-lennon.uk/MyVideo";
         john.setVideoURL(newVideoURL);
@@ -129,7 +132,7 @@ public class UserProfileUnitTests {
         String userName = "JohnLennon";
         MyDate birthday = new MyDate(1940, 10, 9);
         String emailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(firstName, lastName, userName, birthday, emailAddress);
+        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         john.addInstrument(Instrument.VOICE, Level.PROFESSIONAL);
 
@@ -146,7 +149,7 @@ public class UserProfileUnitTests {
         String userName = "JohnLennon";
         MyDate birthday = new MyDate(1940, 10, 9);
         String emailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(firstName, lastName, userName, birthday, emailAddress);
+        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         john.addInstrument(Instrument.VOICE, Level.PROFESSIONAL);
         john.removeInstrument(Instrument.VOICE);
@@ -163,7 +166,7 @@ public class UserProfileUnitTests {
         String userName = "JohnLennon";
         MyDate birthday = new MyDate(1940, 10, 9);
         String emailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(firstName, lastName, userName, birthday, emailAddress);
+        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         john.addInstrument(Instrument.VOICE, Level.PROFESSIONAL);
         john.addInstrument(Instrument.PIANO, Level.ADVANCED);
@@ -181,7 +184,7 @@ public class UserProfileUnitTests {
         String userName = "JohnLennon";
         MyDate birthday = new MyDate(1940, 10, 9);
         String emailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(firstName, lastName, userName, birthday, emailAddress);
+        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         assertEquals(false, john.containsAnyInstrument());
 
@@ -201,7 +204,7 @@ public class UserProfileUnitTests {
         String userName = "JohnLennon";
         MyDate birthday = new MyDate(1940, 10, 9);
         String emailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(firstName, lastName, userName, birthday, emailAddress);
+        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         assertEquals(0, john.numberOfInstruments());
 
@@ -237,7 +240,7 @@ public class UserProfileUnitTests {
         String userName = "JohnLennon";
         MyDate birthday = new MyDate(1940, 10, 9);
         String emailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(firstName, lastName, userName, birthday, emailAddress);
+        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         assertEquals(false, john.containsInstrument(Instrument.VOICE));
 
@@ -254,7 +257,7 @@ public class UserProfileUnitTests {
         String userName = "JohnLennon";
         MyDate birthday = new MyDate(1940, 10, 9);
         String emailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(firstName, lastName, userName, birthday, emailAddress);
+        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         john.addInstrument(Instrument.VOICE, Level.PROFESSIONAL);
 
@@ -268,7 +271,7 @@ public class UserProfileUnitTests {
         String userName = "JohnLennon";
         MyDate birthday = new MyDate(1940, 10, 9);
         String emailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(firstName, lastName, userName, birthday, emailAddress);
+        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         john.addInstrument(Instrument.VOICE, Level.PROFESSIONAL);
 
@@ -286,7 +289,7 @@ public class UserProfileUnitTests {
         String userName = "JohnLennon";
         MyDate birthday = new MyDate(1940, 10, 9);
         String emailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(firstName, lastName, userName, birthday, emailAddress);
+        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         Location location = new Location(51.532005, -0.177331);
         john.setLocation(location);
@@ -305,7 +308,7 @@ public class UserProfileUnitTests {
         String userName = "JohnLennon";
         MyDate birthday = new MyDate(1940, 10, 9);
         String emailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(firstName, lastName, userName, birthday, emailAddress);
+        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         String bandName = "The Beatles";
         Band beatles = new Band(bandName, john);
@@ -326,14 +329,14 @@ public class UserProfileUnitTests {
         String johnUserName = "JohnLennon";
         MyDate johnBirthday = new MyDate(1940, 10, 9);
         String johnEmailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(johnFirstName, johnLastName, johnUserName, johnBirthday, johnEmailAddress);
+        Musician john = new Musician(johnFirstName, johnLastName, johnUserName, johnEmailAddress, johnBirthday);
 
         String paulFirstName = "Paul";
         String paulLastName = "McCartney";
         String paulUserName = "PaulMcCartney";
         MyDate paulBirthday = new MyDate(1942, 6, 18);
         String paulEmailAddress = "paul.mccartney@gmail.com";
-        Musician paul = new Musician(paulFirstName, paulLastName, paulUserName, paulBirthday, paulEmailAddress);
+        Musician paul = new Musician(paulFirstName, paulLastName, paulUserName, paulEmailAddress, paulBirthday);
 
         String bandName = "The Beatles";
         Band beatles = new Band(bandName, john);
@@ -359,14 +362,14 @@ public class UserProfileUnitTests {
         String johnUserName = "JohnLennon";
         MyDate johnBirthday = new MyDate(1940, 10, 9);
         String johnEmailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(johnFirstName, johnLastName, johnUserName, johnBirthday, johnEmailAddress);
+        Musician john = new Musician(johnFirstName, johnLastName, johnUserName, johnEmailAddress, johnBirthday);
 
         String paulFirstName = "Paul";
         String paulLastName = "McCartney";
         String paulUserName = "PaulMcCartney";
         MyDate paulBirthday = new MyDate(1942, 6, 18);
         String paulEmailAddress = "paul.mccartney@gmail.com";
-        Musician paul = new Musician(paulFirstName, paulLastName, paulUserName, paulBirthday, paulEmailAddress);
+        Musician paul = new Musician(paulFirstName, paulLastName, paulUserName, paulEmailAddress, paulBirthday);
 
         String bandName = "The Beatles";
         Band beatles = new Band(bandName, john);
@@ -394,14 +397,14 @@ public class UserProfileUnitTests {
         String johnUserName = "JohnLennon";
         MyDate johnBirthday = new MyDate(1940, 10, 9);
         String johnEmailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(johnFirstName, johnLastName, johnUserName, johnBirthday, johnEmailAddress);
+        Musician john = new Musician(johnFirstName, johnLastName, johnUserName, johnEmailAddress, johnBirthday);
 
         String paulFirstName = "Paul";
         String paulLastName = "McCartney";
         String paulUserName = "PaulMcCartney";
         MyDate paulBirthday = new MyDate(1942, 6, 18);
         String paulEmailAddress = "paul.mccartney@gmail.com";
-        Musician paul = new Musician(paulFirstName, paulLastName, paulUserName, paulBirthday, paulEmailAddress);
+        Musician paul = new Musician(paulFirstName, paulLastName, paulUserName, paulEmailAddress, paulBirthday);
 
         String bandName = "The Beatles";
         Band beatles = new Band(bandName, john);
@@ -424,14 +427,14 @@ public class UserProfileUnitTests {
         String johnUserName = "JohnLennon";
         MyDate johnBirthday = new MyDate(1940, 10, 9);
         String johnEmailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(johnFirstName, johnLastName, johnUserName, johnBirthday, johnEmailAddress);
+        Musician john = new Musician(johnFirstName, johnLastName, johnUserName, johnEmailAddress, johnBirthday);
 
         String paulFirstName = "Paul";
         String paulLastName = "McCartney";
         String paulUserName = "PaulMcCartney";
         MyDate paulBirthday = new MyDate(1942, 6, 18);
         String paulEmailAddress = "paul.mccartney@gmail.com";
-        Musician paul = new Musician(paulFirstName, paulLastName, paulUserName, paulBirthday, paulEmailAddress);
+        Musician paul = new Musician(paulFirstName, paulLastName, paulUserName, paulEmailAddress, paulBirthday);
 
         String bandName = "The Beatles";
         Band beatles = new Band(bandName, john);
@@ -457,7 +460,7 @@ public class UserProfileUnitTests {
         String userName = "JohnLennon";
         MyDate birthday = new MyDate(1940, 10, 9);
         String emailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(firstName, lastName, userName, birthday, emailAddress);
+        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         String bandName = "The Beatles";
         Band beatles = new Band(bandName, john);
@@ -475,7 +478,7 @@ public class UserProfileUnitTests {
         String userName = "JohnLennon";
         MyDate birthday = new MyDate(1940, 10, 9);
         String emailAddress = "john.lennon@gmail.com";
-        Musician john = new Musician(firstName, lastName, userName, birthday, emailAddress);
+        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         String bandName = "The Beatles";
         Band beatles = new Band(bandName, john);
@@ -496,7 +499,8 @@ public class UserProfileUnitTests {
         String lastName = "Epstein";
         String userName = "BrianEpstein";
         String emailAddress = "brian.epstein@gmail.com";
-        EventManager brian = new EventManager(firstName, lastName, userName, emailAddress);
+        MyDate birthday = new MyDate(1934, 9, 19);
+        EventManager brian = new EventManager(firstName, lastName, userName, emailAddress, birthday);
         MyDate currentDate = new MyDate();
 
         assertEquals(firstName, brian.getFirstName());
@@ -512,7 +516,8 @@ public class UserProfileUnitTests {
         String lastName = "Epstein";
         String userName = "BrianEpstein";
         String emailAddress = "brian.epstein@gmail.com";
-        EventManager brian = new EventManager(firstName, lastName, userName, emailAddress);
+        MyDate birthday = new MyDate(1934, 9, 19);
+        EventManager brian = new EventManager(firstName, lastName, userName, emailAddress, birthday);
 
         String newFirstName = "Brian Samuel";
         brian.setFirstName(newFirstName);
@@ -526,7 +531,8 @@ public class UserProfileUnitTests {
         String lastName = "Epstein";
         String userName = "BrianEpstein";
         String emailAddress = "brian.epstein@gmail.com";
-        EventManager brian = new EventManager(firstName, lastName, userName, emailAddress);
+        MyDate birthday = new MyDate(1934, 9, 19);
+        EventManager brian = new EventManager(firstName, lastName, userName, emailAddress, birthday);
 
         String newLastName = "Samuel Epstein";
         brian.setLastName(newLastName);
@@ -540,7 +546,8 @@ public class UserProfileUnitTests {
         String lastName = "Epstein";
         String userName = "BrianEpstein";
         String emailAddress = "brian.epstein@gmail.com";
-        EventManager brian = new EventManager(firstName, lastName, userName, emailAddress);
+        MyDate birthday = new MyDate(1934, 9, 19);
+        EventManager brian = new EventManager(firstName, lastName, userName, emailAddress, birthday);
 
         String newUserName = "BrianSamuel";
         brian.setUserName(newUserName);
@@ -554,9 +561,10 @@ public class UserProfileUnitTests {
         String lastName = "Epstein";
         String userName = "BrianEpstein";
         String emailAddress = "brian.epstein@gmail.com";
-        EventManager brian = new EventManager(firstName, lastName, userName, emailAddress);
+        MyDate birthday = new MyDate(1934, 9, 19);
+        EventManager brian = new EventManager(firstName, lastName, userName, emailAddress, birthday);
 
-        String newEmailAddress = "brian.epstein@epfl.ch";
+        String newEmailAddress = "brian.samuel.epstein@gmail.com";
         brian.setEmailAddress(newEmailAddress);
 
         assertEquals(newEmailAddress, brian.getEmailAddress());
@@ -568,7 +576,8 @@ public class UserProfileUnitTests {
         String lastName = "Epstein";
         String userName = "BrianEpstein";
         String emailAddress = "brian.epstein@gmail.com";
-        EventManager brian = new EventManager(firstName, lastName, userName, emailAddress);
+        MyDate birthday = new MyDate(1934, 9, 19);
+        EventManager brian = new EventManager(firstName, lastName, userName, emailAddress, birthday);
 
         String newEventName = "On the rooftop";
         brian.setEventName(newEventName);
@@ -582,7 +591,8 @@ public class UserProfileUnitTests {
         String lastName = "Epstein";
         String userName = "BrianEpstein";
         String emailAddress = "brian.epstein@gmail.com";
-        EventManager brian = new EventManager(firstName, lastName, userName, emailAddress);
+        MyDate birthday = new MyDate(1934, 9, 19);
+        EventManager brian = new EventManager(firstName, lastName, userName, emailAddress, birthday);
 
         MyDate newEventDate = new MyDate(1969, 1, 30);
         brian.setEventDate(newEventDate);
@@ -596,7 +606,8 @@ public class UserProfileUnitTests {
         String lastName = "Epstein";
         String userName = "BrianEpstein";
         String emailAddress = "brian.epstein@gmail.com";
-        EventManager brian = new EventManager(firstName, lastName, userName, emailAddress);
+        MyDate birthday = new MyDate(1934, 9, 19);
+        EventManager brian = new EventManager(firstName, lastName, userName, emailAddress, birthday);
 
         Location location = new Location(51.532005, -0.177331);
         brian.setLocation(location);

@@ -2,6 +2,9 @@ package ch.epfl.sdp.musiconnect;
 
 import java.util.Date;
 
+/**
+ * @author Manuel Pellegrini, EPFL
+ */
 public class MyDate {
 
     private int year;
@@ -17,20 +20,20 @@ public class MyDate {
     private static final int MINUTES_CORRECTION = 0;
 
 
-    public MyDate(int newYear, int newMonth, int newDate, int newHours, int newMinutes) {
-        setYear(newYear);
-        setMonth(newMonth);
-        setDate(newDate);
-        setHours(newHours);
-        setMinutes(newMinutes);
+    public MyDate(int year, int month, int date, int hours, int minutes) {
+        setYear(year);
+        setMonth(month);
+        setDate(date);
+        setHours(hours);
+        setMinutes(minutes);
     }
 
-    public MyDate(int newYear, int newMonth, int newDate) {
-        this(newYear, newMonth, newDate, 0, 0);
+    public MyDate(int year, int month, int date) {
+        this(year, month, date, 0, 0);
     }
 
-    public MyDate(MyDate newDate) {
-        this(newDate.getYear(), newDate.getMonth(), newDate.getDate(), newDate.getHours(), newDate.getMinutes());
+    public MyDate(MyDate date) {
+        this(date.getYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes());
     }
 
     public MyDate() {
@@ -43,31 +46,31 @@ public class MyDate {
     }
 
 
-    public void setYear(int newYear) {
-        if (newYear < 0) {
+    public void setYear(int year) {
+        if (year < 0) {
             throw new IllegalArgumentException("Year cannot be negative");
         }
 
-        year = newYear;
+        this.year = year;
     }
 
     public int getYear() {
         return year;
     }
 
-    public void setMonth(int newMonth) {
-        if (newMonth < 1 || 12 < newMonth) {
+    public void setMonth(int month) {
+        if (month < 1 || 12 < month) {
             throw new IllegalArgumentException("Month must be between 1 and 12");
         }
 
-        month = newMonth;
+        this.month = month;
     }
 
     public int getMonth() {
         return month;
     }
 
-    public void setDate(int newDate) {
+    public void setDate(int date) {
         int maxDate;
         switch (month) {
             case 1:
@@ -96,39 +99,39 @@ public class MyDate {
                 throw new Error("Month value should be between 1 and 12");
         }
 
-        if (newDate < 1 || maxDate < newDate) {
+        if (date < 1 || maxDate < date) {
             throw new IllegalArgumentException("Date is invalid for this month");
-        } else if (year == 1582 && month == 10 && 4 < newDate && newDate < 15) {
+        } else if (year == 1582 && month == 10 && 4 < date && date < 15) {
             throw new IllegalArgumentException("Date is invalid for october of 1582");
-        } else if (year == 1752 && month == 9 && 2 < newDate && newDate < 14) {
+        } else if (year == 1752 && month == 9 && 2 < date && date < 14) {
             throw new IllegalArgumentException("Date is invalid for september of 1752");
         }
 
-        date = newDate;
+        this.date = date;
     }
 
     public int getDate() {
         return date;
     }
 
-    public void setHours(int newHours) {
-        if (newHours < 0 || 23 < newHours) {
+    public void setHours(int hours) {
+        if (hours < 0 || 23 < hours) {
             throw new IllegalArgumentException("Hours must be between 0 and 23");
         }
 
-        hours = newHours;
+        this.hours = hours;
     }
 
     public int getHours() {
         return hours;
     }
 
-    public void setMinutes(int newMinutes) {
-        if (newMinutes < 0 || 59 < newMinutes) {
+    public void setMinutes(int minutes) {
+        if (minutes < 0 || 59 < minutes) {
             throw new IllegalArgumentException("Minutes must be between 0 and 59");
         }
 
-        minutes = newMinutes;
+        this.minutes = minutes;
     }
 
     public int getMinutes() {
@@ -185,7 +188,7 @@ public class MyDate {
 
     @Override
     public String toString() {
-        return String.format("%02d", date) + "." + String.format("%02d", month) + "." + String.format("%04d", year) + "    " + String.format("%02d", hours) + ":" + String.format("%02d", minutes);
+        return String.format("%02d", date) + "." + String.format("%02d", month) + "." + String.format("%04d", year) + "    " + String.format("%02d", hours) + ":" + String.format("%02d", minutes) + "\n";
     }
 
 }

@@ -1,5 +1,8 @@
 package ch.epfl.sdp.musiconnect;
 
+/**
+ * @author Manuel Pellegrini, EPFL
+ */
 public class Location {
 
     private double latitude;
@@ -9,43 +12,43 @@ public class Location {
     private static final double MAX_LONGITUDE_VALUE = 180.0;
 
 
-    public Location(double newLatitude, double newLongitude) {
-        setLatitude(newLatitude);
-        setLongitude(newLongitude);
+    public Location(double latitude, double longitude) {
+        setLatitude(latitude);
+        setLongitude(longitude);
     }
 
-    public Location(Location newLocation) {
-        this(newLocation.getLatitude(), newLocation.getLongitude());
+    public Location(Location location) {
+        this(location.getLatitude(), location.getLongitude());
     }
 
 
-    public void setLatitude(double newLatitude) {
-        if (newLatitude < -MAX_LATITUDE_VALUE || MAX_LATITUDE_VALUE < newLatitude) {
+    public void setLatitude(double latitude) {
+        if (latitude < -MAX_LATITUDE_VALUE || MAX_LATITUDE_VALUE < latitude) {
             throw new IllegalArgumentException("Latitude value not valid");
         }
 
-        latitude = newLatitude;
+        this.latitude = latitude;
     }
 
     public double getLatitude() {
         return latitude;
     }
 
-    public void setLongitude(double newLongitude) {
-        if (newLongitude <= -MAX_LONGITUDE_VALUE || MAX_LONGITUDE_VALUE < newLongitude) {
+    public void setLongitude(double longitude) {
+        if (longitude <= -MAX_LONGITUDE_VALUE || MAX_LONGITUDE_VALUE < longitude) {
             throw new IllegalArgumentException("Longitude value not valid");
         }
 
-        longitude = newLongitude;
+        this.longitude = longitude;
     }
 
     public double getLongitude() {
         return longitude;
     }
 
-    public void setLocation(Location newLocation) {
-        setLatitude(newLocation.getLatitude());
-        setLongitude(newLocation.getLongitude());
+    public void setLocation(Location location) {
+        setLatitude(location.getLatitude());
+        setLongitude(location.getLongitude());
     }
 
     public Location getLocation() {

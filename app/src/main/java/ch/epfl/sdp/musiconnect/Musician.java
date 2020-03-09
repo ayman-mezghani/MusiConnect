@@ -4,145 +4,30 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 
-public class Musician {
+/**
+ * @author Manuel Pellegrini, EPFL
+ */
+public class Musician extends Person implements Performer {
 
-    private String firstName;
-    private String lastName;
-    private String userName;
-    private MyDate birthday;
-    private String emailAddress;
-    private MyDate joinDate;
     private String videoURL;
     private Map<Instrument, Level> instruments;
-    private Location location;
 
-    private static final int MAX_NAME_LENGTH = 16;
-    private static final int MIN_AGE = 13;
-    private static final int MAX_AGE = 120;
-    private static final int MAX_EMAIL_ADDRESS_LENGTH = 64;
     private static final int MAX_VIDEO_URL_LENGTH = 2048;
 
-    private static final double EPFL_LATITUDE = 46.5185941;
-    private static final double EPFL_LONGITUDE = 6.5618969;
 
-
-    public Musician(String newFirstName, String newLastName, String newUserName, MyDate newBirthday, String newEmailAddress) {
-        setFirstName(newFirstName);
-        setLastName(newLastName);
-        setUserName(newUserName);
-        setBirthday(newBirthday);
-        setEmailAddress(newEmailAddress);
-        joinDate = new MyDate();
+    public Musician(String firstName, String lastName, String userName, String emailAddress, MyDate birthday) {
+        super(firstName, lastName, userName, emailAddress, birthday);
         videoURL = "";
         instruments = new HashMap<Instrument, Level>();
-        location = new Location(EPFL_LATITUDE, EPFL_LONGITUDE);
     }
 
 
-    public void setFirstName(String newFirstName) {
-        if (newFirstName.isEmpty()) {
-            throw new IllegalArgumentException("First name can not be empty");
-        } else if (newFirstName.length() > MAX_NAME_LENGTH) {
-            throw new IllegalArgumentException("First name too long");
-        }
-
-        firstName = newFirstName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setLastName(String newLastName) {
-        if (newLastName.isEmpty()) {
-            throw new IllegalArgumentException("Last name can not be empty");
-        } else if (newLastName.length() > MAX_NAME_LENGTH) {
-            throw new IllegalArgumentException("Last name too long");
-        }
-
-        lastName = newLastName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setUserName(String newUserName) {
-        if (newUserName.isEmpty()) {
-            throw new IllegalArgumentException("User name can not be empty");
-        } else if (newUserName.length() > MAX_NAME_LENGTH) {
-            throw new IllegalArgumentException("User name too long");
-        }
-
-        userName = newUserName;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setBirthday(MyDate newBirthday) {
-        MyDate currentDate = new MyDate();
-
-        if (newBirthday.after(currentDate)) {
-            throw new IllegalArgumentException("Birthday has not happened yet");
-        }
-
-        int currentAge = currentDate.getYear() - newBirthday.getYear();
-        if (currentDate.getMonth() < newBirthday.getMonth() || currentDate.getMonth() == newBirthday.getMonth() && currentDate.getDate() < newBirthday.getDate()) {
-            --currentAge;
-        }
-
-        if (currentAge < MIN_AGE) {
-            throw new IllegalArgumentException("Age too low");
-        } else if (currentAge > MAX_AGE) {
-            throw new IllegalArgumentException("Age too high");
-        }
-
-        birthday = new MyDate(newBirthday.getYear(), newBirthday.getMonth(), newBirthday.getDate());
-    }
-
-    public MyDate getBirthday() {
-        return new MyDate(birthday.getYear(), birthday.getMonth(), birthday.getDate());
-    }
-
-    public int getAge() {
-        MyDate currentDate = new MyDate();
-
-        int currentAge = currentDate.getYear() - birthday.getYear();
-        if (currentDate.getMonth() < birthday.getMonth() || currentDate.getMonth() == birthday.getMonth() && currentDate.getDate() < birthday.getDate()) {
-            --currentAge;
-        }
-
-        return currentAge;
-    }
-
-    public void setEmailAddress(String newEmailAddress) {
-        if (newEmailAddress.isEmpty()) {
-            throw new IllegalArgumentException("Email address can not be empty");
-        } else if (newEmailAddress.length() > MAX_EMAIL_ADDRESS_LENGTH) {
-            throw new IllegalArgumentException("Email address too long");
-        } else if (!(newEmailAddress.endsWith("@gmail.com") || newEmailAddress.endsWith("@epfl.ch"))) {
-            throw new IllegalArgumentException("Email address format not valid");
-        }
-
-        emailAddress = newEmailAddress;
-    }
-
-    public String getEmailAddress() {
-        return emailAddress;
-    }
-
-    public MyDate getJoinDate() {
-        return new MyDate(joinDate);
-    }
-
-    public void setVideoURL(String newVideoURL) {
-        if (newVideoURL.length() > MAX_VIDEO_URL_LENGTH) {
+    public void setVideoURL(String videoURL) {
+        if (videoURL.length() > MAX_VIDEO_URL_LENGTH) {
             throw new IllegalArgumentException("Video URL too long");
         }
 
-        videoURL = newVideoURL;
+        this.videoURL = videoURL;
     }
 
     public String getVideoURL() {
@@ -204,14 +89,6 @@ public class Musician {
 
     public Set<Instrument> setOfInstruments() {
         return instruments.keySet();
-    }
-
-    public void setLocation(Location newLocation) {
-        location.setLocation(newLocation);
-    }
-
-    public Location getLocation() {
-        return location.getLocation();
     }
 
 
