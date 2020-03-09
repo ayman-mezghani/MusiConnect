@@ -155,19 +155,7 @@ public class MyDate {
     }
 
     public boolean before(MyDate thatDate) {
-        if (year < thatDate.getYear()) {
-            return true;
-        } else if (year == thatDate.getYear() && month < thatDate.getMonth()) {
-            return true;
-        } else if (year == thatDate.getYear() && month == thatDate.getMonth() && date < thatDate.getDate()) {
-            return true;
-        } else if (year == thatDate.getYear() && month == thatDate.getMonth() && date == thatDate.getDate() && hours < thatDate.getHours()) {
-            return true;
-        } else if (year == thatDate.getYear() && month == thatDate.getMonth() && date == thatDate.getDate() && hours == thatDate.getHours() && minutes < thatDate.getMinutes()) {
-            return true;
-        } else {
-            return false;
-        }
+        return thatDate.after(this);
     }
 
 
