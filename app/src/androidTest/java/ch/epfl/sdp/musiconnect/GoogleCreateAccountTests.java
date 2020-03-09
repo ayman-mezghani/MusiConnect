@@ -33,7 +33,7 @@ public class GoogleCreateAccountTests {
     private UiDevice mUiDevice;
     private static final String ACCOUNT_MAIL = "musiconnectsdp@gmail.com";
     private static final String ACCOUNT_PWD = "mcSDP2k20";
-    private static final long DEFAULT_TIMEOUT = 1000 * 120;
+    private static final long DEFAULT_TIMEOUT = 1000 * 5;
 
     @Rule
     public final ActivityTestRule<GoogleResultActivity> mGoogleResultActivity =
@@ -67,6 +67,7 @@ public class GoogleCreateAccountTests {
 
     @Test()
     public void a_connectNewAccount() throws Exception {
+        boolean noAccountInstalled = false;
         // to be deleted after merging
         onView(withId(R.id.mainGoButton)).perform(click());
         buttonClick(mUiDevice.findObject(new UiSelector().textContains("sign in")));
@@ -76,7 +77,13 @@ public class GoogleCreateAccountTests {
         loginButton.waitForExists(DEFAULT_TIMEOUT);
 
         if (!loginButton.exists()) {
-            buttonClick(mUiDevice.findObject(new UiSelector().textContains("another account")));
+            UiObject anotherAccount = mUiDevice.findObject(new UiSelector().textContains("another account"));
+            loginButton.waitForExists(DEFAULT_TIMEOUT);
+
+            if(anotherAccount.exists())
+                anotherAccount.click();
+            else
+                noAccountInstalled = true;
 
             mUiDevice.wait(Until.findObject(By.clazz(WebView.class)), DEFAULT_TIMEOUT);
 
@@ -98,6 +105,11 @@ public class GoogleCreateAccountTests {
 
             buttonClick(mUiDevice.findObject(new UiSelector().instance(0).className(Button.class)));
             Thread.sleep(DEFAULT_TIMEOUT);
+
+            if(noAccountInstalled){
+                buttonClick(mUiDevice.findObject(new UiSelector().className(Button.class).textContains("Accept")));
+                Thread.sleep(DEFAULT_TIMEOUT);
+            }
         }
         else
             loginButton.click();
