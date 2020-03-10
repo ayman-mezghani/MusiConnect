@@ -10,22 +10,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import ch.epfl.sdp.MainActivity;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class DataBaseTest {
     private DataBase db = new DataBase();
-    @Rule
-    public final ActivityTestRule<MainActivity> mActivityRule =
-            new ActivityTestRule<>(MainActivity.class);
 
-    /*
-    @Before
-    public void beforeFunction(){
-        db = new DataBase();
-    }*/
+    @Rule
+    public final ActivityTestRule<StartPage> startPageRule =
+            new ActivityTestRule<>(StartPage.class);
 
     private static void waitALittle() {
         try {
@@ -64,15 +57,6 @@ public class DataBaseTest {
 
         db.deleteDoc(stevenDocName);
     }
-
-    /*
-    @Test
-    public void deleteDocTest() {
-        db.addDoc(user1, "user1");
-        db.deleteDoc("user1");
-        db.
-    }
-    */
 
     @Test
     public void updateDocTest() {
