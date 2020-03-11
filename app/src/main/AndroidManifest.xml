@@ -15,6 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+      
         <activity android:name=".musiconnect.UserLocationActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -26,13 +27,18 @@
         -->
 
 
-        <activity android:name=".musiconnect.MainActivity">
+        <activity android:name=".musiconnect.SettingsPage" />
+        <activity android:name=".musiconnect.HelpPage" />
+        <activity android:name=".musiconnect.ProfilePage" />
+        <activity android:name=".musiconnect.StartPage">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>
