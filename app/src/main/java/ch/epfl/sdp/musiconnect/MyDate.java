@@ -70,6 +70,14 @@ public class MyDate {
         return month;
     }
 
+    private boolean isLeapYear() {
+        if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     protected int getMaxDateOfMonth() {
         switch (month) {
             case 1:
@@ -81,7 +89,7 @@ public class MyDate {
             case 12:
                 return 31;
             case 2:
-                if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0) {
+                if (isLeapYear()) {
                     return 29;
                 } else {
                     return 28;
@@ -137,15 +145,11 @@ public class MyDate {
     }
 
     public boolean after(MyDate thatDate) {
-        if (year > thatDate.getYear()) {
-            return true;
-        } else if (year == thatDate.getYear() && month > thatDate.getMonth()) {
-            return true;
-        } else if (year == thatDate.getYear() && month == thatDate.getMonth() && date > thatDate.getDate()) {
-            return true;
-        } else if (year == thatDate.getYear() && month == thatDate.getMonth() && date == thatDate.getDate() && hours > thatDate.getHours()) {
-            return true;
-        } else if (year == thatDate.getYear() && month == thatDate.getMonth() && date == thatDate.getDate() && hours == thatDate.getHours() && minutes > thatDate.getMinutes()) {
+        if (year > thatDate.getYear() ||
+                year == thatDate.getYear() && month > thatDate.getMonth() ||
+                year == thatDate.getYear() && month == thatDate.getMonth() && date > thatDate.getDate() ||
+                year == thatDate.getYear() && month == thatDate.getMonth() && date == thatDate.getDate() && hours > thatDate.getHours() ||
+                year == thatDate.getYear() && month == thatDate.getMonth() && date == thatDate.getDate() && hours == thatDate.getHours() && minutes > thatDate.getMinutes()) {
             return true;
         } else {
             return false;
