@@ -135,8 +135,7 @@ public class EventManager extends Person {
         String tmp;
 
         try {
-            String eventName = getEventName();
-            tmp = eventName;
+            tmp = getEventName();
         } catch (Error error) {
             tmp = "Event";
         }

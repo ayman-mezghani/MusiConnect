@@ -555,16 +555,17 @@ public class EventManagerClassUnitTests {
         brian.addMusician(john);
 
         String secondExpectedString = secondEventName + " (Organizer: " + brianFirstName + " " + brianLastName + ")\n";
-        secondExpectedString += "\n";
+        secondExpectedString += "Musicians:\n" + "    " + johnFirstName + " " + johnLastName + "\n";
 
         assertEquals(secondExpectedString, brian.toString());
 
-        String thirdEventName = "The Beatles on the rooftop";
+        String thirdEventName = "The Beatles show";
         brian.setEventName(thirdEventName);
         brian.addBand(beatles);
 
         String thirdExpectedString = thirdEventName + " (Organizer: " + brianFirstName + " " + brianLastName + ")\n";
-        thirdExpectedString += "\n";
+        thirdExpectedString += "Musicians:\n" + "    " + johnFirstName + " " + johnLastName + "\n";
+        thirdExpectedString += "Bands:\n" + "    " + bandName + "\n";
 
         assertEquals(thirdExpectedString, brian.toString());
     }
