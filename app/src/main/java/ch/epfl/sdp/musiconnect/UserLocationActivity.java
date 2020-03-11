@@ -53,16 +53,11 @@ public class UserLocationActivity extends AppCompatActivity {
                     if (location != null) {
                         lastLocation = location;
                         locationTv.setText("Latitude : " + lastLocation.getLatitude() + "\nLongitude : " + lastLocation.getLongitude());
-
                     }
                 }
             }
         };
 
-        createLocationRequest();
-    }
-
-    protected void createLocationRequest() {
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(10 * 1000); // 10 seconds
@@ -73,7 +68,6 @@ public class UserLocationActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        //stop location updates when Activity is no longer active
         if (fusedLocationClient != null) {
             stopLocationUpdates();
         }
@@ -96,14 +90,19 @@ public class UserLocationActivity extends AppCompatActivity {
                 Looper.getMainLooper());
     }
 
-    private void getLocation() {
+
+    protected void setLocation(Location location) {
+        lastLocation = location;
+    }
+
+    protected Location getLocation() {
         if (ActivityCompat.checkSelfPermission(UserLocationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             checkLocationPermission();
 
         } else {
             fusedLocationClient.getLastLocation().addOnSuccessListener(UserLocationActivity.this, location -> {
                 if (location != null) {
-                    lastLocation.set(location);
+                    lastLocation = location;
                     locationTv.setText("Latitude : " + lastLocation.getLatitude() + "\nLongitude : " + lastLocation.getLongitude());
 
                 } else {
@@ -111,6 +110,8 @@ public class UserLocationActivity extends AppCompatActivity {
                 }
             });
         }
+
+        return lastLocation;
     }
 
 
@@ -151,16 +152,13 @@ public class UserLocationActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    // permission was granted, yay! Do the
-                    // location-related task you need to do.
+                    // permission was granted. Do the location-related task you need to do.
                     if (ContextCompat.checkSelfPermission(this,
                             Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {

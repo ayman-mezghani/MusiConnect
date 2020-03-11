@@ -33,7 +33,7 @@ public class UserLocationActivityTest{
             new ActivityTestRule<>(UserLocationActivity.class);
 
     @Test
-    public void testLoc() {
+    public void testSettingFakeLocationReturnsRightLocation() {
          onView(withId(R.id.mainGoButton)).perform(click());
 
 
@@ -43,10 +43,9 @@ public class UserLocationActivityTest{
         location.setTime(System.currentTimeMillis());
 
 
-        //location.setLatitude(uActivityRule.getActivity().getLocation().getLatitude());
+        uActivityRule.getActivity().setLocation(location);
         Location l = uActivityRule.getActivity().getLocation();
         assertThat(l.getLatitude(), is(location.getLatitude()));
-
     }
 
 }
