@@ -49,8 +49,7 @@ public class MapsActivityTest {
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText("Map")).perform(click());
-
-
+        
 
         UiObject marker = device.findObject(new UiSelector().descriptionContains("You"));
         marker.waitForExists(5000);
