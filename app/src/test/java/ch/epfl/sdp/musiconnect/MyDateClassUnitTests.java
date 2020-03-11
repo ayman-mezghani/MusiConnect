@@ -9,8 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public class MyDateClassUnitTests {
 
-    // TODO : Tests for setDate() method
-
     @Test
     public void gettersOfMyDateClassWork() {
         int year = 2020;
@@ -89,7 +87,85 @@ public class MyDateClassUnitTests {
         assertThrows(IllegalArgumentException.class, () -> day.setMonth(highMonth));
     }
 
-    // TODO : Tests for setDate() method
+    @Test
+    public void getMaxDateOfMonthWorks() {
+        int year = 2020;
+        int month = 1;
+        int date = 15;
+        MyDate day = new MyDate(year, month, date);
+
+        assertEquals(31, day.getMaxDateOfMonth());
+        day.setMonth(2);
+        assertEquals(29, day.getMaxDateOfMonth());
+        day.setYear(2000);
+        assertEquals(29, day.getMaxDateOfMonth());
+        day.setYear(1900);
+        assertEquals(28, day.getMaxDateOfMonth());
+        day.setYear(2019);
+        assertEquals(28, day.getMaxDateOfMonth());
+        day.setMonth(3);
+        assertEquals(31, day.getMaxDateOfMonth());
+        day.setMonth(4);
+        assertEquals(30, day.getMaxDateOfMonth());
+        day.setMonth(5);
+        assertEquals(31, day.getMaxDateOfMonth());
+        day.setMonth(6);
+        assertEquals(30, day.getMaxDateOfMonth());
+        day.setMonth(7);
+        assertEquals(31, day.getMaxDateOfMonth());
+        day.setMonth(8);
+        assertEquals(31, day.getMaxDateOfMonth());
+        day.setMonth(9);
+        assertEquals(30, day.getMaxDateOfMonth());
+        day.setMonth(10);
+        assertEquals(31, day.getMaxDateOfMonth());
+        day.setMonth(11);
+        assertEquals(30, day.getMaxDateOfMonth());
+        day.setMonth(12);
+        assertEquals(31, day.getMaxDateOfMonth());
+    }
+
+    @Test
+    public void setDateWorksWithValidInput() {
+        int year = 2020;
+        int month = 2;
+        int date = 2;
+        MyDate day = new MyDate(year, month, date);
+
+        int newDate = 4;
+
+        assertEquals(date, day.getDate());
+        day.setDate(newDate);
+        assertEquals(newDate, day.getDate());
+    }
+
+    @Test
+    public void setDateThrowsExceptionWithInvalidInput() {
+        int year = 2020;
+        int month = 2;
+        int date = 2;
+        MyDate day = new MyDate(year, month, date);
+
+        int lowDate = 0;
+        int highDate = 30;
+        int firstInvalidYear = 1582;
+        int firstInvalidMonth = 10;
+        int firstInvalidDate = 10;
+        int secondInvalidYear = 1752;
+        int secondInvalidMonth = 9;
+        int secondInvalidDate = 9;
+
+        assertThrows(IllegalArgumentException.class, () -> day.setDate(lowDate));
+        assertThrows(IllegalArgumentException.class, () -> day.setDate(highDate));
+
+        day.setYear(firstInvalidYear);
+        day.setMonth(firstInvalidMonth);
+        assertThrows(IllegalArgumentException.class, () -> day.setDate(firstInvalidDate));
+
+        day.setYear(secondInvalidYear);
+        day.setMonth(secondInvalidMonth);
+        assertThrows(IllegalArgumentException.class, () -> day.setDate(secondInvalidDate));
+    }
 
     @Test
     public void setHoursWorksWithValidInput() {

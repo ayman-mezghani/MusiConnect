@@ -70,8 +70,7 @@ public class MyDate {
         return month;
     }
 
-    public void setDate(int date) {
-        int maxDate;
+    protected int getMaxDateOfMonth() {
         switch (month) {
             case 1:
             case 3:
@@ -80,26 +79,25 @@ public class MyDate {
             case 8:
             case 10:
             case 12:
-                maxDate = 31;
-                break;
+                return 31;
             case 2:
                 if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0) {
-                    maxDate = 29;
+                    return 29;
                 } else {
-                    maxDate = 28;
+                    return 28;
                 }
-                break;
             case 4:
             case 6:
             case 9:
             case 11:
-                maxDate = 30;
-                break;
+                return 30;
             default:
                 throw new Error("Month value should be between 1 and 12");
         }
+    }
 
-        if (date < 1 || maxDate < date) {
+    public void setDate(int date) {
+        if (date < 1 || getMaxDateOfMonth() < date) {
             throw new IllegalArgumentException("Date is invalid for this month");
         } else if (year == 1582 && month == 10 && 4 < date && date < 15) {
             throw new IllegalArgumentException("Date is invalid for october of 1582");
