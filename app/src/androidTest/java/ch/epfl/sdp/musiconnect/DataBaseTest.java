@@ -20,12 +20,6 @@ public class DataBaseTest {
     public final ActivityTestRule<StartPage> startPageRule =
             new ActivityTestRule<>(StartPage.class);
 
-    /*
-    @Before
-    public void beforeFunction(){
-        db = new DataBase();
-    }*/
-
     private static void waitALittle() {
         try {
             TimeUnit.SECONDS.sleep(2);
