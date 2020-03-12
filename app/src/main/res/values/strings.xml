@@ -1,4 +1,5 @@
 <resources>
+
     <string name="app_name">MusiConnect</string>
     <string name="title_activity_main_page">MainPage</string>
     <string name="login">Login</string>

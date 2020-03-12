@@ -75,12 +75,6 @@ public class MenuTests {
         intended(hasComponent(ProfilePage.class.getName()));
     }
 
-    @Test
-    public void testMapClickShouldDisplayMessage() {
-        openActionsMenu(R.string.map);
-
-        onView(withText(R.string.not_yet_done)).inRoot(withDecorView(not(startPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
-    }
 
     @Test
     public void testSettingsClickShouldStartNewIntent() {
