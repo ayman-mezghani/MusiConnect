@@ -48,6 +48,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Marker marker;
     private Circle circle;
     private final double THRESHOLD = 0.00002;
+    private AlertDialog alert;
 
     private LocationCallback locationCallback = new LocationCallback() {
         @Override
@@ -204,7 +205,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return lastLocation;
     }
 
-
     private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -216,7 +216,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
-                new AlertDialog.Builder(this)
+                alert = new AlertDialog.Builder(this)
                         .setTitle("Location Permission Needed")
                         .setMessage("This app needs the Location permission, please accept to use location functionality")
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -228,8 +228,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         MY_PERMISSIONS_REQUEST_LOCATION);
                             }
                         })
-                        .create()
-                        .show();
+                        .create();
+                alert.show();
 
 
             } else {
@@ -255,7 +255,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
 
             } else {
-
                 // permission denied. Disable the
                 // functionality that depends on this permission.
                 Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();

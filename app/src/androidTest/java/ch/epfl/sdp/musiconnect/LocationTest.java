@@ -1,9 +1,11 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.Manifest;
+import android.app.Instrumentation;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 
 import androidx.core.content.ContextCompat;
 import androidx.test.InstrumentationRegistry;
@@ -11,6 +13,10 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObjectNotFoundException;
+import androidx.test.uiautomator.UiSelector;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,6 +26,7 @@ import org.junit.runner.RunWith;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+
 
 
 @RunWith(AndroidJUnit4.class)
@@ -32,28 +39,15 @@ public class LocationTest {
             new ActivityTestRule<>(MapsActivity.class);
 
 
-
-    @Before
-    public void initIntents() {
-        Intents.init();
-    }
-
-    @After
-    public void releaseIntents() {
-        Intents.release();
-    }
-
-
-    /*
-    private void allowPermissionsIfNeeded(String permissionNeeded) {
+    private void allowPermissionsIfNeeded() {
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !hasNeededPermission(permissionNeeded)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && testPermissionsGranted()) {
                 try {
-                    Thread.sleep(millis);
+                    Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException("Cannot execute Thread.sleep()");
                 }
-                UiDevice device = UiDevice.getInstance(getInstrumentation());
+                UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
                 UiObject allowPermissions = device.findObject(new UiSelector()
                         .clickable(true)
                         .checkable(false)
@@ -65,7 +59,7 @@ public class LocationTest {
         } catch (UiObjectNotFoundException e) {
             System.out.println("There is no permissions dialog to interact with");
         }
-    }*/
+    }
 
     private boolean correctLocation(Location location) {
         if (location != null) {
@@ -84,6 +78,7 @@ public class LocationTest {
 
     @Test
     public void testSetFakeLocationReturnsRight() {
+        allowPermissionsIfNeeded();
         if (testPermissionsGranted()) {
 
             Location l = new Location("Test");
@@ -98,7 +93,16 @@ public class LocationTest {
             assertThat(l.getLatitude(), is(loc.getLatitude()));
             assertThat(l.getLongitude(), is(loc.getLongitude()));
         }
-
     }
 
+
+    @Test
+    public void testRequestPermissionResultGranted() {
+        allowPermissionsIfNeeded();
+        int[] results = new int[1];
+        results[0] = PackageManager.PERMISSION_GRANTED;
+        mRule.getActivity().onRequestPermissionsResult(99, null, results);
+
+        assert(testPermissionsGranted());
+    }
 }
