@@ -21,9 +21,11 @@ import java.util.List;
 import java.util.Map;
 
 public class DataBase {
-    private static final String TAG = "DocSnippets";
+    private static final String TAG = "DataBase";
     private FirebaseFirestore db;
 
+    //TODO add Toast messages on success and on failure:
+    //add private context and init from constructor, to be used for toast
     public DataBase() {
         this.db = FirebaseFirestore.getInstance();
     }

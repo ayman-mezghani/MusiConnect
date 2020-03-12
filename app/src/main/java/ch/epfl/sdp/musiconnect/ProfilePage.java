@@ -10,5 +10,8 @@ public class ProfilePage extends StartPage {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
+
+        CloudStorage storage = new CloudStorage(getApplicationContext());
+        storage.upload("/home/ayman/Pictures/p.png", "amz");
     }
 }
