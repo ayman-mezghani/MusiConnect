@@ -45,6 +45,7 @@ public class MapsActivityTest {
 
     @Test
     public void testMapsOpensWithMainMarker(){
+        assert(true);
 
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
