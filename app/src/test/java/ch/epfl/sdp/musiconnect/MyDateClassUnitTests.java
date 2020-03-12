@@ -88,6 +88,22 @@ public class MyDateClassUnitTests {
     }
 
     @Test
+    public void isLeapYearWorks() {
+        int year = 2020;
+        int month = 1;
+        int date = 15;
+        MyDate day = new MyDate(year, month, date);
+
+        assertEquals(true, day.isLeapYear());
+        day.setYear(2000);
+        assertEquals(true, day.isLeapYear());
+        day.setYear(1900);
+        assertEquals(false, day.isLeapYear());
+        day.setYear(2019);
+        assertEquals(false, day.isLeapYear());
+    }
+
+    @Test
     public void getMaxDateOfMonthWorks() {
         int year = 2020;
         int month = 1;
