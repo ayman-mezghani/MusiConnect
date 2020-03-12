@@ -108,7 +108,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 return false;
             }
         }
-        return true;
+        return false;
     }
     @Override
     public void onInfoWindowClick(Marker marker) {
