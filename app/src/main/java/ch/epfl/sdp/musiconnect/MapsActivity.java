@@ -49,6 +49,46 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Circle circle;
     private final double THRESHOLD = 0.00002;
 
+    private LocationCallback locationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            if (locationResult != null) {
+                for (Location location : locationResult.getLocations()) {
+                    if (lastLocation == null ||
+                            (location != null &&
+                                    (Math.abs(lastLocation.getLatitude() - location.getLatitude()) > THRESHOLD ||
+                                            Math.abs(lastLocation.getLatitude() - location.getLatitude()) > THRESHOLD))) {
+
+                        lastLocation = location;
+
+                        double lat = lastLocation.getLatitude();
+                        double lon = lastLocation.getLongitude();
+
+                        if (marker != null) {
+                            marker.remove();
+                        }
+
+                        String markerName = "MarkerName";
+                        LatLng latLng = new LatLng(lat, lon);
+                        marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerName));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+                        CircleOptions circleOptions = new CircleOptions()
+                                .center(latLng)
+                                .radius(5000); // In meters
+
+                        if (circle != null) {
+                            circle.remove();
+                        }
+                        circle = mMap.addCircle(circleOptions);
+
+                        mapView.setContentDescription("Google Map Ready");
+                    }
+                }
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,47 +103,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
-    private LocationCallback locationCallback = new LocationCallback() {
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
-            if (locationResult == null) {
-                return;
-            }
 
-            for (Location location : locationResult.getLocations()) {
-                if (lastLocation == null ||
-                        (location != null &&
-                        (Math.abs(lastLocation.getLatitude() - location.getLatitude()) > THRESHOLD ||
-                         Math.abs(lastLocation.getLatitude() - location.getLatitude()) > THRESHOLD))) {
-
-                    lastLocation = location;
-
-                    double lat = lastLocation.getLatitude();
-                    double lon = lastLocation.getLongitude();
-
-                    if (marker != null) {
-                        marker.remove();
-                    }
-
-                    String markerName = "MarkerName";
-                    LatLng latLng = new LatLng(lat,lon);
-                    marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerName));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-
-                    CircleOptions circleOptions = new CircleOptions()
-                            .center(latLng)
-                            .radius(5000); // In meters
-
-                    if (circle != null) {
-                        circle.remove();
-                    }
-                    circle = mMap.addCircle(circleOptions);
-
-                    mapView.setContentDescription("Google Map Ready");
-                }
-            }
-        }
-    };
 
 
     /**
@@ -189,9 +189,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (location != null) {
                     lastLocation = location;
 
-                } else {
-                    startLocationUpdates();
                 }
+                /*else {
+                    startLocationUpdates();
+                }*/
             });
         }
 
@@ -242,26 +243,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == MY_PERMISSIONS_REQUEST_LOCATION) { // If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    // permission was granted. Do the location-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(this,
-                            Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
+                // permission was granted. Do the location-related task you need to do.
+                if (ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
 
-                        startLocationUpdates();
-                    }
-
-                } else {
-
-                    // permission denied. Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
+                    startLocationUpdates();
                 }
-                return;
+
+            } else {
+
+                // permission denied. Disable the
+                // functionality that depends on this permission.
+                Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
             }
 
             // other 'case' lines to check for other
