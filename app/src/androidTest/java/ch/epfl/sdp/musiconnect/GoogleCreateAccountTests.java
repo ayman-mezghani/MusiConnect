@@ -4,6 +4,7 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.test.espresso.Espresso;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -35,6 +36,7 @@ public class GoogleCreateAccountTests {
     private static final String ACCOUNT_MAIL = "musiconnectsdp@gmail.com";
     private static final String ACCOUNT_PWD = "mcSDP2k20";
     private static final long DEFAULT_TIMEOUT = 1000 * 10;
+    private static final boolean RUN_IN_LOCAL = false; // variable used for switching between Travis(false) tests and local tests(true)
 
     @Rule
     public final ActivityTestRule<GoogleResultActivity> mGoogleResultActivity =
@@ -67,70 +69,72 @@ public class GoogleCreateAccountTests {
     }
 
     @Test()
+    /**
+     * This tests work in local, the were written to get the coverage
+     * To run this test in local don't forget to change RUN_IN_LOCAL to true
+     */
     public void a_connectNewAccount() throws Exception {
-        boolean noAccountInstalled = false;
-        // to be deleted after merging
         onView(withId(R.id.mainGoButton)).perform(click());
-        buttonClick(mUiDevice.findObject(new UiSelector().textContains("sign in")));
 
-        // firstof all, test if the account doesnt exist yet on android device
-        UiObject loginButton = mUiDevice.findObject(new UiSelector().textContains(ACCOUNT_MAIL));
-        loginButton.waitForExists(DEFAULT_TIMEOUT);
-
-        if (!loginButton.exists()) {
-            UiScrollable appViews = new UiScrollable(new UiSelector().scrollable(true));
-            UiObject anotherAccount = mUiDevice.findObject(new UiSelector().textContains("another account"));
+        if(RUN_IN_LOCAL) {
+            boolean noAccountInstalled = false;
+            // to be deleted after merging
+            buttonClick(mUiDevice.findObject(new UiSelector().textContains("sign in")));
+            // firstof all, test if the account doesnt exist yet on android device
+            UiObject loginButton = mUiDevice.findObject(new UiSelector().textContains(ACCOUNT_MAIL));
             loginButton.waitForExists(DEFAULT_TIMEOUT);
 
-            if(anotherAccount.exists())
-                anotherAccount.click();
-            else
-                noAccountInstalled = true;
+            if (!loginButton.exists()) {
+                UiScrollable appViews = new UiScrollable(new UiSelector().scrollable(true));
+                UiObject anotherAccount = mUiDevice.findObject(new UiSelector().textContains("another account"));
+                loginButton.waitForExists(DEFAULT_TIMEOUT);
 
-            mUiDevice.wait(Until.findObject(By.clazz(WebView.class)), DEFAULT_TIMEOUT);
-            do{
-                if(mUiDevice.findObject(new UiSelector().instance(0).className(EditText.class)).exists()){
-                    mUiDevice.findObject(new UiSelector().instance(0).className(EditText.class)).setText(ACCOUNT_MAIL);
-                    //mUiDevice.findObject(new UiSelector().className(Button.class).textContains("Accept")).clickAndWaitForNewWindow(DEFAULT_TIMEOUT);
-                    break;
-                }
-            }
-            while(!appViews.scrollForward());
+                if (anotherAccount.exists())
+                    anotherAccount.click();
+                else
+                    noAccountInstalled = true;
 
-/*
-            UiObject emailInput = mUiDevice.findObject(new UiSelector().instance(0).className(EditText.class));
-
-            emailInput.waitForExists(DEFAULT_TIMEOUT);
-            emailInput.setText(ACCOUNT_MAIL);
-*/
-            buttonClick(mUiDevice.findObject(new UiSelector().className(Button.class).textContains("Next")));
-
-            UiObject pwdInput = mUiDevice.findObject(new UiSelector().instance(0).className(EditText.class));
-
-            pwdInput.waitForExists(DEFAULT_TIMEOUT);
-            pwdInput.setText(ACCOUNT_PWD);
-
-            buttonClick(mUiDevice.findObject(new UiSelector().className(Button.class).textContains("Next")));
-
-
-            appViews.scrollForward(2);
-
-            buttonClick(mUiDevice.findObject(new UiSelector().className(Button.class).textContains("I agree")));
-
-            if(noAccountInstalled){
-                while(!appViews.scrollForward()){
-                    if(mUiDevice.findObject(new UiSelector().className(Button.class).textContains("Accept")).exists()){
-                        mUiDevice.findObject(new UiSelector().className(Button.class).textContains("Accept")).clickAndWaitForNewWindow(DEFAULT_TIMEOUT);
+                mUiDevice.wait(Until.findObject(By.clazz(WebView.class)), DEFAULT_TIMEOUT);
+                do {
+                    if (mUiDevice.findObject(new UiSelector().instance(0).className(EditText.class)).exists()) {
+                        mUiDevice.findObject(new UiSelector().instance(0).className(EditText.class)).setText(ACCOUNT_MAIL);
+                        //mUiDevice.findObject(new UiSelector().className(Button.class).textContains("Accept")).clickAndWaitForNewWindow(DEFAULT_TIMEOUT);
                         break;
                     }
                 }
-            }
-        }
-        else
-            loginButton.clickAndWaitForNewWindow(DEFAULT_TIMEOUT);
+                while (!appViews.scrollForward());
+                buttonClick(mUiDevice.findObject(new UiSelector().className(Button.class).textContains("Next")));
 
-        Thread.sleep(2*DEFAULT_TIMEOUT);
-        intended(hasComponent(GoogleResultActivity.class.getName()));
+                UiObject pwdInput = mUiDevice.findObject(new UiSelector().instance(0).className(EditText.class));
+
+                pwdInput.waitForExists(DEFAULT_TIMEOUT);
+                pwdInput.setText(ACCOUNT_PWD);
+
+                buttonClick(mUiDevice.findObject(new UiSelector().className(Button.class).textContains("Next")));
+
+
+                appViews.scrollForward(2);
+
+                buttonClick(mUiDevice.findObject(new UiSelector().className(Button.class).textContains("I agree")));
+
+                if (noAccountInstalled) {
+                    while (!appViews.scrollForward()) {
+                        if (mUiDevice.findObject(new UiSelector().className(Button.class).textContains("Accept")).exists()) {
+                            mUiDevice.findObject(new UiSelector().className(Button.class).textContains("Accept")).clickAndWaitForNewWindow(DEFAULT_TIMEOUT);
+                            break;
+                        }
+                    }
+                }
+            } else
+                loginButton.clickAndWaitForNewWindow(DEFAULT_TIMEOUT);
+
+            Thread.sleep(2 * DEFAULT_TIMEOUT);
+            intended(hasComponent(GoogleResultActivity.class.getName()));
+        }
+        else{
+            assert(true);
+        }
+
     }
 
 }
