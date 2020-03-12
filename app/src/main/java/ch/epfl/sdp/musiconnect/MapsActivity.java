@@ -85,15 +85,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         marker.remove();
                     }
 
-                    // Get Main marker information
-
                     String markerName = "MarkerName";
                     LatLng latLng = new LatLng(lat,lon);
-
                     marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerName));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
-                    //add circle around main marker
                     CircleOptions circleOptions = new CircleOptions()
                             .center(latLng)
                             .radius(5000); // In meters
@@ -101,7 +97,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     if (circle != null) {
                         circle.remove();
                     }
-
                     circle = mMap.addCircle(circleOptions);
 
                     mapView.setContentDescription("Google Map Ready");
