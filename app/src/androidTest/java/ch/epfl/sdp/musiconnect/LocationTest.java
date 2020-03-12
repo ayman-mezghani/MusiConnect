@@ -5,16 +5,12 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 
-
 import androidx.core.content.ContextCompat;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.UiObject;
-import androidx.test.uiautomator.UiSelector;
 
 import org.junit.After;
 import org.junit.Before;
