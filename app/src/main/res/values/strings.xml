@@ -1,3 +1,20 @@
 <resources>
-    <string name="app_name">Bootcamp</string>
+
+    <string name="app_name">MusiConnect</string>
+    <string name="title_activity_main_page">MainPage</string>
+    <string name="login">Login</string>
+    <string name="username">Username</string>
+    <string name="sign_in_with_google">sign in with google</string>
+    <string name="my_profile">My profile</string>
+    <string name="map">Map</string>
+    <string name="search">Search</string>
+    <string name="settings">Settings</string>
+    <string name="help">Help</string>
+    <string name="my_profile_page">My profile page</string>
+    <string name="title_activity_help_page">HelpPage</string>
+    <string name="title_activity_settings_page">SettingsPage</string>
+    <string name="help_message">Help is on the way !</string>
+    <string name="settings_message">Settings to come...</string>
+    <string name="not_yet_done">This functionality is not yet part of the application. Please be patient.</string>
+
 </resources>

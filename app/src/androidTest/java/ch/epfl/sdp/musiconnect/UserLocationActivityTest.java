@@ -10,12 +10,17 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Map;
+
 import ch.epfl.sdp.R;
 
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -23,18 +28,24 @@ import static org.junit.Assert.assertThat;
 @RunWith(AndroidJUnit4.class)
 public class UserLocationActivityTest{
 
-    @Rule
-    public final ActivityTestRule<MainActivity> mActivityRule =
-            new ActivityTestRule<>(MainActivity.class);
 
 
+    /**
+     * Helper method to avoid duplicate code
+     * @param stringId
+     */
+    private void openActionsMenu(int stringId) {
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(stringId)).perform(click());
+    }
+
     @Rule
-    public final ActivityTestRule<UserLocationActivity> uActivityRule =
-            new ActivityTestRule<>(UserLocationActivity.class);
+    public final ActivityTestRule<MapsActivity> uActivityRule =
+            new ActivityTestRule<>(MapsActivity.class);
 
     @Test
     public void testSettingFakeLocationReturnsRightLocation() {
-         onView(withId(R.id.mainGoButton)).perform(click());
+        openActionsMenu(R.string.map);
 
 
         Location location = new Location("Test");
