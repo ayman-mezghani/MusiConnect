@@ -43,6 +43,7 @@
         <activity android:name=".musiconnect.ProfilePage" />
         <activity android:name=".musiconnect.StartPage">
 
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
