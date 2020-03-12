@@ -53,9 +53,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.0.1'
-    
-    androidTestCompile ("com.android.support.test.espresso:espresso-intents:3.2.0") // Need this for intent tests
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+
+    androidTestCompile ("com.android.support.test.espresso:espresso-intents:3.2.0")
 }
 
 tasks.withType(Test) {
