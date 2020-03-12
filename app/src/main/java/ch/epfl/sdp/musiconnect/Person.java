@@ -87,6 +87,17 @@ public abstract class Person extends User {
         return emailAddress;
     }
 
+    private int computeAge(MyDate birthday) {
+        MyDate currentDate = new MyDate();
+
+        int currentAge = currentDate.getYear() - birthday.getYear();
+        if (currentDate.getMonth() < birthday.getMonth() || currentDate.getMonth() == birthday.getMonth() && currentDate.getDate() < birthday.getDate()) {
+            --currentAge;
+        }
+
+        return currentAge;
+    }
+
     public void setBirthday(MyDate birthday) {
         MyDate currentDate = new MyDate();
 
@@ -94,10 +105,7 @@ public abstract class Person extends User {
             throw new IllegalArgumentException("Birthday has not happened yet");
         }
 
-        int currentAge = currentDate.getYear() - birthday.getYear();
-        if (currentDate.getMonth() < birthday.getMonth() || currentDate.getMonth() == birthday.getMonth() && currentDate.getDate() < birthday.getDate()) {
-            --currentAge;
-        }
+        int currentAge = computeAge(birthday);
 
         if (currentAge < MIN_AGE) {
             throw new IllegalArgumentException("Age too low");
@@ -113,14 +121,7 @@ public abstract class Person extends User {
     }
 
     public int getAge() {
-        MyDate currentDate = new MyDate();
-
-        int currentAge = currentDate.getYear() - birthday.getYear();
-        if (currentDate.getMonth() < birthday.getMonth() || currentDate.getMonth() == birthday.getMonth() && currentDate.getDate() < birthday.getDate()) {
-            --currentAge;
-        }
-
-        return currentAge;
+        return computeAge(birthday);
     }
 
 }
