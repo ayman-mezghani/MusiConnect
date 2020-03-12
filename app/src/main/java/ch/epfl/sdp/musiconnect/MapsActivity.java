@@ -2,7 +2,9 @@ package ch.epfl.sdp.musiconnect;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -14,15 +16,22 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import ch.epfl.sdp.R;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
+        GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mMap;
     private View mapView;
     private UiSettings mUiSettings;
+    private List<Pair<String,LatLng>> profiles = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +70,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng marker = new LatLng(lat,lon);
         mMap.addMarker(new MarkerOptions().position(marker).title(markerName));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
+        mMap.animateCamera( CameraUpdateFactory.zoomTo( 10.0f ) );
 
         //add circle around main marker
         CircleOptions circleOptions = new CircleOptions()
@@ -69,6 +79,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Circle circle = mMap.addCircle(circleOptions);
 
+        //Get nearby users and place their marker
+        profiles.add(new Pair<>("User1", new LatLng(lat+0.1,lon)));
+        profiles.add(new Pair<>("User2", new LatLng(lat,lon+0.1)));
+        profiles.add(new Pair<>("User3", new LatLng(lat-0.1,lon-0.1)));
+        loadProfilesMarker(profiles);
+        mMap.setOnMarkerClickListener(this);
+        mMap.setOnInfoWindowClickListener(this);
+
         mapView.setContentDescription("Google Map Ready");
+    }
+
+    private void loadProfilesMarker(List<Pair<String,LatLng>> profiles){
+        for(Pair<String,LatLng> p:profiles){
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(p.second)
+                    .title(p.first));
+            marker.setTag(p);
+
+        }
+    }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+        if(profiles.contains(marker.getTag())) {
+            if(!marker.isInfoWindowShown()) {
+                marker.showInfoWindow();
+                return false;
+            }
+        }
+        return true;
+    }
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        if(profiles.contains(marker.getTag())) {
+            Intent profileIntent = new Intent(MapsActivity.this, ProfilePage.class);
+            this.startActivity(profileIntent);
+        }
     }
 }
