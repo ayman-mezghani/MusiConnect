@@ -105,6 +105,18 @@ public class LocationTest {
         denyPermissionsIfNeeded();
     }
 
+    private int[] grantedPerm() {
+        int[] results = new int[1];
+        results[0] = PackageManager.PERMISSION_GRANTED;
+        return results;
+    }
+
+    private int[] deniedPerm() {
+        int[] results = new int[1];
+        results[0] = PackageManager.PERMISSION_DENIED;
+        return results;
+    }
+
     @Test
     public void testGetLocationReturnsRight() {
         clickAllow();
@@ -138,10 +150,8 @@ public class LocationTest {
     @Test
     public void testRequestPermissionResultGranted() {
         clickAllow();
-        int[] results = new int[1];
-        results[0] = PackageManager.PERMISSION_GRANTED;
+        int[] results = grantedPerm();
         mRule.getActivity().onRequestPermissionsResult(MapsActivity.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
-
         assert(mRule.getActivity().getToast().getView().isShown());
         // onView(withText(R.string.perm_granted)).inRoot(withDecorView(not(mRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
@@ -149,8 +159,7 @@ public class LocationTest {
     @Test
     public void testRequestPermissionResultDenied() {
         clickDeny();
-        int[] results = new int[1];
-        results[0] = PackageManager.PERMISSION_DENIED;
+        int[] results = deniedPerm();
         mRule.getActivity().onRequestPermissionsResult(MapsActivity.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
         assert(mRule.getActivity().getToast().getView().isShown());
         // onView(withText(R.string.perm_denied)).inRoot(withDecorView(not(mRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
@@ -159,8 +168,7 @@ public class LocationTest {
     @Test
     public void testRequestPermissionResultIgnored() {
         clickDeny();
-        int[] results = new int[1];
-        results[0] = PackageManager.PERMISSION_GRANTED;
+        int[] results = deniedPerm();
         mRule.getActivity().onRequestPermissionsResult(0, null, results);
         assert(!mRule.getActivity().getToast().getView().isShown());
 
