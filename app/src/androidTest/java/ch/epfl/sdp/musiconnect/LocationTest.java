@@ -163,17 +163,16 @@ public class LocationTest {
         mRule.getActivity().onRequestPermissionsResult(MapsActivity.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
         assert(mRule.getActivity().getToast().getView().isShown());
         // onView(withText(R.string.perm_denied)).inRoot(withDecorView(not(mRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+
+        mRule.getActivity().onRequestPermissionsResult(0, null, results);
+        assert(!mRule.getActivity().getToast().getView().isShown());
     }
 
     @Test
     public void testRequestPermissionResultIgnored() {
         clickDeny();
-        int[] results = deniedPerm();
-        mRule.getActivity().onRequestPermissionsResult(0, null, results);
-        assert(!mRule.getActivity().getToast().getView().isShown());
-
-        int[] noResults = new int[0];
-        mRule.getActivity().onRequestPermissionsResult(MapsActivity.MY_PERMISSIONS_REQUEST_LOCATION, null, noResults);
+        int[] results = new int[0];
+        mRule.getActivity().onRequestPermissionsResult(MapsActivity.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
         assert(!mRule.getActivity().getToast().getView().isShown());
     }
 }
