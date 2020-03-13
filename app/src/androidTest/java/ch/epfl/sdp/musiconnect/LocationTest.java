@@ -1,25 +1,20 @@
 package ch.epfl.sdp.musiconnect;
 
-import android.Manifest;
-import android.app.Instrumentation;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.Build;
+import android.os.Looper;
 
-import androidx.core.content.ContextCompat;
-import androidx.test.InstrumentationRegistry;
-import androidx.test.espresso.intent.Intents;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.rule.ActivityTestRule;
+
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
 
-import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,28 +33,66 @@ public class LocationTest {
     public final ActivityTestRule<MapsActivity> mRule =
             new ActivityTestRule<>(MapsActivity.class);
 
+    UiDevice device;
 
-    private void allowPermissionsIfNeeded() {
+    @BeforeClass
+    public static void set() {
+        Looper.prepare();
+    }
+
+    @Before
+    public void setUp(){
+        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+    }
+
+    private void clickAlert() {
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && testPermissionsGranted()) {
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException("Cannot execute Thread.sleep()");
-                }
-                UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-                UiObject allowPermissions = device.findObject(new UiSelector()
-                        .clickable(true)
-                        .checkable(false)
-                        .index(1));
-                if (allowPermissions.exists()) {
-                    allowPermissions.click();
-                }
+            UiObject alert = device.findObject(new UiSelector().className("android.widget.Button")
+                    .text("OK"));
+
+            if (alert.exists()) {
+                alert.clickAndWaitForNewWindow();
             }
         } catch (UiObjectNotFoundException e) {
             System.out.println("There is no permissions dialog to interact with");
         }
     }
+
+    private void allowPermissionsIfNeeded() {
+        try {
+
+            UiObject allowPermissions = device.findObject(new UiSelector()
+                    .clickable(true)
+                    .checkable(false)
+                    .index(1));
+            if (allowPermissions.exists()) {
+                allowPermissions.click();
+            }
+
+        } catch (UiObjectNotFoundException e) {
+            System.out.println("There is no permissions dialog to interact with");
+        }
+    }
+
+
+    private void denyPermissionsIfNeeded() {
+        try {
+
+                UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+                UiObject denyPermissions = device.findObject(new UiSelector()
+                        .clickable(true)
+                        .checkable(false)
+                        .index(0));
+
+                if (denyPermissions.exists()) {
+                    denyPermissions.click();
+                }
+
+        } catch (UiObjectNotFoundException e) {
+            System.out.println("There is no permissions dialog to interact with");
+        }
+    }
+
 
     private boolean correctLocation(Location location) {
         if (location != null) {
@@ -70,39 +103,26 @@ public class LocationTest {
     }
 
 
-    private boolean testPermissionsGranted() {
-        Context context = InstrumentationRegistry.getTargetContext();
-        int permissionStatus = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION);
-        return (permissionStatus == PackageManager.PERMISSION_GRANTED);
-    }
 
     @Test
     public void testSetFakeLocationReturnsRight() {
+
+        clickAlert();
         allowPermissionsIfNeeded();
-        if (testPermissionsGranted()) {
 
-            Location l = new Location("Test");
-            l.setLongitude(10.0);
-            l.setLatitude(30.0);
+        Location loc = mRule.getActivity().getLocation();
+        assert(correctLocation(loc));
 
-            mRule.getActivity().setLocation(l);
-
-            Location loc = mRule.getActivity().getLocation();
-
-            assert(correctLocation(loc));
-            assertThat(l.getLatitude(), is(loc.getLatitude()));
-            assertThat(l.getLongitude(), is(loc.getLongitude()));
-        }
     }
 
-
     @Test
-    public void testRequestPermissionResultGranted() {
-        allowPermissionsIfNeeded();
-        int[] results = new int[1];
-        results[0] = PackageManager.PERMISSION_GRANTED;
-        mRule.getActivity().onRequestPermissionsResult(99, null, results);
+    public void testSetFakeLocationFails() {
+        clickAlert();
+        denyPermissionsIfNeeded();
 
-        assert(testPermissionsGranted());
+
+        Location loc = mRule.getActivity().getLocation();
+        assert(loc == null);
+
     }
 }

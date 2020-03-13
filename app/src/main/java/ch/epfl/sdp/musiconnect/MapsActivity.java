@@ -5,6 +5,7 @@ import ch.epfl.sdp.R;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -13,15 +14,20 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -32,7 +38,9 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -42,6 +50,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     FusedLocationProviderClient fusedLocationClient;
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    private static final int REQUEST_CHECK_SETTINGS = 0x1;
+
     private GoogleMap mMap;
     private View mapView;
     private UiSettings mUiSettings;
@@ -74,13 +84,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerName));
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
+                        if (circle != null) {
+                            circle.remove();
+                        }
                         CircleOptions circleOptions = new CircleOptions()
                                 .center(latLng)
                                 .radius(5000); // In meters
 
-                        if (circle != null) {
-                            circle.remove();
-                        }
                         circle = mMap.addCircle(circleOptions);
 
                         mapView.setContentDescription("Google Map Ready");
@@ -102,6 +112,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(5 * 1000);
+        locationRequest.setFastestInterval(3 * 1000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
 
@@ -129,6 +144,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationRequest.setInterval(5 * 1000);
         locationRequest.setFastestInterval(3 * 1000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -170,17 +186,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    protected void setLocation(Location location) {
-        if (location != null) {
-            if (location.getLatitude() > -90.0 &&
-                    location.getLatitude() <= 90.0 &&
-                    location.getLongitude() > -180.0 &&
-                    location.getLongitude() <= 180.0) {
-                lastLocation = location;
-            }
-        }
-    }
-
     protected Location getLocation() {
         if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             checkLocationPermission();
@@ -197,15 +202,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             });
         }
 
-        /*Intent resultIntent = new Intent();
-        resultIntent.putExtra("lastLocation", lastLocation);
-        setResult(Activity.RESULT_OK, resultIntent);
-        finish();*/
-
         return lastLocation;
     }
 
-    private void checkLocationPermission() {
+    protected AlertDialog getAlert() {
+        return alert;
+    }
+
+    protected void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
@@ -226,6 +230,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 ActivityCompat.requestPermissions(MapsActivity.this,
                                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                         MY_PERMISSIONS_REQUEST_LOCATION);
+                            }
+                        })
+                        .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
                             }
                         })
                         .create();
@@ -250,7 +260,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (ContextCompat.checkSelfPermission(this,
                         Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED) {
-
+                    Toast.makeText(this, "permission granted", Toast.LENGTH_LONG).show();
                     startLocationUpdates();
                 }
 
