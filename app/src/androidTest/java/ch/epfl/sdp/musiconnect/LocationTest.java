@@ -28,7 +28,7 @@ public class LocationTest {
     public final ActivityTestRule<MapsActivity> mRule =
             new ActivityTestRule<>(MapsActivity.class);
 
-    UiDevice device;
+    private UiDevice device;
 
     @BeforeClass
     public static void set() {
@@ -95,11 +95,19 @@ public class LocationTest {
         return false;
     }
 
+    private void clickAllow() {
+        clickAlert();
+        allowPermissionsIfNeeded();
+    }
+
+    private void clickDeny() {
+        clickAlert();
+        denyPermissionsIfNeeded();
+    }
 
     @Test
     public void testGetLocationReturnsRight() {
-        clickAlert();
-        allowPermissionsIfNeeded();
+        clickAllow();
         mRule.getActivity().updateLastLocation();
         try {
             Thread.sleep(3000);
@@ -121,8 +129,7 @@ public class LocationTest {
 
     @Test
     public void testGetLocationFails() {
-        clickAlert();
-        denyPermissionsIfNeeded();
+        clickDeny();
 
         Location loc = mRule.getActivity().getLocation();
         assert(!correctLocation(loc));
@@ -130,8 +137,7 @@ public class LocationTest {
 
     @Test
     public void testRequestPermissionResultGranted() {
-        clickAlert();
-        allowPermissionsIfNeeded();
+        clickAllow();
         int[] results = new int[1];
         results[0] = PackageManager.PERMISSION_GRANTED;
         mRule.getActivity().onRequestPermissionsResult(MapsActivity.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
@@ -142,8 +148,7 @@ public class LocationTest {
 
     @Test
     public void testRequestPermissionResultDenied() {
-        clickAlert();
-        denyPermissionsIfNeeded();
+        clickDeny();
         int[] results = new int[1];
         results[0] = PackageManager.PERMISSION_DENIED;
         mRule.getActivity().onRequestPermissionsResult(MapsActivity.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
@@ -153,8 +158,7 @@ public class LocationTest {
 
     @Test
     public void testRequestPermissionResultIgnored() {
-        clickAlert();
-        denyPermissionsIfNeeded();
+        clickDeny();
         int[] results = new int[1];
         results[0] = PackageManager.PERMISSION_GRANTED;
         mRule.getActivity().onRequestPermissionsResult(0, null, results);
