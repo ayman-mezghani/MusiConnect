@@ -91,7 +91,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
+        getLocation();
     }
 
 
@@ -167,7 +167,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             fusedLocationClient.getLastLocation().addOnSuccessListener(MapsActivity.this, location -> {
                 if (location != null) {
                     lastLocation = location;
-
                 }
                 /*else {
                     startLocationUpdates();
