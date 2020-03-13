@@ -2,7 +2,6 @@ package ch.epfl.sdp.musiconnect;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -25,8 +24,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -46,9 +43,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private View mapView;
     private UiSettings mUiSettings;
     private Marker marker;
-    private Circle circle;
     private final double THRESHOLD = 0.00002;
     private AlertDialog alert;
+    private Toast toast;
 
     private LocationCallback locationCallback = new LocationCallback() {
         @Override
@@ -74,14 +71,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerName));
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
-                        if (circle != null) {
-                            circle.remove();
-                        }
-                        CircleOptions circleOptions = new CircleOptions()
-                                .center(latLng)
-                                .radius(5000); // In meters
-
-                        circle = mMap.addCircle(circleOptions);
 
                         mapView.setContentDescription("Google Map Ready");
                     }
@@ -154,9 +143,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onPause() {
         super.onPause();
 
-        if (fusedLocationClient != null) {
-            fusedLocationClient.removeLocationUpdates(locationCallback);
-        }
+        fusedLocationClient.removeLocationUpdates(locationCallback);
+
     }
 
     @Override
@@ -190,6 +178,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return lastLocation;
     }
 
+    protected Toast getToast() {
+        return toast;
+    }
 
     protected void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -229,19 +220,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         if (requestCode == MY_PERMISSIONS_REQUEST_LOCATION) { // If request is cancelled, the result arrays are empty.
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
                 // permission was granted. Do the location-related task you need to do.
                 if (ContextCompat.checkSelfPermission(this,
                         Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "permission granted", Toast.LENGTH_LONG).show();
+                    toast = Toast.makeText(this, getString(R.string.perm_granted), Toast.LENGTH_LONG);
+                    toast.show();
                     startLocationUpdates();
                 }
 
             } else {
                 // permission denied. Disable the
                 // functionality that depends on this permission.
-                Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
+                toast = Toast.makeText(this, getString(R.string.perm_denied), Toast.LENGTH_LONG);
+                toast.show();
             }
 
             // other 'case' lines to check for other
