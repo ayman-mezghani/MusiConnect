@@ -54,6 +54,7 @@ public class LocationTest {
     @Before
     public void setUp(){
         device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        mRule.getActivity().updateLastLocation();
     }
 
 
@@ -117,11 +118,12 @@ public class LocationTest {
         clickAlert();
         allowPermissionsIfNeeded();
 
+
         Location loc = mRule.getActivity().getLocation();
-        assertThat(correctLocation(loc), is(true));
+        assert(correctLocation(loc));
 
         Location loc2 = mRule.getActivity().getLocation();
-        assertThat(correctLocation(loc2), is(true));
+        assert(correctLocation(loc2));
         assertThat(loc.getLatitude(), is(loc2.getLatitude()));
         assertThat(loc.getLongitude(), is(loc2.getLongitude()));
     }

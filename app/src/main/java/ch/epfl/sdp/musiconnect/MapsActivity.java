@@ -91,7 +91,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        getLocation();
     }
 
 
@@ -159,7 +158,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    protected Location getLocation() {
+    protected void updateLastLocation() {
         if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             checkLocationPermission();
 
@@ -173,7 +172,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }*/
             });
         }
+    }
 
+    protected Location getLocation() {
         return lastLocation;
     }
 
