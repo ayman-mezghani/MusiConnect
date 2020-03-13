@@ -1,14 +1,9 @@
 package ch.epfl.sdp.musiconnect;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Looper;
-import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
-import androidx.test.espresso.core.internal.deps.guava.collect.Maps;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -23,17 +18,6 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import ch.epfl.sdp.R;
-
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsNot.not;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -54,7 +38,6 @@ public class LocationTest {
     @Before
     public void setUp(){
         device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        mRule.getActivity().updateLastLocation();
     }
 
 
@@ -117,15 +100,23 @@ public class LocationTest {
     public void testGetLocationReturnsRight() {
         clickAlert();
         allowPermissionsIfNeeded();
-
-
+        mRule.getActivity().updateLastLocation();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Cannot execute Thread.sleep()");
+        }
         Location loc = mRule.getActivity().getLocation();
         assert(correctLocation(loc));
 
+        mRule.getActivity().updateLastLocation();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Cannot execute Thread.sleep()");
+        }
         Location loc2 = mRule.getActivity().getLocation();
         assert(correctLocation(loc2));
-        assertThat(loc.getLatitude(), is(loc2.getLatitude()));
-        assertThat(loc.getLongitude(), is(loc2.getLongitude()));
     }
 
     @Test
@@ -134,7 +125,7 @@ public class LocationTest {
         denyPermissionsIfNeeded();
 
         Location loc = mRule.getActivity().getLocation();
-        assert(loc == null);
+        assert(!correctLocation(loc));
     }
 
     @Test
@@ -144,7 +135,7 @@ public class LocationTest {
         int[] results = new int[1];
         results[0] = PackageManager.PERMISSION_GRANTED;
         mRule.getActivity().onRequestPermissionsResult(MapsActivity.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
-        mRule.getActivity().getToast().getView().isShown();
+
         assert(mRule.getActivity().getToast().getView().isShown());
         // onView(withText(R.string.perm_granted)).inRoot(withDecorView(not(mRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
