@@ -4,6 +4,9 @@ import ch.epfl.sdp.R;
 
 import android.os.Bundle;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 public class ProfilePage extends StartPage {
 
     @Override
@@ -12,6 +15,6 @@ public class ProfilePage extends StartPage {
         setContentView(R.layout.activity_profile_page);
 
         CloudStorage storage = new CloudStorage(getApplicationContext());
-        storage.upload("/home/ayman/Pictures/p.png", "amz");
+        storage.uploadGoogle("/home/ayman/Documents/3e/prin/sdp/MusiConnect/app/src/test/data/image.jpg");
     }
 }
