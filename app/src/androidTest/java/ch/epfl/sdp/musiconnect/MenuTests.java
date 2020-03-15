@@ -52,8 +52,8 @@ public class MenuTests {
     public void testHelpClickShouldStartNewIntent() {
         onView(withId(R.id.help)).perform(click());
 
-        Intent profileIntent = new Intent();
-        startPageRule.launchActivity(profileIntent);
+        Intent helpIntent = new Intent();
+        startPageRule.launchActivity(helpIntent);
         intended(hasComponent(HelpPage.class.getName()));
     }
 

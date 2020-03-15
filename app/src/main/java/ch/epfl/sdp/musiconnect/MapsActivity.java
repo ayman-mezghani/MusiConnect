@@ -3,6 +3,7 @@ package ch.epfl.sdp.musiconnect;
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,6 +34,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapView = mapFragment.getView();
         mapFragment.getMapAsync(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == R.id.map)
+            return true;
+        else
+            super.onOptionsItemSelected(item);
+        return true;
     }
 
 
