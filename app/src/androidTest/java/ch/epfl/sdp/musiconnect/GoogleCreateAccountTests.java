@@ -4,7 +4,6 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 
-import androidx.test.espresso.Espresso;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -21,11 +20,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import ch.epfl.sdp.MainActivity;
-import ch.epfl.sdp.R;
-
-import static android.provider.Settings.System.getString;
-import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
@@ -38,13 +32,17 @@ public class GoogleCreateAccountTests {
     private static final long DEFAULT_TIMEOUT = 1000 * 10;
     private static final boolean RUN_IN_LOCAL = false; // variable used for switching between Travis(false) tests and local tests(true)
 
-    @Rule
+    /*@Rule
     public final ActivityTestRule<GoogleResultActivity> mGoogleResultActivity =
-            new ActivityTestRule<>(GoogleResultActivity.class);
+            new ActivityTestRule<>(GoogleResultActivity.class);*/
+
+    /*@Rule
+    public final ActivityTestRule<MainActivity> mActivityRule =
+            new ActivityTestRule<>(MainActivity.class, false, true);*/
 
     @Rule
-    public final ActivityTestRule<MainActivity> mActivityRule =
-            new ActivityTestRule<>(MainActivity.class, false, true);
+    public final ActivityTestRule<GoogleLogin> googleLoginTestsRule =
+            new ActivityTestRule<>(GoogleLogin.class);
 
     // Before and after methods are used in order to accept tests with intents
     @After
@@ -68,13 +66,12 @@ public class GoogleCreateAccountTests {
         }
     }
 
-    @Test()
     /**
      * This tests work in local, the were written to get the coverage
      * To run this test in local don't forget to change RUN_IN_LOCAL to true
      */
+    @Test()
     public void a_connectNewAccount() throws Exception {
-        onView(withId(R.id.mainGoButton)).perform(click());
 
         if(RUN_IN_LOCAL) {
             boolean noAccountInstalled = false;
@@ -85,16 +82,19 @@ public class GoogleCreateAccountTests {
             loginButton.waitForExists(DEFAULT_TIMEOUT);
 
             if (!loginButton.exists()) {
-                UiScrollable appViews = new UiScrollable(new UiSelector().scrollable(true));
                 UiObject anotherAccount = mUiDevice.findObject(new UiSelector().textContains("another account"));
                 loginButton.waitForExists(DEFAULT_TIMEOUT);
 
-                if (anotherAccount.exists())
+                if (anotherAccount.exists()) {
                     anotherAccount.click();
-                else
+                }
+                else {
                     noAccountInstalled = true;
+                }
 
                 mUiDevice.wait(Until.findObject(By.clazz(WebView.class)), DEFAULT_TIMEOUT);
+                Thread.sleep(DEFAULT_TIMEOUT);
+                UiScrollable appViews = new UiScrollable(new UiSelector().scrollable(true));
                 do {
                     if (mUiDevice.findObject(new UiSelector().instance(0).className(EditText.class)).exists()) {
                         mUiDevice.findObject(new UiSelector().instance(0).className(EditText.class)).setText(ACCOUNT_MAIL);
@@ -111,7 +111,7 @@ public class GoogleCreateAccountTests {
                 pwdInput.setText(ACCOUNT_PWD);
 
                 buttonClick(mUiDevice.findObject(new UiSelector().className(Button.class).textContains("Next")));
-
+                Thread.sleep(DEFAULT_TIMEOUT);
 
                 appViews.scrollForward(2);
 
@@ -129,7 +129,7 @@ public class GoogleCreateAccountTests {
                 loginButton.clickAndWaitForNewWindow(DEFAULT_TIMEOUT);
 
             Thread.sleep(2 * DEFAULT_TIMEOUT);
-            intended(hasComponent(GoogleResultActivity.class.getName()));
+            intended(hasComponent(StartPage.class.getName()));
         }
         else{
             assert(true);

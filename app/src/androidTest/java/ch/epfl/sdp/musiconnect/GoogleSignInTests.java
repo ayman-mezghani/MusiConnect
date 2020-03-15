@@ -1,36 +1,34 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.content.Intent;
-import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.EditText;
 
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiSelector;
-import androidx.test.uiautomator.Until;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import ch.epfl.sdp.MainActivity;
+
 import ch.epfl.sdp.R;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.TestCase.assertTrue;
 
 
@@ -42,12 +40,12 @@ public class GoogleSignInTests {
     private static final boolean RUN_IN_LOCAL = false; // variable used for switching between Travis(false) tests and local tests(true)
 
     @Rule
-    public final ActivityTestRule<GoogleResultActivity> mGoogleResultActivity =
-            new ActivityTestRule<>(GoogleResultActivity.class);
+    public final ActivityTestRule<StartPage> startPageTestsRule =
+            new ActivityTestRule<>(StartPage.class);
 
     @Rule
-    public final ActivityTestRule<MainActivity> mActivityRule =
-            new ActivityTestRule<>(MainActivity.class, false, true);
+    public final ActivityTestRule<GoogleLogin> googleLoginTestRule =
+            new ActivityTestRule<>(GoogleLogin.class, true, true);
 
 
     private UiDevice mUiDevice;
@@ -62,7 +60,7 @@ public class GoogleSignInTests {
     public void before() throws Exception {
         Intents.init();
         mUiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        mActivityRule.launchActivity(null);
+        //mActivityRule.launchActivity(null);
     }
 
 
@@ -75,27 +73,30 @@ public class GoogleSignInTests {
     public void c_AlreadySignedIn() throws Exception {
         if(RUN_IN_LOCAL) {
             b_connectExistingAccountTest();
-            Espresso.pressBack();
-            onView(withId(R.id.txtvWelcome)).check(matches(withText("Already signed in")));
+
+            openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+            onView(withText(R.string.myprofile)).perform(click());
+
+            onView(withId(R.id.myFirstname)).check(matches(withText("MusiConnect")));
         }else assert(true);
     }
 
     @Test
-    public void d_signOut() throws Exception {
+    public void testSignoutClickShoulKillStartPageActivity() throws Exception {
         if(RUN_IN_LOCAL)
             b_connectExistingAccountTest();
         else{
             Intent i = new Intent();
-            mGoogleResultActivity.launchActivity(i);
+            startPageTestsRule.launchActivity(i);
         }
-        UiObject signout = mUiDevice.findObject(new UiSelector().className(Button.class).instance(0));
-        signout.waitForExists(DEFAULT_TIMEOUT);
-        signout.click();
+
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(R.string.logOut)).perform(click());
 
         if(RUN_IN_LOCAL){
             Thread.sleep(DEFAULT_TIMEOUT);
 
-            assertTrue(mGoogleResultActivity.getActivity().isDestroyed());
+            assertTrue(startPageTestsRule.getActivity().isDestroyed());
         }
         else{
             assert(true);
@@ -105,8 +106,6 @@ public class GoogleSignInTests {
     @Test
     public void b_connectExistingAccountTest() throws Exception {
         if (RUN_IN_LOCAL) {
-            // to be deleted after merging
-            onView(withId(R.id.mainGoButton)).perform(click());
             onView(withId(R.id.sign_in_button)).perform((click()));
 
 
@@ -119,14 +118,11 @@ public class GoogleSignInTests {
 
                 Thread.sleep(DEFAULT_TIMEOUT);
 
-                intended(hasComponent(GoogleResultActivity.class.getName()));
+                intended(hasComponent(StartPage.class.getName()));
             }
         }
         else
             assert(true);
     }
-
-
-
 }
 

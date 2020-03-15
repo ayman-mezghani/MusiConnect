@@ -1,10 +1,10 @@
 package ch.epfl.sdp.musiconnect;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import ch.epfl.sdp.R;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,30 +15,35 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
-import ch.epfl.sdp.R;
+public class ProfilePage extends StartPage implements View.OnClickListener {
 
-public class GoogleResultActivity extends AppCompatActivity {
-
-    private ImageView v;
-    private TextView name, mail, id;
+    Button editProfile;
+    private ImageView userImgView;
+    private TextView laastname, firstname, mail, id;
     private Button signOut;
     private GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_google_result);
+        setContentView(R.layout.activity_profile_page);
 
-        v = findViewById(R.id.imgView);
-        mail = findViewById(R.id.txtvMail);
-        name = findViewById(R.id.txtvName);
-        id = findViewById(R.id.txtvId);
-        signOut = findViewById(R.id.btnSignOut);
+        editProfile = findViewById(R.id.btnEditProfile);
+        editProfile.setOnClickListener(this);
 
-        signOut.setOnClickListener(v -> signOut());
+        userImgView = findViewById(R.id.imgView);
+        mail = findViewById(R.id.myMail);
+        firstname = findViewById(R.id.myFirstname);
+        laastname = findViewById(R.id.myLastname);
+
+        firstname.setOnClickListener(v->{
+            Toast.makeText(this, "FirstName", Toast.LENGTH_SHORT).show();
+        });
+        //id = findViewById(R.id.txtvId);
+        //signOut = findViewById(R.id.btnSignOut);
+
+        //signOut.setOnClickListener(v -> signOut());
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -56,23 +61,16 @@ public class GoogleResultActivity extends AppCompatActivity {
             String personId = acct.getId();
             Uri personPhoto = acct.getPhotoUrl();
 
-            name.setText(personName);
+            firstname.setText(personName.split(" ")[0]);
+            laastname.setText(personName.split(" ")[1]);
             mail.setText(personEmail);
-            id.setText(personId);
+            //id.setText(personId);
 
-            Glide.with(this).load(String.valueOf(personPhoto)).into(v);
+            Glide.with(this).load(String.valueOf(personPhoto)).into(userImgView);
         }
-
     }
 
-    private void signOut() {
-        mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(GoogleResultActivity.this, "Signed out succefully", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                });
+    public void onClick(View view) {
+        super.displayNotFinishedFunctionalityMessage();
     }
 }

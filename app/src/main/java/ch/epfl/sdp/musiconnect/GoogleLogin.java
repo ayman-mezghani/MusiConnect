@@ -23,6 +23,7 @@ public class GoogleLogin extends AppCompatActivity {
     SignInButton signInButton;
     private GoogleSignInClient mGoogleSignInClient;
     private int RC_SIGN_IN = 0;
+    private boolean tests = true; // variable telling us if we are running the travis's tests
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,9 @@ public class GoogleLogin extends AppCompatActivity {
 
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        if(tests)
+            mGoogleSignInClient.signOut(); // used to assume be logged out before each tests
     }
 
     @Override
@@ -52,8 +56,8 @@ public class GoogleLogin extends AppCompatActivity {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
         if(account != null) {
-            TextView t = findViewById(R.id.txtvWelcome);
-            t.setText("Already signed in");
+            Intent i = new Intent(GoogleLogin.this, StartPage.class);
+            startActivity(i);
         }
     }
 
@@ -81,10 +85,8 @@ public class GoogleLogin extends AppCompatActivity {
 
             // Signed in successfully, show authenticated UI.
             //updateUI(account);
-            //TextView t = findViewById(R.id.txtvWelcome);
-            //t.setText("You logged in");
 
-            Intent i = new Intent(GoogleLogin.this, GoogleResultActivity.class);
+            Intent i = new Intent(GoogleLogin.this, StartPage.class);
             startActivity(i);
 
         } catch (ApiException e) {
