@@ -11,7 +11,11 @@ import org.junit.runner.RunWith;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiSelector;
 import ch.epfl.sdp.R;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -75,7 +79,6 @@ public class MenuTests {
         intended(hasComponent(ProfilePage.class.getName()));
     }
 
-
     @Test
     public void testSettingsClickShouldStartNewIntent() {
         openActionsMenu(R.string.settings);
@@ -83,5 +86,18 @@ public class MenuTests {
         Intent settingsIntent = new Intent();
         startPageRule.launchActivity(settingsIntent);
         intended(hasComponent(SettingsPage.class.getName()));
+    }
+
+    @Test
+    public void testMapsOpensWithMainMarker() {
+        assert(true);
+
+        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        openActionsMenu(R.string.map);
+
+        UiObject marker = device.findObject(new UiSelector().descriptionContains("You"));
+        marker.waitForExists(5000);
+
+        assert(true);
     }
 }

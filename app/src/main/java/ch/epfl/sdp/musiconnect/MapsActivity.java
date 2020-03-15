@@ -36,15 +36,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == R.id.map)
-            return true;
-        else
-            super.onOptionsItemSelected(item);
-        return true;
-    }
-
 
     /**
      * Manipulates the map once available.
