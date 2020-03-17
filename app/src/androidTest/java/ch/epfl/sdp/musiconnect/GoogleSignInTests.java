@@ -1,9 +1,7 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.content.Intent;
-import android.widget.Button;
 
-import androidx.test.espresso.Espresso;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;

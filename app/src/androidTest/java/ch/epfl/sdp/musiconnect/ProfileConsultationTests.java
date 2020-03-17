@@ -23,7 +23,7 @@ public class ProfileConsultationTests {
             new ActivityTestRule<>(ProfilePage.class);
 
     @Test
-    public void testEditButtonShouldDisplayMessage() {
+    public void testEditButtonShouldDisplayMessage() throws InterruptedException {
         onView(withText(R.string.edit_profile)).perform(click());
         onView(withText(R.string.not_yet_done)).inRoot(withDecorView(not(profilePageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }

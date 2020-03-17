@@ -1,20 +1,19 @@
 package ch.epfl.sdp.musiconnect;
 
-import ch.epfl.sdp.R;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+
+import ch.epfl.sdp.R;
 
 public class ProfilePage extends StartPage implements View.OnClickListener {
 
@@ -37,9 +36,6 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
         firstname = findViewById(R.id.myFirstname);
         laastname = findViewById(R.id.myLastname);
 
-        firstname.setOnClickListener(v->{
-            Toast.makeText(this, "FirstName", Toast.LENGTH_SHORT).show();
-        });
         //id = findViewById(R.id.txtvId);
         //signOut = findViewById(R.id.btnSignOut);
 
