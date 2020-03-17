@@ -15,4 +15,11 @@
     <string name="help_message">Help is on the way !</string>
     <string name="settings_message">Settings to come...</string>
     <string name="not_yet_done">This functionality is not yet part of the application. Please be patient.</string>
+    <string name="cloud_upload_successful">File uploaded successfully</string>
+    <string name="cloud_upload_failed">File upload failed</string>
+    <string name="cloud_download_successful">File downloaded successfully</string>
+    <string name="cloud_download_failed">File download failed</string>
+    <string name="cloud_uploading_file">Uploading: </string>
+    <string name="cloud_downloading_file">Downloading: </string>
+    <string name="cloud_upload_invalid_file_path">Invalid file path</string>
 </resources>

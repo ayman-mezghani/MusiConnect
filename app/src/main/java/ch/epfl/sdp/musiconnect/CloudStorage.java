@@ -1,6 +1,5 @@
 package ch.epfl.sdp.musiconnect;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
@@ -11,6 +10,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
+
+import ch.epfl.sdp.R;
 
 public class CloudStorage {
     private static final String TAG = "Cloud";
@@ -23,27 +24,26 @@ public class CloudStorage {
     }
 
     public void upload(Uri fileUri, String userName) {
-        if (fileUri != null) {
-
+        if (fileUri != null && fileUri.getPath().indexOf('/') > -1) {
             String filePath = fileUri.getPath();
             String cloudPath = userName + "/" + filePath.substring(filePath.lastIndexOf('/'));
             StorageReference fileRef = storageReference.child(cloudPath);
 
             fileRef.putFile(fileUri)
                     .addOnSuccessListener(taskSnapshot -> {
-                        Toast.makeText(context, "File uploaded successfully", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, R.string.cloud_upload_successful, Toast.LENGTH_LONG).show();
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(context, "File upload failed", Toast.LENGTH_LONG).show();
-                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, R.string.cloud_upload_failed, Toast.LENGTH_LONG).show();
+                        Log.d(TAG, e.getMessage());
                     })
                     .addOnProgressListener(taskSnapshot -> {
                         long progress = 100 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount();
-                        Toast.makeText(context, "Uploading: " + progress + "%", Toast.LENGTH_SHORT).show();
+                        String s = context.getString(R.string.cloud_uploading_file)+" ";
+                        Toast.makeText(context, s + progress + "%", Toast.LENGTH_SHORT).show();
                     });
         } else {
-//            Display error Toast
-            Toast.makeText(context, "No file is selected for upload", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -61,17 +61,18 @@ public class CloudStorage {
         fileRef.getFile(localFile)
                 .addOnSuccessListener(taskSnapshot -> {
                     // Local temp file has been created
-                    Toast.makeText(context, "File downloaded successfully", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, R.string.cloud_download_successful, Toast.LENGTH_LONG).show();
 
                 })
                 .addOnFailureListener(e -> {
                     // Handle any errors
-                    Toast.makeText(context, "File download failed", Toast.LENGTH_LONG).show();
-                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, R.string.cloud_download_failed, Toast.LENGTH_LONG).show();
+                    Log.d(TAG, e.getMessage());
                 })
                 .addOnProgressListener(taskSnapshot -> {
                     long progress = 100 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount();
-                    Toast.makeText(context, "Downloading: " + progress + "%", Toast.LENGTH_SHORT).show();
+                    String s = context.getString(R.string.cloud_downloading_file)+" ";
+                    Toast.makeText(context, s + progress + "%", Toast.LENGTH_SHORT).show();
                 });
     }
 }
