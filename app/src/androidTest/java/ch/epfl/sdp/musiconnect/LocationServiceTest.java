@@ -1,9 +1,12 @@
 package ch.epfl.sdp.musiconnect;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Looper;
 
+import androidx.core.content.ContextCompat;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -13,16 +16,30 @@ import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.sdp.R;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertTrue;
+
 
 @RunWith(AndroidJUnit4.class)
 @SdkSuppress(minSdkVersion = 18)
-public class LocationTest {
+public class LocationServiceTest {
+
 
     @Rule
     public final ActivityTestRule<MapsActivity> mRule =
@@ -40,6 +57,12 @@ public class LocationTest {
         device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
     }
 
+
+    private static boolean hasNeededPermission() {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        int permissionStatus = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION);
+        return permissionStatus == PackageManager.PERMISSION_GRANTED;
+    }
 
     private void clickAlert() {
         try {
@@ -95,11 +118,18 @@ public class LocationTest {
         return false;
     }
 
+
+    /**
+     * Clicks on the alert boxes such that location permissions are given
+     */
     private void clickAllow() {
         clickAlert();
         allowPermissionsIfNeeded();
     }
 
+    /**
+     * Clicks on the alert boxes such that location permissions are rejected
+     */
     private void clickDeny() {
         clickAlert();
         denyPermissionsIfNeeded();
@@ -120,59 +150,69 @@ public class LocationTest {
     @Test
     public void testGetLocationReturnsRight() {
         clickAllow();
-        mRule.getActivity().updateLastLocation();
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException("Cannot execute Thread.sleep()");
-        }
-        Location loc = mRule.getActivity().getLocation();
-        assert(correctLocation(loc));
 
-        mRule.getActivity().updateLastLocation();
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException("Cannot execute Thread.sleep()");
-        }
-        Location loc2 = mRule.getActivity().getLocation();
-        assert(correctLocation(loc2));
+        Task<Location> task = mRule.getActivity().getLocation();
+        task.addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    assertTrue(correctLocation(location));
+                } else { // location will be null if the location services are not available...
+                    assertTrue(location == null);
+                }
+            }
+        });
+
+
     }
 
+
+    /**
+     * This test works only if the user rejected the location permissions
+     */
     @Test
     public void testGetLocationFails() {
-        clickDeny();
-
-        Location loc = mRule.getActivity().getLocation();
-        assert(!correctLocation(loc));
+        if (!hasNeededPermission()) {
+            clickDeny();
+            Task<Location> task = mRule.getActivity().getLocation();
+            task.addOnSuccessListener(new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    assertTrue(location == null);
+                }
+            });
+        }
     }
+
 
     @Test
     public void testRequestPermissionResultGranted() {
         clickAllow();
         int[] results = grantedPerm();
-        mRule.getActivity().onRequestPermissionsResult(MapsActivity.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
-        assert(mRule.getActivity().getToast().getView().isShown());
-        // onView(withText(R.string.perm_granted)).inRoot(withDecorView(not(mRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+        mRule.getActivity().onRequestPermissionsResult(LocationService.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
+        boolean b = mRule.getActivity().isLocationPermissionGranted();
+        assertTrue(b);
     }
 
     @Test
     public void testRequestPermissionResultDenied() {
         clickDeny();
         int[] results = deniedPerm();
-        mRule.getActivity().onRequestPermissionsResult(MapsActivity.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
-        assert(mRule.getActivity().getToast().getView().isShown());
-        // onView(withText(R.string.perm_denied)).inRoot(withDecorView(not(mRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+        mRule.getActivity().onRequestPermissionsResult(LocationService.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
+        boolean b = mRule.getActivity().isLocationPermissionGranted();
+        assertTrue(!b);
 
         mRule.getActivity().onRequestPermissionsResult(0, null, results);
-        assert(!mRule.getActivity().getToast().getView().isShown());
+        b = mRule.getActivity().isLocationPermissionGranted();
+        assertTrue(!b);
     }
 
     @Test
     public void testRequestPermissionResultIgnored() {
         clickDeny();
         int[] results = new int[0];
-        mRule.getActivity().onRequestPermissionsResult(MapsActivity.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
-        assert(!mRule.getActivity().getToast().getView().isShown());
+        mRule.getActivity().onRequestPermissionsResult(LocationService.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
+        boolean b = mRule.getActivity().isLocationPermissionGranted();
+        assertTrue(!b);
     }
 }

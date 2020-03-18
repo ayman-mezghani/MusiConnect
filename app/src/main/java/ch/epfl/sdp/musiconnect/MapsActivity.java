@@ -1,23 +1,25 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,57 +29,33 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.Task;
+
 
 import ch.epfl.sdp.R;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-
-    LocationRequest locationRequest;
-    Location lastLocation;
-    FusedLocationProviderClient fusedLocationClient;
-
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    private static final String TAG = "MapsActivity";
+    private FusedLocationProviderClient fusedLocationClient;
+    private boolean locationPermissionGranted;
 
     private GoogleMap mMap;
     private View mapView;
     private UiSettings mUiSettings;
     private Marker marker;
-    private final double THRESHOLD = 0.00002;
-    private AlertDialog alert;
-    private Toast toast;
 
-    private LocationCallback locationCallback = new LocationCallback() {
+    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
-        public void onLocationResult(LocationResult locationResult) {
-            if (locationResult != null) {
-                for (Location location : locationResult.getLocations()) {
-                    if (lastLocation == null ||
-                            (location != null &&
-                                    (Math.abs(lastLocation.getLatitude() - location.getLatitude()) > THRESHOLD ||
-                                            Math.abs(lastLocation.getLatitude() - location.getLatitude()) > THRESHOLD))) {
-
-                        lastLocation = location;
-
-                        double lat = lastLocation.getLatitude();
-                        double lon = lastLocation.getLongitude();
-
-                        if (marker != null) {
-                            marker.remove();
-                        }
-
-                        String markerName = "MarkerName";
-                        LatLng latLng = new LatLng(lat, lon);
-                        marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerName));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-
-
-                        mapView.setContentDescription("Google Map Ready");
-                    }
-                }
+        public void onReceive(Context context, Intent intent) {
+            Bundle b = intent.getBundleExtra("Location");
+            Location location = b.getParcelable("Location");
+            if (location != null) {
+                setLocation(location);
             }
         }
     };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,9 +69,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        getLastLocation();
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                messageReceiver, new IntentFilter("GPSLocationUpdates"));
+    }
 
 
     /**
@@ -113,78 +99,77 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Set UI settings
         mUiSettings.setZoomControlsEnabled(true);
 
+    }
 
-        locationRequest = LocationRequest.create();
-        locationRequest.setInterval(5 * 1000);
-        locationRequest.setFastestInterval(3 * 1000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    private void getLastLocation() {
+        if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationPermissionGranted = true;
+            fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
+                if (location != null) {
+                    setLocation(location);
+                    startLocationService();
+                }
+            });
+        } else {
+            checkLocationPermission();
+        }
+    }
+
+    protected Task<Location> getLocation() {
+        return fusedLocationClient.getLastLocation();
+    }
+
+    protected boolean isLocationPermissionGranted() {
+        return locationPermissionGranted;
+    }
 
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                //Location Permission already granted
-                startLocationUpdates();
-                mMap.setMyLocationEnabled(true);
-            } else {
-                //Request Location Permission
-                checkLocationPermission();
+
+    private void setLocation(Location location) {
+        double lat = location.getLatitude();
+        double lon = location.getLongitude();
+
+        if (marker != null) {
+            marker.remove();
+        }
+
+        String markerName = "MarkerName";
+        LatLng latLng = new LatLng(lat, lon);
+        marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerName));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+        mapView.setContentDescription("Google Map Ready");
+    }
+
+
+
+
+    private void startLocationService() {
+        if (!isLocationServiceRunning()) {
+            Intent serviceIntent = new Intent(this, LocationService.class);
+            startService(serviceIntent);
+        }
+    }
+
+    private boolean isLocationServiceRunning() {
+        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
+            if("ch.epfl.sdp.musiconnect.LocationService".equals(service.service.getClassName())) {
+                Log.d(TAG, "isLocationServiceRunning: location service is already running.");
+                return true;
             }
         }
-        else {
-            startLocationUpdates();
-            mMap.setMyLocationEnabled(true);
-
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        fusedLocationClient.removeLocationUpdates(locationCallback);
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        startLocationUpdates();
-    }
-
-    private void startLocationUpdates() {
-        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+        Log.d(TAG, "isLocationServiceRunning: location service is not running.");
+        return false;
     }
 
 
-    protected void updateLastLocation() {
-        if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            checkLocationPermission();
 
-        } else {
-            fusedLocationClient.getLastLocation().addOnSuccessListener(MapsActivity.this, location -> {
-                if (location != null) {
-                    lastLocation = location;
-                }
-                /*else {
-                    startLocationUpdates();
-                }*/
-            });
-        }
-    }
-
-    protected Location getLocation() {
-        return lastLocation;
-    }
-
-    protected Toast getToast() {
-        return toast;
-    }
-
-    protected void checkLocationPermission() {
+    private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
+            locationPermissionGranted = false;
 
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -193,51 +178,63 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
-                alert = new AlertDialog.Builder(this)
+                new AlertDialog.Builder(this)
                         .setTitle("Location Permission Needed")
                         .setMessage("This app needs the Location permission, please accept to use location functionality")
                         .setPositiveButton("OK", (dialogInterface, i) -> {
                             //Prompt the user once explanation has been shown
-                            ActivityCompat.requestPermissions(MapsActivity.this,
+                            ActivityCompat.requestPermissions(this,
                                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                    MY_PERMISSIONS_REQUEST_LOCATION);
+                                    LocationService.MY_PERMISSIONS_REQUEST_LOCATION);
                         })
                         .setNegativeButton("cancel", (dialog, which) -> dialog.dismiss())
-                        .create();
-                alert.show();
+                        .create()
+                        .show();
 
 
             } else {
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
+                        LocationService.MY_PERMISSIONS_REQUEST_LOCATION);
             }
+        }
+
+        else {
+            locationPermissionGranted = true;
+            getLastLocation();
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if (requestCode == MY_PERMISSIONS_REQUEST_LOCATION) { // If request is cancelled, the result arrays are empty.
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // permission was granted. Do the location-related task you need to do.
-                if (ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.ACCESS_FINE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED) {
-                    toast = Toast.makeText(this, getString(R.string.perm_granted), Toast.LENGTH_LONG);
-                    toast.show();
-                    startLocationUpdates();
+        switch (requestCode) {
+            case LocationService.MY_PERMISSIONS_REQUEST_LOCATION:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted. Do the location-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        Toast.makeText(this, getString(R.string.perm_granted), Toast.LENGTH_LONG)
+                                .show();
+
+                        locationPermissionGranted = true;
+                        getLastLocation();
+                    }
+
+                } else {
+                    // permission denied. Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(this, getString(R.string.perm_denied), Toast.LENGTH_LONG)
+                            .show();
+
+                    locationPermissionGranted = false;
                 }
 
-            } else {
-                // permission denied. Disable the
-                // functionality that depends on this permission.
-                toast = Toast.makeText(this, getString(R.string.perm_denied), Toast.LENGTH_LONG);
-                toast.show();
-            }
+                // other 'case' lines to check for other
+                // permissions this app might request
 
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
 }
