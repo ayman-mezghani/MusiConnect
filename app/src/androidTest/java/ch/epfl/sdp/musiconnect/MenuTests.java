@@ -12,6 +12,9 @@ import org.junit.runner.RunWith;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
+
+import java.util.Map;
+
 import ch.epfl.sdp.R;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -83,5 +86,14 @@ public class MenuTests {
         Intent settingsIntent = new Intent();
         startPageRule.launchActivity(settingsIntent);
         intended(hasComponent(SettingsPage.class.getName()));
+    }
+
+    @Test
+    public void testMapClickShouldStartNewIntent() {
+        openActionsMenu(R.string.map);
+
+        Intent mapIntent = new Intent();
+        startPageRule.launchActivity(mapIntent);
+        intended(hasComponent(MapsActivity.class.getName()));
     }
 }

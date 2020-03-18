@@ -23,4 +23,6 @@
     <string name="last_name">Last name :</string>
     <string name="username_field">Username :</string>
     <string name="edit_profile">Edit profile</string>
+    <string name="perm_granted">Permission granted</string>
+    <string name="perm_denied">Permission denied</string>
 </resources>
