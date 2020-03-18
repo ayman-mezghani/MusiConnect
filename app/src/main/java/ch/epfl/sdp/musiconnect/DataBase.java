@@ -51,7 +51,7 @@ public class DataBase {
         for (String str : fields) {
             updates.put(str, FieldValue.delete());
         }
-        db.collection("users").document(docName).update(updates);
+        this.updateDoc(docName, updates);
     }
 
     public void readDoc(String docName, DbCallback dbCallback) {

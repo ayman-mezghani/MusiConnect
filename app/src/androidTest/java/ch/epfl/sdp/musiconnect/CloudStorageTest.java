@@ -30,9 +30,9 @@ public class CloudStorageTest {
     public final ActivityTestRule<StartPage> startPageRule =
             new ActivityTestRule<>(StartPage.class);
 
-    Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-
+    private Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
     private CloudStorage storage = new CloudStorage(context);
+    private String fileName = R.drawable.image + "";
 
     private static void waitALittle(int t) {
         try {
@@ -44,16 +44,17 @@ public class CloudStorageTest {
 
     @Test
     public void uploadSuccessfulTest() {
-        Uri imageUri = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.drawable.image);
-        storage.upload(imageUri, "amz");
-        waitALittle(7000);
+        Uri imageUri = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + fileName);
+        storage.upload(imageUri, "test");
+        waitALittle(8000);
         onView(withText(R.string.cloud_upload_successful)).inRoot(withDecorView(not(startPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+        storage.delete("test/" + fileName);
     }
 
     @Test
     public void uploadFailedTest() {
         Uri imageUri = Uri.parse("Random/stuff");
-        storage.upload(imageUri, "amz");
+        storage.upload(imageUri, "test");
         waitALittle(6000);
         onView(withText(R.string.cloud_upload_failed)).inRoot(withDecorView(not(startPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
@@ -61,15 +62,36 @@ public class CloudStorageTest {
 
     @Test
     public void downloadSuccessfulTest() {
-        storage.download("test/image.jpg");
+        Uri imageUri = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + fileName);
+        storage.upload(imageUri, "test");
+        storage.download("test/" + fileName, "/storage/self/primary/Download/");
         waitALittle(7000);
         onView(withText(R.string.cloud_download_successful)).inRoot(withDecorView(not(startPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+        waitALittle(2000);
+        storage.delete("test/" + fileName);
     }
 
     @Test
     public void downloadFailedTest() {
-        storage.download("Random/stuffg");
+        storage.download("Random/stuffg", "/storage/self/primary/Download/");
         waitALittle(5000);
         onView(withText(R.string.cloud_download_failed)).inRoot(withDecorView(not(startPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void deleteSuccessfulTest() {
+        Uri imageUri = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + fileName);
+        storage.upload(imageUri, "test");
+        waitALittle(7000);
+        storage.delete("test/" + fileName);
+        waitALittle(1000);
+        onView(withText(R.string.cloud_delete_successful)).inRoot(withDecorView(not(startPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void deleteFailedTest() {
+        storage.delete("Random/stuffg");
+        waitALittle(1000);
+        onView(withText(R.string.cloud_delete_failed)).inRoot(withDecorView(not(startPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 }

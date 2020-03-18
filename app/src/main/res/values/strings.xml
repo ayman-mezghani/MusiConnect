@@ -22,4 +22,6 @@
     <string name="cloud_uploading_file">Uploading: </string>
     <string name="cloud_downloading_file">Downloading: </string>
     <string name="cloud_upload_invalid_file_path">Invalid file path</string>
+    <string name="cloud_delete_successful">File deleted successfully</string>
+    <string name="cloud_delete_failed">File delete failed</string>
 </resources>
