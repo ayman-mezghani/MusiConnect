@@ -11,7 +11,11 @@ import org.junit.runner.RunWith;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiSelector;
 import ch.epfl.sdp.R;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -52,8 +56,8 @@ public class MenuTests {
     public void testHelpClickShouldStartNewIntent() {
         onView(withId(R.id.help)).perform(click());
 
-        Intent profileIntent = new Intent();
-        startPageRule.launchActivity(profileIntent);
+        Intent helpIntent = new Intent();
+        startPageRule.launchActivity(helpIntent);
         intended(hasComponent(HelpPage.class.getName()));
     }
 
@@ -76,18 +80,24 @@ public class MenuTests {
     }
 
     @Test
-    public void testMapClickShouldDisplayMessage() {
-        openActionsMenu(R.string.map);
-
-        onView(withText(R.string.not_yet_done)).inRoot(withDecorView(not(startPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
-    }
-
-    @Test
     public void testSettingsClickShouldStartNewIntent() {
         openActionsMenu(R.string.settings);
 
         Intent settingsIntent = new Intent();
         startPageRule.launchActivity(settingsIntent);
         intended(hasComponent(SettingsPage.class.getName()));
+    }
+
+    @Test
+    public void testMapsOpensWithMainMarker() {
+        assert(true);
+
+        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        openActionsMenu(R.string.map);
+
+        UiObject marker = device.findObject(new UiSelector().descriptionContains("You"));
+        marker.waitForExists(5000);
+
+        assert(true);
     }
 }

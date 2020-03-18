@@ -7,13 +7,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 import ch.epfl.sdp.R;
@@ -59,21 +59,42 @@ public class CloudStorage {
     }
 
 
-    public void download(String cloudPath, String fullSavePath) {
+    public void download(String cloudPath) {
         StorageReference fileRef = storageReference.child(cloudPath);
 
+/*
         String dirPath = fullSavePath;
 
-        if (fullSavePath.charAt(fullSavePath.length()-1) != '/')
+        if (fullSavePath.charAt(fullSavePath.length() - 1) != '/')
             dirPath += "/";
 
-        File localFile = new File(dirPath + getFileName(cloudPath));
+        String fileName = getFileName(cloudPath)+ "_" + new SimpleDateFormat("yyyyMMddHHmmss'.txt'").format(new Date());
+
+        File localFile = new File(dirPath + fileName);
+*/
+
+        String fileName = getFileName(cloudPath);
+
+        Log.d(TAG, fileName);
+        String prefix = fileName.contains(".") ? fileName.substring(0, fileName.indexOf(".")) : fileName;
+        String suffix = fileName.contains(".") ? fileName.substring(fileName.indexOf(".")) : null;
+
+        File localFile = null;
+        try {
+            localFile = File.createTempFile(prefix+"_", suffix, null);
+        } catch (IOException e) {
+            Toast.makeText(context, "Error Occurred", Toast.LENGTH_LONG).show();
+            Log.d(TAG, e.getMessage());
+            return;
+        }
+
+        File finalLocalFile = localFile;
 
         fileRef.getFile(localFile)
                 .addOnSuccessListener(taskSnapshot -> {
                     // Local temp file has been created
                     Toast.makeText(context, R.string.cloud_download_successful, Toast.LENGTH_LONG).show();
-                    Log.e(TAG, "File created. Created " + localFile.toString());
+                    Log.e(TAG, "File created. Created " + finalLocalFile.toString());
                 })
                 .addOnFailureListener(e -> {
                     // Handle any errors
@@ -102,6 +123,6 @@ public class CloudStorage {
     }
 
     private String getFileName(@NonNull String path) {
-        return path.contains("/") ? path.substring(path.lastIndexOf('/')) : path;
+        return path.contains("/") ? path.substring(path.lastIndexOf('/')+1) : path;
     }
 }

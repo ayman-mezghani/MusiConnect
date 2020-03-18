@@ -1,20 +1,35 @@
 package ch.epfl.sdp.musiconnect;
 
-import ch.epfl.sdp.BuildConfig;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+
 import ch.epfl.sdp.R;
 
-import android.net.Uri;
-import android.os.Bundle;
+public class ProfilePage extends StartPage implements View.OnClickListener {
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-public class ProfilePage extends StartPage {
+    Button editProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
+
+        editProfile = findViewById(R.id.btnEditProfile);
+        editProfile.setOnClickListener(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == R.id.my_profile)
+            return true;
+        else
+            super.onOptionsItemSelected(item);
+        return true;
+    }
+
+    public void onClick(View view) {
+        super.displayNotFinishedFunctionalityMessage();
     }
 }

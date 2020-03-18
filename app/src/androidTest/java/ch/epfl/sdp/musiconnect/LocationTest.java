@@ -1,0 +1,178 @@
+package ch.epfl.sdp.musiconnect;
+
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.os.Looper;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.SdkSuppress;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObjectNotFoundException;
+import androidx.test.uiautomator.UiSelector;
+
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+
+@RunWith(AndroidJUnit4.class)
+@SdkSuppress(minSdkVersion = 18)
+public class LocationTest {
+
+    @Rule
+    public final ActivityTestRule<MapsActivity> mRule =
+            new ActivityTestRule<>(MapsActivity.class);
+
+    private UiDevice device;
+
+    @BeforeClass
+    public static void set() {
+        Looper.prepare();
+    }
+
+    @Before
+    public void setUp(){
+        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+    }
+
+
+    private void clickAlert() {
+        try {
+            UiObject alert = device.findObject(new UiSelector().className("android.widget.Button")
+                    .text("OK"));
+
+            if (alert.exists()) {
+                alert.clickAndWaitForNewWindow();
+            }
+        } catch (UiObjectNotFoundException e) {
+            System.out.println("There is no permissions dialog to interact with");
+        }
+    }
+
+    private void allowPermissionsIfNeeded() {
+        try {
+            UiObject allowPermissions = device.findObject(new UiSelector()
+                    .clickable(true)
+                    .checkable(false)
+                    .index(1));
+            if (allowPermissions.exists()) {
+                allowPermissions.click();
+            }
+
+        } catch (UiObjectNotFoundException e) {
+            System.out.println("There is no permissions dialog to interact with");
+        }
+    }
+
+
+    private void denyPermissionsIfNeeded() {
+        try {
+            UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+            UiObject denyPermissions = device.findObject(new UiSelector()
+                    .clickable(true)
+                    .checkable(false)
+                    .index(0));
+
+            if (denyPermissions.exists()) {
+                denyPermissions.click();
+            }
+        } catch (UiObjectNotFoundException e) {
+            System.out.println("There is no permissions dialog to interact with");
+        }
+    }
+
+
+    private boolean correctLocation(Location location) {
+        if (location != null) {
+            return (location.getLatitude() < 90.0) && (location.getLatitude() > -90.0) &&
+                    (location.getLongitude() < 180.0) && (location.getLongitude() > -180.0);
+        }
+        return false;
+    }
+
+    private void clickAllow() {
+        clickAlert();
+        allowPermissionsIfNeeded();
+    }
+
+    private void clickDeny() {
+        clickAlert();
+        denyPermissionsIfNeeded();
+    }
+
+    private int[] grantedPerm() {
+        int[] results = new int[1];
+        results[0] = PackageManager.PERMISSION_GRANTED;
+        return results;
+    }
+
+    private int[] deniedPerm() {
+        int[] results = new int[1];
+        results[0] = PackageManager.PERMISSION_DENIED;
+        return results;
+    }
+
+    @Test
+    public void testGetLocationReturnsRight() {
+        clickAllow();
+        mRule.getActivity().updateLastLocation();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Cannot execute Thread.sleep()");
+        }
+        Location loc = mRule.getActivity().getLocation();
+        assert(correctLocation(loc));
+
+        mRule.getActivity().updateLastLocation();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Cannot execute Thread.sleep()");
+        }
+        Location loc2 = mRule.getActivity().getLocation();
+        assert(correctLocation(loc2));
+    }
+
+    @Test
+    public void testGetLocationFails() {
+        clickDeny();
+
+        Location loc = mRule.getActivity().getLocation();
+        assert(!correctLocation(loc));
+    }
+
+    @Test
+    public void testRequestPermissionResultGranted() {
+        clickAllow();
+        int[] results = grantedPerm();
+        mRule.getActivity().onRequestPermissionsResult(MapsActivity.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
+        assert(mRule.getActivity().getToast().getView().isShown());
+        // onView(withText(R.string.perm_granted)).inRoot(withDecorView(not(mRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testRequestPermissionResultDenied() {
+        clickDeny();
+        int[] results = deniedPerm();
+        mRule.getActivity().onRequestPermissionsResult(MapsActivity.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
+        assert(mRule.getActivity().getToast().getView().isShown());
+        // onView(withText(R.string.perm_denied)).inRoot(withDecorView(not(mRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+
+        mRule.getActivity().onRequestPermissionsResult(0, null, results);
+        assert(!mRule.getActivity().getToast().getView().isShown());
+    }
+
+    @Test
+    public void testRequestPermissionResultIgnored() {
+        clickDeny();
+        int[] results = new int[0];
+        mRule.getActivity().onRequestPermissionsResult(MapsActivity.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
+        assert(!mRule.getActivity().getToast().getView().isShown());
+    }
+}
