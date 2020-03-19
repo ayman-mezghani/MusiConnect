@@ -77,7 +77,7 @@ public class StartPage extends AppCompatActivity {
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+        //GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
         /*if (acct != null) {
             Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
         }
@@ -94,12 +94,13 @@ public class StartPage extends AppCompatActivity {
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-
+        /*
         if(account == null && !tests) { // for the moment : if we are running travis's tests we can't enter in this block
             Intent i = new Intent(StartPage.this, GoogleLogin.class);
             startActivity(i);
             finish();
         }
+        */
     }
 
     private void signOut() {

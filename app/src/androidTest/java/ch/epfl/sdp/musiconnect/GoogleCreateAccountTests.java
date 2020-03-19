@@ -24,7 +24,7 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 
 public class GoogleCreateAccountTests {
-    private UiDevice mUiDevice;
+/*    private UiDevice mUiDevice;
     private static final String ACCOUNT_MAIL = "musiconnectsdp@gmail.com";
     private static final String ACCOUNT_PWD = "mcSDP2k20";
     private static final long DEFAULT_TIMEOUT = 1000 * 10;
@@ -37,21 +37,21 @@ public class GoogleCreateAccountTests {
     /*@Rule
     public final ActivityTestRule<MainActivity> mActivityRule =
             new ActivityTestRule<>(MainActivity.class, false, true);*/
-
+/*
     @Rule
     public final ActivityTestRule<GoogleLogin> googleLoginTestsRule =
             new ActivityTestRule<>(GoogleLogin.class);
-
-    // Before and after methods are used in order to accept tests with intents
-    @After
-    public void releaseIntents() {
-        Intents.release();
-    }
 
     @Before
     public void before() throws Exception {
         Intents.init();
         mUiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+    }
+
+    // Before and after methods are used in order to accept tests with intents
+    @After
+    public void releaseIntents() {
+        Intents.release();
     }
 
     private void buttonClick(UiObject btn){
@@ -68,6 +68,7 @@ public class GoogleCreateAccountTests {
      * This tests work in local, the were written to get the coverage
      * To run this test in local don't forget to change RUN_IN_LOCAL to true
      */
+/*
     @Test()
     public void a_connectNewAccount() throws Exception {
 
@@ -134,5 +135,5 @@ public class GoogleCreateAccountTests {
         }
 
     }
-
+*/
 }
