@@ -24,6 +24,8 @@ public class StartPage extends AppCompatActivity {
         return true;
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
@@ -39,7 +41,7 @@ public class StartPage extends AppCompatActivity {
                 Intent helpIntent = new Intent(StartPage.this, HelpPage.class);
                 this.startActivity(helpIntent);
                 return true;
-                // In comments right now to avoid duplication
+            // In comments right now to avoid duplication
 //            case R.id.search:
 //                return true;
             case R.id.map:

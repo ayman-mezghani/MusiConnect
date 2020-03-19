@@ -45,6 +45,10 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name=".musiconnect.LocationService"
+            android:stopWithTask="true" />
+
     </application>
 
 </manifest>
