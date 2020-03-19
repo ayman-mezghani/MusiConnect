@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DataBase {
-    private static final String TAG = "DocSnippets";
+    private static final String TAG = "DataBase";
     private FirebaseFirestore db;
 
     public DataBase() {
@@ -30,50 +30,20 @@ public class DataBase {
 
     public void addDoc(Map<String, Object> m, String docName) {
         db.collection("users").document(docName).set(m)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error writing document", e);
-                    }
-                });
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
+                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
     }
 
     public void deleteDoc(String docName) {
         db.collection("users").document(docName).delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void bVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error deleting document", e);
-                    }
-                });
+                .addOnSuccessListener(bVoid -> Log.d(TAG, "DocumentSnapshot successfully deleted!"))
+                .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));
     }
 
     public void updateDoc(String docName, Map<String, Object> newValueMap) {
         db.collection("users").document(docName).update(newValueMap)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void cVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully updated!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error updating document", e);
-                    }
-                });
+                .addOnSuccessListener(cVoid -> Log.d(TAG, "DocumentSnapshot successfully updated!"))
+                .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
     }
 
     public void deleteFieldsInDoc(String docName, List<String> fields) {
@@ -81,23 +51,15 @@ public class DataBase {
         for (String str : fields) {
             updates.put(str, FieldValue.delete());
         }
-        db.collection("users").document(docName).update(updates);
+        this.updateDoc(docName, updates);
     }
 
     public void readDoc(String docName, DbCallback dbCallback) {
         db.collection("users").document(docName).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        Map data = documentSnapshot.getData();
-                        dbCallback.onCallback(data);
-                    }
+                .addOnSuccessListener(documentSnapshot -> {
+                    Map data = documentSnapshot.getData();
+                    dbCallback.onCallback(data);
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error reading document", e);
-                    }
-                });
+                .addOnFailureListener(e -> Log.w(TAG, "Error reading document", e));
     }
 }

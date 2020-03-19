@@ -11,10 +11,11 @@ import org.junit.runner.RunWith;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
-
-import java.util.Map;
-
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiSelector;
 import ch.epfl.sdp.R;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -55,8 +56,8 @@ public class MenuTests {
     public void testHelpClickShouldStartNewIntent() {
         onView(withId(R.id.help)).perform(click());
 
-        Intent profileIntent = new Intent();
-        startPageRule.launchActivity(profileIntent);
+        Intent helpIntent = new Intent();
+        startPageRule.launchActivity(helpIntent);
         intended(hasComponent(HelpPage.class.getName()));
     }
 
@@ -78,7 +79,6 @@ public class MenuTests {
         intended(hasComponent(ProfilePage.class.getName()));
     }
 
-
     @Test
     public void testSettingsClickShouldStartNewIntent() {
         openActionsMenu(R.string.settings);
@@ -89,11 +89,15 @@ public class MenuTests {
     }
 
     @Test
-    public void testMapClickShouldStartNewIntent() {
+    public void testMapsOpensWithMainMarker() {
+        assert(true);
+
+        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         openActionsMenu(R.string.map);
 
-        Intent mapIntent = new Intent();
-        startPageRule.launchActivity(mapIntent);
-        intended(hasComponent(MapsActivity.class.getName()));
+        UiObject marker = device.findObject(new UiSelector().descriptionContains("You"));
+        marker.waitForExists(5000);
+
+        assert(true);
     }
 }
