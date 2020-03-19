@@ -180,10 +180,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         setLoc = location;
         if (mMap != null) {
-            String markerName = "MarkerName";
+            String markerName = "You";
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerName));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(10.0f));
+            circle.setCenter(latLng);
 
             mapView.setContentDescription("Google Map Ready");
         }
