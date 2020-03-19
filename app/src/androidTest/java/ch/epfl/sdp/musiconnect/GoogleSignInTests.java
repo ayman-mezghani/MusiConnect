@@ -37,9 +37,6 @@ public class GoogleSignInTests {
     private static final long DEFAULT_TIMEOUT = 1000 * 10;
     private static final boolean RUN_IN_LOCAL = false; // variable used for switching between Travis(false) tests and local tests(true)
 
-    @Rule
-    public final ActivityTestRule<StartPage> startPageTestsRule =
-            new ActivityTestRule<>(StartPage.class);
 
     @Rule
     public final ActivityTestRule<GoogleLogin> googleLoginTestRule =
@@ -77,28 +74,6 @@ public class GoogleSignInTests {
 
             onView(withId(R.id.myFirstname)).check(matches(withText("MusiConnect")));
         }else assert(true);
-    }
-
-    @Test
-    public void testSignoutClickShoulKillStartPageActivity() throws Exception {
-        if(RUN_IN_LOCAL)
-            b_connectExistingAccountTest();
-        else{
-            Intent i = new Intent();
-            startPageTestsRule.launchActivity(i);
-        }
-
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-        onView(withText(R.string.logOut)).perform(click());
-
-        if(RUN_IN_LOCAL){
-            Thread.sleep(DEFAULT_TIMEOUT);
-
-            assertTrue(startPageTestsRule.getActivity().isDestroyed());
-        }
-        else{
-            assert(true);
-        }
     }
 
     @Test

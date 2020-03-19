@@ -1,9 +1,12 @@
 package ch.epfl.sdp.musiconnect;
 
+import android.provider.ContactsContract;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import ch.epfl.sdp.R;
