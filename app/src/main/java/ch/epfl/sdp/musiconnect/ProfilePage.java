@@ -1,12 +1,11 @@
 package ch.epfl.sdp.musiconnect;
 
-import ch.epfl.sdp.R;
-
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+
+import ch.epfl.sdp.R;
 
 public class ProfilePage extends StartPage implements View.OnClickListener {
 
