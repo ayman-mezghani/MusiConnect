@@ -31,7 +31,7 @@ public class LocationService extends Service {
     private Location lastLocation;
     private FusedLocationProviderClient fusedLocationClient;
 
-    public final static int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    public final static int MY_PERMISSIONS_REQUEST_LOCATION = 10;
     private final static long UPDATE_INTERVAL = 5 * 1000;
     private final static long FASTEST_INTERVAL = 3 * 1000;
 

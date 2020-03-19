@@ -96,7 +96,7 @@ public class DataBaseTest {
         db.readDoc(docName, new DbCallback() {
             @Override
             public void onCallback(Map data) {
-                Map<String, Object> m = new HashMap();
+                Map<String, Object> m = new HashMap<>();
                 m.put("name", "bob");
                 assertTrue(m.equals(data));
             }

@@ -69,7 +69,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        getLastLocation();
+        checkLocationPermission();
     }
 
 
@@ -107,10 +107,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
                 if (location != null) {
                     setLocation(location);
-                    startLocationService();
+                } else {
+                    // Here it could be either location is turned off or there was not enough time for
+                    // the first location to arrive
+                    Toast.makeText(this, "Location is disabled", Toast.LENGTH_LONG)
+                            .show();
                 }
+                startLocationService();
+
             });
         } else {
+            locationPermissionGranted = false;
             checkLocationPermission();
         }
     }
@@ -124,23 +131,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
     private void setLocation(Location location) {
-        double lat = location.getLatitude();
-        double lon = location.getLongitude();
-
         if (marker != null) {
             marker.remove();
         }
 
         String markerName = "MarkerName";
-        LatLng latLng = new LatLng(lat, lon);
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerName));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
         mapView.setContentDescription("Google Map Ready");
     }
-
 
 
 
@@ -191,23 +193,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .create()
                         .show();
 
-
             } else {
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         LocationService.MY_PERMISSIONS_REQUEST_LOCATION);
             }
-        }
-
-        else {
+        } else {
             locationPermissionGranted = true;
             getLastLocation();
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case LocationService.MY_PERMISSIONS_REQUEST_LOCATION:
                 // If request is cancelled, the result arrays are empty.
@@ -237,4 +236,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
     }
+
+
 }
