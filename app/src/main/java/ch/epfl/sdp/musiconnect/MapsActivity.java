@@ -1,11 +1,5 @@
 package ch.epfl.sdp.musiconnect;
 
-import androidx.fragment.app.FragmentActivity;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Pair;
-
 import android.Manifest;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
@@ -17,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Toast;
 
@@ -24,7 +19,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -39,7 +33,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
-
 
 import java.util.ArrayList;
 import java.util.List;
