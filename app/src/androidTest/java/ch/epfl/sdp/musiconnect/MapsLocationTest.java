@@ -148,7 +148,7 @@ public class MapsLocationTest {
     public void testGetLocationReturnsRight() {
         clickAllow();
 
-        Task<Location> task = mRule.getActivity().getLocation();
+        Task<Location> task = mRule.getActivity().getTaskLocation();
         task.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
@@ -159,9 +159,6 @@ public class MapsLocationTest {
                 }
             }
         });
-
-
-
     }
 
 
@@ -172,7 +169,7 @@ public class MapsLocationTest {
     public void testGetLocationFails() {
         if (!hasNeededPermission()) {
             clickDeny();
-            Task<Location> task = mRule.getActivity().getLocation();
+            Task<Location> task = mRule.getActivity().getTaskLocation();
             task.addOnSuccessListener(new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
@@ -212,5 +209,43 @@ public class MapsLocationTest {
         mRule.getActivity().onRequestPermissionsResult(LocationService.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
         boolean b = mRule.getActivity().isLocationPermissionGranted();
         assertTrue(!b);
+    }
+
+    private void sendMessageToActivity(Location l) {
+        Intent intent = new Intent("GPSLocationUpdates");
+        Bundle b = new Bundle();
+        b.putParcelable("Location", l);
+        intent.putExtra("Location", b);
+        LocalBroadcastManager.getInstance(InstrumentationRegistry.getInstrumentation().getContext())
+                .sendBroadcast(intent);
+    }
+
+
+    @Test
+    public void testMessageReceiverSendNullShouldBeIgnored() {
+        sendMessageToActivity(null);
+
+        Location loc = mRule.getActivity().getSetLocation();
+        assertTrue(correctLocation(loc));
+
+    }
+
+    @Test
+    public void testMessageReceiver() {
+        Location location = new Location("Test");
+        location.setLatitude(0);
+        location.setLongitude(0);
+        sendMessageToActivity(location);
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Location loc = mRule.getActivity().getSetLocation();
+        //assertTrue(correctLocation(loc));
+        assertTrue(loc.getLatitude() == location.getLatitude());
+
     }
 }

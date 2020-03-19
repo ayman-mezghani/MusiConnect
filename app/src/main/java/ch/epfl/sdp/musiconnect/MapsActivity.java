@@ -39,6 +39,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String TAG = "MapsActivity";
     private FusedLocationProviderClient fusedLocationClient;
     private boolean locationPermissionGranted;
+    private Location setLoc;
 
     private GoogleMap mMap;
     private View mapView;
@@ -122,12 +123,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    protected Task<Location> getLocation() {
+    protected Task<Location> getTaskLocation() {
         return fusedLocationClient.getLastLocation();
     }
 
     protected boolean isLocationPermissionGranted() {
         return locationPermissionGranted;
+    }
+
+    protected Location getSetLocation() {
+        return setLoc;
     }
 
 
@@ -136,6 +141,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             marker.remove();
         }
 
+        setLoc = location;
         String markerName = "MarkerName";
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerName));
@@ -236,6 +242,4 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
     }
-
-
 }
