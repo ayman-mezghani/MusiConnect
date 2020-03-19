@@ -6,36 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".musiconnect.ProfilePage">
 
-    <TextView
-        android:id="@+id/myProfileFirstname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="160dp"
-        android:text="@string/first_name"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/myProfileUsername"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.673" />
-
-    <TextView
-        android:id="@+id/myProfileBirthday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/myProfileEmailAddress"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="40dp"
-        android:text="@string/date_of_birth"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/myProfileEmailAddress"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/myProfileUsername" />
 
     <TextView
         android:id="@+id/myProfileTitle"
@@ -56,36 +26,43 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.023" />
 
-    <Button
-        android:id="@+id/btnEditProfile"
+    <TextView
+        android:id="@+id/myBirthday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="100dp"
-        android:text="@string/edit_profile"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/myProfileTitle"
-        app:layout_constraintVertical_bias="0.793" />
+        android:layout_below="@+id/myMail"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="94dp"
+        android:text="12.04.1996"
+        android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/myProfileUsername"
+        android:id="@+id/myProfileFirstname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/myProfileLastname"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="40dp"
-        android:text="@string/username_field"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="231dp"
+        android:text="@string/first_name"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/myProfileUsername"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.379" />
+        app:layout_constraintVertical_bias="0.673" />
+
+    <TextView
+        android:id="@+id/myFirstname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="231dp"
+        android:layout_marginEnd="148dp"
+        android:text="John"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/myProfileLastname"
@@ -93,7 +70,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/myProfileFirstname"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="40dp"
         android:text="@string/last_name"
         android:textSize="18sp"
@@ -104,12 +81,39 @@
         app:layout_constraintVertical_bias="0.611" />
 
     <TextView
+        android:id="@+id/myLastname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/myFirstname"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="152dp"
+        android:text="Doe"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/myProfileUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/myProfileLastname"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:text="@string/username_field"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.379" />
+
+    <TextView
         android:id="@+id/myProfileEmailAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/myProfileUsername"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="40dp"
         android:text="@string/email_address"
         android:textSize="18sp"
@@ -120,48 +124,44 @@
         app:layout_constraintVertical_bias="0.618" />
 
     <TextView
-        android:id="@+id/myFirstname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="160dp"
-        android:layout_marginEnd="158dp"
-        android:text="John"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/myLastname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/myFirstname"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="163dp"
-        android:text="Doe"
-        android:textSize="18sp" />
-
-    <TextView
         android:id="@+id/myMail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/myUsername"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="40dp"
-        android:layout_marginEnd="29dp"
+        android:layout_marginEnd="18dp"
         android:text="john.doe@gmail.com"
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/myBirthday"
+        android:id="@+id/myProfileBirthday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/myMail"
-        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/myProfileEmailAddress"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="40dp"
-        android:layout_marginEnd="104dp"
-        android:text="12.04.1996"
-        android:textSize="18sp" />
+        android:text="@string/date_of_birth"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/myProfileEmailAddress"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myProfileUsername" />
+
+    <Button
+        android:id="@+id/btnEditProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="29dp"
+        android:text="@string/edit_profile"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myProfileTitle"
+        app:layout_constraintVertical_bias="0.793" />
 
     <TextView
         android:id="@+id/myUsername"
@@ -170,8 +170,30 @@
         android:layout_below="@+id/myLastname"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="40dp"
-        android:layout_marginEnd="104dp"
+        android:layout_marginEnd="94dp"
         android:text="JohnDoe27"
         android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="76dp"
+        android:contentDescription="User profile picture"
+        android:scaleType="fitXY"
+        android:text="@string/myprofile"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.316"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023"
+        app:srcCompat="@drawable/ic_launcher_foreground" />
 
 </RelativeLayout>
