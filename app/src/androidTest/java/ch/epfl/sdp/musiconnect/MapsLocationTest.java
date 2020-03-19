@@ -221,17 +221,6 @@ public class MapsLocationTest {
     }
 
 
-
-
-    @Test
-    public void testMessageReceiverSendNullShouldBeIgnored() {
-        sendMessageToActivity(null);
-
-        Location loc = mRule.getActivity().getSetLocation();
-        assertTrue(correctLocation(loc));
-
-    }
-
     @Test
     public void testMessageReceiver() {
         Location location = new Location("Test");
