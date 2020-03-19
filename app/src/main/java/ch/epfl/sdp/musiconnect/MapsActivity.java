@@ -179,12 +179,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         setLoc = location;
-        String markerName = "MarkerName";
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerName));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        if (mMap != null) {
+            String markerName = "MarkerName";
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerName));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
-        mapView.setContentDescription("Google Map Ready");
+            mapView.setContentDescription("Google Map Ready");
+        }
     }
 
 

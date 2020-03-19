@@ -115,6 +115,15 @@ public class MapsLocationTest {
         return false;
     }
 
+    private void sendMessageToActivity(Location l) {
+        Intent intent = new Intent("GPSLocationUpdates");
+        Bundle b = new Bundle();
+        b.putParcelable("Location", l);
+        intent.putExtra("Location", b);
+        LocalBroadcastManager.getInstance(InstrumentationRegistry.getInstrumentation().getContext())
+                .sendBroadcast(intent);
+    }
+
 
     /**
      * Clicks on the alert boxes such that location permissions are given
@@ -211,14 +220,7 @@ public class MapsLocationTest {
         assertTrue(!b);
     }
 
-    private void sendMessageToActivity(Location l) {
-        Intent intent = new Intent("GPSLocationUpdates");
-        Bundle b = new Bundle();
-        b.putParcelable("Location", l);
-        intent.putExtra("Location", b);
-        LocalBroadcastManager.getInstance(InstrumentationRegistry.getInstrumentation().getContext())
-                .sendBroadcast(intent);
-    }
+
 
 
     @Test
@@ -244,7 +246,7 @@ public class MapsLocationTest {
         }
 
         Location loc = mRule.getActivity().getSetLocation();
-        //assertTrue(correctLocation(loc));
+        assertTrue(correctLocation(loc));
         assertTrue(loc.getLatitude() == location.getLatitude());
 
     }

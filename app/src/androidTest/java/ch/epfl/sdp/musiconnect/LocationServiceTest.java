@@ -47,40 +47,4 @@ public class LocationServiceTest {
 
         assertTrue(binder == null);
     }
-
-    private boolean correctLocation(Location location) {
-        if (location != null) {
-            return (location.getLatitude() < 90.0) && (location.getLatitude() > -90.0) &&
-                    (location.getLongitude() < 180.0) && (location.getLongitude() > -180.0);
-        }
-        return false;
-    }
-
-    @Test
-    public void test() {
-        boolean c;
-        BroadcastReceiver messageReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Bundle b = intent.getBundleExtra("Location");
-                setResultExtras(b);
-            }
-        };
-
-        Bundle bundle = messageReceiver.getResultExtras(true);
-        Location loc = bundle.getParcelable("Location");
-        assertTrue(loc == null);
-
-        try {
-            Thread.sleep(5*1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        bundle = messageReceiver.getResultExtras(true);
-        loc = bundle.getParcelable("Location");
-        assertTrue(correctLocation(loc));
-    }
-
-
 }
