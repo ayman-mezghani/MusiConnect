@@ -1,5 +1,11 @@
 package ch.epfl.sdp.musiconnect;
 
+import androidx.fragment.app.FragmentActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Pair;
+
 import android.Manifest;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
@@ -19,6 +25,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,16 +33,23 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ch.epfl.sdp.R;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
+        GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+
     private static final String TAG = "MapsActivity";
     private FusedLocationProviderClient fusedLocationClient;
     private boolean locationPermissionGranted;
@@ -43,7 +57,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private View mapView;
     private UiSettings mUiSettings;
+    private List<Pair<String,LatLng>> profiles = new ArrayList<>();
     private Marker marker;
+
+    private double lat = -34;
+    private double lon = 151;
+    private Circle circle;
+    private double radius = 5000;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
@@ -99,8 +119,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Set UI settings
         mUiSettings.setZoomControlsEnabled(true);
 
-    }
+        //Set circle
+        CircleOptions circleOptions = new CircleOptions()
+                .center(new LatLng(lat,lon))
+                .radius(radius);
+        circle = mMap.addCircle(circleOptions);
 
+
+        //Get users and place their marker
+        profiles.add(new Pair<>("User1", new LatLng(lat+0.1,lon)));
+        profiles.add(new Pair<>("User2", new LatLng(lat,lon+0.1)));
+        profiles.add(new Pair<>("User3", new LatLng(lat-0.1,lon-0.1)));
+        loadProfilesMarker(profiles);
+        mMap.setOnMarkerClickListener(this);
+        mMap.setOnInfoWindowClickListener(this);
+
+        mapView.setContentDescription("Google Map Ready");
+    }
+          
+         
     private void getLastLocation() {
         if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationPermissionGranted = true;
@@ -121,7 +158,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             checkLocationPermission();
         }
     }
-
+          
     protected Task<Location> getLocation() {
         return fusedLocationClient.getLastLocation();
     }
@@ -230,10 +267,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     locationPermissionGranted = false;
                 }
-
                 // other 'case' lines to check for other
                 // permissions this app might request
+        }
 
+
+    }
+
+    private void loadProfilesMarker(List<Pair<String,LatLng>> profiles){
+        for(Pair<String,LatLng> p:profiles){
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(p.second)
+                    .title(p.first));
+            marker.setTag(p);
+
+        }
+    }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+        if(profiles.contains(marker.getTag())) {
+            if(!marker.isInfoWindowShown()) {
+                marker.showInfoWindow();
+                return false;
+            }
+        }
+        return false;
+    }
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        if(profiles.contains(marker.getTag())) {
+            Intent profileIntent = new Intent(MapsActivity.this, ProfilePage.class);
+            this.startActivity(profileIntent);
         }
     }
 
