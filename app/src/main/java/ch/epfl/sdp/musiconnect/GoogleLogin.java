@@ -21,7 +21,7 @@ public class GoogleLogin extends AppCompatActivity {
     SignInButton signInButton;
     private GoogleSignInClient mGoogleSignInClient;
     private int RC_SIGN_IN = 0;
-    private boolean tests = true; // variable telling us if we are running the travis's tests
+    private boolean tests = false; // variable telling us if we are running the travis's tests
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -37,34 +37,6 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
         firstname = findViewById(R.id.myFirstname);
         laastname = findViewById(R.id.myLastname);
 
-        //id = findViewById(R.id.txtvId);
-        //signOut = findViewById(R.id.btnSignOut);
-
-        //signOut.setOnClickListener(v -> signOut());
-
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        // Build a GoogleSignInClient with the options specified by gso.
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
-        if (acct != null) {
-            String personName = acct.getDisplayName();
-            String personEmail = acct.getEmail();
-            String personId = acct.getId();
-            Uri personPhoto = acct.getPhotoUrl();
-
-            firstname.setText(personName.split(" ")[0]);
-            laastname.setText(personName.split(" ")[1]);
-            mail.setText(personEmail);
-            //id.setText(personId);
-
-            Glide.with(this).load(String.valueOf(personPhoto)).into(userImgView);
-        }
     }
 
     @Override
