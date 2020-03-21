@@ -54,8 +54,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
 
-    androidTestCompile ("com.android.support.test.espresso:espresso-intents:3.2.0") // Need this for intent tests
+    androidTestCompile("com.android.support.test.espresso:espresso-intents:3.2.0")
+    // Need this for intent tests
 
 }
 
