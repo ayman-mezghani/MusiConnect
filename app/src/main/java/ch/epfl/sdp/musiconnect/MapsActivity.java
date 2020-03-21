@@ -213,32 +213,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 != PackageManager.PERMISSION_GRANTED) {
             locationPermissionGranted = false;
 
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LocationService.MY_PERMISSIONS_REQUEST_LOCATION);
 
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-                new AlertDialog.Builder(this)
-                        .setTitle("Location Permission Needed")
-                        .setMessage("This app needs the Location permission, please accept to use location functionality")
-                        .setPositiveButton("OK", (dialogInterface, i) -> {
-                            //Prompt the user once explanation has been shown
-                            ActivityCompat.requestPermissions(this,
-                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                    LocationService.MY_PERMISSIONS_REQUEST_LOCATION);
-                        })
-                        .setNegativeButton("cancel", (dialog, which) -> dialog.dismiss())
-                        .create()
-                        .show();
-
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        LocationService.MY_PERMISSIONS_REQUEST_LOCATION);
-            }
         } else {
             locationPermissionGranted = true;
             getLastLocation();
@@ -247,11 +225,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
         switch (requestCode) {
             case LocationService.MY_PERMISSIONS_REQUEST_LOCATION:
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
                     // permission was granted. Do the location-related task you need to do.
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
@@ -273,8 +251,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // other 'case' lines to check for other
                 // permissions this app might request
         }
-
-
     }
 
     private void loadProfilesMarker(List<Pair<String,LatLng>> profiles){
@@ -304,6 +280,4 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             this.startActivity(profileIntent);
         }
     }
-
-
 }

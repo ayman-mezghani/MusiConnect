@@ -1,12 +1,5 @@
 package ch.epfl.sdp.musiconnect;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
-import ch.epfl.sdp.R;
-
 import android.Manifest;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
@@ -15,24 +8,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.Toast;
-import android.location.Location;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
+import ch.epfl.sdp.R;
 
-public class StartPage extends AppCompatActivity {
-    private double lat = -34;
-    private double lon = 151;
-    private String mainMarkerName = "You";
 
+public class StartPage extends Page {
     private static final String TAG = "MainActivity";
     private FusedLocationProviderClient fusedLocationClient;
     private boolean locationPermissionGranted;
@@ -67,56 +58,6 @@ public class StartPage extends AppCompatActivity {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 messageReceiver, new IntentFilter("GPSLocationUpdates"));
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.my_profile:
-                Intent profileIntent = new Intent(StartPage.this, ProfilePage.class);
-                this.startActivity(profileIntent);
-                return true;
-            case R.id.settings:
-                Intent settingsIntent = new Intent(StartPage.this, SettingsPage.class);
-                this.startActivity(settingsIntent);
-                return true;
-            case R.id.help:
-                Intent helpIntent = new Intent(StartPage.this, HelpPage.class);
-                this.startActivity(helpIntent);
-                return true;
-            // In comments right now to avoid duplication
-//            case R.id.search:
-//                return true;
-            case R.id.map:
-                startMap();
-                return true;
-            default:
-                displayNotFinishedFunctionalityMessage();
-                return false;
-        }
-    }
-
-    protected void displayNotFinishedFunctionalityMessage() {
-        Toast.makeText(this, getString(R.string.not_yet_done), Toast.LENGTH_SHORT).show();
-    }
-
-    private void startMap(){
-        Intent myIntent = new Intent(StartPage.this, MapsActivity.class);
-
-
-        myIntent.putExtra("lat", lat);
-        myIntent.putExtra("lon", lon);
-        myIntent.putExtra("mainMarkerName", mainMarkerName);
-        StartPage.this.startActivity(myIntent);
     }
 
 
@@ -228,10 +169,8 @@ public class StartPage extends AppCompatActivity {
 
                     locationPermissionGranted = false;
                 }
-
                 // other 'case' lines to check for other
                 // permissions this app might request
-
         }
     }
 }

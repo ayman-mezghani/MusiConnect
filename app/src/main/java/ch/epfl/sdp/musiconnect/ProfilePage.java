@@ -7,7 +7,7 @@ import android.widget.Button;
 
 import ch.epfl.sdp.R;
 
-public class ProfilePage extends StartPage implements View.OnClickListener {
+public class ProfilePage extends Page implements View.OnClickListener {
 
     Button editProfile;
 

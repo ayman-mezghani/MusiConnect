@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-public class HelpPage extends StartPage {
+public class HelpPage extends Page {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
