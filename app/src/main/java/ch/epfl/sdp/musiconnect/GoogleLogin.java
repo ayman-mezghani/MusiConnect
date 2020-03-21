@@ -41,16 +41,6 @@ public class GoogleLogin extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        // Check for existing Google Sign In account, if the user is already signed in
-        // the GoogleSignInAccount will be non-null.
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-
-    }
-
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -75,11 +65,14 @@ public class GoogleLogin extends AppCompatActivity {
 
             // Signed in successfully, show authenticated UI.
             //updateUI(account);
+
+            Intent StartPage = new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class);
+            startActivity(StartPage);
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            //updateUI(null);
+            // updateUI(null);
         }
     }
 }

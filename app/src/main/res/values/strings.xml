@@ -36,5 +36,6 @@
     <string name="cloud_upload_invalid_file_path">Invalid file path</string>
     <string name="cloud_delete_successful">File deleted successfully</string>
     <string name="cloud_delete_failed">File delete failed</string>
+    <string name="signout">Sign Out</string>
 
 </resources>
