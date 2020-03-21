@@ -139,8 +139,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (location != null) {
                     setLocation(location);
                 } else {
-                    // Here it could be either location is turned off or there was not enough time for
-                    // the first location to arrive
+                    // Here it could be either location setting is turned off or there was not
+                    // enough time for the first location to arrive
                     Toast.makeText(this, "Location is disabled", Toast.LENGTH_LONG)
                             .show();
                 }
@@ -185,27 +185,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
     private void startLocationService() {
-        if (!isLocationServiceRunning()) {
-            Intent serviceIntent = new Intent(this, LocationService.class);
-            startService(serviceIntent);
-        }
+        LocationPermission.startLocationService(this);
     }
-
-    private boolean isLocationServiceRunning() {
-        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
-            if("ch.epfl.sdp.musiconnect.LocationService".equals(service.service.getClassName())) {
-                Log.d(TAG, "isLocationServiceRunning: location service is already running.");
-                return true;
-            }
-        }
-        Log.d(TAG, "isLocationServiceRunning: location service is not running.");
-        return false;
-    }
-
 
 
     private void checkLocationPermission() {
@@ -213,9 +195,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 != PackageManager.PERMISSION_GRANTED) {
             locationPermissionGranted = false;
 
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    LocationService.MY_PERMISSIONS_REQUEST_LOCATION);
+            LocationPermission.sendLocationPermission(this);
 
         } else {
             locationPermissionGranted = true;
@@ -224,32 +204,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
-        switch (requestCode) {
-            case LocationService.MY_PERMISSIONS_REQUEST_LOCATION:
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted. Do the location-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
-                        Toast.makeText(this, getString(R.string.perm_granted), Toast.LENGTH_LONG)
-                                .show();
-
-                        locationPermissionGranted = true;
-                        getLastLocation();
-                    }
-
-                } else {
-                    // permission denied. Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(this, getString(R.string.perm_denied), Toast.LENGTH_LONG)
-                            .show();
-
-                    locationPermissionGranted = false;
-                }
-                // other 'case' lines to check for other
-                // permissions this app might request
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (LocationPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults)) {
+            locationPermissionGranted = true;
+            getLastLocation();
+        } else {
+            locationPermissionGranted = false;
         }
     }
 

@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import ch.epfl.sdp.R;
 
-public class Page extends AppCompatActivity {
+public abstract class Page extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
