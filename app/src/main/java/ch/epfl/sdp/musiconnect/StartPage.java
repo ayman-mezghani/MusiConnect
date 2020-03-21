@@ -89,12 +89,10 @@ public class StartPage extends Page {
     private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            locationPermissionGranted = false;
             LocationPermission.sendLocationPermission(this);
         }
 
         else {
-            locationPermissionGranted = true;
             getLastLocation();
         }
     }
@@ -102,10 +100,7 @@ public class StartPage extends Page {
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         if (LocationPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults)) {
-            locationPermissionGranted = true;
             getLastLocation();
-        } else {
-            locationPermissionGranted = false;
         }
     }
 }
