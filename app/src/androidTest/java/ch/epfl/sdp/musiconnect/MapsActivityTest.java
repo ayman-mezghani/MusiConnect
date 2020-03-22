@@ -39,23 +39,10 @@ public class MapsActivityTest {
         device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
     }
 
-    private void clickAlert() {
-        try {
-            UiObject alert = device.findObject(new UiSelector().className("android.widget.Button")
-                    .text("OK"));
-
-            if (alert.exists()) {
-                alert.clickAndWaitForNewWindow();
-            }
-        } catch (UiObjectNotFoundException e) {
-            System.out.println("There is no permissions dialog to interact with");
-        }
-    }
-
 
     @Test
     public void testMapsOpensWithMainMarker(){
-        clickAlert();
+        MapsLocationTest.clickAlert(device);
         assert(true);
 
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());

@@ -45,25 +45,13 @@ public class MenuTests {
 
     private UiDevice device;
 
-    private void clickAlert() {
-        try {
-            UiObject alert = device.findObject(new UiSelector().className("android.widget.Button")
-                    .text("OK"));
-
-            if (alert.exists()) {
-                alert.clickAndWaitForNewWindow();
-            }
-        } catch (UiObjectNotFoundException e) {
-            System.out.println("There is no permissions dialog to interact with");
-        }
-    }
 
     // Before and after methods are used in order to accept tests with intents
     @Before
     public void initIntents() {
         Intents.init();
         device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        clickAlert();
+        MapsLocationTest.clickAlert(device);
     }
 
     @After

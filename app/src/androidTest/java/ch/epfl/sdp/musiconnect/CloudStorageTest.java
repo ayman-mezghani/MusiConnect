@@ -19,12 +19,6 @@ import java.util.concurrent.TimeUnit;
 import ch.epfl.sdp.BuildConfig;
 import ch.epfl.sdp.R;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.core.IsNot.not;
 
 public class CloudStorageTest {
     @Rule

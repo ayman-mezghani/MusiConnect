@@ -85,8 +85,7 @@ public class LocationPermission {
         } else {
             Toast.makeText(activity, activity.getString(R.string.perm_denied), Toast.LENGTH_LONG)
                     .show();
+            return false;
         }
-
-        return false;
     }
 }

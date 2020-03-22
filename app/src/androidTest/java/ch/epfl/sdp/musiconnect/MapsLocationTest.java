@@ -67,7 +67,7 @@ public class MapsLocationTest {
         return permissionStatus == PackageManager.PERMISSION_GRANTED;
     }
 
-    private void clickAlert() {
+    public static void clickAlert(UiDevice device) {
         try {
             UiObject alert = device.findObject(new UiSelector().className("android.widget.Button")
                     .text("OK"));
@@ -135,7 +135,7 @@ public class MapsLocationTest {
      * Clicks on the alert boxes such that location permissions are given
      */
     private void clickAllow() {
-        clickAlert();
+        clickAlert(device);
         allowPermissionsIfNeeded();
     }
 
@@ -143,7 +143,7 @@ public class MapsLocationTest {
      * Clicks on the alert boxes such that location permissions are rejected
      */
     private void clickDeny() {
-        clickAlert();
+        clickAlert(device);
         denyPermissionsIfNeeded();
     }
 
