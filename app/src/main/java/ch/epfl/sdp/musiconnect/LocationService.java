@@ -34,7 +34,7 @@ public class LocationService extends Service {
     private final static long UPDATE_INTERVAL = 5 * 1000;
     private final static long FASTEST_INTERVAL = 3 * 1000;
 
-    private final double THRESHOLD = 0.00002;
+    private final float THRESHOLD = 5.0f; // 5 meters
 
 
     private LocationCallback locationCallback = new LocationCallback() {
@@ -44,10 +44,7 @@ public class LocationService extends Service {
 
             Location location = locationResult.getLastLocation();
 
-            if (lastLocation == null || (location != null &&
-                    (Math.abs(lastLocation.getLatitude() - location.getLatitude()) > THRESHOLD ||
-                            Math.abs(lastLocation.getLatitude() - location.getLatitude()) > THRESHOLD))) {
-
+            if (location != null && (lastLocation == null || location.distanceTo(lastLocation) > THRESHOLD)) {
                 lastLocation = location;
                 sendMessageToActivity(location);
             }
