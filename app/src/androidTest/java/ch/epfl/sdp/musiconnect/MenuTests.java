@@ -42,9 +42,7 @@ public class MenuTests {
     public void initIntents() { Intents.init(); }
 
     @After
-    public void releaseIntents() {
-        Intents.release();
-    }
+    public void releaseIntents() { Intents.release(); }
 
     @Test
     public void testSearchClickShouldDisplayMessage() {

@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.Toast;
 
 
@@ -23,8 +22,6 @@ public class StartPage extends AppCompatActivity {
         inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -59,7 +56,6 @@ public class StartPage extends AppCompatActivity {
 
     private void startMap(){
         Intent myIntent = new Intent(StartPage.this, MapsActivity.class);
-
 
         myIntent.putExtra("lat", lat);
         myIntent.putExtra("lon", lon);

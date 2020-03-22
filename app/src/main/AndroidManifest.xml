@@ -8,7 +8,6 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -25,19 +24,16 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
         <activity android:name=".musiconnect.MapsActivity" />
-
         <activity android:name=".musiconnect.SettingsPage" />
         <activity android:name=".musiconnect.HelpPage" />
         <activity android:name=".musiconnect.ProfilePage" />
+        <activity android:name=".musiconnect.ProfileModification" />
         <activity android:name=".musiconnect.StartPage">
-
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -48,7 +44,6 @@
         <service
             android:name=".musiconnect.LocationService"
             android:stopWithTask="true" />
-
     </application>
 
 </manifest>
