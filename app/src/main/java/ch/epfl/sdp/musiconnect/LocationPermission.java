@@ -31,11 +31,13 @@ public class LocationPermission {
         ActivityManager manager = (ActivityManager) activity.getSystemService(ACTIVITY_SERVICE);
         String className = "ch.epfl.sdp.musiconnect.LocationService";
 
-        if (manager != null) {
-            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
-                if(className.equals(service.service.getClassName())) {
-                    return true;
-                }
+        if (manager == null) {
+            return false;
+        }
+
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
+            if(className.equals(service.service.getClassName())) {
+                return true;
             }
         }
         return false;

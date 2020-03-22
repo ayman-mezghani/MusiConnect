@@ -12,6 +12,13 @@ public class MyLocation {
     private static final double MAX_LONGITUDE_VALUE = 180.0;
 
 
+    private void checkCoordinate(double value, final double maxValue, String exceptionMessage) {
+        if (value < -maxValue || value > maxValue) {
+            throw new IllegalArgumentException(exceptionMessage);
+        }
+    }
+
+
     public MyLocation(double latitude, double longitude) {
         setLatitude(latitude);
         setLongitude(longitude);
@@ -23,9 +30,7 @@ public class MyLocation {
 
 
     public void setLatitude(double latitude) {
-        if (latitude < -MAX_LATITUDE_VALUE || MAX_LATITUDE_VALUE < latitude) {
-            throw new IllegalArgumentException("Latitude value not valid");
-        }
+        checkCoordinate(latitude, MAX_LATITUDE_VALUE, "Latitude value not valid");
 
         this.latitude = latitude;
     }
@@ -35,9 +40,8 @@ public class MyLocation {
     }
 
     public void setLongitude(double longitude) {
-        if (longitude <= -MAX_LONGITUDE_VALUE || MAX_LONGITUDE_VALUE < longitude) {
-            throw new IllegalArgumentException("Longitude value not valid");
-        }
+        checkCoordinate(longitude, MAX_LONGITUDE_VALUE, "Longitude value not valid");
+
 
         this.longitude = longitude;
     }
