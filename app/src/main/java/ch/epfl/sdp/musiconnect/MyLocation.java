@@ -13,7 +13,7 @@ public class MyLocation {
 
 
     private void checkCoordinate(double value, final double maxValue, String exceptionMessage) {
-        if (value < -maxValue || value > maxValue) {
+        if (value <= -maxValue || value > maxValue) {
             throw new IllegalArgumentException(exceptionMessage);
         }
     }
