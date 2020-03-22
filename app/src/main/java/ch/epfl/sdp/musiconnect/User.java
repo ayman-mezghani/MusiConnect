@@ -6,7 +6,7 @@ package ch.epfl.sdp.musiconnect;
 public abstract class User {
 
     private MyDate joinDate;
-    private Location location;
+    private MyLocation location;
 
     private static final double EPFL_LATITUDE = 46.5185941;
     private static final double EPFL_LONGITUDE = 6.5618969;
@@ -14,7 +14,7 @@ public abstract class User {
 
     public User() {
         joinDate = new MyDate();
-        location = new Location(EPFL_LATITUDE, EPFL_LONGITUDE);
+        location = new MyLocation(EPFL_LATITUDE, EPFL_LONGITUDE);
     }
 
 
@@ -22,11 +22,11 @@ public abstract class User {
         return new MyDate(joinDate);
     }
 
-    public void setLocation(Location location) {
+    public void setLocation(MyLocation location) {
         this.location.setLocation(location);
     }
 
-    public Location getLocation() {
+    public MyLocation getLocation() {
         return location.getLocation();
     }
 

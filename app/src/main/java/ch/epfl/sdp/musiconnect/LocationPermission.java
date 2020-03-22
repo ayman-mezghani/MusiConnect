@@ -29,10 +29,11 @@ public class LocationPermission {
 
     private static boolean isLocationServiceRunning(Activity activity) {
         ActivityManager manager = (ActivityManager) activity.getSystemService(ACTIVITY_SERVICE);
+        String className = "ch.epfl.sdp.musiconnect.LocationService";
 
         if (manager != null) {
             for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
-                if("ch.epfl.sdp.musiconnect.LocationService".equals(service.service.getClassName())) {
+                if(className.equals(service.service.getClassName())) {
                     return true;
                 }
             }
@@ -73,22 +74,19 @@ public class LocationPermission {
 
 
     static boolean onRequestPermissionsResult(Activity activity, int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case LocationService.MY_PERMISSIONS_REQUEST_LOCATION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
-                        Toast.makeText(activity, activity.getString(R.string.perm_granted), Toast.LENGTH_LONG)
-                                .show();
-                        return true;
-                    }
-
-                } else {
-                    Toast.makeText(activity, activity.getString(R.string.perm_denied), Toast.LENGTH_LONG)
-                            .show();
-                    return false;
-                }
+        if (requestCode != LocationService.MY_PERMISSIONS_REQUEST_LOCATION) {
+            return false;
         }
+
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(activity, activity.getString(R.string.perm_granted), Toast.LENGTH_LONG)
+                    .show();
+            return true;
+        } else {
+            Toast.makeText(activity, activity.getString(R.string.perm_denied), Toast.LENGTH_LONG)
+                    .show();
+        }
+
         return false;
     }
 }

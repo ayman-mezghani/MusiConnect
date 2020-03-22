@@ -13,8 +13,10 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
 import ch.epfl.sdp.R;
 
@@ -37,9 +39,32 @@ public class MenuTests {
     public final ActivityTestRule<StartPage> startPageRule =
             new ActivityTestRule<>(StartPage.class);
 
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule =
+            GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
+
+    private UiDevice device;
+
+    private void clickAlert() {
+        try {
+            UiObject alert = device.findObject(new UiSelector().className("android.widget.Button")
+                    .text("OK"));
+
+            if (alert.exists()) {
+                alert.clickAndWaitForNewWindow();
+            }
+        } catch (UiObjectNotFoundException e) {
+            System.out.println("There is no permissions dialog to interact with");
+        }
+    }
+
     // Before and after methods are used in order to accept tests with intents
     @Before
-    public void initIntents() { Intents.init(); }
+    public void initIntents() {
+        Intents.init();
+        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        clickAlert();
+    }
 
     @After
     public void releaseIntents() {

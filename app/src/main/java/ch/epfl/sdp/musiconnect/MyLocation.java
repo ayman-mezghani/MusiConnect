@@ -3,7 +3,7 @@ package ch.epfl.sdp.musiconnect;
 /**
  * @author Manuel Pellegrini, EPFL
  */
-public class Location {
+public class MyLocation {
 
     private double latitude;
     private double longitude;
@@ -12,12 +12,12 @@ public class Location {
     private static final double MAX_LONGITUDE_VALUE = 180.0;
 
 
-    public Location(double latitude, double longitude) {
+    public MyLocation(double latitude, double longitude) {
         setLatitude(latitude);
         setLongitude(longitude);
     }
 
-    public Location(Location location) {
+    public MyLocation(MyLocation location) {
         this(location.getLatitude(), location.getLongitude());
     }
 
@@ -46,13 +46,13 @@ public class Location {
         return longitude;
     }
 
-    public void setLocation(Location location) {
+    public void setLocation(MyLocation location) {
         setLatitude(location.getLatitude());
         setLongitude(location.getLongitude());
     }
 
-    public Location getLocation() {
-        return new Location(latitude, longitude);
+    public MyLocation getLocation() {
+        return new MyLocation(latitude, longitude);
     }
 
 
@@ -60,8 +60,8 @@ public class Location {
     public boolean equals(Object that) {
         if (this == that) {
             return true;
-        } else if (that instanceof Location) {
-            Location thatLocation = (Location) that;
+        } else if (that instanceof MyLocation) {
+            MyLocation thatLocation = (MyLocation) that;
 
             if (latitude == thatLocation.getLatitude() && longitude == thatLocation.getLongitude()) {
                 return true;
