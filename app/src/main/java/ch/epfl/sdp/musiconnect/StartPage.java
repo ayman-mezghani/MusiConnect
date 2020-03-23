@@ -117,6 +117,8 @@ public class StartPage extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        Intent googleLogin = new Intent(StartPage.this, GoogleLogin.class);
+                        startActivity(googleLogin);
                         finish();
                     }
                 });

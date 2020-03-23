@@ -1,34 +1,38 @@
 {
   "project_info": {
-    "project_number": "1054816476745",
-    "firebase_url": "https://musiconnect-sdp.firebaseio.com",
-    "project_id": "musiconnect-sdp",
-    "storage_bucket": "musiconnect-sdp.appspot.com"
+    "project_number": "979535636289",
+    "firebase_url": "https://musiconnect-1584830246961.firebaseio.com",
+    "project_id": "musiconnect-1584830246961",
+    "storage_bucket": "musiconnect-1584830246961.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1054816476745:android:f2720864356d7a44162998",
+        "mobilesdk_app_id": "1:979535636289:android:58e245fd947aab8f3163c0",
         "android_client_info": {
           "package_name": "ch.epfl.sdp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1054816476745-i72p7qhk5h1j6r4qb5ilq0pbvm4kk78b.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "979535636289-9h3qkp4ohppj75rplcu3ni766gebkfvn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.epfl.sdp",
+            "certificate_hash": "23f481ff593247601e293b907efb333cc25cfb99"
+          }
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA7TW1aImXrqPUPnDA2qhgSSFDbv0DpK8o"
+          "current_key": "AIzaSyC8ZovEJRt9HBhvQBBujHlSra_J07nVUFw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1054816476745-i72p7qhk5h1j6r4qb5ilq0pbvm4kk78b.apps.googleusercontent.com",
+              "client_id": "979535636289-mimgslj88n4r7375q6pmajo7409s6rrt.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
