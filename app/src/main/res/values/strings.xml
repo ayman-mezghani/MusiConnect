@@ -1,4 +1,5 @@
 <resources>
+
     <string name="app_name">MusiConnect</string>
     <string name="title_activity_main_page">MainPage</string>
     <string name="login">Login</string>
@@ -14,5 +15,27 @@
     <string name="title_activity_settings_page">SettingsPage</string>
     <string name="help_message">Help is on the way !</string>
     <string name="settings_message">Settings to come...</string>
+    <string name="edit_profile_button_text">Edit profile</string>
     <string name="not_yet_done">This functionality is not yet part of the application. Please be patient.</string>
+
+    <string name="myprofile">My profile</string>
+    <string name="email_address">Email address :</string>
+    <string name="date_of_birth">Date of birth :</string>
+    <string name="first_name">First name :</string>
+    <string name="last_name">Last name :</string>
+    <string name="username_field">Username :</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="perm_granted">Permission granted</string>
+    <string name="perm_denied">Permission denied</string>
+
+    <string name="cloud_upload_successful">File uploaded successfully</string>
+    <string name="cloud_upload_failed">File upload failed</string>
+    <string name="cloud_download_successful">File downloaded successfully</string>
+    <string name="cloud_download_failed">File download failed</string>
+    <string name="cloud_uploading_file">Uploading: </string>
+    <string name="cloud_downloading_file">Downloading: </string>
+    <string name="cloud_upload_invalid_file_path">Invalid file path</string>
+    <string name="cloud_delete_successful">File deleted successfully</string>
+    <string name="cloud_delete_failed">File delete failed</string>
+
 </resources>

@@ -1,5 +1,10 @@
 package ch.epfl.sdp.musiconnect;
 
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+
 import ch.epfl.sdp.R;
 
 import android.annotation.SuppressLint;
@@ -10,10 +15,11 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.VideoView;
 
-public class ProfilePage extends StartPage {
+public class ProfilePage extends StartPage implements View.OnClickListener {
     private static int VIDEO_REQUEST = 101;
     private Uri videoUri = null;
     private VideoView mVideoView;
+    Button editProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +47,21 @@ public class ProfilePage extends StartPage {
         if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK) {
             videoUri = data.getData();
         }
+        editProfile = findViewById(R.id.btnEditProfile);
+        editProfile.setOnClickListener(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == R.id.my_profile)
+            return true;
+        else
+            super.onOptionsItemSelected(item);
+        return true;
+    }
+
+    public void onClick(View view) {
+        super.displayNotFinishedFunctionalityMessage();
     }
 }
 
