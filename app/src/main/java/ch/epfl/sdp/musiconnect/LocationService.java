@@ -2,9 +2,12 @@ package ch.epfl.sdp.musiconnect;
 
 import android.Manifest;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Looper;
@@ -20,6 +23,8 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class LocationService extends Service {
@@ -35,6 +40,7 @@ public class LocationService extends Service {
 
     private final double THRESHOLD = 0.00002;
 
+    private boolean connected = false;
 
     private LocationCallback locationCallback = new LocationCallback() {
         @Override
@@ -42,13 +48,17 @@ public class LocationService extends Service {
             Log.d(TAG, "onLocationResult: got location result.");
 
             Location location = locationResult.getLastLocation();
-
-            if (lastLocation == null || (location != null &&
+            checkConnection();
+            if(connected == false){
+                sendMessageToActivity(location,"NoInternet");
+            } else if (lastLocation == null || (location != null &&
                     (Math.abs(lastLocation.getLatitude() - location.getLatitude()) > THRESHOLD ||
                             Math.abs(lastLocation.getLatitude() - location.getLatitude()) > THRESHOLD))) {
 
                 lastLocation = location;
-                sendMessageToActivity(location);
+                sendMessageToActivity(location,"");
+            } else if(location == null){
+                sendMessageToActivity(location,"NoLocation");
             }
         }
     };
@@ -97,11 +107,24 @@ public class LocationService extends Service {
     }
 
 
-    private void sendMessageToActivity(Location l) {
+    private void sendMessageToActivity(Location l,String message) {
         Intent intent = new Intent("GPSLocationUpdates");
         Bundle b = new Bundle();
         b.putParcelable("Location", l);
         intent.putExtra("Location", b);
+        intent.putExtra("Message",message);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
+
+    private void checkConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            connected = true;
+        } else {
+            connected = false;
+        }
+    }
+
 }

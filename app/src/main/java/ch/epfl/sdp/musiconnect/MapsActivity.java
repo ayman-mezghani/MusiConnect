@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -35,6 +37,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import ch.epfl.sdp.R;
@@ -42,6 +46,8 @@ import ch.epfl.sdp.R;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+    private boolean connected = false;
+    private Date timeCoLost;
 
     private static final String TAG = "MapsActivity";
     private FusedLocationProviderClient fusedLocationClient;
@@ -64,8 +70,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         public void onReceive(Context context, Intent intent) {
             Bundle b = intent.getBundleExtra("Location");
             Location location = b.getParcelable("Location");
-            if (location != null) {
+            String message = intent.getStringExtra("Message");
+            if(message == "") {
+                connected = true;
                 setLocation(location);
+            } else{
+                if(message == "NoLocation"){
+                    generateWarning("There was a problem retrieving your location; Please check your connection");
+                } else if(message == "NoInternet"){
+                    if(connected == true)             timeCoLost = Calendar.getInstance().getTime();
+                    connected = false;
+                    generateWarning("No internet connection! Showing the only last musician found since " + timeCoLost.toString());
+                }
             }
         }
     };
@@ -128,7 +144,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
 
-        mapView.setContentDescription("Google Map Ready");
     }
           
          
@@ -141,8 +156,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 } else {
                     // Here it could be either location is turned off or there was not enough time for
                     // the first location to arrive
-                    Toast.makeText(this, "Location is disabled", Toast.LENGTH_LONG)
-                            .show();
+                    //Toast.makeText(this, "Location is disabled", Toast.LENGTH_LONG)
+                    //        .show();
+                    generateWarning("There was a problem retrieving your location; Please check you are connected to a network");
                 }
                 startLocationService();
 
@@ -167,6 +183,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void setLocation(Location location) {
+
         if (marker != null) {
             marker.remove();
         }
@@ -177,10 +194,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerName));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(10.0f));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
             circle.setCenter(latLng);
 
-            mapView.setContentDescription("Google Map Ready");
         }
     }
 
@@ -306,4 +322,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
+
+    private void generateWarning(String message){
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
 }
