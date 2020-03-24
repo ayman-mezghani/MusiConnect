@@ -62,12 +62,9 @@ public class GoogleLogin extends AppCompatActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
-            // Signed in successfully, show authenticated UI.
-            //updateUI(account);
-
-            Intent StartPage = new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class);
-            startActivity(StartPage);
+            // Signed in successfully
+            startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class));
+            finish();
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
