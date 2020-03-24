@@ -13,10 +13,6 @@
     <string name="my_profile_page">My profile page</string>
     <string name="title_activity_help_page">HelpPage</string>
     <string name="title_activity_settings_page">SettingsPage</string>
-    <string name="help_message">Help is on the way !</string>
-    <string name="settings_message">Settings to come…</string>
-    <string name="in_construction">Still under construction…</string>
-    <string name="not_yet_done">This functionality is not yet part of the application. Please be patient.</string>
 
     <string name="myprofile">My profile</string>
     <string name="editmyprofile">Edit my profile</string>
@@ -30,10 +26,15 @@
     <string name="new_last_name">New last name</string>
     <string name="username_field">Username :</string>
     <string name="new_username">New username</string>
-
     <string name="edit_profile_button_text">Edit profile</string>
     <string name="do_not_save_profile">Don\'t save</string>
     <string name="save_profile">Save</string>
+
+    <string name="help_message">Help is on the way !</string>
+    <string name="settings_message">Settings to come…</string>
+    <string name="in_construction">Still under construction…</string>
+    <string name="not_yet_done">This functionality is not yet part of the application. Please be patient.</string>
+    <string name="error_in_current_process">The app detected an error and has quit the current page. Sorry for the inconvenience.</string>
     <string name="perm_granted">Permission granted</string>
     <string name="perm_denied">Permission denied</string>
 
