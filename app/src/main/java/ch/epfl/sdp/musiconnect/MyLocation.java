@@ -67,9 +67,7 @@ public class MyLocation {
         } else if (that instanceof MyLocation) {
             MyLocation thatLocation = (MyLocation) that;
 
-            if (latitude == thatLocation.getLatitude() && longitude == thatLocation.getLongitude()) {
-                return true;
-            }
+            return latitude == thatLocation.getLatitude() && longitude == thatLocation.getLongitude();
         }
 
         return false;

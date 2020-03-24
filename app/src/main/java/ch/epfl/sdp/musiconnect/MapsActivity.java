@@ -1,8 +1,6 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.Manifest;
-import android.app.ActivityManager;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +8,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 import android.widget.Toast;
 
@@ -43,7 +39,6 @@ import ch.epfl.sdp.R;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
 
-    private static final String TAG = "MapsActivity";
     private FusedLocationProviderClient fusedLocationClient;
     private boolean locationPermissionGranted;
     private Location setLoc;
@@ -51,7 +46,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private View mapView;
     private UiSettings mUiSettings;
-    private List<Pair<String,LatLng>> profiles = new ArrayList<>();
+    private List<Musician> profiles = new ArrayList<>();
+    private Musician person1;
+    private Musician person2;
+    private Musician person3;
+
     private Marker marker;
 
     private double lat = -34;
@@ -75,6 +74,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        person1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
+        person2 = new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", new MyDate(1992, 9, 20));
+        person3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
+
+        person1.setLocation(new MyLocation(-51.0, 34.0));
+        person2.setLocation(new MyLocation(40, -100));
+        person3.setLocation(new MyLocation(20, 90));
+
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -121,9 +129,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         //Get users and place their marker
-        profiles.add(new Pair<>("User1", new LatLng(lat+0.1,lon)));
-        profiles.add(new Pair<>("User2", new LatLng(lat,lon+0.1)));
-        profiles.add(new Pair<>("User3", new LatLng(lat-0.1,lon-0.1)));
+        profiles.add(person1);
+        profiles.add(person2);
+        profiles.add(person3);
+
         loadProfilesMarker(profiles);
         mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
@@ -211,13 +220,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void loadProfilesMarker(List<Pair<String,LatLng>> profiles){
-        for(Pair<String,LatLng> p:profiles){
+    private void loadProfilesMarker(List<Musician> profiles){
+        for(Musician m:profiles){
+            LatLng latlng = new LatLng(m.getLocation().getLatitude(), m.getLocation().getLongitude());
             Marker marker = mMap.addMarker(new MarkerOptions()
-                    .position(p.second)
-                    .title(p.first));
-            marker.setTag(p);
-
+                    .position(latlng)
+                    .title(m.getUserName()));
+            marker.setTag(m);
         }
     }
 
@@ -231,10 +240,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         return false;
     }
+
     @Override
     public void onInfoWindowClick(Marker marker) {
         if(profiles.contains(marker.getTag())) {
             Intent profileIntent = new Intent(MapsActivity.this, ProfilePage.class);
+            Musician m = (Musician) marker.getTag();
+            profileIntent.putExtra("FirstName", m.getFirstName());
+            profileIntent.putExtra("LastName", m.getLastName());
+            profileIntent.putExtra("UserName", m.getUserName());
+            profileIntent.putExtra("EmailAddress", m.getEmailAddress());
+
+            // MyDate is not parcelable...
+            int[] birthday = {m.getBirthday().getYear(), m.getBirthday().getMonth(), m.getBirthday().getDate()};
+            profileIntent.putExtra("Birthday", birthday);
+
             this.startActivity(profileIntent);
         }
     }
