@@ -17,7 +17,7 @@ import android.widget.VideoView;
 
 public class ProfilePage extends StartPage implements View.OnClickListener {
     private static int VIDEO_REQUEST = 101;
-    private Uri videoUri = null;
+    protected Uri videoUri = null;
     private VideoView mVideoView;
     Button editProfile;
 
@@ -31,6 +31,9 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
             mVideoView.setVideoURI(videoUri);
             mVideoView.start();
         });
+
+        editProfile = findViewById(R.id.btnEditProfile);
+        editProfile.setOnClickListener(this);
     }
 
     public void captureVideo(View view) {
@@ -47,8 +50,6 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
         if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK) {
             videoUri = data.getData();
         }
-        editProfile = findViewById(R.id.btnEditProfile);
-        editProfile.setOnClickListener(this);
     }
 
     @Override
