@@ -119,7 +119,7 @@ public class StartPage extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         Intent googleLogin = new Intent(StartPage.this, GoogleLogin.class);
                         startActivity(googleLogin);
-                        finish();
+                        //finish();
                     }
                 });
     }
