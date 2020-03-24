@@ -1,12 +1,13 @@
 package ch.epfl.sdp.musiconnect;
 
-import ch.epfl.sdp.R;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import ch.epfl.sdp.R;
+
+
 public class HelpPage extends Page {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

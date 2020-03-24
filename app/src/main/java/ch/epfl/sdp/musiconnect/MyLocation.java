@@ -77,5 +77,4 @@ public class MyLocation {
     public String toString() {
         return "Location: (" + getLatitude() + ", " + getLongitude() + ")\n";
     }
-
 }
