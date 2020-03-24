@@ -11,24 +11,6 @@ import ch.epfl.sdp.R;
 
 public class ProfilePage extends StartPage {
 
-    /**
-     * Automatically fill the edit texts of profile modification page with actual string values
-     * @param intent
-     */
-    private void sendInformation(Intent intent) {
-        TextView firstName = findViewById(R.id.myFirstname);
-        TextView lastName = findViewById(R.id.myLastname);
-        TextView username = findViewById(R.id.myUsername);
-        TextView mail = findViewById(R.id.myMail);
-        TextView birthday = findViewById(R.id.myBirthday);
-
-        intent.putExtra("FIRST_NAME", firstName.getText().toString());
-        intent.putExtra("LAST_NAME", lastName.getText().toString());
-        intent.putExtra("USERNAME", username.getText().toString());
-        intent.putExtra("MAIL", mail.getText().toString());
-        intent.putExtra("BIRTHDAY", birthday.getText().toString());
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,5 +33,23 @@ public class ProfilePage extends StartPage {
         else
             super.onOptionsItemSelected(item);
         return true;
+    }
+
+    /**
+     * Automatically fill the edit texts of profile modification page with actual string values
+     * @param intent
+     */
+    private void sendInformation(Intent intent) {
+        TextView firstName = findViewById(R.id.myFirstname);
+        TextView lastName = findViewById(R.id.myLastname);
+        TextView username = findViewById(R.id.myUsername);
+        TextView mail = findViewById(R.id.myMail);
+        TextView birthday = findViewById(R.id.myBirthday);
+
+        intent.putExtra("FIRST_NAME", firstName.getText().toString());
+        intent.putExtra("LAST_NAME", lastName.getText().toString());
+        intent.putExtra("USERNAME", username.getText().toString());
+        intent.putExtra("MAIL", mail.getText().toString());
+        intent.putExtra("BIRTHDAY", birthday.getText().toString());
     }
 }
