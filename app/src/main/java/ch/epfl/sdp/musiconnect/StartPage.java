@@ -108,20 +108,13 @@ public class StartPage extends AppCompatActivity {
         }
         else
             Toast.makeText(this, "Signed In", Toast.LENGTH_SHORT).show();
-
     }
 
     private void signOut() {
         mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-
-        Intent googleLogin = new Intent(StartPage.this, GoogleLogin.class);
-        startActivity(googleLogin);
-                        //finish();
-                    }
+                .addOnCompleteListener(this, task -> {
+                    startActivity(new Intent(StartPage.this, GoogleLogin.class));
+                    finish();
                 });
-
     }
 }
