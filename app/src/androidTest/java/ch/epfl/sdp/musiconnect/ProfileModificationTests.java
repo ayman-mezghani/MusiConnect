@@ -22,15 +22,22 @@ public class ProfileModificationTests {
     public final ActivityTestRule<ProfileModification> profileModificationPageRule =
             new ActivityTestRule<>(ProfileModification.class);
 
-    @Test
-    public void testDoNotSaveButtonShouldDisplayMessage() {
-        onView(withText(R.string.do_not_save_profile)).perform(click());
+    /**
+     * Helper method to avoid duplication
+     * @param stringId
+     */
+    private void clickToDisplayMessage(int stringId) {
+        onView(withText(stringId)).perform(click());
         onView(withText(R.string.in_construction)).inRoot(withDecorView(not(profileModificationPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
     @Test
+    public void testDoNotSaveButtonShouldDisplayMessage() {
+        clickToDisplayMessage(R.string.do_not_save_profile);
+    }
+
+    @Test
     public void testSaveButtonShouldDisplayMessage() {
-        onView(withText(R.string.save_profile)).perform(click());
-        onView(withText(R.string.in_construction)).inRoot(withDecorView(not(profileModificationPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+        clickToDisplayMessage(R.string.save_profile);
     }
 }
