@@ -76,7 +76,7 @@ public class VideoPlayingTests {
     @Rule
     public ActivityTestRule<StartPage> mActivityTestRule = new ActivityTestRule<>(StartPage.class);
 
-    private void goToMyProfilePage() {
+    public static void goToMyProfilePage() {
         ViewInteraction overflowMenuButton = onView(allOf(withContentDescription("More options"),
                 childAtPosition( childAtPosition(withId(R.id.action_bar),1),2), isDisplayed()));
         overflowMenuButton.perform(click());

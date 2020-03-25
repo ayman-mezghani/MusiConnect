@@ -43,19 +43,9 @@ public class VideoRecordingTests {
     @Rule
     public ActivityTestRule<StartPage> mActivityTestRule = new ActivityTestRule<>(StartPage.class);
 
-    private void goToMyProfilePage() {
-        ViewInteraction overflowMenuButton = onView(allOf(withContentDescription("More options"),
-                childAtPosition( childAtPosition(withId(R.id.action_bar),1),2), isDisplayed()));
-        overflowMenuButton.perform(click());
-
-        ViewInteraction appCompatTextView = onView(allOf(withId(R.id.title), withText("My profile"),
-                childAtPosition(childAtPosition(withId(R.id.content),0),0),isDisplayed()));
-        appCompatTextView.perform(click());
-    }
-
     @Test
     public void videoRecordingTests() throws InterruptedException {
-        goToMyProfilePage();
+        VideoPlayingTests.goToMyProfilePage();
 
         ViewInteraction appCompatButton = onView(allOf(withText("Capture Video"),
                         childAtPosition(childAtPosition(withClassName(is("android.widget.LinearLayout")),
