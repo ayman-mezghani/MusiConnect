@@ -1,18 +1,15 @@
 package ch.epfl.sdp.musiconnect;
 
-import android.Manifest;
 import android.content.Context;
 import android.net.Uri;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.RuleChain;
 
 import java.util.concurrent.TimeUnit;
 

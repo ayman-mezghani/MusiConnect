@@ -15,6 +15,7 @@
     <string name="title_activity_settings_page">SettingsPage</string>
     <string name="help_message">Help is on the way !</string>
     <string name="settings_message">Settings to come...</string>
+    <string name="edit_profile_button_text">Edit profile</string>
     <string name="not_yet_done">This functionality is not yet part of the application. Please be patient.</string>
 
     <string name="myprofile">My profile</string>
