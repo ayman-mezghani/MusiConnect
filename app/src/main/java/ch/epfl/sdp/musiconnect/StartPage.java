@@ -24,7 +24,8 @@ public class StartPage extends AppCompatActivity {
     private double lat = -34;
     private double lon = 151;
     private String mainMarkerName = "You";
-    private GoogleSignInClient mGoogleSignInClient;
+    protected GoogleSignInClient mGoogleSignInClient;
+    protected GoogleSignInOptions gso;
     private boolean test = true;
 
     @Override
@@ -40,7 +41,7 @@ public class StartPage extends AppCompatActivity {
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
 
