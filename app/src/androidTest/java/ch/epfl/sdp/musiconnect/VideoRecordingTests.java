@@ -44,31 +44,12 @@ public class VideoRecordingTests {
     public ActivityTestRule<StartPage> mActivityTestRule = new ActivityTestRule<>(StartPage.class);
 
     @Test
-    public void videoRecordingTests() throws InterruptedException {
+    public void videoRecordingTests() {
         VideoPlayingTests.goToMyProfilePage();
 
         ViewInteraction appCompatButton = onView(allOf(withText("Capture Video"),
-                        childAtPosition(childAtPosition(withClassName(is("android.widget.LinearLayout")),
+                        VideoPlayingTests.childAtPosition(VideoPlayingTests.childAtPosition(withClassName(is("android.widget.LinearLayout")),
                                         0),1),isDisplayed()));
         appCompatButton.perform(click());
-    }
-
-    private static Matcher<View> childAtPosition(
-            final Matcher<View> parentMatcher, final int position) {
-
-        return new TypeSafeMatcher<View>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("Child at position " + position + " in parent ");
-                parentMatcher.describeTo(description);
-            }
-
-            @Override
-            public boolean matchesSafely(View view) {
-                ViewParent parent = view.getParent();
-                return parent instanceof ViewGroup && parentMatcher.matches(parent)
-                        && view.equals(((ViewGroup) parent).getChildAt(position));
-            }
-        };
     }
 }

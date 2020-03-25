@@ -105,7 +105,7 @@ public class VideoPlayingTests {
         //assertTrue(v.getDuration() > -1); // test if the video is loaded
     }
 
-    private static Matcher<View> childAtPosition(
+    public static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
 
         return new TypeSafeMatcher<View>() {
