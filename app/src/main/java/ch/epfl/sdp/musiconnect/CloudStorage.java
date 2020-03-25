@@ -8,36 +8,44 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Objects;
 
 import ch.epfl.sdp.R;
 
 public class CloudStorage {
+    public enum FileType {
+        PROFILE_IMAGE, VIDEO
+    }
+
     private static final String TAG = "Cloud";
     private StorageReference storageReference;
     private final Context context;
 
-    public CloudStorage(Context context) {
-        this.storageReference = FirebaseStorage.getInstance().getReference();
+    public CloudStorage(StorageReference storageReference, Context context) {
+        this.storageReference = storageReference;
         this.context = context;
     }
 
-    public void upload(Uri fileUri, String userName) {
+    public void upload(Uri fileUri, FileType fileType, String userName) {
         if (fileUri != null) {
 
-            String filePath = fileUri.getPath();
+//            String filePath = fileUri.getPath();
 //            File f = new File(Objects.requireNonNull(filePath));
 //            if (f.exists()) {
-            String cloudPath = userName + "/" + getFileName(filePath);
+            String cloudPath = userName + "/" + fileType.toString().toLowerCase();
+
             StorageReference fileRef = storageReference.child(cloudPath);
 
-            fileRef.putFile(fileUri)
+            StorageMetadata metadata = new StorageMetadata.Builder()
+                    .setContentType("video/mp4")
+                    .build();
+
+            fileRef.putFile(fileUri, metadata)
                     .addOnSuccessListener(taskSnapshot -> {
                         Toast.makeText(context, R.string.cloud_upload_successful, Toast.LENGTH_LONG).show();
                     })

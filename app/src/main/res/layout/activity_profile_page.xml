@@ -164,6 +164,7 @@
 
         <VideoView
             android:id="@+id/videoView"
+            android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="200dp"/>
     </LinearLayout>
@@ -188,7 +189,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Capture Video"
+                android:text="add/Edit Video"
                 android:onClick="captureVideo"/>
         </LinearLayout>
     </LinearLayout>
