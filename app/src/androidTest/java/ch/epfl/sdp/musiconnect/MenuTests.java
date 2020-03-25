@@ -101,7 +101,7 @@ public class MenuTests {
         assert(true);
     }
 
-    //@Test
+    @Test
     public void testLogOut() {
         openActionsMenu(R.string.signout);
         //intended(hasComponent(GoogleLogin.class.getName()));
