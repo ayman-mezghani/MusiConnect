@@ -47,7 +47,7 @@ public class VideoRecordingTests {
     public void videoRecordingTests() {
         VideoPlayingTests.goToMyProfilePage();
 
-        ViewInteraction appCompatButton = onView(allOf(withText("Capture Video"),
+        ViewInteraction appCompatButton = onView(allOf(withText("add/Edit Video"),
                         VideoPlayingTests.childAtPosition(VideoPlayingTests.childAtPosition(withClassName(is("android.widget.LinearLayout")),
                                         0),1),isDisplayed()));
         appCompatButton.perform(click());
