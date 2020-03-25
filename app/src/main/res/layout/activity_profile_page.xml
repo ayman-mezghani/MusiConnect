@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_weight="10">
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -69,7 +69,7 @@
                 android:id="@+id/myProfileLastname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:layout_weight="1"
                 android:text="@string/last_name"
                 android:textSize="18sp"
@@ -79,7 +79,7 @@
                 android:id="@+id/myLastname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:layout_weight="1"
                 android:text="Doe"
                 android:textSize="18sp" />
@@ -93,7 +93,7 @@
                 android:id="@+id/myProfileUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:layout_weight="1"
                 android:text="@string/username_field"
                 android:textSize="18sp"
@@ -103,7 +103,7 @@
                 android:id="@+id/myUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:layout_weight="1"
                 android:text="JohnDoe"
                 android:textSize="18sp" />
@@ -117,7 +117,7 @@
                 android:id="@+id/myProfileEmailAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:layout_weight="1"
                 android:text="@string/email_address"
                 android:textSize="18sp"
@@ -127,7 +127,7 @@
                 android:id="@+id/myMail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:layout_weight="1"
                 android:text="john.doe@gmail.com"
                 android:textSize="18sp" />
@@ -141,7 +141,7 @@
                 android:id="@+id/myProfileBirthday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:layout_weight="1"
                 android:text="@string/date_of_birth"
                 android:textSize="18sp"
@@ -151,7 +151,7 @@
                 android:id="@+id/myBirthday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:layout_weight="1"
                 android:text="John"
                 android:textSize="18sp" />
