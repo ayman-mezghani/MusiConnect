@@ -96,7 +96,7 @@ public class VideoRecordingTests {
         ViewInteraction appCompatButton = onView(allOf(withText("Capture Video"),
                         childAtPosition(childAtPosition(withClassName(is("android.widget.LinearLayout")),
                                         0),1),isDisplayed()));
-        //appCompatButton.perform(click());
+        appCompatButton.perform(click());
     }
 
     private String videoSource = "https://sites.google.com/site/androidexample9/download/RunningClock.mp4";
