@@ -65,6 +65,7 @@ public class GoogleLoginTests {
         return null;
     }
 
+    @Rule
     public IntentsTestRule<GoogleLogin> activityRule = new IntentsTestRule<>(GoogleLogin.class);
 
     @Test
