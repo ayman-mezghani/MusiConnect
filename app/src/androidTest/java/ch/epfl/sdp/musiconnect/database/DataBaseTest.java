@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.database;
 
 import androidx.test.rule.ActivityTestRule;
 
@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import ch.epfl.sdp.musiconnect.StartPage;
+import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
