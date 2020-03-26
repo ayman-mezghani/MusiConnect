@@ -248,18 +248,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
 
-        if (setLoc != null) {
-            for (Musician m : allUsers) {
-                Location l = new Location("");
-                l.setLatitude(m.getLocation().getLatitude());
-                l.setLongitude(m.getLocation().getLongitude());
-                if (setLoc.distanceTo(l) <= threshold) {
-                    profiles.add(m);
-                }
-            }
-            loadProfilesMarker(profiles);
-            circle.setRadius(threshold);
+        if (setLoc == null) {
+            return;
         }
+
+        for (Musician m : allUsers) {
+            Location l = new Location("");
+            l.setLatitude(m.getLocation().getLatitude());
+            l.setLongitude(m.getLocation().getLongitude());
+            if (setLoc.distanceTo(l) <= threshold) {
+                profiles.add(m);
+            }
+        }
+
+        loadProfilesMarker(profiles);
+        circle.setRadius(threshold);
     }
 
 
