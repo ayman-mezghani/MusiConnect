@@ -5,13 +5,16 @@ import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
@@ -40,24 +43,29 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import ch.epfl.sdp.R;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
-    private boolean connected = false;
-    private Date timeCoLost;
+    private Date timeLastUpdt;
 
     private static final String TAG = "MapsActivity";
     private FusedLocationProviderClient fusedLocationClient;
     private boolean locationPermissionGranted;
     private Location setLoc;
 
+    private boolean updatePos = true;
+
     private GoogleMap mMap;
     private View mapView;
     private UiSettings mUiSettings;
-    private List<Pair<String,LatLng>> profiles = new ArrayList<>();
+
+    private int delay;
+    private List<Pair<String, LatLng>> profiles = new ArrayList<>();
+    private List<Marker> markers = new ArrayList<>();
     private Marker marker;
 
     private double lat = -34;
@@ -71,18 +79,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Bundle b = intent.getBundleExtra("Location");
             Location location = b.getParcelable("Location");
             String message = intent.getStringExtra("Message");
-            if(message == "") {
-                connected = true;
-                setLocation(location);
-            } else{
-                if(message == "NoLocation"){
-                    generateWarning("There was a problem retrieving your location; Please check your connection");
-                } else if(message == "NoInternet"){
-                    if(connected == true)             timeCoLost = Calendar.getInstance().getTime();
-                    connected = false;
-                    generateWarning("No internet connection! Showing the only last musician found since " + timeCoLost.toString());
-                }
+            switch (message) {
+                case "":
+                    setLocation(location);
+                    break;
+                case "NoLocation":
+                    generateWarning("There was a problem retrieving your location; Please check your connection", 1);
+                    break;
+
             }
+
         }
     };
 
@@ -126,27 +132,50 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mUiSettings = mMap.getUiSettings();
 
+        timeLastUpdt = Calendar.getInstance().getTime();
+
+
         //Set UI settings
         mUiSettings.setZoomControlsEnabled(true);
 
         //Set circle
         CircleOptions circleOptions = new CircleOptions()
-                .center(new LatLng(lat,lon))
+                .center(new LatLng(lat, lon))
                 .radius(radius);
         circle = mMap.addCircle(circleOptions);
 
 
         //Get users and place their marker
-        profiles.add(new Pair<>("User1", new LatLng(lat+0.1,lon)));
-        profiles.add(new Pair<>("User2", new LatLng(lat,lon+0.1)));
-        profiles.add(new Pair<>("User3", new LatLng(lat-0.1,lon-0.1)));
-        loadProfilesMarker(profiles);
+        loadProfilesMarker();
         mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
 
+        //Handler that updates nearby users list
+        Handler handler = new Handler();
+        delay = 1000; //milliseconds
+
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                boolean co = checkConnection();
+                boolean loc = checkLocationServices();
+
+                if (!co) {
+                    updatePos = false;
+                    generateWarning("Error: No internet connection. Showing the only last musicians found since " + timeLastUpdt.toString(), 1);
+                } else if(!loc){
+                    updatePos = false;
+                    generateWarning("Error: couldn't update your location", 1);
+                } else {
+                    updatePos = true;
+                    timeLastUpdt = Calendar.getInstance().getTime();
+                    loadProfilesMarker();
+                }
+                handler.postDelayed(this, delay);
+            }
+        }, delay);
     }
-          
-         
+
+
     private void getLastLocation() {
         if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationPermissionGranted = true;
@@ -158,7 +187,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     // the first location to arrive
                     //Toast.makeText(this, "Location is disabled", Toast.LENGTH_LONG)
                     //        .show();
-                    generateWarning("There was a problem retrieving your location; Please check you are connected to a network");
+                    updatePos = false;
+                    generateWarning("There was a problem retrieving your location; Please check you are connected to a network", 2);
                 }
                 startLocationService();
 
@@ -184,6 +214,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void setLocation(Location location) {
 
+        if(!updatePos){
+            return;
+        }
+
         if (marker != null) {
             marker.remove();
         }
@@ -201,7 +235,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
     private void startLocationService() {
         if (!isLocationServiceRunning()) {
             Intent serviceIntent = new Intent(this, LocationService.class);
@@ -212,8 +245,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private boolean isLocationServiceRunning() {
         ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
-            if("ch.epfl.sdp.musiconnect.LocationService".equals(service.service.getClassName())) {
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if ("ch.epfl.sdp.musiconnect.LocationService".equals(service.service.getClassName())) {
                 Log.d(TAG, "isLocationServiceRunning: location service is already running.");
                 return true;
             }
@@ -221,7 +254,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, "isLocationServiceRunning: location service is not running.");
         return false;
     }
-
 
 
     private void checkLocationPermission() {
@@ -293,37 +325,108 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    private void loadProfilesMarker(List<Pair<String,LatLng>> profiles){
-        for(Pair<String,LatLng> p:profiles){
+    private void loadProfilesMarker() {
+        for (Marker m : markers) {
+            m.remove();
+        }
+        markers.clear();
+
+        updateProfileList();
+
+        for (Pair<String, LatLng> p : profiles) {
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(p.second)
                     .title(p.first));
             marker.setTag(p);
+            markers.add(marker);
 
+        }
+    }
+
+    private void updateProfileList() {
+        Random random = new Random();
+        if(setLoc == null){
+            return;
+        } else{
+            delay = 20000;
+        }
+        profiles.clear();
+        for (int i = 0; i < 3; i++) {
+            double lat = ((double)random.nextInt(10)-5) /100 ;
+            double lng = ((double)random.nextInt(10)-5) /100 ;
+
+            LatLng userPos = new LatLng(setLoc.getLatitude() + lat, setLoc.getLongitude() + lng);
+            profiles.add(new Pair<>("User" + i, userPos));
         }
     }
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        if(profiles.contains(marker.getTag())) {
-            if(!marker.isInfoWindowShown()) {
+        if (profiles.contains(marker.getTag())) {
+            if (!marker.isInfoWindowShown()) {
                 marker.showInfoWindow();
                 return false;
             }
         }
         return false;
     }
+
     @Override
     public void onInfoWindowClick(Marker marker) {
-        if(profiles.contains(marker.getTag())) {
+        if (profiles.contains(marker.getTag())) {
             Intent profileIntent = new Intent(MapsActivity.this, ProfilePage.class);
             this.startActivity(profileIntent);
         }
     }
 
+    private boolean checkConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+    private boolean checkLocationServices(){
+        LocationManager lm = (LocationManager)MapsActivity.this.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
 
-    private void generateWarning(String message){
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch(Exception ex) {}
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch(Exception ex) {}
+
+        if(!gps_enabled && !network_enabled) {
+            return false;
+        } else{
+            return true;
+        }
+
+    }
+
+    //creates warning message when something goes wrong; type 1 is a simple message at the bottom of the screen, type 2 is an alertDialog box
+    private void generateWarning(String message, int type) {
+        switch (type) {
+            case 1:
+                delay = 5000;
+                Toast.makeText(MapsActivity.this, message, Toast.LENGTH_LONG).show();
+                break;
+            case 2:
+                delay = 20000;
+                AlertDialog wrng = new AlertDialog.Builder(MapsActivity.this).create();
+                wrng.setTitle("Warning!");
+                wrng.setMessage(message);
+                wrng.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        (dialog, which) -> dialog.dismiss());
+                wrng.show();
+                break;
+        }
     }
 }

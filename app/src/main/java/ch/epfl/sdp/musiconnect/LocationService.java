@@ -48,17 +48,15 @@ public class LocationService extends Service {
             Log.d(TAG, "onLocationResult: got location result.");
 
             Location location = locationResult.getLastLocation();
-            checkConnection();
-            if(connected == false){
-                sendMessageToActivity(location,"NoInternet");
-            } else if (lastLocation == null || (location != null &&
+
+            if(location == null){
+                sendMessageToActivity(location,"NoLocation");
+            } if (lastLocation == null || (
                     (Math.abs(lastLocation.getLatitude() - location.getLatitude()) > THRESHOLD ||
                             Math.abs(lastLocation.getLatitude() - location.getLatitude()) > THRESHOLD))) {
 
                 lastLocation = location;
                 sendMessageToActivity(location,"");
-            } else if(location == null){
-                sendMessageToActivity(location,"NoLocation");
             }
         }
     };
@@ -116,15 +114,6 @@ public class LocationService extends Service {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
-    private void checkConnection() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            //we are connected to a network
-            connected = true;
-        } else {
-            connected = false;
-        }
-    }
+
 
 }
