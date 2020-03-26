@@ -30,6 +30,7 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
     private ImageView imgVw;
     private TextView id;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

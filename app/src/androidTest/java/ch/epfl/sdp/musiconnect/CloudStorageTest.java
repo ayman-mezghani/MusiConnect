@@ -27,7 +27,7 @@ public class CloudStorageTest {
     @Rule
     public final ActivityTestRule<StartPage> startPageRule =
             new ActivityTestRule<>(StartPage.class);
-/*
+
     @Before
     public void stallBefore() {
         waitALittle(5);
@@ -103,5 +103,5 @@ public class CloudStorageTest {
         storage.delete("Random/stuffg");
         waitALittle(2);
         //onView(withText(R.string.cloud_delete_failed)).inRoot(withDecorView(not(startPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
-    }*/
+    }
 }
