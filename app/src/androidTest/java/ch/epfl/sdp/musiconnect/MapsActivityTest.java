@@ -54,6 +54,7 @@ public class MapsActivityTest {
         marker.waitForExists(5000);
 
         assert(true);
-
     }
+
+
 }

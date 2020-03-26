@@ -218,15 +218,6 @@ public class MapsLocationTest {
         assertTrue(!b);
     }
 
-    @Test
-    public void testRequestPermissionResultIgnored() {
-        clickDeny();
-        int[] results = new int[0];
-        mRule.getActivity().onRequestPermissionsResult(LocationService.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
-        boolean b = mRule.getActivity().isLocationPermissionGranted();
-        assertTrue(!b);
-    }
-
 
     @Test
     public void testMessageReceiver() {
