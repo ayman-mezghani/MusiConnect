@@ -4,10 +4,13 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,13 +24,25 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 @RunWith(AndroidJUnit4.class)
 @SdkSuppress(minSdkVersion = 18)
 public class MapsActivityTest {
+    private UiDevice device;
+
     @Rule
     public final ActivityTestRule<StartPage> startPageRule =
             new ActivityTestRule<>(StartPage.class);
 
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule =
+            GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
+
+    @Before
+    public void setUp(){
+        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+    }
+
 
     @Test
     public void testMapsOpensWithMainMarker(){
+        MapsLocationTest.clickAlert(device);
         assert(true);
 
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
@@ -39,6 +54,7 @@ public class MapsActivityTest {
         marker.waitForExists(5000);
 
         assert(true);
-
     }
+
+
 }

@@ -10,6 +10,7 @@ import android.widget.VideoView;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -43,8 +44,12 @@ public class VideoRecordingTests {
     @Rule
     public ActivityTestRule<StartPage> mActivityTestRule = new ActivityTestRule<>(StartPage.class);
 
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
+
     @Test
     public void videoRecordingTests() {
+        MapsLocationTest.clickAllow();
         VideoPlayingTests.goToMyProfilePage();
 
         ViewInteraction appCompatButton = onView(allOf(withText("Capture video"),

@@ -7,13 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * @author Manuel Pellegrini, EPFL
  */
-public class LocationClassUnitTests {
+public class MyLocationClassUnitTests {
 
     @Test
     public void gettersOfLocationClassWork() {
         double latitude = 0.0;
         double longitude = 0.0;
-        Location location = new Location(latitude, longitude);
+        MyLocation location = new MyLocation(latitude, longitude);
 
         assertEquals(latitude, location.getLatitude());
         assertEquals(longitude, location.getLongitude());
@@ -24,7 +24,7 @@ public class LocationClassUnitTests {
     public void setLatitudeWorksWithValidInput() {
         double latitude = 0.0;
         double longitude = 0.0;
-        Location location = new Location(latitude, longitude);
+        MyLocation location = new MyLocation(latitude, longitude);
 
         double newLatitude = -45.0;
 
@@ -37,7 +37,7 @@ public class LocationClassUnitTests {
     public void setLatitudeThrowsExceptionIfLatitudeIsInvalid() {
         double latitude = 0.0;
         double longitude = 0.0;
-        Location location = new Location(latitude, longitude);
+        MyLocation location = new MyLocation(latitude, longitude);
 
         double lowLatitude = -100.0;
         double highLatitude = 100.0;
@@ -50,7 +50,7 @@ public class LocationClassUnitTests {
     public void setLongitudeWorksWithValidInput() {
         double latitude = 0.0;
         double longitude = 0.0;
-        Location location = new Location(latitude, longitude);
+        MyLocation location = new MyLocation(latitude, longitude);
 
         double newLongitude = -145.0;
 
@@ -63,7 +63,7 @@ public class LocationClassUnitTests {
     public void setLongitudeThrowsExceptionIfLongitudeIsInvalid() {
         double latitude = 0.0;
         double longitude = 0.0;
-        Location location = new Location(latitude, longitude);
+        MyLocation location = new MyLocation(latitude, longitude);
 
         double lowLongitude = -180.0;
         double highLongitude = 200.0;
@@ -76,11 +76,11 @@ public class LocationClassUnitTests {
     public void setLocationWorksWithValidInput() {
         double latitude = 0.0;
         double longitude = 0.0;
-        Location location = new Location(latitude, longitude);
+        MyLocation location = new MyLocation(latitude, longitude);
 
         double newLatitude = 54.5;
         double newLongitude = -145.0;
-        Location newLocation = new Location(newLatitude, newLongitude);
+        MyLocation newLocation = new MyLocation(newLatitude, newLongitude);
 
         assertEquals(location, location.getLocation());
         location.setLocation(newLocation);
@@ -91,7 +91,7 @@ public class LocationClassUnitTests {
     public void equalsOfLocationClassWorksWithSameInstance() {
         double latitude = 0.0;
         double longitude = 0.0;
-        Location location = new Location(latitude, longitude);
+        MyLocation location = new MyLocation(latitude, longitude);
 
         assertEquals(true, location.equals(location));
     }
@@ -100,9 +100,9 @@ public class LocationClassUnitTests {
     public void equalsOfLocationClassWorksWithSameLocation() {
         double latitude = 0.0;
         double longitude = 0.0;
-        Location location = new Location(latitude, longitude);
+        MyLocation location = new MyLocation(latitude, longitude);
 
-        Location thatLocation = new Location(location);
+        MyLocation thatLocation = new MyLocation(location);
 
         assertEquals(true, location.equals(thatLocation));
     }
@@ -112,8 +112,8 @@ public class LocationClassUnitTests {
         double firstLatitude = 0.0;
         double secondLatitude = 50.0;
         double longitude = 0.0;
-        Location firstLocation = new Location(firstLatitude, longitude);
-        Location secondLocation = new Location(secondLatitude, longitude);
+        MyLocation firstLocation = new MyLocation(firstLatitude, longitude);
+        MyLocation secondLocation = new MyLocation(secondLatitude, longitude);
 
         assertEquals(false, firstLocation.equals(secondLocation));
     }
@@ -123,8 +123,8 @@ public class LocationClassUnitTests {
         double latitude = 0.0;
         double firstLongitude = 0.0;
         double secondLongitude = 100.0;
-        Location firstLocation = new Location(latitude, firstLongitude);
-        Location secondLocation = new Location(latitude, secondLongitude);
+        MyLocation firstLocation = new MyLocation(latitude, firstLongitude);
+        MyLocation secondLocation = new MyLocation(latitude, secondLongitude);
 
         assertEquals(false, firstLocation.equals(secondLocation));
     }
@@ -133,11 +133,11 @@ public class LocationClassUnitTests {
     public void equalsOfLocationClassWorksWithDifferentLocation() {
         double firstLatitude = 0.0;
         double firstLongitude = 0.0;
-        Location firstLocation = new Location(firstLatitude, firstLongitude);
+        MyLocation firstLocation = new MyLocation(firstLatitude, firstLongitude);
 
         double secondLatitude = 50.0;
         double secondLongitude = 100.0;
-        Location secondLocation = new Location(secondLatitude, secondLongitude);
+        MyLocation secondLocation = new MyLocation(secondLatitude, secondLongitude);
 
         assertEquals(false, firstLocation.equals(secondLocation));
     }
@@ -146,7 +146,7 @@ public class LocationClassUnitTests {
     public void equalsOfLocationClassWorksWithObjectDifferentFromLocation() {
         double latitude = 0.0;
         double longitude = 0.0;
-        Location location = new Location(latitude, longitude);
+        MyLocation location = new MyLocation(latitude, longitude);
 
         int year = 2020;
         int month = 2;
@@ -162,7 +162,7 @@ public class LocationClassUnitTests {
     public void toStringOfLocationClassWorks() {
         double latitude = 0.0;
         double longitude = 0.0;
-        Location location = new Location(latitude, longitude);
+        MyLocation location = new MyLocation(latitude, longitude);
 
         String expectedString = "Location: (" + latitude + ", " + longitude + ")\n";
 

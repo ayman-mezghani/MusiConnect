@@ -3,7 +3,7 @@ package ch.epfl.sdp.musiconnect;
 /**
  * @author Manuel Pellegrini, EPFL
  */
-public class Location {
+public class MyLocation {
 
     private double latitude;
     private double longitude;
@@ -12,20 +12,25 @@ public class Location {
     private static final double MAX_LONGITUDE_VALUE = 180.0;
 
 
-    public Location(double latitude, double longitude) {
+    private void checkCoordinate(double value, final double maxValue, String exceptionMessage) {
+        if (value <= -maxValue || value > maxValue) {
+            throw new IllegalArgumentException(exceptionMessage);
+        }
+    }
+
+
+    public MyLocation(double latitude, double longitude) {
         setLatitude(latitude);
         setLongitude(longitude);
     }
 
-    public Location(Location location) {
+    public MyLocation(MyLocation location) {
         this(location.getLatitude(), location.getLongitude());
     }
 
 
     public void setLatitude(double latitude) {
-        if (latitude < -MAX_LATITUDE_VALUE || MAX_LATITUDE_VALUE < latitude) {
-            throw new IllegalArgumentException("Latitude value not valid");
-        }
+        checkCoordinate(latitude, MAX_LATITUDE_VALUE, "Latitude value not valid");
 
         this.latitude = latitude;
     }
@@ -35,9 +40,8 @@ public class Location {
     }
 
     public void setLongitude(double longitude) {
-        if (longitude <= -MAX_LONGITUDE_VALUE || MAX_LONGITUDE_VALUE < longitude) {
-            throw new IllegalArgumentException("Longitude value not valid");
-        }
+        checkCoordinate(longitude, MAX_LONGITUDE_VALUE, "Longitude value not valid");
+
 
         this.longitude = longitude;
     }
@@ -46,13 +50,13 @@ public class Location {
         return longitude;
     }
 
-    public void setLocation(Location location) {
+    public void setLocation(MyLocation location) {
         setLatitude(location.getLatitude());
         setLongitude(location.getLongitude());
     }
 
-    public Location getLocation() {
-        return new Location(latitude, longitude);
+    public MyLocation getLocation() {
+        return new MyLocation(latitude, longitude);
     }
 
 
@@ -60,12 +64,10 @@ public class Location {
     public boolean equals(Object that) {
         if (this == that) {
             return true;
-        } else if (that instanceof Location) {
-            Location thatLocation = (Location) that;
+        } else if (that instanceof MyLocation) {
+            MyLocation thatLocation = (MyLocation) that;
 
-            if (latitude == thatLocation.getLatitude() && longitude == thatLocation.getLongitude()) {
-                return true;
-            }
+            return latitude == thatLocation.getLatitude() && longitude == thatLocation.getLongitude();
         }
 
         return false;
@@ -75,5 +77,4 @@ public class Location {
     public String toString() {
         return "Location: (" + getLatitude() + ", " + getLongitude() + ")\n";
     }
-
 }

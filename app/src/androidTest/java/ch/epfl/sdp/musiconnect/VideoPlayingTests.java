@@ -10,6 +10,7 @@ import android.widget.VideoView;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -76,6 +77,10 @@ public class VideoPlayingTests {
     @Rule
     public ActivityTestRule<StartPage> mActivityTestRule = new ActivityTestRule<>(StartPage.class);
 
+
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
+
     public static void goToMyProfilePage() {
         ViewInteraction overflowMenuButton = onView(allOf(withContentDescription("More options"),
                 childAtPosition( childAtPosition(withId(R.id.action_bar),1),2), isDisplayed()));
@@ -89,6 +94,7 @@ public class VideoPlayingTests {
     private String videoSource = "https://sites.google.com/site/androidexample9/download/RunningClock.mp4";
     @Test
     public void playVideoTest() throws InterruptedException {
+        MapsLocationTest.clickAllow();
         goToMyProfilePage();
 
         ((ProfilePage) getCurrentActivity()).videoUri = Uri.parse(videoSource);
