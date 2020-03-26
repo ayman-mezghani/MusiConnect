@@ -61,8 +61,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Marker marker;
     private List<Marker> markers = new ArrayList<>();
 
-    private double lat = -34;
-    private double lon = 151;
     private Circle circle;
 
     private int threshold = 50; // meters
@@ -147,7 +145,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Set circle
         CircleOptions circleOptions = new CircleOptions()
-                .center(new LatLng(lat,lon))
+                .center(new LatLng(-34, 151))
                 .radius(threshold);
         circle = mMap.addCircle(circleOptions);
 
@@ -257,9 +255,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 l.setLongitude(m.getLocation().getLongitude());
                 if (setLoc.distanceTo(l) <= threshold) {
                     profiles.add(m);
-                    loadProfilesMarker(profiles);
                 }
             }
+            loadProfilesMarker(profiles);
             circle.setRadius(threshold);
         }
     }
@@ -281,7 +279,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(profiles.contains(marker.getTag())) {
             if(!marker.isInfoWindowShown()) {
                 marker.showInfoWindow();
-                return false;
             }
         }
         return false;
