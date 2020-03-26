@@ -49,6 +49,7 @@ public class VideoRecordingTests {
 
     @Test
     public void videoRecordingTests() {
+        MapsLocationTest.clickAllow();
         VideoPlayingTests.goToMyProfilePage();
 
         ViewInteraction appCompatButton = onView(allOf(withText("Capture Video"),

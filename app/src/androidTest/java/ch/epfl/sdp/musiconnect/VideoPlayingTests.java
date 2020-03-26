@@ -94,6 +94,7 @@ public class VideoPlayingTests {
     private String videoSource = "https://sites.google.com/site/androidexample9/download/RunningClock.mp4";
     @Test
     public void playVideoTest() throws InterruptedException {
+        MapsLocationTest.clickAllow();
         goToMyProfilePage();
 
         ((ProfilePage) getCurrentActivity()).videoUri = Uri.parse(videoSource);

@@ -42,17 +42,13 @@ public class MapsLocationTest {
     public final ActivityTestRule<MapsActivity> mRule =
             new ActivityTestRule<>(MapsActivity.class);
 
-    private UiDevice device;
+
 
     @BeforeClass
     public static void set() {
         Looper.prepare();
     }
 
-    @Before
-    public void setUp(){
-        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-    }
 
 
     private static boolean hasNeededPermission() {
@@ -74,7 +70,7 @@ public class MapsLocationTest {
         }
     }
 
-    private void clickOnDialog(int pos) {
+    public static void clickOnDialog(UiDevice device, int pos) {
         try {
             UiObject allowPermissions = device.findObject(new UiSelector()
                     .clickable(true)
@@ -112,17 +108,19 @@ public class MapsLocationTest {
     /**
      * Clicks on the alert boxes such that location permissions are given
      */
-    private void clickAllow() {
+    public static void clickAllow() {
+        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         clickAlert(device);
-        clickOnDialog(1);
+        clickOnDialog(device, 1);
     }
 
     /**
      * Clicks on the alert boxes such that location permissions are rejected
      */
-    private void clickDeny() {
+    public static void clickDeny() {
+        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         clickAlert(device);
-        clickOnDialog(0);
+        clickOnDialog(device, 0);
     }
 
     private int[] grantedPerm() {
