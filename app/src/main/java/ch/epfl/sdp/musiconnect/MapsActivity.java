@@ -163,7 +163,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
          
     private void getLastLocation() {
         if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationPermissionGranted = true;
             fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
                 if (location != null) {
                     setLocation(location);
@@ -177,7 +176,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             });
         } else {
-            locationPermissionGranted = false;
             checkLocationPermission();
         }
     }
@@ -308,8 +306,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String selected = parent.getItemAtPosition(position).toString();
-        selected = selected.replaceAll("m", "");
+        String selected = parent.getItemAtPosition(position).toString()
+                .replaceAll("m", "");
         int meters = 1;
 
         if (selected.contains("k")) {
