@@ -9,8 +9,18 @@ import android.widget.TextView;
 
 import ch.epfl.sdp.R;
 
-public class ProfilePage extends Page implements View.OnClickListener {
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.view.View;
+import android.widget.VideoView;
 
+public class ProfilePage extends StartPage implements View.OnClickListener {
+    private static int VIDEO_REQUEST = 101;
+    protected Uri videoUri = null;
+    private VideoView mVideoView;
     Button editProfile;
 
     @Override
@@ -38,9 +48,30 @@ public class ProfilePage extends Page implements View.OnClickListener {
             birthdayView.setText(s);
 
         }
+        mVideoView = findViewById(R.id.videoView);
+        mVideoView.setOnClickListener(v->{
+            mVideoView.setVideoURI(videoUri);
+            mVideoView.start();
+        });
 
         editProfile = findViewById(R.id.btnEditProfile);
         editProfile.setOnClickListener(this);
+    }
+
+    public void captureVideo(View view) {
+        Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+        if(videoIntent.resolveActivity(getPackageManager()) != null){
+            startActivityForResult(videoIntent, VIDEO_REQUEST);
+        }
+    }
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK) {
+            videoUri = data.getData();
+        }
     }
 
     @Override
@@ -56,3 +87,4 @@ public class ProfilePage extends Page implements View.OnClickListener {
         super.displayNotFinishedFunctionalityMessage();
     }
 }
+
