@@ -61,7 +61,7 @@ public class CloudStorage {
         fileRef.getFile(localFile)
                 .addOnSuccessListener(taskSnapshot -> {
                     // Local temp file has been created
-                    Toast.makeText(context, R.string.cloud_download_successful, Toast.LENGTH_LONG).show();
+//                    Toast.makeText(context, R.string.cloud_download_successful, Toast.LENGTH_LONG).show();
                     Log.e(TAG, "File created. Created " + localFile.toString());
                     cloudCallback.onCallback(Uri.fromFile(localFile));
                 })
