@@ -20,6 +20,15 @@ import java.io.IOException;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+
 
 public class ProfilePage extends StartPage implements View.OnClickListener {
     private static int VIDEO_REQUEST = 101;
@@ -27,6 +36,8 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
     private VideoView mVideoView;
     private String username = "testUser";
     Button editProfile;
+    private ImageView imgVw;
+    private TextView name, firstname, mail, id;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -34,12 +45,40 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
 
+        mVideoView = findViewById(R.id.videoView);
         getVideoUri();
 
         mVideoView = findViewById(R.id.videoView);
+        imgVw = findViewById(R.id.imgView);
+        firstname = findViewById(R.id.myFirstname);
+        name = findViewById(R.id.myLastname);
+        mail = findViewById(R.id.myMail);
 
         editProfile = findViewById(R.id.btnEditProfile);
         editProfile.setOnClickListener(this);
+
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        // Build a GoogleSignInClient with the options specified by gso.
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+        if (acct != null) {
+            String personName = acct.getDisplayName();
+            String personEmail = acct.getEmail();
+            //String personId = acct.getId();
+            Uri personPhoto = acct.getPhotoUrl();
+
+            firstname.setText(personName.split(" ")[0]);
+            name.setText(personName.split(" ")[1]);
+            mail.setText(personEmail);
+
+            Glide.with(this).load(String.valueOf(personPhoto)).into(imgVw);
+        }
     }
 
     public void captureVideo(View view) {
@@ -118,4 +157,3 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
         }
     }
 }
-
