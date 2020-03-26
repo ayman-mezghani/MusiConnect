@@ -1,9 +1,9 @@
 package ch.epfl.sdp.musiconnect;
 
-import ch.epfl.sdp.R;
-
 import android.os.Bundle;
 import android.view.MenuItem;
+
+import ch.epfl.sdp.R;
 
 public class SettingsPage extends StartPage {
 

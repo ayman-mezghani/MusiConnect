@@ -151,7 +151,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
                 android:layout_weight="1"
-                android:text="John"
+                android:text="01/01/2020"
                 android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>

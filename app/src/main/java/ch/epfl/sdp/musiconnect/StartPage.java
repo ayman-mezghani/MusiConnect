@@ -23,7 +23,7 @@ public class StartPage extends AppCompatActivity {
     private String mainMarkerName = "You";
     protected GoogleSignInClient mGoogleSignInClient;
     protected GoogleSignInOptions gso;
-    private boolean test = true;
+    private boolean test = false;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
