@@ -145,7 +145,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="01.01.1970"
+                android:text="01/01/2020"
                 android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>
@@ -158,6 +158,7 @@
 
         <VideoView
             android:id="@+id/videoView"
+            android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="200dp"/>
     </LinearLayout>
@@ -182,7 +183,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/capture_video"
+                android:text="add/Edit Video"
                 android:onClick="captureVideo"/>
         </LinearLayout>
     </LinearLayout>
