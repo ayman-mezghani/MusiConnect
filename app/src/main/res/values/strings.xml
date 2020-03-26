@@ -13,20 +13,45 @@
     <string name="my_profile_page">My profile page</string>
     <string name="title_activity_help_page">HelpPage</string>
     <string name="title_activity_settings_page">SettingsPage</string>
-    <string name="help_message">Help is on the way !</string>
-    <string name="settings_message">Settings to come...</string>
-    <string name="edit_profile_button_text">Edit profile</string>
-    <string name="not_yet_done">This functionality is not yet part of the application. Please be patient.</string>
 
     <string name="myprofile">My profile</string>
+    <string name="editmyprofile">Edit my profile</string>
     <string name="email_address">Email address :</string>
+    <string name="new_email_address">New email address</string>
     <string name="date_of_birth">Date of birth :</string>
+    <string name="new_birthday">New birthday</string>
     <string name="first_name">First name :</string>
+    <string name="new_first_name">New first name</string>
     <string name="last_name">Last name :</string>
+    <string name="new_last_name">New last name</string>
     <string name="username_field">Username :</string>
-    <string name="edit_profile">Edit profile</string>
+    <string name="new_username">New username</string>
+    <string name="edit_profile_button_text">Edit profile</string>
+    <string name="do_not_save_profile">Don\'t save</string>
+    <string name="save_profile">Save</string>
+    <string name="capture_video">Capture video</string>
+
+    <string name="help_message">Help is on the way !</string>
+    <string name="settings_message">Settings to come…</string>
+    <string name="in_construction">Still under construction…</string>
+    <string name="not_yet_done">This functionality is not yet part of the application. Please be patient.</string>
+    <string name="error_in_current_process">The app detected an error and has quit the current page. Sorry for the inconvenience.</string>
     <string name="perm_granted">Permission granted</string>
     <string name="perm_denied">Permission denied</string>
+    <string name="show_users">Show users within :</string>
+
+    <string-array name="distance_array">
+        <item>10m</item>
+        <item>20m</item>
+        <item>50m</item>
+        <item>100m</item>
+        <item>200m</item>
+        <item>500m</item>
+        <item>1km</item>
+        <item>2km</item>
+        <item>5km</item>
+        <item>10km</item>
+    </string-array>
 
     <string name="cloud_upload_successful">File uploaded successfully</string>
     <string name="cloud_upload_failed">File upload failed</string>
@@ -38,5 +63,6 @@
     <string name="cloud_delete_successful">File deleted successfully</string>
     <string name="cloud_delete_failed">File delete failed</string>
     <string name="signout">Sign Out</string>
+
 
 </resources>

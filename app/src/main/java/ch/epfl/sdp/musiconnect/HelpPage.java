@@ -5,7 +5,8 @@ import android.view.MenuItem;
 
 import ch.epfl.sdp.R;
 
-public class HelpPage extends StartPage {
+
+public class HelpPage extends Page {
 
 
     @Override

@@ -1,6 +1,7 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -27,14 +28,19 @@ import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 
 
-public class ProfilePage extends StartPage implements View.OnClickListener {
+public class ProfilePage extends Page implements View.OnClickListener {
+
     private static int VIDEO_REQUEST = 101;
+    private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
     protected Uri videoUri = null;
+
+    private TextView firstName, lastName, username, mail, birthday;
     private VideoView mVideoView;
-    private String username = "testUser";
-    Button editProfile;
+
+    private String testusername = "testUser";
+
     private ImageView imgVw;
-    private TextView name, firstname, mail, id;
+    private TextView id;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -45,14 +51,41 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
         mVideoView = findViewById(R.id.videoView);
         getVideoUri();
 
-        mVideoView = findViewById(R.id.videoView);
-        imgVw = findViewById(R.id.imgView);
-        firstname = findViewById(R.id.myFirstname);
-        name = findViewById(R.id.myLastname);
-        mail = findViewById(R.id.myMail);
+        Intent intent = getIntent();
+        if (intent.hasExtra("FirstName")) {
+            TextView firstNameView = findViewById(R.id.myFirstname);
+            firstNameView.setText(intent.getStringExtra("FirstName"));
 
-        editProfile = findViewById(R.id.btnEditProfile);
-        editProfile.setOnClickListener(this);
+            TextView lastNameView = findViewById(R.id.myLastname);
+            lastNameView.setText(intent.getStringExtra("LastName"));
+
+            TextView userNameView = findViewById(R.id.myUsername);
+            userNameView.setText(intent.getStringExtra("UserName"));
+
+            TextView emailView = findViewById(R.id.myMail);
+            emailView.setText(intent.getStringExtra("EmailAddress"));
+
+            TextView birthdayView = findViewById(R.id.myBirthday);
+            int[] birthday = intent.getIntArrayExtra("Birthday");
+            String s = birthday[0] + "." + birthday[1] + "." + birthday[2];
+            birthdayView.setText(s);
+        }
+
+        imgVw = findViewById(R.id.imgView);
+        firstName = findViewById(R.id.myFirstname);
+        lastName = findViewById(R.id.myLastname);
+        username = findViewById(R.id.myUsername);
+        mail = findViewById(R.id.myMail);
+        birthday = findViewById(R.id.myBirthday);
+
+        Button editProfile = findViewById(R.id.btnEditProfile);
+        editProfile.setOnClickListener(v -> {
+            Intent profileModificationIntent = new Intent(this, ProfileModification.class);
+            sendInformation(profileModificationIntent);
+            // Permits sending information from child to parent activity
+            startActivityForResult(profileModificationIntent, LAUNCH_PROFILE_MODIF_INTENT);
+        });
+
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -70,8 +103,8 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
             //String personId = acct.getId();
             Uri personPhoto = acct.getPhotoUrl();
 
-            firstname.setText(personName.split(" ")[0]);
-            name.setText(personName.split(" ")[1]);
+            firstName.setText(personName.split(" ")[0]);
+            lastName.setText(personName.split(" ")[1]);
             mail.setText(personEmail);
 
             Glide.with(this).load(String.valueOf(personPhoto)).into(imgVw);
@@ -95,9 +128,20 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
 
             CloudStorage storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
             try {
-                storage.upload(videoUri, CloudStorage.FileType.video, username);
+                storage.upload(videoUri, CloudStorage.FileType.video, testusername);
             } catch (IOException e) {
                 Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
+            }
+        }
+        if (requestCode == LAUNCH_PROFILE_MODIF_INTENT) {
+            if (resultCode == Activity.RESULT_OK) {
+                String[] newFields = data.getStringArrayExtra("newFields");
+                assert newFields != null;
+                firstName.setText(newFields[0]);
+                lastName.setText(newFields[1]);
+                username.setText(newFields[2]);
+                mail.setText(newFields[3]);
+                birthday.setText(newFields[4]);
             }
         }
 
@@ -122,6 +166,7 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
     public void onClick(View view) {
         super.displayNotFinishedFunctionalityMessage();
     }
+
 
     private void showVideo() {
         if (videoUri != null) {
@@ -151,5 +196,17 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
         } catch (IOException e) {
             Toast.makeText(this, "An error occured, please contact support.", Toast.LENGTH_LONG).show();
         }
+    }
+
+    /**
+     * Automatically fill the edit texts of profile modification page with actual string values
+     * @param intent
+     */
+    private void sendInformation(Intent intent) {
+        intent.putExtra("FIRST_NAME", firstName.getText().toString());
+        intent.putExtra("LAST_NAME", lastName.getText().toString());
+        intent.putExtra("USERNAME", username.getText().toString());
+        intent.putExtra("MAIL", mail.getText().toString());
+        intent.putExtra("BIRTHDAY", birthday.getText().toString());
     }
 }

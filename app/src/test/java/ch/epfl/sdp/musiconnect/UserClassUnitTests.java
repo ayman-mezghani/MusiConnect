@@ -36,7 +36,7 @@ public class UserClassUnitTests {
         MyDate birthday = new MyDate(1940, 10, 9);
         Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
-        Location initialLocation = new Location(EPFL_LATITUDE, EPFL_LONGITUDE);
+        MyLocation initialLocation = new MyLocation(EPFL_LATITUDE, EPFL_LONGITUDE);
 
         assertEquals(initialLocation, john.getLocation());
     }
@@ -50,8 +50,8 @@ public class UserClassUnitTests {
         MyDate birthday = new MyDate(1940, 10, 9);
         Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
-        Location initialLocation = new Location(EPFL_LATITUDE, EPFL_LONGITUDE);
-        Location nextLocation = new Location(51.532005, -0.177331);
+        MyLocation initialLocation = new MyLocation(EPFL_LATITUDE, EPFL_LONGITUDE);
+        MyLocation nextLocation = new MyLocation(51.532005, -0.177331);
 
         assertEquals(initialLocation, john.getLocation());
         john.setLocation(nextLocation);

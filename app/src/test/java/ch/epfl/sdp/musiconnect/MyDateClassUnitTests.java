@@ -362,7 +362,7 @@ public class MyDateClassUnitTests {
 
         double latitude = 0.0;
         double longitude = 0.0;
-        Location location = new Location(latitude, longitude);
+        MyLocation location = new MyLocation(latitude, longitude);
 
         assertEquals(false, day.equals(location));
     }

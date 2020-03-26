@@ -5,7 +5,8 @@ import android.view.MenuItem;
 
 import ch.epfl.sdp.R;
 
-public class SettingsPage extends StartPage {
+public class SettingsPage extends Page {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

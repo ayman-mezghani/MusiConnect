@@ -13,9 +13,9 @@
         android:title="@string/help"
         app:showAsAction="always" />
 
-    <item android:id="@+id/my_profile"
+    <item  android:id="@+id/my_profile"
         android:title="@string/my_profile"
-        app:showAsAction="never" />
+        app:showAsAction="never"/>
 
     <item android:id="@+id/map"
         android:title="@string/map"
