@@ -227,7 +227,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (LocationPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults)) {
             locationPermissionGranted = true;
             getLastLocation();
