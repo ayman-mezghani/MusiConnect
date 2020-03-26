@@ -50,4 +50,13 @@
     <string name="myMusicianFinderLevels"></string>
     <string name="musicianFinderButton">Find musicians</string>
 
+    <string name="bandFinderTitle">Band finder</string>
+    <string name="bandFinderBandName">Band name</string>
+    <string name="myBandFinderBandName"></string>
+    <string name="bandFinderInstruments">Instruments</string>
+    <string name="myBandFinderInstruments"></string>
+    <string name="bandFinderLevels">Levels</string>
+    <string name="myBandFinderLevels"></string>
+    <string name="bandFinderButton">Find bands</string>
+
 </resources>
