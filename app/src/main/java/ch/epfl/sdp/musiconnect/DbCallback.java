@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect.database;
+package ch.epfl.sdp.musiconnect;
 
 import java.util.Map;
 
