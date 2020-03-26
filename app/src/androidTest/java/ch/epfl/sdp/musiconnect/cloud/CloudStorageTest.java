@@ -59,7 +59,7 @@ public class CloudStorageTest {
     public void uploadSuccessfulTest() throws IOException {
         Uri imageUri = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + fileName);
         storage.upload(imageUri, CloudStorage.FileType.profile_image, "test");
-        waitALittle(7);
+//        waitALittle(7);
         //onView(withText(R.string.cloud_upload_successful)).inRoot(withDecorView(not(startPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
         waitALittle(5);
         storage.delete("test/" + fileName);
@@ -69,7 +69,7 @@ public class CloudStorageTest {
     public void uploadFailedTest() throws IOException {
         Uri imageUri = Uri.parse("Random/stuff");
         storage.upload(imageUri, CloudStorage.FileType.profile_image, "test");
-        waitALittle(7);
+//        waitALittle(7);
         //onView(withText(R.string.cloud_upload_failed)).inRoot(withDecorView(not(startPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
@@ -78,16 +78,16 @@ public class CloudStorageTest {
     public void downloadSuccessfulTest() throws IOException {
         Uri imageUri = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + fileName);
         storage.upload(imageUri, CloudStorage.FileType.profile_image, "test");
-        waitALittle(10);
+        waitALittle(2);
         storage.download("test/" + fileName, fileName, new CloudCallback() {
             @Override
             public void onCallback(Uri fileUri) {
 
             }
         });
-        waitALittle(7);
+//        waitALittle(7);
         //onView(withText(R.string.cloud_download_successful)).inRoot(withDecorView(not(startPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
-        waitALittle(5);
+        waitALittle(2);
         storage.delete("test/" + fileName);
     }
 
@@ -99,7 +99,7 @@ public class CloudStorageTest {
 
             }
         });
-        waitALittle(5);
+//        waitALittle(5);
         //onView(withText(R.string.cloud_download_failed)).inRoot(withDecorView(not(startPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
@@ -107,16 +107,16 @@ public class CloudStorageTest {
     public void deleteSuccessfulTest() throws IOException {
         Uri imageUri = Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + fileName);
         storage.upload(imageUri, CloudStorage.FileType.profile_image, "test");
-        waitALittle(10);
-        storage.delete("test/" + fileName);
         waitALittle(2);
+        storage.delete("test/" + fileName);
+//        waitALittle(2);
         //onView(withText(R.string.cloud_delete_successful)).inRoot(withDecorView(not(startPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
     @Test
     public void deleteFailedTest() {
         storage.delete("Random/stuff");
-        waitALittle(2);
+//        waitALittle(2);
         //onView(withText(R.string.cloud_delete_failed)).inRoot(withDecorView(not(startPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 }
