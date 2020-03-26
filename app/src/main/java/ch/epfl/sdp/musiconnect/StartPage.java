@@ -103,12 +103,8 @@ public class StartPage extends AppCompatActivity {
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
-        if(account == null && !test){
-            Intent googleSignIn = new Intent(this, GoogleLogin.class);
-            startActivity(googleSignIn);
-        }
-        else
-            Toast.makeText(this, "Signed In", Toast.LENGTH_SHORT).show();
+        if(account == null && !test)
+            startActivity(new Intent(this, GoogleLogin.class));
     }
 
     private void signOut() {
