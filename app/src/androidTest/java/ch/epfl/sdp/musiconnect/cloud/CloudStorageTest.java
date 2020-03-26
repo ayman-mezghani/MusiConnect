@@ -15,17 +15,11 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.BuildConfig;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.StartPage;
-import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
-import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
-
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.core.IsNot.not;
 
 public class CloudStorageTest {
     @Rule

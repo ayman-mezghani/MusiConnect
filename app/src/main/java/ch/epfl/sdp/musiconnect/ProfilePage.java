@@ -92,7 +92,7 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
         if (videoUri != null) {
             mVideoView.setVideoURI(videoUri);
             mVideoView.start();
-            mVideoView.setOnCompletionListener ( new MediaPlayer.OnCompletionListener() {
+            mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
                     mVideoView.start();
