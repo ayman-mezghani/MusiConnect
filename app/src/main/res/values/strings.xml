@@ -38,6 +38,20 @@
     <string name="error_in_current_process">The app detected an error and has quit the current page. Sorry for the inconvenience.</string>
     <string name="perm_granted">Permission granted</string>
     <string name="perm_denied">Permission denied</string>
+    <string name="show_users">Show users within :</string>
+
+    <string-array name="distance_array">
+        <item>10m</item>
+        <item>20m</item>
+        <item>50m</item>
+        <item>100m</item>
+        <item>200m</item>
+        <item>500m</item>
+        <item>1km</item>
+        <item>2km</item>
+        <item>5km</item>
+        <item>10km</item>
+    </string-array>
 
     <string name="cloud_upload_successful">File uploaded successfully</string>
     <string name="cloud_upload_failed">File upload failed</string>
@@ -49,5 +63,6 @@
     <string name="cloud_delete_successful">File deleted successfully</string>
     <string name="cloud_delete_failed">File delete failed</string>
     <string name="signout">Sign Out</string>
+
 
 </resources>

@@ -1,7 +1,6 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.Manifest;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,6 +17,9 @@ import android.os.Handler;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -51,6 +53,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -58,15 +61,15 @@ import ch.epfl.sdp.R;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
-        GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+        GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener, AdapterView.OnItemSelectedListener {
     private Date timeLastUpdt;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
 
-    private static final String TAG = "MapsActivity";
     private FusedLocationProviderClient fusedLocationClient;
     private boolean locationPermissionGranted;
     private Location setLoc;
+    private Spinner spinner;
 
     private boolean updatePos = true;
 
@@ -77,14 +80,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private UiSettings mUiSettings;
 
     private int delay;
-    private List<Pair<String, LatLng>> profiles = new ArrayList<>();
     private List<Marker> markers = new ArrayList<>();
+    private List<Musician> allUsers = new ArrayList<>();
+    private List<Musician> profiles = new ArrayList<>();
+    private Musician person1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
+    private Musician person2 = new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", new MyDate(1992, 9, 20));
+    private Musician person3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
+
     private Marker marker;
 
-    private double lat = -34;
-    private double lon = 151;
     private Circle circle;
-    private double radius = 5000;
+
+    private int threshold = 50; // meters
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
@@ -102,6 +109,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        spinner = findViewById(R.id.distanceThreshold);
+        String[] items = getResources().getStringArray(R.array.distance_array);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+        spinner.setSelection(2);
+
+
+        person1.setLocation(new MyLocation(46.52, 6.52));
+        person2.setLocation(new MyLocation(46.51, 6.45));
+        person3.setLocation(new MyLocation(46.519, 6.57));
+
+        allUsers.add(person1);
+        allUsers.add(person2);
+        allUsers.add(person3);
+
+
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -112,6 +137,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         checkLocationPermission();
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
+    }
 
     @Override
     protected void onResume() {
@@ -125,8 +157,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
+     * This is where we can add markers or lines, add listeners or move the camera.
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
@@ -145,13 +176,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Set circle
         CircleOptions circleOptions = new CircleOptions()
-                .center(new LatLng(lat, lon))
-                .radius(radius);
+                .center(new LatLng(-34, 151))
+                .radius(threshold);
         circle = mMap.addCircle(circleOptions);
 
 
         //place users' markers
         loadProfilesMarker();
+
         mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
 
@@ -185,7 +217,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void getLastLocation() {
         if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationPermissionGranted = true;
             fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
                 if (location != null) {
                     setLocation(location);
@@ -204,7 +235,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             });
         } else {
-            locationPermissionGranted = false;
             checkLocationPermission();
         }
     }
@@ -246,23 +276,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void startLocationService() {
-        if (!isLocationServiceRunning()) {
-            Intent serviceIntent = new Intent(this, LocationService.class);
-            startService(serviceIntent);
-        }
-    }
-
-    private boolean isLocationServiceRunning() {
-        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if ("ch.epfl.sdp.musiconnect.LocationService".equals(service.service.getClassName())) {
-                Log.d(TAG, "isLocationServiceRunning: location service is already running.");
-                return true;
-            }
-        }
-        Log.d(TAG, "isLocationServiceRunning: location service is not running.");
-        return false;
+        LocationPermission.startLocationService(this);
     }
 
 
@@ -270,33 +284,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             locationPermissionGranted = false;
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-                new AlertDialog.Builder(this)
-                        .setTitle("Location Permission Needed")
-                        .setMessage("This app needs the Location permission, please accept to use location functionality")
-                        .setPositiveButton("OK", (dialogInterface, i) -> {
-                            //Prompt the user once explanation has been shown
-                            ActivityCompat.requestPermissions(this,
-                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                    LocationService.MY_PERMISSIONS_REQUEST_LOCATION);
-                        })
-                        .setNegativeButton("cancel", (dialog, which) -> dialog.dismiss())
-                        .create()
-                        .show();
-
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        LocationService.MY_PERMISSIONS_REQUEST_LOCATION);
-            }
+            LocationPermission.sendLocationPermission(this);
         } else {
             locationPermissionGranted = true;
             getLastLocation();
@@ -305,52 +293,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case LocationService.MY_PERMISSIONS_REQUEST_LOCATION:
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted. Do the location-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
-                        Toast.makeText(this, getString(R.string.perm_granted), Toast.LENGTH_LONG)
-                                .show();
-
-                        locationPermissionGranted = true;
-                        getLastLocation();
-                    }
-
-                } else {
-                    // permission denied. Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(this, getString(R.string.perm_denied), Toast.LENGTH_LONG)
-                            .show();
-
-                    locationPermissionGranted = false;
-                }
-                // other 'case' lines to check for other
-                // permissions this app might request
-        }
-
-
-    }
-
-    private void loadProfilesMarker() {
-        for (Marker m : markers) {
-            m.remove();
-        }
-        markers.clear();
-
-
-        for (Pair<String, LatLng> p : profiles) {
-            Marker marker = mMap.addMarker(new MarkerOptions()
-                    .position(p.second)
-                    .title(p.first));
-            marker.setTag(p);
-            markers.add(marker);
-
+        if (LocationPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults)) {
+            locationPermissionGranted = true;
+            getLastLocation();
+        } else {
+            locationPermissionGranted = false;
         }
     }
+
 
     private void updateProfileList() {
         Random random = new Random();
@@ -360,12 +310,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             delay = 20000;
         }
         profiles.clear();
-        for (int i = 0; i < 3; i++) {
-            double lat = ((double)random.nextInt(10)-5) /100 ;
-            double lng = ((double)random.nextInt(10)-5) /100 ;
 
-            LatLng userPos = new LatLng(setLoc.getLatitude() + lat, setLoc.getLongitude() + lng);
-            profiles.add(new Pair<>("User" + i, userPos));
+        for (Musician m : allUsers) {
+            double lat = setLoc.getLatitude() + (((double)random.nextInt(5)-2.5) /100 );
+            double lng = setLoc.getLongitude() + (((double)random.nextInt(5)-2.5) /100);
+            Location l = new Location("");
+            l.setLatitude(lat);
+            l.setLongitude(lng);
+            m.setLocation(new MyLocation(lat,lng));
+            if (setLoc.distanceTo(l) <= threshold) {
+                profiles.add(m);
+            }
+        }
+
+        circle.setRadius(threshold);
+    }
+
+    private void loadProfilesMarker() {
+        for (Marker m : markers) {
+            m.remove();
+        }
+        markers.clear();
+
+        for(Musician m:profiles){
+            LatLng latlng = new LatLng(m.getLocation().getLatitude(), m.getLocation().getLongitude());
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(latlng)
+                    .title(m.getUserName()));
+            marker.setTag(m);
+            markers.add(marker);
         }
     }
 
@@ -374,7 +347,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (profiles.contains(marker.getTag())) {
             if (!marker.isInfoWindowShown()) {
                 marker.showInfoWindow();
-                return false;
             }
         }
         return false;
@@ -384,6 +356,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onInfoWindowClick(Marker marker) {
         if (profiles.contains(marker.getTag())) {
             Intent profileIntent = new Intent(MapsActivity.this, ProfilePage.class);
+            Musician m = (Musician) marker.getTag();
+            profileIntent.putExtra("FirstName", m.getFirstName());
+            profileIntent.putExtra("LastName", m.getLastName());
+            profileIntent.putExtra("UserName", m.getUserName());
+            profileIntent.putExtra("EmailAddress", m.getEmailAddress());
+
+            // MyDate is not parcelable...
+            int[] birthday = {m.getBirthday().getYear(), m.getBirthday().getMonth(), m.getBirthday().getDate()};
+            profileIntent.putExtra("Birthday", birthday);
+
             this.startActivity(profileIntent);
         }
     }
@@ -442,8 +424,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void savePos() {
         FileOutputStream fos = null;
         String toCache = sdf.format(timeLastUpdt) + "\n";
-        for(Pair<String,LatLng> p:profiles){
-            toCache = toCache + p.first + "," + String.valueOf(p.second.latitude) + "," + String.valueOf(p.second.longitude) + "\n";
+        for(Musician p:profiles){
+            String birthdate = p.getBirthday().getYear() + "/" + p.getBirthday().getMonth() + "/" + p.getBirthday().getDate();
+            toCache = toCache + p.getFirstName() + "," + p.getLastName() + "," + p.getUserName() + ","
+                    + p.getEmailAddress() + "," + birthdate + ","
+                    + String.valueOf(p.getLocation().getLatitude()) + "," + String.valueOf(p.getLocation().getLongitude()) + "\n";
         }
         try {
             fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
@@ -480,10 +465,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             timeLastUpdt = sdf.parse(cached.get(0));
 
             profiles.clear();
-            for(int i = 1; i < cached.size();i++){
+            for (int i = 1; i < cached.size(); i++) {
                 String[] strProfile = cached.get(i).split(",");
-                Pair<String,LatLng> p = new Pair<>(strProfile[0],
-                        new LatLng(Double.parseDouble(strProfile[1]),Double.parseDouble(strProfile[2])));
+                String[] birthdate = strProfile[4].split("/");
+                MyDate birthday = new MyDate(Integer.valueOf(birthdate[0]),
+                        Integer.valueOf(birthdate[1]),
+                        Integer.valueOf(birthdate[2]),0,0);
+                Musician p = new Musician(strProfile[0],strProfile[1],strProfile[2],strProfile[3],
+                        birthday);
+                p.setLocation(new MyLocation(Double.valueOf(strProfile[5]),Double.valueOf(strProfile[6])));
                 profiles.add(p);
             }
 
@@ -504,5 +494,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         }
+    }
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String selected = parent.getItemAtPosition(position).toString()
+                .replaceAll("m", "");
+        int meters = 1;
+
+        if (selected.contains("k")) {
+            meters = 1000;
+            selected = selected.replaceAll("k", "");
+        }
+
+        try {
+            threshold = Integer.parseInt(selected) * meters;
+        } catch (NumberFormatException e) {
+            threshold = 0;
+        }
+
+        spinner.setSelection(position);
+        if(checkConnection()){
+            updateProfileList();
+            loadProfilesMarker();
+            savePos();
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

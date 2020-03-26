@@ -1,5 +1,14 @@
 package ch.epfl.sdp.musiconnect;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import ch.epfl.sdp.R;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -18,9 +27,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
-import ch.epfl.sdp.R;
+public class ProfilePage extends Page implements View.OnClickListener {
 
-public class ProfilePage extends StartPage implements View.OnClickListener {
     private static int VIDEO_REQUEST = 101;
     private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
     protected Uri videoUri = null;
@@ -36,6 +44,26 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
 
+        Intent intent = getIntent();
+        if (intent.hasExtra("FirstName")) {
+            TextView firstNameView = findViewById(R.id.myFirstname);
+            firstNameView.setText(intent.getStringExtra("FirstName"));
+
+            TextView lastNameView = findViewById(R.id.myLastname);
+            lastNameView.setText(intent.getStringExtra("LastName"));
+
+            TextView userNameView = findViewById(R.id.myUsername);
+            userNameView.setText(intent.getStringExtra("UserName"));
+
+            TextView emailView = findViewById(R.id.myMail);
+            emailView.setText(intent.getStringExtra("EmailAddress"));
+
+            TextView birthdayView = findViewById(R.id.myBirthday);
+            int[] birthday = intent.getIntArrayExtra("Birthday");
+            String s = birthday[0] + "." + birthday[1] + "." + birthday[2];
+            birthdayView.setText(s);
+        }
+      
         imgVw = findViewById(R.id.imgView);
         firstName = findViewById(R.id.myFirstname);
         lastName = findViewById(R.id.myLastname);
