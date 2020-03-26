@@ -17,7 +17,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import ch.epfl.sdp.R;
 
 
-public class Page extends AppCompatActivity {
+public abstract class Page extends AppCompatActivity {
     protected GoogleSignInClient mGoogleSignInClient;
     protected GoogleSignInOptions gso;
     private boolean test = true;
