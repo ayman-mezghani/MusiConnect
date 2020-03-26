@@ -28,12 +28,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.epfl.sdp.R;
-
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertTrue;
@@ -80,30 +74,17 @@ public class MapsLocationTest {
         }
     }
 
-    private void allowPermissionsIfNeeded() {
+    private void clickOnDialog(int pos) {
         try {
             UiObject allowPermissions = device.findObject(new UiSelector()
                     .clickable(true)
                     .checkable(false)
-                    .index(1));
+                    .index(pos));
 
             if (allowPermissions.exists()) {
                 allowPermissions.click();
             }
 
-        } catch (UiObjectNotFoundException e) {
-            System.out.println("There is no permissions dialog to interact with");
-        }
-    }
-
-
-    private void denyPermissionsIfNeeded() {
-        try {
-            UiObject denyPermissions = device.findObject(new UiSelector().clickable(true).checkable(false).index(0));
-
-            if (denyPermissions.exists()) {
-                denyPermissions.click();
-            }
         } catch (UiObjectNotFoundException e) {
             System.out.println("There is no permissions dialog to interact with");
         }
@@ -133,7 +114,7 @@ public class MapsLocationTest {
      */
     private void clickAllow() {
         clickAlert(device);
-        allowPermissionsIfNeeded();
+        clickOnDialog(1);
     }
 
     /**
@@ -141,7 +122,7 @@ public class MapsLocationTest {
      */
     private void clickDeny() {
         clickAlert(device);
-        denyPermissionsIfNeeded();
+        clickOnDialog(0);
     }
 
     private int[] grantedPerm() {
