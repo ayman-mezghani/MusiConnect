@@ -54,12 +54,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private List<Musician> allUsers = new ArrayList<>();
     private List<Musician> profiles = new ArrayList<>();
-    private Musician person1;
-    private Musician person2;
-    private Musician person3;
+    private Musician person1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
+    private Musician person2 = new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", new MyDate(1992, 9, 20));
+    private Musician person3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
 
     private Marker marker;
-    private List<Marker> markers;
+    private List<Marker> markers = new ArrayList<>();
 
     private double lat = -34;
     private double lon = 151;
@@ -92,9 +92,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         spinner.setOnItemSelectedListener(this);
         spinner.setSelection(2);
 
-        person1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
-        person2 = new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", new MyDate(1992, 9, 20));
-        person3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
 
         person1.setLocation(new MyLocation(46.52, 6.52));
         person2.setLocation(new MyLocation(46.51, 6.45));
@@ -104,7 +101,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         allUsers.add(person2);
         allUsers.add(person3);
 
-        markers = new ArrayList<>();
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -156,11 +152,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .radius(radius);
         circle = mMap.addCircle(circleOptions);
 
-
-        //Get users and place their marker
-        profiles.add(person1);
-        profiles.add(person2);
-        profiles.add(person3);
 
         loadProfilesMarker(profiles);
         mMap.setOnMarkerClickListener(this);
