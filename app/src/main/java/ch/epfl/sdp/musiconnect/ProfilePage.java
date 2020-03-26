@@ -12,8 +12,15 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.VideoView;
+
+import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 public class ProfilePage extends StartPage implements View.OnClickListener {
     private static int VIDEO_REQUEST = 101;
@@ -22,14 +29,17 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
 
     private TextView firstName, lastName, username, mail, birthday;
     private VideoView mVideoView;
-    private Button editProfile;
+    Button editProfile;
+    private ImageView imgVw;
+    private TextView id;
 
-
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
 
+        imgVw = findViewById(R.id.imgView);
         firstName = findViewById(R.id.myFirstname);
         lastName = findViewById(R.id.myLastname);
         username = findViewById(R.id.myUsername);
@@ -37,9 +47,10 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
         birthday = findViewById(R.id.myBirthday);
 
         mVideoView = findViewById(R.id.videoView);
-        mVideoView.setOnClickListener(v -> {
+        mVideoView.setOnTouchListener((v, event) -> {
             mVideoView.setVideoURI(videoUri);
             mVideoView.start();
+            return true;
         });
 
         editProfile = findViewById(R.id.btnEditProfile);
@@ -49,6 +60,30 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
             // Permits sending information from child to parent activity
             startActivityForResult(profileModificationIntent, LAUNCH_PROFILE_MODIF_INTENT);
         });
+        editProfile.setOnClickListener(this);
+
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        // Build a GoogleSignInClient with the options specified by gso.
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+        if (acct != null) {
+            String personName = acct.getDisplayName();
+            String personEmail = acct.getEmail();
+            //String personId = acct.getId();
+            Uri personPhoto = acct.getPhotoUrl();
+
+            firstName.setText(personName.split(" ")[0]);
+            lastName.setText(personName.split(" ")[1]);
+            mail.setText(personEmail);
+
+            Glide.with(this).load(String.valueOf(personPhoto)).into(imgVw);
+        }
     }
 
     @SuppressLint("MissingSuperCall")
