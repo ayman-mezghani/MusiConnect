@@ -32,6 +32,7 @@ public class ProfileTests {
     public void releaseIntents() {
         Intents.release();
     }
+
     /**
      * Helper method to avoid duplicate code
      * @param stringId

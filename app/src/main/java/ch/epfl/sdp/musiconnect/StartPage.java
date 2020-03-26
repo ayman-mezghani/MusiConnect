@@ -67,7 +67,6 @@ public class StartPage extends Page {
     }
 
 
-
     private void getLastLocation() {
         Log.d(TAG, "getLastKnownLocation: called.");
 
