@@ -39,7 +39,16 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -51,6 +60,8 @@ import ch.epfl.sdp.R;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
     private Date timeLastUpdt;
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+
 
     private static final String TAG = "MapsActivity";
     private FusedLocationProviderClient fusedLocationClient;
@@ -58,6 +69,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Location setLoc;
 
     private boolean updatePos = true;
+
+    private static final String FILE_NAME = "cachePos.txt";
 
     private GoogleMap mMap;
     private View mapView;
@@ -132,7 +145,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mUiSettings = mMap.getUiSettings();
 
-        timeLastUpdt = Calendar.getInstance().getTime();
+        //load cached profiles
+        loadPos();
 
 
         //Set UI settings
@@ -145,7 +159,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         circle = mMap.addCircle(circleOptions);
 
 
-        //Get users and place their marker
+        //place users' markers
         loadProfilesMarker();
         mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
@@ -161,14 +175,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 if (!co) {
                     updatePos = false;
-                    generateWarning("Error: No internet connection. Showing the only last musicians found since " + timeLastUpdt.toString(), 1);
+                    generateWarning("Error: No internet connection. Showing the only last musicians found since " + sdf.format(timeLastUpdt), 1);
                 } else if(!loc){
                     updatePos = false;
                     generateWarning("Error: couldn't update your location", 1);
                 } else {
                     updatePos = true;
                     timeLastUpdt = Calendar.getInstance().getTime();
+                    updateProfileList();
                     loadProfilesMarker();
+                    savePos();
                 }
                 handler.postDelayed(this, delay);
             }
@@ -185,9 +201,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 } else {
                     // Here it could be either location is turned off or there was not enough time for
                     // the first location to arrive
-                    //Toast.makeText(this, "Location is disabled", Toast.LENGTH_LONG)
-                    //        .show();
+                    //either way, we remove all markers, stop updating the location, and send an error message to the user
                     updatePos = false;
+                    for(Marker m:markers){
+                        m.remove();
+                    }
+                    markers.clear();
                     generateWarning("There was a problem retrieving your location; Please check you are connected to a network", 2);
                 }
                 startLocationService();
@@ -331,7 +350,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         markers.clear();
 
-        updateProfileList();
 
         for (Pair<String, LatLng> p : profiles) {
             Marker marker = mMap.addMarker(new MarkerOptions()
@@ -427,6 +445,73 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         (dialog, which) -> dialog.dismiss());
                 wrng.show();
                 break;
+        }
+    }
+
+    private void savePos() {
+        FileOutputStream fos = null;
+        String toCache = sdf.format(timeLastUpdt) + "\n";
+        for(Pair<String,LatLng> p:profiles){
+            toCache = toCache + p.first + "," + String.valueOf(p.second.latitude) + "," + String.valueOf(p.second.longitude) + "\n";
+        }
+        try {
+            fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+            fos.write(toCache.getBytes());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void loadPos() {
+        FileInputStream fis = null;
+
+        try {
+            fis = openFileInput(FILE_NAME);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            String text;
+            List<String> cached = new ArrayList<>();
+
+            while ((text = br.readLine()) != null) {
+                cached.add(text);
+            }
+
+            timeLastUpdt = sdf.parse(cached.get(0));
+
+            profiles.clear();
+            for(int i = 1; i < cached.size();i++){
+                String[] strProfile = cached.get(i).split(",");
+                Pair<String,LatLng> p = new Pair<>(strProfile[0],
+                        new LatLng(Double.parseDouble(strProfile[1]),Double.parseDouble(strProfile[2])));
+                profiles.add(p);
+            }
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            timeLastUpdt = Calendar.getInstance().getTime();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }
