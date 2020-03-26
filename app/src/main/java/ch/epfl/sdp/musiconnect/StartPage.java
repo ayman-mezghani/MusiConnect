@@ -88,7 +88,6 @@ public class StartPage extends AppCompatActivity {
     private void startMap(){
         Intent myIntent = new Intent(StartPage.this, MapsActivity.class);
 
-
         myIntent.putExtra("lat", lat);
         myIntent.putExtra("lon", lon);
         myIntent.putExtra("mainMarkerName", mainMarkerName);
