@@ -20,6 +20,7 @@ import java.io.IOException;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
+
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -92,11 +93,10 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK) {
             videoUri = data.getData();
-            Log.d("Video", videoUri.getPath());
 
-            Log.d("Video", "uploading video");
             CloudStorage storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
             try {
                 storage.upload(videoUri, CloudStorage.FileType.video, username);
