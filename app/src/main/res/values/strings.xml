@@ -37,4 +37,17 @@
     <string name="cloud_delete_successful">File deleted successfully</string>
     <string name="cloud_delete_failed">File delete failed</string>
 
+    <string name="musicianFinderTitle">Musician finder</string>
+    <string name="musicianFinderFirstName">First name</string>
+    <string name="myMusicianFinderFirstName"></string>
+    <string name="musicianFinderLastName">Last name</string>
+    <string name="myMusicianFinderLastName"></string>
+    <string name="musicianFinderUserName">User name</string>
+    <string name="myMusicianFinderUserName"></string>
+    <string name="musicianFinderInstruments">Instruments</string>
+    <string name="myMusicianFinderInstruments"></string>
+    <string name="musicianFinderLevels">Levels</string>
+    <string name="myMusicianFinderLevels"></string>
+    <string name="musicianFinderButton">Find musicians</string>
+
 </resources>
