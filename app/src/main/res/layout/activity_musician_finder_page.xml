@@ -26,7 +26,7 @@
                 android:layout_marginStart="0dp"
                 android:text="@string/musicianFinderTitle"
                 android:textAlignment="center"
-                android:textSize="40sp"
+                android:textSize="50sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -36,7 +36,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,9 +50,9 @@
                 android:id="@+id/musicianFinderFirstNameID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.4"
                 android:text="@string/musicianFinderFirstName"
-                android:textSize="20sp"
+                android:textSize="30sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -59,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/myMusicianFinderFirstName"
-                android:textSize="20sp" />
+                android:textSize="30sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -72,9 +74,9 @@
                 android:id="@+id/musicianFinderLastNameID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.4"
                 android:text="@string/musicianFinderLastName"
-                android:textSize="20sp"
+                android:textSize="30sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -83,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/myMusicianFinderLastName"
-                android:textSize="20sp" />
+                android:textSize="30sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -96,9 +98,9 @@
                 android:id="@+id/musicianFinderUserNameID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.4"
                 android:text="@string/musicianFinderUserName"
-                android:textSize="20sp"
+                android:textSize="30sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -107,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/myMusicianFinderUserName"
-                android:textSize="20sp" />
+                android:textSize="30sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -120,9 +122,9 @@
                 android:id="@+id/musicianFinderInstrumentsID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.4"
                 android:text="@string/musicianFinderInstruments"
-                android:textSize="20sp"
+                android:textSize="30sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -131,7 +133,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/myMusicianFinderInstruments"
-                android:textSize="20sp" />
+                android:textSize="30sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -144,9 +146,9 @@
                 android:id="@+id/musicianFinderLevelsID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.4"
                 android:text="@string/musicianFinderLevels"
-                android:textSize="20sp"
+                android:textSize="30sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -155,7 +157,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/myMusicianFinderLevels"
-                android:textSize="20sp" />
+                android:textSize="30sp" />
         </LinearLayout>
 
     </LinearLayout>
@@ -177,7 +179,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/musicianFinderButton"
-                android:textSize="25sp" />
+                android:textSize="35sp" />
         </LinearLayout>
 
     </LinearLayout>
