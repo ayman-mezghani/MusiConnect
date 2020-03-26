@@ -183,8 +183,8 @@ public class ProfilePage extends Page implements View.OnClickListener {
 
     private void getVideoUri() {
         CloudStorage storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
-        String path = username + "/" + CloudStorage.FileType.video;
-        String saveName = username + "_" + CloudStorage.FileType.video;
+        String path = testusername + "/" + CloudStorage.FileType.video;
+        String saveName = testusername + "_" + CloudStorage.FileType.video;
         try {
             storage.download(path, saveName, new CloudCallback() {
                 @Override
