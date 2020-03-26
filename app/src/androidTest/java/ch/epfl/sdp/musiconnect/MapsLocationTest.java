@@ -82,10 +82,8 @@ public class MapsLocationTest {
 
     private void allowPermissionsIfNeeded() {
         try {
-            UiObject allowPermissions = device.findObject(new UiSelector()
-                    .clickable(true)
-                    .checkable(false)
-                    .index(1));
+            UiObject allowPermissions = device.findObject(new UiSelector().clickable(true).checkable(false).index(1));
+
             if (allowPermissions.exists()) {
                 allowPermissions.click();
             }
@@ -98,10 +96,7 @@ public class MapsLocationTest {
 
     private void denyPermissionsIfNeeded() {
         try {
-            UiObject denyPermissions = device.findObject(new UiSelector()
-                    .clickable(true)
-                    .checkable(false)
-                    .index(0));
+            UiObject denyPermissions = device.findObject(new UiSelector().clickable(true).checkable(false).index(0));
 
             if (denyPermissions.exists()) {
                 denyPermissions.click();
