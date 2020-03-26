@@ -49,29 +49,30 @@ public class Page extends AppCompatActivity {
             case R.id.my_profile:
                 Intent profileIntent = new Intent(this, ProfilePage.class);
                 this.startActivity(profileIntent);
-                return true;
+                break;
             case R.id.settings:
                 Intent settingsIntent = new Intent(this, SettingsPage.class);
                 this.startActivity(settingsIntent);
-                return true;
+                break;
             case R.id.help:
                 Intent helpIntent = new Intent(this, HelpPage.class);
                 this.startActivity(helpIntent);
-                return true;
+                break;
             // In comments right now to avoid duplication
 //            case R.id.search:
 //                return true;
             case R.id.map:
                 Intent mapsIntent = new Intent(this, MapsActivity.class);
                 this.startActivity(mapsIntent);
-                return true;
+                break;
             case R.id.signout:
                 signOut();
-                return true;
+                break;
             default:
                 displayNotFinishedFunctionalityMessage();
                 return false;
         }
+        return true;
     }
 
     protected void displayNotFinishedFunctionalityMessage() {

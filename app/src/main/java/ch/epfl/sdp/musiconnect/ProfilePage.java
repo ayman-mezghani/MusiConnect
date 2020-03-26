@@ -23,7 +23,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
-public class ProfilePage extends StartPage implements View.OnClickListener {
+public class ProfilePage extends Page implements View.OnClickListener {
     private static int VIDEO_REQUEST = 101;
     protected Uri videoUri = null;
     private VideoView mVideoView;

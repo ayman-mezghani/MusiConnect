@@ -98,7 +98,6 @@ public class MapsLocationTest {
 
     private void denyPermissionsIfNeeded() {
         try {
-            UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
             UiObject denyPermissions = device.findObject(new UiSelector()
                     .clickable(true)
                     .checkable(false)
