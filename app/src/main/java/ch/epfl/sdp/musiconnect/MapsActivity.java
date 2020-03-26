@@ -91,16 +91,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         public void onReceive(Context context, Intent intent) {
             Bundle b = intent.getBundleExtra("Location");
             Location location = b.getParcelable("Location");
-            String message = intent.getStringExtra("Message");
-            switch (message) {
-                case "":
-                    setLocation(location);
-                    break;
-                case "NoLocation":
-                    generateWarning("There was a problem retrieving your location; Please check your connection", 1);
-                    break;
-
-            }
+            setLocation(location);
 
         }
     };

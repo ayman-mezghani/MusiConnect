@@ -50,13 +50,13 @@ public class LocationService extends Service {
             Location location = locationResult.getLastLocation();
 
             if(location == null){
-                sendMessageToActivity(location,"NoLocation");
+                sendMessageToActivity(location);
             } if (lastLocation == null || (
                     (Math.abs(lastLocation.getLatitude() - location.getLatitude()) > THRESHOLD ||
                             Math.abs(lastLocation.getLatitude() - location.getLatitude()) > THRESHOLD))) {
 
                 lastLocation = location;
-                sendMessageToActivity(location,"");
+                sendMessageToActivity(location);
             }
         }
     };
@@ -105,12 +105,11 @@ public class LocationService extends Service {
     }
 
 
-    private void sendMessageToActivity(Location l,String message) {
+    private void sendMessageToActivity(Location l) {
         Intent intent = new Intent("GPSLocationUpdates");
         Bundle b = new Bundle();
         b.putParcelable("Location", l);
         intent.putExtra("Location", b);
-        intent.putExtra("Message",message);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
