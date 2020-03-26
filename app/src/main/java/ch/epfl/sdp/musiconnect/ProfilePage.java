@@ -1,5 +1,6 @@
 package ch.epfl.sdp.musiconnect;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,14 +17,24 @@ import android.widget.VideoView;
 
 public class ProfilePage extends StartPage implements View.OnClickListener {
     private static int VIDEO_REQUEST = 101;
+    private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
     protected Uri videoUri = null;
+
+    private TextView firstName, lastName, username, mail, birthday;
     private VideoView mVideoView;
-    Button editProfile;
+    private Button editProfile;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
+
+        firstName = findViewById(R.id.myFirstname);
+        lastName = findViewById(R.id.myLastname);
+        username = findViewById(R.id.myUsername);
+        mail = findViewById(R.id.myMail);
+        birthday = findViewById(R.id.myBirthday);
 
         mVideoView = findViewById(R.id.videoView);
         mVideoView.setOnClickListener(v -> {
@@ -33,17 +44,28 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
 
         editProfile = findViewById(R.id.btnEditProfile);
         editProfile.setOnClickListener(v -> {
-            Intent profileModificationIntent = new Intent(getApplicationContext(), ProfileModification.class);
+            Intent profileModificationIntent = new Intent(this, ProfileModification.class);
             sendInformation(profileModificationIntent);
-            startActivity(profileModificationIntent);
+            // Permits sending information from child to parent activity
+            startActivityForResult(profileModificationIntent, LAUNCH_PROFILE_MODIF_INTENT);
         });
     }
 
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK) {
+        if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK)
             videoUri = data.getData();
+        if (requestCode == LAUNCH_PROFILE_MODIF_INTENT) {
+            if (resultCode == Activity.RESULT_OK) {
+                String[] newFields = data.getStringArrayExtra("newFields");
+                assert newFields != null;
+                firstName.setText(newFields[0]);
+                lastName.setText(newFields[1]);
+                username.setText(newFields[2]);
+                mail.setText(newFields[3]);
+                birthday.setText(newFields[4]);
+            }
         }
     }
 
@@ -65,12 +87,6 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
      * @param intent
      */
     private void sendInformation(Intent intent) {
-        TextView firstName = findViewById(R.id.myFirstname);
-        TextView lastName = findViewById(R.id.myLastname);
-        TextView username = findViewById(R.id.myUsername);
-        TextView mail = findViewById(R.id.myMail);
-        TextView birthday = findViewById(R.id.myBirthday);
-
         intent.putExtra("FIRST_NAME", firstName.getText().toString());
         intent.putExtra("LAST_NAME", lastName.getText().toString());
         intent.putExtra("USERNAME", username.getText().toString());
@@ -80,9 +96,7 @@ public class ProfilePage extends StartPage implements View.OnClickListener {
 
     public void captureVideo(View view) {
         Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-
-        if(videoIntent.resolveActivity(getPackageManager()) != null){
+        if (videoIntent.resolveActivity(getPackageManager()) != null)
             startActivityForResult(videoIntent, VIDEO_REQUEST);
-        }
     }
 }
