@@ -29,6 +29,7 @@
     <string name="edit_profile_button_text">Edit profile</string>
     <string name="do_not_save_profile">Don\'t save</string>
     <string name="save_profile">Save</string>
+    <string name="capture_video">Capture video</string>
 
     <string name="help_message">Help is on the way !</string>
     <string name="settings_message">Settings to come…</string>

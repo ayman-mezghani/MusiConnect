@@ -1,29 +1,50 @@
 package ch.epfl.sdp.musiconnect;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View.OnClickListener;
+import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import ch.epfl.sdp.R;
 
-public class ProfilePage extends StartPage {
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.widget.TextView;
+import android.widget.VideoView;
+
+public class ProfilePage extends StartPage implements View.OnClickListener {
+    private static int VIDEO_REQUEST = 101;
+    protected Uri videoUri = null;
+    private VideoView mVideoView;
+    Button editProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
 
-        // Open an intent when the profile button is clicked
-        OnClickListener listener = view -> {
+        mVideoView = findViewById(R.id.videoView);
+        mVideoView.setOnClickListener(v -> {
+            mVideoView.setVideoURI(videoUri);
+            mVideoView.start();
+        });
+
+        editProfile = findViewById(R.id.btnEditProfile);
+        editProfile.setOnClickListener(v -> {
             Intent profileModificationIntent = new Intent(getApplicationContext(), ProfileModification.class);
             sendInformation(profileModificationIntent);
             startActivity(profileModificationIntent);
-        };
-        Button editProfile = findViewById(R.id.btnEditProfile);
-        editProfile.setOnClickListener(listener);
+        });
+    }
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK) {
+            videoUri = data.getData();
+        }
     }
 
     @Override
@@ -33,6 +54,10 @@ public class ProfilePage extends StartPage {
         else
             super.onOptionsItemSelected(item);
         return true;
+    }
+
+    public void onClick(View view) {
+        super.displayNotFinishedFunctionalityMessage();
     }
 
     /**
@@ -51,5 +76,13 @@ public class ProfilePage extends StartPage {
         intent.putExtra("USERNAME", username.getText().toString());
         intent.putExtra("MAIL", mail.getText().toString());
         intent.putExtra("BIRTHDAY", birthday.getText().toString());
+    }
+
+    public void captureVideo(View view) {
+        Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+        if(videoIntent.resolveActivity(getPackageManager()) != null){
+            startActivityForResult(videoIntent, VIDEO_REQUEST);
+        }
     }
 }
