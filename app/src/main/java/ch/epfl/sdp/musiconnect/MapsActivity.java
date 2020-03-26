@@ -64,7 +64,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private double lat = -34;
     private double lon = 151;
     private Circle circle;
-    private double radius = 5000;
 
     private int threshold = 50; // meters
 
@@ -149,7 +148,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Set circle
         CircleOptions circleOptions = new CircleOptions()
                 .center(new LatLng(lat,lon))
-                .radius(radius);
+                .radius(threshold);
         circle = mMap.addCircle(circleOptions);
 
 
@@ -260,6 +259,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 loadProfilesMarker(profiles);
             }
         }
+        circle.setRadius(threshold);
     }
 
 

@@ -35,7 +35,6 @@ public class ProfilePage extends Page implements View.OnClickListener {
             TextView birthdayView = findViewById(R.id.myBirthday);
             int[] birthday = intent.getIntArrayExtra("Birthday");
             String s = birthday[0] + "." + birthday[1] + "." + birthday[2];
-            //MyDate date = new MyDate(, birthday[1], birthday[2]);
             birthdayView.setText(s);
 
         }
