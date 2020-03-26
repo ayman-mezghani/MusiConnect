@@ -19,7 +19,7 @@ public class DataBaseTest {
     @Rule
     public final ActivityTestRule<StartPage> startPageRule =
             new ActivityTestRule<>(StartPage.class);
-
+/*
     private static void waitALittle() {
         try {
             TimeUnit.SECONDS.sleep(2);
@@ -101,5 +101,5 @@ public class DataBaseTest {
                 assertTrue(m.equals(data));
             }
         });
-    }
+    }*/
 }
