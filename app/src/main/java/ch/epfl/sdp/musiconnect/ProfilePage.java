@@ -1,17 +1,9 @@
 package ch.epfl.sdp.musiconnect;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-
-import ch.epfl.sdp.R;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -20,12 +12,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.firebase.storage.FirebaseStorage;
+
+import java.io.IOException;
+
+import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
+import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
+
 
 public class ProfilePage extends Page implements View.OnClickListener {
 
@@ -35,6 +36,9 @@ public class ProfilePage extends Page implements View.OnClickListener {
 
     private TextView firstName, lastName, username, mail, birthday;
     private VideoView mVideoView;
+
+    private String testusername = "testUser";
+
     private ImageView imgVw;
     private TextView id;
 
@@ -43,6 +47,9 @@ public class ProfilePage extends Page implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
+
+        mVideoView = findViewById(R.id.videoView);
+        getVideoUri();
 
         Intent intent = getIntent();
         if (intent.hasExtra("FirstName")) {
@@ -63,20 +70,13 @@ public class ProfilePage extends Page implements View.OnClickListener {
             String s = birthday[0] + "." + birthday[1] + "." + birthday[2];
             birthdayView.setText(s);
         }
-      
+
         imgVw = findViewById(R.id.imgView);
         firstName = findViewById(R.id.myFirstname);
         lastName = findViewById(R.id.myLastname);
         username = findViewById(R.id.myUsername);
         mail = findViewById(R.id.myMail);
         birthday = findViewById(R.id.myBirthday);
-
-        mVideoView = findViewById(R.id.videoView);
-        mVideoView.setOnTouchListener((v, event) -> {
-            mVideoView.setVideoURI(videoUri);
-            mVideoView.start();
-            return true;
-        });
 
         Button editProfile = findViewById(R.id.btnEditProfile);
         editProfile.setOnClickListener(v -> {
@@ -85,6 +85,7 @@ public class ProfilePage extends Page implements View.OnClickListener {
             // Permits sending information from child to parent activity
             startActivityForResult(profileModificationIntent, LAUNCH_PROFILE_MODIF_INTENT);
         });
+
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -110,11 +111,28 @@ public class ProfilePage extends Page implements View.OnClickListener {
         }
     }
 
+    public void captureVideo(View view) {
+        Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+        if (videoIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(videoIntent, VIDEO_REQUEST);
+        }
+    }
+
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK)
+
+        if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK) {
             videoUri = data.getData();
+
+            CloudStorage storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
+            try {
+                storage.upload(videoUri, CloudStorage.FileType.video, testusername);
+            } catch (IOException e) {
+                Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
+            }
+        }
         if (requestCode == LAUNCH_PROFILE_MODIF_INTENT) {
             if (resultCode == Activity.RESULT_OK) {
                 String[] newFields = data.getStringArrayExtra("newFields");
@@ -126,6 +144,14 @@ public class ProfilePage extends Page implements View.OnClickListener {
                 birthday.setText(newFields[4]);
             }
         }
+
+        showVideo();
+
+//        TODO: refresh the intent, may be useful after video change
+//        finish();
+//        overridePendingTransition( 0, 0);
+//        startActivity(getIntent());
+//        overridePendingTransition( 0, 0);
     }
 
     @Override
@@ -141,6 +167,37 @@ public class ProfilePage extends Page implements View.OnClickListener {
         super.displayNotFinishedFunctionalityMessage();
     }
 
+
+    private void showVideo() {
+        if (videoUri != null) {
+            mVideoView.setVideoURI(videoUri);
+            mVideoView.start();
+            mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    mVideoView.start();
+                }
+            });
+        }
+    }
+
+    private void getVideoUri() {
+        CloudStorage storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
+        String path = testusername + "/" + CloudStorage.FileType.video;
+        String saveName = testusername + "_" + CloudStorage.FileType.video;
+        try {
+            storage.download(path, saveName, new CloudCallback() {
+                @Override
+                public void onCallback(Uri fileUri) {
+                    videoUri = fileUri;
+                    showVideo();
+                }
+            });
+        } catch (IOException e) {
+            Toast.makeText(this, "An error occured, please contact support.", Toast.LENGTH_LONG).show();
+        }
+    }
+
     /**
      * Automatically fill the edit texts of profile modification page with actual string values
      * @param intent
@@ -151,11 +208,5 @@ public class ProfilePage extends Page implements View.OnClickListener {
         intent.putExtra("USERNAME", username.getText().toString());
         intent.putExtra("MAIL", mail.getText().toString());
         intent.putExtra("BIRTHDAY", birthday.getText().toString());
-    }
-
-    public void captureVideo(View view) {
-        Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        if (videoIntent.resolveActivity(getPackageManager()) != null)
-            startActivityForResult(videoIntent, VIDEO_REQUEST);
     }
 }
