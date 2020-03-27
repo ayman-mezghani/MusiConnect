@@ -198,9 +198,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 if (!co) {
                     updatePos = false;
+                    delay = 5000;
                     generateWarning("Error: No internet connection. Showing the only last musicians found since " + sdf.format(timeLastUpdt), 1);
                 } else if(!loc){
                     updatePos = false;
+                    delay = 5000;
                     generateWarning("Error: couldn't update your location", 1);
                 } else {
                     updatePos = true;
@@ -229,6 +231,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         m.remove();
                     }
                     markers.clear();
+                    delay = 20000;
                     generateWarning("There was a problem retrieving your location; Please check you are connected to a network", 2);
                 }
                 startLocationService();
@@ -370,7 +373,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private boolean checkConnection() {
+    protected boolean checkConnection() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
@@ -381,7 +384,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private boolean checkLocationServices(){
+    protected boolean checkLocationServices(){
         LocationManager lm = (LocationManager)MapsActivity.this.getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
         boolean network_enabled = false;
@@ -406,11 +409,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void generateWarning(String message, int type) {
         switch (type) {
             case 1:
-                delay = 5000;
                 Toast.makeText(MapsActivity.this, message, Toast.LENGTH_LONG).show();
                 break;
             case 2:
-                delay = 20000;
                 AlertDialog wrng = new AlertDialog.Builder(MapsActivity.this).create();
                 wrng.setTitle("Warning!");
                 wrng.setMessage(message);
