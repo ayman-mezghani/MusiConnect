@@ -56,8 +56,11 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.R;
+
+import static ch.epfl.sdp.musiconnect.MapsActivity.Utility.generateWarning;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
@@ -79,15 +82,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private View mapView;
     private UiSettings mUiSettings;
 
-    private int delay;
-    private List<Marker> markers = new ArrayList<>();
-    private List<Musician> allUsers = new ArrayList<>();
-    private List<Musician> profiles = new ArrayList<>();
-    private Musician person1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
-    private Musician person2 = new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", new MyDate(1992, 9, 20));
-    private Musician person3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
+    private int delay;                                          //delay to updating the users list in ms
+    private List<Musician> allUsers = new ArrayList<>();        //all users "near" the current user's position
+    private List<Musician> profiles = new ArrayList<>();        //all users within the radius set by the user in the app
+    private List<Marker> markers = new ArrayList<>();           //markers on the map associated to profiles
 
-    private Marker marker;
+
+    private Marker marker;                                      //main user's marker
 
     private Circle circle;
 
@@ -115,16 +116,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
         spinner.setSelection(2);
-
-
-        person1.setLocation(new MyLocation(46.52, 6.52));
-        person2.setLocation(new MyLocation(46.51, 6.45));
-        person3.setLocation(new MyLocation(46.519, 6.57));
-
-        allUsers.add(person1);
-        allUsers.add(person2);
-        allUsers.add(person3);
-
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -167,8 +158,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mUiSettings = mMap.getUiSettings();
 
-        //load cached profiles
-        loadPos();
+        //If there's a connection, fetch Users in the general area; else, load them from cache
+        if(checkConnection()){
+            createPlaceHolderUsers();
+        }else{
+            loadUsersFromCache();
+        }
 
 
         //Set UI settings
@@ -182,14 +177,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         //place users' markers
+        updateProfileList();
         loadProfilesMarker();
 
+        //sets listeners on map markers
         mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
 
-        //Handler that updates nearby users list
+        //Handler that updates users list
         Handler handler = new Handler();
-        delay = 1000; //milliseconds
+        delay = 1000;
 
         handler.postDelayed(new Runnable() {
             public void run() {
@@ -199,17 +196,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (!co) {
                     updatePos = false;
                     delay = 5000;
-                    generateWarning("Error: No internet connection. Showing the only last musicians found since " + sdf.format(timeLastUpdt), 1);
+                    generateWarning(MapsActivity.this,"Error: No internet connection. Showing the only last musicians found since " + sdf.format(timeLastUpdt), Utility.warningTypes.Toast);
                 } else if(!loc){
                     updatePos = false;
                     delay = 5000;
-                    generateWarning("Error: couldn't update your location", 1);
+                    generateWarning(MapsActivity.this,"Error: couldn't update your location", Utility.warningTypes.Toast);
                 } else {
                     updatePos = true;
                     timeLastUpdt = Calendar.getInstance().getTime();
+                    updateUsers();
                     updateProfileList();
                     loadProfilesMarker();
-                    savePos();
                 }
                 handler.postDelayed(this, delay);
             }
@@ -232,7 +229,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                     markers.clear();
                     delay = 20000;
-                    generateWarning("There was a problem retrieving your location; Please check you are connected to a network", 2);
+                    generateWarning(MapsActivity.this,"There was a problem retrieving your location; Please check you are connected to a network", Utility.warningTypes.Alert);
                 }
                 startLocationService();
 
@@ -304,23 +301,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    //fetches users coordinates, updates them, and save them to cache
+    //(right now, only creates random nearby position and saves user to cache until database is implemented)
+    private void updateUsers(){
+        if(setLoc == null){             //Might be called before we get the first update to the location;
+            return;
+        }
 
-    private void updateProfileList() {
         Random random = new Random();
-        if(setLoc == null){
+
+        for(Musician m:allUsers){
+            double lat = setLoc.getLatitude() + (((double)random.nextInt(5)-2.5) /100);
+            double lng = setLoc.getLongitude() + (((double)random.nextInt(5)-2.5) /100);
+            m.setLocation(new MyLocation(lat,lng));
+        }
+
+        saveUsersToCache();
+    }
+
+    //From the users around the area, picks the ones that are within the threshold distance.
+    private void updateProfileList() {
+        if(setLoc == null){             //Might be called before we get the first update to the location;
             return;
         } else{
-            delay = 20000;
+            delay = 20000;              //sets a 20 sec long delay on updates when everything is in place
         }
-        profiles.clear();
 
+        profiles.clear();
         for (Musician m : allUsers) {
-            double lat = setLoc.getLatitude() + (((double)random.nextInt(5)-2.5) /100 );
-            double lng = setLoc.getLongitude() + (((double)random.nextInt(5)-2.5) /100);
             Location l = new Location("");
-            l.setLatitude(lat);
-            l.setLongitude(lng);
-            m.setLocation(new MyLocation(lat,lng));
+            l.setLatitude(m.getLocation().getLatitude());
+            l.setLongitude(m.getLocation().getLongitude());
             if (setLoc.distanceTo(l) <= threshold) {
                 profiles.add(m);
             }
@@ -329,6 +340,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         circle.setRadius(threshold);
     }
 
+    //Loads the profile on the map as markers, with associated information
     private void loadProfilesMarker() {
         for (Marker m : markers) {
             m.remove();
@@ -405,27 +417,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    //creates warning message when something goes wrong; type 1 is a simple message at the bottom of the screen, type 2 is an alertDialog box
-    private void generateWarning(String message, int type) {
-        switch (type) {
-            case 1:
-                Toast.makeText(MapsActivity.this, message, Toast.LENGTH_LONG).show();
-                break;
-            case 2:
-                AlertDialog wrng = new AlertDialog.Builder(MapsActivity.this).create();
-                wrng.setTitle("Warning!");
-                wrng.setMessage(message);
-                wrng.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                        (dialog, which) -> dialog.dismiss());
-                wrng.show();
-                break;
-        }
-    }
 
-    private void savePos() {
+
+    private void saveUsersToCache() {
         FileOutputStream fos = null;
         String toCache = sdf.format(timeLastUpdt) + "\n";
-        for(Musician p:profiles){
+        for(Musician p:allUsers){
             String birthdate = p.getBirthday().getYear() + "/" + p.getBirthday().getMonth() + "/" + p.getBirthday().getDate();
             toCache = toCache + p.getFirstName() + "," + p.getLastName() + "," + p.getUserName() + ","
                     + p.getEmailAddress() + "," + birthdate + ","
@@ -449,7 +446,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void loadPos() {
+    private void loadUsersFromCache() {
         FileInputStream fis = null;
 
         try {
@@ -465,7 +462,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             timeLastUpdt = sdf.parse(cached.get(0));
 
-            profiles.clear();
+            allUsers.clear();
             for (int i = 1; i < cached.size(); i++) {
                 String[] strProfile = cached.get(i).split(",");
                 String[] birthdate = strProfile[4].split("/");
@@ -475,7 +472,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Musician p = new Musician(strProfile[0],strProfile[1],strProfile[2],strProfile[3],
                         birthday);
                 p.setLocation(new MyLocation(Double.valueOf(strProfile[5]),Double.valueOf(strProfile[6])));
-                profiles.add(p);
+                allUsers.add(p);
             }
 
 
@@ -514,15 +511,57 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         spinner.setSelection(position);
-        if(checkConnection()){
-            updateProfileList();
-            loadProfilesMarker();
-            savePos();
-        }
+
+        updateProfileList();
+        loadProfilesMarker();
+
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    //Should be replaced by a function that fetch user from the database; right now it generates 3 fixed users
+    private void createPlaceHolderUsers(){
+
+        Musician person1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
+        Musician person2 = new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", new MyDate(1992, 9, 20));
+        Musician person3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
+
+        person1.setLocation(new MyLocation(46.52, 6.52));
+        person2.setLocation(new MyLocation(46.51, 6.45));
+        person3.setLocation(new MyLocation(46.519, 6.57));
+
+        allUsers.add(person1);
+        allUsers.add(person2);
+        allUsers.add(person3);
+
+
+
+    }
+
+    public static class Utility{
+        public enum warningTypes{
+            Toast,
+            Alert
+        }
+
+        //creates warning message when something goes wrong; Toast is a simple message at the bottom of the screen, Alert is an alertDialog box
+        public static void generateWarning(Context context, String message, warningTypes type) {
+            switch (type) {
+                case Toast:
+                    Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+                    break;
+                case Alert:
+                    AlertDialog wrng = new AlertDialog.Builder(context).create();
+                    wrng.setTitle("Warning!");
+                    wrng.setMessage(message);
+                    wrng.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            (dialog, which) -> dialog.dismiss());
+                    wrng.show();
+                    break;
+            }
+        }
     }
 }
