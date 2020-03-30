@@ -43,7 +43,7 @@ public class CloudStorageTest {
     private CloudStorage storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), context);
     private String fileName = R.drawable.image + "";
 
-    private static void waitALittle(int t) {
+    public static void waitALittle(int t) {
         try {
             TimeUnit.SECONDS.sleep(t);
         } catch (InterruptedException e) {

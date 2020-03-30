@@ -29,7 +29,7 @@ public class UserCreation extends Page {
     int month;
     int dayOfMonth;
     Calendar calendar;
-    private EditText etFirstName, etLastName, etUserName, etMail;
+    protected EditText etFirstName, etLastName, etUserName, etMail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,7 @@ public class UserCreation extends Page {
                     StartActivityAndFinish(new Intent(UserCreation.this, StartPage.class));
                 }
                 else {
-                    Toast.makeText(this, "Select a date of birth", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Select a date of birth", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -98,7 +98,7 @@ public class UserCreation extends Page {
         }
     }
 
-    private String getAge(int year, int month, int day){
+    public String getAge(int year, int month, int day){
         Calendar dob = Calendar.getInstance();
         Calendar today = Calendar.getInstance();
 
@@ -113,32 +113,25 @@ public class UserCreation extends Page {
         return String.valueOf(age);
     }
 
-    private void signOut() {
-        mGoogleSignInClient.signOut()
-            .addOnCompleteListener(this, task -> {
-                StartActivityAndFinish(new Intent(UserCreation.this, GoogleLogin.class));
-            });
-    }
-
-    private boolean isEmpty(EditText etText) {
+    public boolean isEmpty(EditText etText) {
         return etText.getText().toString().trim().length() == 0;
     }
 
-    private boolean checkUserCreationInput() {
+    public boolean checkUserCreationInput() {
         if(isEmpty(etFirstName)){
-            Toast.makeText(this, "Fill Firstname field", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Fill Firstname field", Toast.LENGTH_LONG).show();
             return false;
         }
         if(isEmpty(etLastName)){
-            Toast.makeText(this, "Fill Lastname field", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Fill Lastname field", Toast.LENGTH_LONG).show();
             return false;
         }
         if(isEmpty(etUserName)){
-            Toast.makeText(this, "Fill Username field", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Fill Username field", Toast.LENGTH_LONG).show();
             return false;
         }
         if(isEmpty(etMail)){
-            Toast.makeText(this, "Fill Email field", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Fill Email field", Toast.LENGTH_LONG).show();
             return false;
         }
 

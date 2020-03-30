@@ -94,7 +94,7 @@ public abstract class Page extends AppCompatActivity {
         //  startActivity(new Intent(this, UserCreation.class));
     }
 
-     private void signOut() {
+     protected void signOut() {
         mGoogleSignInClient.signOut()
             .addOnCompleteListener(this, task -> {
                 startActivity(new Intent(Page.this, GoogleLogin.class));
