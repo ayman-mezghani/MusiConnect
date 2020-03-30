@@ -3,18 +3,24 @@ package ch.epfl.sdp.musiconnect;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.util.Calendar;
 
 import ch.epfl.sdp.R;
 
-public class UserCreation extends AppCompatActivity {
+public class UserCreation extends Page {
     private static final int GALLERY_REQUEST_CODE = 123;
     private ImageView profilePicture;
     TextView date;
@@ -23,6 +29,7 @@ public class UserCreation extends AppCompatActivity {
     int month;
     int dayOfMonth;
     Calendar calendar;
+    private EditText etFirstName, etLastName, etUserName, etMail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +57,37 @@ public class UserCreation extends AppCompatActivity {
             gallery.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(gallery, "Pick an image"), GALLERY_REQUEST_CODE);
         });
+
+        // signout if user choose cancel
+        findViewById(R.id.btnUserCreationCancel).setOnClickListener(v -> signOut());
+
+        findViewById(R.id.btnUserCreationCreate).setOnClickListener(v -> {
+            if(checkUserCreationInput()) {
+                if (((TextView) findViewById(R.id.etDate)).getText().toString().trim().length() > 0) {
+                    // TODO: Insert Data in database
+                    StartActivityAndFinish(new Intent(UserCreation.this, StartPage.class));
+                }
+                else {
+                    Toast.makeText(this, "Select a date of birth", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        etFirstName = findViewById(R.id.etFirstname);
+        etLastName = findViewById(R.id.etLastName);
+        etUserName = findViewById(R.id.etUsername);
+        etMail = findViewById(R.id.etMail);
+
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+
+        if(account != null){
+            etFirstName.setText(account.getGivenName());
+            etLastName.setText(account.getFamilyName());
+            etMail.setText(account.getEmail());
+        }
+
     }
 
     @Override
@@ -73,5 +111,42 @@ public class UserCreation extends AppCompatActivity {
         }
 
         return String.valueOf(age);
+    }
+
+    private void signOut() {
+        mGoogleSignInClient.signOut()
+            .addOnCompleteListener(this, task -> {
+                StartActivityAndFinish(new Intent(UserCreation.this, GoogleLogin.class));
+            });
+    }
+
+    private boolean isEmpty(EditText etText) {
+        return etText.getText().toString().trim().length() == 0;
+    }
+
+    private boolean checkUserCreationInput() {
+        if(isEmpty(etFirstName)){
+            Toast.makeText(this, "Fill Firstname field", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(isEmpty(etLastName)){
+            Toast.makeText(this, "Fill Lastname field", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(isEmpty(etUserName)){
+            Toast.makeText(this, "Fill Username field", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(isEmpty(etMail)){
+            Toast.makeText(this, "Fill Email field", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void StartActivityAndFinish(Intent i) {
+        startActivity(i);
+        finish();
     }
 }

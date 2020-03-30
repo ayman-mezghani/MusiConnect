@@ -89,15 +89,16 @@ public abstract class Page extends AppCompatActivity {
 
         if(account == null && !test)
             startActivity(new Intent(this, GoogleLogin.class));
+        // TODO:
         //else if(account != null && account.getEmail() isn't in database)
         //  startActivity(new Intent(this, UserCreation.class));
     }
 
-    private void signOut() {
+     private void signOut() {
         mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, task -> {
-                    startActivity(new Intent(Page.this, GoogleLogin.class));
-                    finish();
-                });
+            .addOnCompleteListener(this, task -> {
+                startActivity(new Intent(Page.this, GoogleLogin.class));
+                finish();
+            });
     }
 }
