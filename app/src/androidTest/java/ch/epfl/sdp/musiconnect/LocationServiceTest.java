@@ -1,18 +1,12 @@
 package ch.epfl.sdp.musiconnect;
 
 
-import android.app.ActivityManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.os.Bundle;
 import android.os.IBinder;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ServiceTestRule;
 
 import org.junit.Rule;
@@ -21,7 +15,6 @@ import org.junit.runner.RunWith;
 
 import java.util.concurrent.TimeoutException;
 
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)

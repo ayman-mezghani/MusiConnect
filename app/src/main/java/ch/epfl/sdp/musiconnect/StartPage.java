@@ -18,6 +18,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
 
+
 public class StartPage extends Page {
     private static final String TAG = "MainActivity";
     private FusedLocationProviderClient fusedLocationClient;
@@ -35,7 +36,6 @@ public class StartPage extends Page {
                     userLocation = location;
                 }
             }
-
         }
     };
 
@@ -61,7 +61,6 @@ public class StartPage extends Page {
                 messageReceiver, new IntentFilter("GPSLocationUpdates"));
     }
 
-
     private void startLocationService() {
         LocationPermission.startLocationService(this);
     }
@@ -83,8 +82,6 @@ public class StartPage extends Page {
             });
         }
     }
-
-
 
     private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
