@@ -290,7 +290,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onInfoWindowClick(Marker marker) {
         if(profiles.contains(marker.getTag())) {
-            Intent profileIntent = new Intent(MapsActivity.this, ProfilePage.class);
+            Intent profileIntent = new Intent(MapsActivity.this, VisitorProfilePage.class);
             Musician m = (Musician) marker.getTag();
             profileIntent.putExtra("FirstName", m.getFirstName());
             profileIntent.putExtra("LastName", m.getLastName());

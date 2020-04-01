@@ -42,8 +42,8 @@
         <activity android:name=".musiconnect.HelpPage" />
         <activity android:name=".musiconnect.ProfilePage" />
         <activity android:name=".musiconnect.ProfileModification" />
-        <activity android:name=".musiconnect.StartPage">
-        </activity>
+        <activity android:name=".musiconnect.StartPage"/>
+        <activity android:name=".musiconnect.VisitorProfilePage" />
 
         <service
             android:name=".musiconnect.LocationService"
