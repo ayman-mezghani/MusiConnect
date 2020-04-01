@@ -41,75 +41,75 @@ public class UserCreationHardwareTests {
     }
 
     @Test
-    public void AllEptyInputTest(){
-        onView(withId(R.id.btnUserCreationCreate)).perform(click());
+    public void AllEmptyInputTest(){
+        onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
         CloudStorageTest.waitALittle(1);
         onView(withText("Fill Firstname field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
     @Test
     public void ManyEptyInputTest(){
-        onView(withId(R.id.etFirstname)).perform(clearText(), typeText("Bob"));
+        onView(withId(R.id.etFirstname)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob"));
         closeSoftKeyboard();
-        onView(withId(R.id.etLastName)).perform(clearText(), typeText("bernard"));
+        onView(withId(R.id.etLastName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("bernard"));
         closeSoftKeyboard();
-        onView(withId(R.id.etMail)).perform(clearText(), typeText("Bob@bob.ch"));
+        onView(withId(R.id.etMail)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob@bob.ch"));
         closeSoftKeyboard();
 
-        onView(withId(R.id.btnUserCreationCreate)).perform(click());
+        onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
         CloudStorageTest.waitALittle(1);
         onView(withText("Fill Username field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
     @Test
     public void etMail(){
-        onView(withId(R.id.etFirstname)).perform(clearText(), typeText("Bob"));
+        onView(withId(R.id.etFirstname)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob"));
         closeSoftKeyboard();
-        onView(withId(R.id.etLastName)).perform(clearText(), typeText("bernard"));
+        onView(withId(R.id.etLastName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("bernard"));
         closeSoftKeyboard();
-        onView(withId(R.id.etUsername)).perform(clearText(), typeText("Bobbeber"));
+        onView(withId(R.id.etUsername)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bobbeber"));
         closeSoftKeyboard();
 
-        onView(withId(R.id.btnUserCreationCreate)).perform(click());
+        onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
         CloudStorageTest.waitALittle(1);
         onView(withText("Fill Email field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
     @Test
     public void etLastNameEptyInputTest(){
-        onView(withId(R.id.etFirstname)).perform(clearText(), typeText("Bob"));
+        onView(withId(R.id.etFirstname)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob"));
         closeSoftKeyboard();
 
-        onView(withId(R.id.btnUserCreationCreate)).perform(click());
+        onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
         CloudStorageTest.waitALittle(1);
         onView(withText("Fill Lastname field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
     @Test
     public void onlyDateIputEmptyTest(){
-        onView(withId(R.id.etFirstname)).perform(clearText(), typeText("Bob"));
+        onView(withId(R.id.etFirstname)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob"));
         closeSoftKeyboard();
-        onView(withId(R.id.etLastName)).perform(clearText(), typeText("bernard"));
+        onView(withId(R.id.etLastName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("bernard"));
         closeSoftKeyboard();
-        onView(withId(R.id.etUsername)).perform(clearText(), typeText("Bobbeber"));
+        onView(withId(R.id.etUsername)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bobbeber"));
         closeSoftKeyboard();
-        onView(withId(R.id.etMail)).perform(clearText(), typeText("Bob@bob.ch"));
+        onView(withId(R.id.etMail)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob@bob.ch"));
         closeSoftKeyboard();
 
-        onView(withId(R.id.btnUserCreationCreate)).perform(click());
+        onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
         CloudStorageTest.waitALittle(1);
         onView(withText("Select a date of birth")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
     @Test
     public void allInputSetted(){
-        onView(withId(R.id.etFirstname)).perform(clearText(), typeText("Bob"));
+        onView(withId(R.id.etFirstname)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob"));
         closeSoftKeyboard();
-        onView(withId(R.id.etLastName)).perform(clearText(), typeText("bernard"));
+        onView(withId(R.id.etLastName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("bernard"));
         closeSoftKeyboard();
-        onView(withId(R.id.etUsername)).perform(clearText(), typeText("Bobbeber"));
+        onView(withId(R.id.etUsername)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bobbeber"));
         closeSoftKeyboard();
-        onView(withId(R.id.etMail)).perform(clearText(), typeText("Bob@bob.ch"));
+        onView(withId(R.id.etMail)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob@bob.ch"));
         closeSoftKeyboard();
         onView(withId(R.id.etDate)).perform(ViewActions.scrollTo()).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2000, 1, 1));
@@ -120,7 +120,7 @@ public class UserCreationHardwareTests {
 
     @Test
     public void clickOnImgView(){
-        onView(withId(R.id.userProfilePicture)).perform(click());
+        //onView(withId(R.id.userProfilePicture)).perform(ViewActions.scrollTo()).perform(click());
     }
 
     @Test
