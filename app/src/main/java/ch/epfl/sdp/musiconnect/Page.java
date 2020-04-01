@@ -47,7 +47,7 @@ public abstract class Page extends AppCompatActivity {
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.my_profile:
-                Intent profileIntent = new Intent(this, ProfilePage.class);
+                Intent profileIntent = new Intent(this, MyProfilePage.class);
                 this.startActivity(profileIntent);
                 break;
             case R.id.settings:

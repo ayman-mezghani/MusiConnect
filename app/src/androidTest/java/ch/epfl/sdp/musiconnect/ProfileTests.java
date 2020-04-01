@@ -22,8 +22,8 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
 public class ProfileTests {
 
     @Rule
-    public final ActivityTestRule<ProfilePage> profilePageRule =
-            new ActivityTestRule<>(ProfilePage.class);
+    public final ActivityTestRule<MyProfilePage> profilePageRule =
+            new ActivityTestRule<>(MyProfilePage.class);
 
     // Before and after methods are used in order to accept tests with intents
     @Before

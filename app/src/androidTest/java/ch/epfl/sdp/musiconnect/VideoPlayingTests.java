@@ -96,7 +96,7 @@ public class VideoPlayingTests {
         MapsLocationTest.clickAllow();
         goToMyProfilePage();
 
-        ((ProfilePage) getCurrentActivity()).videoUri = Uri.parse(videoSource);
+        ((MyProfilePage) getCurrentActivity()).videoUri = Uri.parse(videoSource);
 
         ViewInteraction videoView = onView(allOf(withId(R.id.videoView),
                 childAtPosition(childAtPosition(withClassName(is("android.widget.LinearLayout")),
