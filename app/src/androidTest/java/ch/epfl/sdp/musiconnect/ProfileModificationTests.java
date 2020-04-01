@@ -41,6 +41,7 @@ public class ProfileModificationTests {
     @Test
     public void testEditProfileAndDoNotSaveShouldDoNothing() {
         clickButtonWithText(R.string.edit_profile_button_text);
+        onView(withId(R.id.newFirstName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob"));
         clickButtonWithText(R.string.do_not_save_profile);
         assert(true);
     }
