@@ -4,18 +4,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import ch.epfl.sdp.R;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class ProfileModification extends AppCompatActivity implements View.OnClickListener {
 
     String firstName, lastName, username, mail, birthday;
     EditText[] editFields;
+    final Calendar calendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +34,13 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
                 findViewById(R.id.newEmailAddress),
                 findViewById(R.id.newBirthday)};
 
+        manageDatePickerDialog(editFields[4]);
+
         firstName = getIntent().getStringExtra("FIRST_NAME");
         lastName = getIntent().getStringExtra("LAST_NAME");
         username = getIntent().getStringExtra("USERNAME");
         mail = getIntent().getStringExtra("MAIL");
         birthday = getIntent().getStringExtra("BIRTHDAY");
-
         setEditTextFields(editFields, new String[]{firstName, lastName, username, mail, birthday});
 
         Button saveProfile = findViewById(R.id.btnSaveProfile);
@@ -69,11 +75,6 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         super.onDestroy();
     }
 
-    /**
-     * Set the EditText fields the actual values when opening the intent
-     * @param fields
-     * @param params
-     */
     private void setEditTextFields(EditText[] fields, String[] params) {
         int idx = 0;
         for (EditText f: fields) {
@@ -88,5 +89,27 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         for (int i = 0; i < editFields.length; i++)
             newFields[i] = editFields[i].getText().toString();
         return newFields;
+    }
+
+    /**
+     * Helper method to initialize the datepicker dialog
+     * @param bdayField
+     */
+    private void manageDatePickerDialog(EditText bdayField) {
+        DatePickerDialog.OnDateSetListener date = (view, year, monthOfYear, dayOfMonth) -> {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, monthOfYear);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel(editFields[4]);
+        };
+        bdayField.setOnClickListener(v -> new DatePickerDialog(
+                ProfileModification.this, date, calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show());
+    }
+
+    private void updateLabel(EditText et) {
+        String myFormat = "dd/MM/yyyy";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.FRANCE);
+        et.setText(sdf.format(calendar.getTime()));
     }
 }

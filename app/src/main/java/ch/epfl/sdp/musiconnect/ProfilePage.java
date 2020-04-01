@@ -27,7 +27,6 @@ import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 
-
 public class ProfilePage extends Page implements View.OnClickListener {
 
     private static int VIDEO_REQUEST = 101;
@@ -40,13 +39,15 @@ public class ProfilePage extends Page implements View.OnClickListener {
     private String testusername = "testUser";
 
     private ImageView imgVw;
-    private TextView id;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
+
+        mVideoView = findViewById(R.id.videoView);
+        getVideoUri();
 
         imgVw = findViewById(R.id.imgView);
         firstName = findViewById(R.id.myFirstname);
