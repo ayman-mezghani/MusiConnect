@@ -119,11 +119,6 @@ public class UserCreationHardwareTests {
     }
 
     @Test
-    public void clickOnImgView(){
-        //onView(withId(R.id.userProfilePicture)).perform(ViewActions.scrollTo()).perform(click());
-    }
-
-    @Test
     public void getJoinDateWorks() {
         assertEquals(((UserCreation) VideoPlayingTests.getCurrentActivity()).getAge(1995, 10, 19), "24");
     }
