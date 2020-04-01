@@ -42,15 +42,13 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         };
         editFields[4].setOnClickListener(v -> new DatePickerDialog(
                 ProfileModification.this, date, calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
-                ).show());
+                calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show());
 
         firstName = getIntent().getStringExtra("FIRST_NAME");
         lastName = getIntent().getStringExtra("LAST_NAME");
         username = getIntent().getStringExtra("USERNAME");
         mail = getIntent().getStringExtra("MAIL");
         birthday = getIntent().getStringExtra("BIRTHDAY");
-
         setEditTextFields(editFields, new String[]{firstName, lastName, username, mail, birthday});
 
         Button saveProfile = findViewById(R.id.btnSaveProfile);
