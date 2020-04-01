@@ -1,16 +1,17 @@
 package ch.epfl.sdp.musiconnect;
 
-import android.widget.TextView;
+import android.widget.DatePicker;
 
-import androidx.test.espresso.intent.rule.IntentsTestRule;
+import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.contrib.PickerActions;
 import androidx.test.rule.ActivityTestRule;
 
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
@@ -18,13 +19,11 @@ import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.intent.Intents.intended;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 
@@ -112,19 +111,16 @@ public class UserCreationHardwareTests {
         closeSoftKeyboard();
         onView(withId(R.id.etMail)).perform(clearText(), typeText("Bob@bob.ch"));
         closeSoftKeyboard();
-        ((TextView)((UserCreation) VideoPlayingTests.getCurrentActivity()).findViewById(R.id.etDate)).setText("19 / 10 / 1995 (24 years)");
+        onView(withId(R.id.etDate)).perform(ViewActions.scrollTo()).perform(click());
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2000, 1, 1));
+        onView(withText("OK")).perform(click());
 
-        onView(withId(R.id.btnUserCreationCreate)).perform(click());
+        onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
     }
 
     @Test
     public void clickOnImgView(){
-        //onView(withId(R.id.userProfilePicture)).perform(click());
-    }
-
-    @Test
-    public void clickOnDatePicker(){
-        //onView(withId(R.id.etDate)).perform(click());
+        onView(withId(R.id.userProfilePicture)).perform(click());
     }
 
     @Test
