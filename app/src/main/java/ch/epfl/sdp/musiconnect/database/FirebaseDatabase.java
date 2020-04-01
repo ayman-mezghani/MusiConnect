@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DataBase {
+public class FirebaseDatabase implements Database {
     private static final String TAG = "DataBase";
     private FirebaseFirestore db;
 
-    public DataBase() {
+    public FirebaseDatabase() {
         this.db = FirebaseFirestore.getInstance();
     }
 
