@@ -4,6 +4,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import ch.epfl.sdp.R;
@@ -23,23 +24,30 @@ public class ProfileModificationTests {
     public final ActivityTestRule<ProfilePage> profilePageRule =
             new ActivityTestRule<>(ProfilePage.class);
 
+    /**
+     * Helper method to avoid duplication
+     * @param text: text to recognize on the clickable object
+     */
+    private void clickButtonWithText(int text) {
+        onView(withText(text)).perform(ViewActions.scrollTo()).perform(click());
+    }
+
     @Test
     public void testEditProfileAndDoNotSaveShouldDoNothing() {
-        onView(withText(R.string.edit_profile_button_text)).perform(click());
-        onView(withText(R.string.do_not_save_profile)).perform(click());
-        profilePageRule.getActivity().finish();
+        clickButtonWithText(R.string.edit_profile_button_text);
+        clickButtonWithText(R.string.do_not_save_profile);
         assert(true);
     }
 
     @Test
     public void testEditProfileAndSaveShouldUpdateFields() {
-        onView(withText(R.string.edit_profile_button_text)).perform(click());
-        onView(withId(R.id.newFirstName)).perform(clearText(), typeText("Bob"));
-        onView(withId(R.id.newLastName)).perform(clearText(), typeText("Mallet"));
-        onView(withId(R.id.newUsername)).perform(clearText(), typeText("BobMallet"));
-        onView(withId(R.id.newEmailAddress)).perform(clearText(), typeText("bob.mallet@gmail.com"));
+        clickButtonWithText(R.string.edit_profile_button_text);
+        onView(withId(R.id.newFirstName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob"));
+        onView(withId(R.id.newLastName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Mallet"));
+        onView(withId(R.id.newUsername)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("BobMallet"));
+        onView(withId(R.id.newEmailAddress)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("bob.mallet@gmail.com"));
         closeSoftKeyboard();
-        onView(withText(R.string.save_profile)).perform(click());
+        clickButtonWithText(R.string.save_profile);
         onView(withId(R.id.myFirstname)).check(matches(withText("Bob")));
         onView(withId(R.id.myLastname)).check(matches(withText("Mallet")));
         onView(withId(R.id.myUsername)).check(matches(withText("BobMallet")));
