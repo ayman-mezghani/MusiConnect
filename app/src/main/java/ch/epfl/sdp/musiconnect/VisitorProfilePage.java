@@ -3,14 +3,26 @@ package ch.epfl.sdp.musiconnect;
 import android.content.Intent;
 import android.os.Bundle;
 
-import ch.epfl.sdp.R;
+import java.util.Map;
 
-public class VisitorProfilePage extends ProfilePage {
+import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.DbAdapter;
+import ch.epfl.sdp.musiconnect.database.DbCallback;
+
+public class VisitorProfilePage extends ProfilePage implements DbCallback {
+    private DataBase db;
+    private DbAdapter dbAdapter;
+    private String newUsername;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        db = new DataBase();
+        dbAdapter = new DbAdapter(db);
+
         setContentView(R.layout.activity_visitor_profile_page);
         mVideoView = findViewById(R.id.videoView);
         getVideoUri();
@@ -23,29 +35,43 @@ public class VisitorProfilePage extends ProfilePage {
         mail = findViewById(R.id.mail);
         birthday = findViewById(R.id.birthday);
 
-
-        loadProfileContent();
+        Intent intent = getIntent();
+        if (!intent.getBooleanExtra("Test", false)) {
+            loadProfileContent();
+        } else {
+            int[] birthday = intent.getIntArrayExtra("Birthday");
+            Musician alyx = new Musician(intent.getStringExtra("FirstName"),
+                    intent.getStringExtra("LastName"),
+                    intent.getStringExtra("UserName"),
+                    intent.getStringExtra("Email"),
+                    new MyDate(birthday[2], birthday[1], birthday[0]));
+            onCallback(alyx);
+        }
     }
 
 
     // This function should take something like userID as input
     private void loadProfileContent() {
         Intent intent = getIntent();
-        if (intent.hasExtra("FirstName")) {
-            String sTitle = intent.getStringExtra("UserName") + "'s profile";
-            title.setText(sTitle);
-
-            firstName.setText(intent.getStringExtra("FirstName"));
-
-            lastName.setText(intent.getStringExtra("LastName"));
-
-            username.setText(intent.getStringExtra("UserName"));
-
-            mail.setText(intent.getStringExtra("EmailAddress"));
-
-            int[] birthdayContent = intent.getIntArrayExtra("Birthday");
-            String sBirthday = birthdayContent[0] + "." + birthdayContent[1] + "." + birthdayContent[2];
-            birthday.setText(sBirthday);
+        if (intent.hasExtra("UserName")) {
+            newUsername = intent.getStringExtra("UserName");
+            dbAdapter.read(newUsername, this);
         }
+    }
+
+
+    public void onCallback(User user) {
+        Musician m = (Musician) user;
+        String sTitle = m.getUserName() + "'s profile";
+        title.setText(sTitle);
+
+        firstName.setText(m.getFirstName());
+        lastName.setText(m.getLastName());
+        username.setText(m.getUserName());
+        mail.setText(m.getEmailAddress());
+
+        MyDate date = m.getBirthday();
+        String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
+        birthday.setText(s);
     }
 }
