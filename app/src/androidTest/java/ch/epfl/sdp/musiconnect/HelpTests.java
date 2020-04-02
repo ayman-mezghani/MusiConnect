@@ -1,5 +1,7 @@
 package ch.epfl.sdp.musiconnect;
 
+import android.content.Intent;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
@@ -18,6 +20,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.core.IsNot.not;
 
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+
 @RunWith(AndroidJUnit4.class)
 public class HelpTests {
 
@@ -34,6 +39,9 @@ public class HelpTests {
     @Test
     public void testSearchClickFromHelpShouldDisplayMessage() {
         onView(withId(R.id.search)).perform(click());
-        onView(withText(R.string.not_yet_done)).inRoot(withDecorView(not(helpPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+
+        Intent searchIntent = new Intent();
+        helpPageRule.launchActivity(searchIntent);
+        intended(hasComponent(FinderPage.class.getName()));
     }
 }
