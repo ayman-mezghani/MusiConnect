@@ -1,9 +1,15 @@
 package ch.epfl.sdp.musiconnect;
 
+import android.widget.DatePicker;
+
+import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.contrib.PickerActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import ch.epfl.sdp.R;
@@ -14,6 +20,7 @@ import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
@@ -23,28 +30,44 @@ public class ProfileModificationTests {
     public final ActivityTestRule<ProfilePage> profilePageRule =
             new ActivityTestRule<>(ProfilePage.class);
 
+    /**
+     * Helper method to avoid duplication
+     * @param text: text to recognize on the clickable object
+     */
+    private void clickButtonWithText(int text) {
+        onView(withText(text)).perform(ViewActions.scrollTo()).perform(click());
+    }
+
     @Test
     public void testEditProfileAndDoNotSaveShouldDoNothing() {
-        onView(withText(R.string.edit_profile_button_text)).perform(click());
-        onView(withText(R.string.do_not_save_profile)).perform(click());
-        profilePageRule.getActivity().finish();
+        clickButtonWithText(R.string.edit_profile_button_text);
+        onView(withId(R.id.newFirstName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob"));
+        clickButtonWithText(R.string.do_not_save_profile);
         assert(true);
     }
 
     @Test
     public void testEditProfileAndSaveShouldUpdateFields() {
-        onView(withText(R.string.edit_profile_button_text)).perform(click());
-        onView(withId(R.id.newFirstName)).perform(clearText(), typeText("Bob"));
-        /*onView(withId(R.id.newLastName)).perform(clearText(), typeText("Mallet"));
-        onView(withId(R.id.newUsername)).perform(clearText(), typeText("BobMallet"));
-        onView(withId(R.id.newEmailAddress)).perform(clearText(), typeText("bob.mallet@gmail.com"));
-        onView(withId(R.id.newBirthday)).perform(clearText(), typeText("01.01.2000"));*/
+        clickButtonWithText(R.string.edit_profile_button_text);
+        onView(withId(R.id.newFirstName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob"));
+        onView(withId(R.id.newLastName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Mallet"));
+        onView(withId(R.id.newUsername)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("BobMallet"));
+        onView(withId(R.id.newEmailAddress)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("bob.mallet@gmail.com"));
         closeSoftKeyboard();
-        onView(withText(R.string.save_profile)).perform(click());
+        clickButtonWithText(R.string.save_profile);
         onView(withId(R.id.myFirstname)).check(matches(withText("Bob")));
-        /*onView(withId(R.id.myLastname)).check(matches(withText("Mallet")));
+        onView(withId(R.id.myLastname)).check(matches(withText("Mallet")));
         onView(withId(R.id.myUsername)).check(matches(withText("BobMallet")));
         onView(withId(R.id.myMail)).check(matches(withText("bob.mallet@gmail.com")));
-        onView(withId(R.id.myBirthday)).check(matches(withText("01.01.2000")));*/
+    }
+
+    @Test
+    public void testChangeDateShouldUpdateField() {
+        clickButtonWithText(R.string.edit_profile_button_text);
+        onView(withId(R.id.newBirthday)).perform(ViewActions.scrollTo()).perform(click());
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2000, 1, 1));
+        onView(withText("OK")).perform(click());
+        clickButtonWithText(R.string.save_profile);
+        onView(withId(R.id.myBirthday)).check(matches(withText("01/01/2000")));
     }
 }

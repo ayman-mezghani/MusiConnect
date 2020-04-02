@@ -1,13 +1,21 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -33,33 +41,54 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.R;
+
+import static ch.epfl.sdp.musiconnect.MapsActivity.Utility.generateWarning;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener, AdapterView.OnItemSelectedListener {
+    private Date timeLastUpdt;
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+
 
     private FusedLocationProviderClient fusedLocationClient;
     private boolean locationPermissionGranted;
     private Location setLoc;
     private Spinner spinner;
 
+    private boolean updatePos = true;
+
+    private static final String FILE_NAME = "cachePos.txt";
+
     private GoogleMap mMap;
     private View mapView;
     private UiSettings mUiSettings;
 
-    private List<Musician> allUsers = new ArrayList<>();
-    private List<Musician> profiles = new ArrayList<>();
-    private Musician person1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
-    private Musician person2 = new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", new MyDate(1992, 9, 20));
-    private Musician person3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
+    private int delay;                                          //delay to updating the users list in ms
+    private List<Musician> allUsers = new ArrayList<>();        //all users "near" the current user's position
+    private List<Musician> profiles = new ArrayList<>();        //all users within the radius set by the user in the app
+    private List<Marker> markers = new ArrayList<>();           //markers on the map associated to profiles
 
-    private Marker marker;
-    private List<Marker> markers = new ArrayList<>();
+
+    private Marker marker;                                      //main user's marker
 
     private Circle circle;
 
@@ -70,9 +99,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         public void onReceive(Context context, Intent intent) {
             Bundle b = intent.getBundleExtra("Location");
             Location location = b.getParcelable("Location");
-            if (location != null) {
-                setLocation(location);
-            }
+            setLocation(location);
+
         }
     };
 
@@ -88,16 +116,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
         spinner.setSelection(2);
-
-
-        person1.setLocation(new MyLocation(46.52, 6.52));
-        person2.setLocation(new MyLocation(46.51, 6.45));
-        person3.setLocation(new MyLocation(46.519, 6.57));
-
-        allUsers.add(person1);
-        allUsers.add(person2);
-        allUsers.add(person3);
-
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -140,6 +158,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mUiSettings = mMap.getUiSettings();
 
+        //If there's a connection, fetch Users in the general area; else, load them from cache
+        if(checkConnection()){
+            createPlaceHolderUsers();
+        }else{
+            loadUsersFromCache();
+        }
+
+
         //Set UI settings
         mUiSettings.setZoomControlsEnabled(true);
 
@@ -150,24 +176,60 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         circle = mMap.addCircle(circleOptions);
 
 
-        loadProfilesMarker(profiles);
+        //place users' markers
+        updateProfileList();
+        loadProfilesMarker();
+
+        //sets listeners on map markers
         mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
 
-        mapView.setContentDescription("Google Map Ready");
+        //Handler that updates users list
+        Handler handler = new Handler();
+        delay = 1000;
+
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                boolean co = checkConnection();
+                boolean loc = checkLocationServices();
+
+                if (!co) {
+                    updatePos = false;
+                    delay = 5000;
+                    generateWarning(MapsActivity.this,"Error: No internet connection. Showing the only last musicians found since " + sdf.format(timeLastUpdt), Utility.warningTypes.Toast);
+                } else if(!loc){
+                    updatePos = false;
+                    delay = 5000;
+                    generateWarning(MapsActivity.this,"Error: couldn't update your location", Utility.warningTypes.Toast);
+                } else {
+                    updatePos = true;
+                    timeLastUpdt = Calendar.getInstance().getTime();
+                    updateUsers();
+                    updateProfileList();
+                    loadProfilesMarker();
+                }
+                handler.postDelayed(this, delay);
+            }
+        }, delay);
     }
-          
-         
+
+
     private void getLastLocation() {
         if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
                 if (location != null) {
                     setLocation(location);
                 } else {
-                    // Here it could be either location setting is turned off or there was not
-                    // enough time for the first location to arrive
-                    Toast.makeText(this, "Location is disabled", Toast.LENGTH_LONG)
-                            .show();
+                    // Here it could be either location is turned off or there was not enough time for
+                    // the first location to arrive
+                    //either way, we remove all markers, stop updating the location, and send an error message to the user
+                    updatePos = false;
+                    for(Marker m:markers){
+                        m.remove();
+                    }
+                    markers.clear();
+                    delay = 20000;
+                    generateWarning(MapsActivity.this,"There was a problem retrieving your location; Please check you are connected to a network", Utility.warningTypes.Alert);
                 }
                 startLocationService();
 
@@ -191,6 +253,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void setLocation(Location location) {
+
+        if(!updatePos){
+            return;
+        }
+
         if (marker != null) {
             marker.remove();
         }
@@ -201,11 +268,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerName));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(10.0f));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
             circle.setCenter(latLng);
 
-            updateProfileList();
-            mapView.setContentDescription("Google Map Ready");
         }
     }
 
@@ -236,22 +301,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-
-    private void updateProfileList() {
-        profiles.clear();
-
-        Iterator<Marker> iter = markers.iterator();
-        while (iter.hasNext()) {
-            Marker marker = iter.next();
-            marker.remove();
-            iter.remove();
-        }
-
-
-        if (setLoc == null) {
+    //fetches users coordinates, updates them, and save them to cache
+    //(right now, only creates random nearby position and saves user to cache until database is implemented)
+    private void updateUsers(){
+        if(setLoc == null){             //Might be called before we get the first update to the location;
             return;
         }
 
+        Random random = new Random();
+
+        for(Musician m:allUsers){
+            double lat = setLoc.getLatitude() + (((double)random.nextInt(5)-2.5) /100);
+            double lng = setLoc.getLongitude() + (((double)random.nextInt(5)-2.5) /100);
+            m.setLocation(new MyLocation(lat,lng));
+        }
+
+        saveUsersToCache();
+    }
+
+    //From the users around the area, picks the ones that are within the threshold distance.
+    private void updateProfileList() {
+        if(setLoc == null){             //Might be called before we get the first update to the location;
+            return;
+        } else{
+            delay = 20000;              //sets a 20 sec long delay on updates when everything is in place
+        }
+
+        profiles.clear();
         for (Musician m : allUsers) {
             Location l = new Location("");
             l.setLatitude(m.getLocation().getLatitude());
@@ -261,12 +337,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
 
-        loadProfilesMarker(profiles);
         circle.setRadius(threshold);
     }
 
+    //Loads the profile on the map as markers, with associated information
+    private void loadProfilesMarker() {
+        for (Marker m : markers) {
+            m.remove();
+        }
+        markers.clear();
 
-    private void loadProfilesMarker(List<Musician> profiles){
         for(Musician m:profiles){
             LatLng latlng = new LatLng(m.getLocation().getLatitude(), m.getLocation().getLongitude());
             Marker marker = mMap.addMarker(new MarkerOptions()
@@ -279,8 +359,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        if(profiles.contains(marker.getTag())) {
-            if(!marker.isInfoWindowShown()) {
+        if (profiles.contains(marker.getTag())) {
+            if (!marker.isInfoWindowShown()) {
                 marker.showInfoWindow();
             }
         }
@@ -289,7 +369,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        if(profiles.contains(marker.getTag())) {
+        if (profiles.contains(marker.getTag())) {
             Intent profileIntent = new Intent(MapsActivity.this, ProfilePage.class);
             Musician m = (Musician) marker.getTag();
             profileIntent.putExtra("FirstName", m.getFirstName());
@@ -305,7 +385,114 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    protected boolean checkConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+    protected boolean checkLocationServices(){
+        LocationManager lm = (LocationManager)MapsActivity.this.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch(Exception ex) {}
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch(Exception ex) {}
+
+        if(!gps_enabled && !network_enabled) {
+            return false;
+        } else{
+            return true;
+        }
+
+    }
+
+
+
+    private void saveUsersToCache() {
+        FileOutputStream fos = null;
+        String toCache = sdf.format(timeLastUpdt) + "\n";
+        for(Musician p:allUsers){
+            String birthdate = p.getBirthday().getYear() + "/" + p.getBirthday().getMonth() + "/" + p.getBirthday().getDate();
+            toCache = toCache + p.getFirstName() + "," + p.getLastName() + "," + p.getUserName() + ","
+                    + p.getEmailAddress() + "," + birthdate + ","
+                    + String.valueOf(p.getLocation().getLatitude()) + "," + String.valueOf(p.getLocation().getLongitude()) + "\n";
+        }
+        try {
+            fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+            fos.write(toCache.getBytes());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void loadUsersFromCache() {
+        FileInputStream fis = null;
+
+        try {
+            fis = openFileInput(FILE_NAME);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            String text;
+            List<String> cached = new ArrayList<>();
+
+            while ((text = br.readLine()) != null) {
+                cached.add(text);
+            }
+
+            timeLastUpdt = sdf.parse(cached.get(0));
+
+            allUsers.clear();
+            for (int i = 1; i < cached.size(); i++) {
+                String[] strProfile = cached.get(i).split(",");
+                String[] birthdate = strProfile[4].split("/");
+                MyDate birthday = new MyDate(Integer.valueOf(birthdate[0]),
+                        Integer.valueOf(birthdate[1]),
+                        Integer.valueOf(birthdate[2]),0,0);
+                Musician p = new Musician(strProfile[0],strProfile[1],strProfile[2],strProfile[3],
+                        birthday);
+                p.setLocation(new MyLocation(Double.valueOf(strProfile[5]),Double.valueOf(strProfile[6])));
+                allUsers.add(p);
+            }
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            timeLastUpdt = Calendar.getInstance().getTime();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String selected = parent.getItemAtPosition(position).toString()
@@ -324,11 +511,57 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         spinner.setSelection(position);
+
         updateProfileList();
+        loadProfilesMarker();
+
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    //Should be replaced by a function that fetch user from the database; right now it generates 3 fixed users
+    private void createPlaceHolderUsers(){
+
+        Musician person1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
+        Musician person2 = new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", new MyDate(1992, 9, 20));
+        Musician person3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
+
+        person1.setLocation(new MyLocation(46.52, 6.52));
+        person2.setLocation(new MyLocation(46.51, 6.45));
+        person3.setLocation(new MyLocation(46.519, 6.57));
+
+        allUsers.add(person1);
+        allUsers.add(person2);
+        allUsers.add(person3);
+
+
+
+    }
+
+    public static class Utility{
+        public enum warningTypes{
+            Toast,
+            Alert
+        }
+
+        //creates warning message when something goes wrong; Toast is a simple message at the bottom of the screen, Alert is an alertDialog box
+        public static void generateWarning(Context context, String message, warningTypes type) {
+            switch (type) {
+                case Toast:
+                    Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+                    break;
+                case Alert:
+                    AlertDialog wrng = new AlertDialog.Builder(context).create();
+                    wrng.setTitle("Warning!");
+                    wrng.setMessage(message);
+                    wrng.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            (dialog, which) -> dialog.dismiss());
+                    wrng.show();
+                    break;
+            }
+        }
     }
 }
