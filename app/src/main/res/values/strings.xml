@@ -72,6 +72,7 @@
     <string name="musician">Musician</string>
     <string name="band">Band</string>
     <string name="event_manager">Event Manager</string>
-
+    <string name="welcome_message">Welcome to MusiConnect !</string>
+    <string name="info_message">Please navigate the app using the menu.</string>
 
 </resources>

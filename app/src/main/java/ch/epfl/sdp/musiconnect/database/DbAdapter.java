@@ -19,7 +19,7 @@ public class DbAdapter {
     }
 
     public void update(Musician musician) {
-        db.updateDoc(musician.getUserName(), (new SimplifiedMusician()).toMap());
+        db.updateDoc(musician.getUserName(), (new SimplifiedMusician(musician)).toMap());
     }
 
 //    public void deleteFieldsInDoc(String docName, List<String> fields) {

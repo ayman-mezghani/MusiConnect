@@ -48,7 +48,7 @@ public class UserCreationHardwareTests {
     }
 
     @Test
-    public void ManyEptyInputTest(){
+    public void ManyEmptyInputTest(){
         onView(withId(R.id.etFirstname)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob"));
         closeSoftKeyboard();
         onView(withId(R.id.etLastName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("bernard"));
@@ -76,7 +76,7 @@ public class UserCreationHardwareTests {
     }
 
     @Test
-    public void etLastNameEptyInputTest(){
+    public void etLastNameEmptyInputTest(){
         onView(withId(R.id.etFirstname)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob"));
         closeSoftKeyboard();
 
@@ -86,7 +86,7 @@ public class UserCreationHardwareTests {
     }
 
     @Test
-    public void onlyDateIputEmptyTest(){
+    public void onlyDateInputEmptyTest(){
         onView(withId(R.id.etFirstname)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob"));
         closeSoftKeyboard();
         onView(withId(R.id.etLastName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("bernard"));
@@ -102,7 +102,7 @@ public class UserCreationHardwareTests {
     }
 
     @Test
-    public void allInputSetted(){
+    public void allInputsSetted(){
 
         onView(withId(R.id.etFirstname)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob"));
         closeSoftKeyboard();
