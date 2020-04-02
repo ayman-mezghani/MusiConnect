@@ -1,7 +1,6 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.Manifest;
-import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;

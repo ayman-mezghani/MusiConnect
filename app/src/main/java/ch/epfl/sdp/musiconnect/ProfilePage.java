@@ -3,7 +3,6 @@ package ch.epfl.sdp.musiconnect;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -24,9 +23,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import java.io.IOException;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
-
 
 public class ProfilePage extends Page implements View.OnClickListener {
 
@@ -40,7 +37,6 @@ public class ProfilePage extends Page implements View.OnClickListener {
     private String testusername = "testUser";
 
     private ImageView imgVw;
-    private TextView id;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -50,26 +46,6 @@ public class ProfilePage extends Page implements View.OnClickListener {
 
         mVideoView = findViewById(R.id.videoView);
         getVideoUri();
-
-        Intent intent = getIntent();
-        if (intent.hasExtra("FirstName")) {
-            TextView firstNameView = findViewById(R.id.myFirstname);
-            firstNameView.setText(intent.getStringExtra("FirstName"));
-
-            TextView lastNameView = findViewById(R.id.myLastname);
-            lastNameView.setText(intent.getStringExtra("LastName"));
-
-            TextView userNameView = findViewById(R.id.myUsername);
-            userNameView.setText(intent.getStringExtra("UserName"));
-
-            TextView emailView = findViewById(R.id.myMail);
-            emailView.setText(intent.getStringExtra("EmailAddress"));
-
-            TextView birthdayView = findViewById(R.id.myBirthday);
-            int[] birthday = intent.getIntArrayExtra("Birthday");
-            String s = birthday[0] + "." + birthday[1] + "." + birthday[2];
-            birthdayView.setText(s);
-        }
 
         imgVw = findViewById(R.id.imgView);
         firstName = findViewById(R.id.myFirstname);
@@ -85,7 +61,6 @@ public class ProfilePage extends Page implements View.OnClickListener {
             // Permits sending information from child to parent activity
             startActivityForResult(profileModificationIntent, LAUNCH_PROFILE_MODIF_INTENT);
         });
-
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -103,6 +78,9 @@ public class ProfilePage extends Page implements View.OnClickListener {
             //String personId = acct.getId();
             Uri personPhoto = acct.getPhotoUrl();
 
+            assert personName != null;
+            assert personEmail != null;
+            assert personPhoto != null;
             firstName.setText(personName.split(" ")[0]);
             lastName.setText(personName.split(" ")[1]);
             mail.setText(personEmail);
@@ -167,17 +145,11 @@ public class ProfilePage extends Page implements View.OnClickListener {
         super.displayNotFinishedFunctionalityMessage();
     }
 
-
     private void showVideo() {
         if (videoUri != null) {
             mVideoView.setVideoURI(videoUri);
             mVideoView.start();
-            mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mVideoView.start();
-                }
-            });
+            mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
         }
     }
 
@@ -186,12 +158,9 @@ public class ProfilePage extends Page implements View.OnClickListener {
         String path = testusername + "/" + CloudStorage.FileType.video;
         String saveName = testusername + "_" + CloudStorage.FileType.video;
         try {
-            storage.download(path, saveName, new CloudCallback() {
-                @Override
-                public void onCallback(Uri fileUri) {
-                    videoUri = fileUri;
-                    showVideo();
-                }
+            storage.download(path, saveName, fileUri -> {
+                videoUri = fileUri;
+                showVideo();
             });
         } catch (IOException e) {
             Toast.makeText(this, "An error occured, please contact support.", Toast.LENGTH_LONG).show();

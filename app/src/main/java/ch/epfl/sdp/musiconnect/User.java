@@ -1,7 +1,5 @@
 package ch.epfl.sdp.musiconnect;
 
-import android.location.Location;
-
 /**
  * @author Manuel Pellegrini, EPFL
  */

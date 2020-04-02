@@ -9,13 +9,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class ProfileModification extends AppCompatActivity implements View.OnClickListener {
 
-    String firstName, lastName, username, mail, birthday;
-    EditText[] editFields;
+    private EditText[] editFields;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,11 +27,11 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
                 findViewById(R.id.newEmailAddress),
                 findViewById(R.id.newBirthday)};
 
-        firstName = getIntent().getStringExtra("FIRST_NAME");
-        lastName = getIntent().getStringExtra("LAST_NAME");
-        username = getIntent().getStringExtra("USERNAME");
-        mail = getIntent().getStringExtra("MAIL");
-        birthday = getIntent().getStringExtra("BIRTHDAY");
+        String firstName = getIntent().getStringExtra("FIRST_NAME");
+        String lastName = getIntent().getStringExtra("LAST_NAME");
+        String username = getIntent().getStringExtra("USERNAME");
+        String mail = getIntent().getStringExtra("MAIL");
+        String birthday = getIntent().getStringExtra("BIRTHDAY");
 
         setEditTextFields(editFields, new String[]{firstName, lastName, username, mail, birthday});
 
