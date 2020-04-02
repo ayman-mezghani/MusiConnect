@@ -3,6 +3,7 @@ package ch.epfl.sdp.musiconnect;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -29,12 +30,11 @@ public class UserCreation extends Page {
     private ImageView profilePicture;
     TextView date;
     DatePickerDialog datePickerDialog;
-    int year;
-    int month;
-    int dayOfMonth;
+    int year, month, dayOfMonth;
     Calendar calendar;
     protected EditText etFirstName, etLastName, etUserName, etMail;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +48,7 @@ public class UserCreation extends Page {
         month = calendar.get(Calendar.MONTH);
         dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
-        date.setOnClickListener(v ->{
+        date.setOnClickListener(v -> {
             datePickerDialog = new DatePickerDialog(UserCreation.this,
                     (datePicker, year, month, day) -> date.setText(day + "/" + (month + 1) + "/" + year + " (" + getAge(year, month, day) + " years)"), year, month, dayOfMonth);
             datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
