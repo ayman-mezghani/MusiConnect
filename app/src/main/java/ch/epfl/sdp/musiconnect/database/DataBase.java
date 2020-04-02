@@ -24,13 +24,13 @@ public class DataBase {
     }
 
     public void deleteDoc(String docName) {
-        db.collection("users").document(docName).delete()
+        db.collection("newtest").document(docName).delete()
                 .addOnSuccessListener(bVoid -> Log.d(TAG, "DocumentSnapshot successfully deleted!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));
     }
 
     public void updateDoc(String docName, Map<String, Object> newValueMap) {
-        db.collection("users").document(docName).update(newValueMap)
+        db.collection("newtest").document(docName).update(newValueMap)
                 .addOnSuccessListener(cVoid -> Log.d(TAG, "DocumentSnapshot successfully updated!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
     }
@@ -44,10 +44,11 @@ public class DataBase {
     }
 
     public void readDoc(String docName, DbCallback dbCallback) {
-        db.collection("users").document(docName).get()
+        db.collection("newtest").document(docName).get()
                 .addOnSuccessListener(documentSnapshot -> {
-                    Map data = documentSnapshot.getData();
-                    dbCallback.onCallback(data);
+                    Map<String, Object> data = documentSnapshot.getData();
+                    SimplifiedMusician m = new SimplifiedMusician(data);
+                    dbCallback.onCallback(m.toMusician());
                 })
                 .addOnFailureListener(e -> Log.w(TAG, "Error reading document", e));
     }

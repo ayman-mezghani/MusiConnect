@@ -14,10 +14,10 @@ public class DbAdapter {
         db.deleteDoc(musician.getUserName());
     }
 
-//    public void update(Musician musician) {
-//        db.updateDoc();
-//    }
-//
+    public void update(Musician musician) {
+        db.updateDoc(musician.getUserName(), (new SimplifiedMusician()).toMap());
+    }
+
 //    public void deleteFieldsInDoc(String docName, List<String> fields) {
 //        Map<String, Object> updates = new HashMap<>();
 //        for (String str : fields) {
@@ -25,13 +25,8 @@ public class DbAdapter {
 //        }
 //        this.updateDoc(docName, updates);
 //    }
-//
-//    public void readDoc(String docName, DbCallback dbCallback) {
-//        db.collection("users").document(docName).get()
-//                .addOnSuccessListener(documentSnapshot -> {
-//                    SimplifiedMusician data = documentSnapshot.getData();
-//                    dbCallback.onCallback(data);
-//                })
-//                .addOnFailureListener(e -> Log.w(TAG, "Error reading document", e));
-//    }
+
+    public void read(String username, DbCallback dbCallback) {
+        db.readDoc(username, dbCallback);
+    }
 }
