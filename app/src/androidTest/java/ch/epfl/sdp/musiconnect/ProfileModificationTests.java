@@ -7,7 +7,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.PickerActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -27,8 +26,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class ProfileModificationTests {
     @Rule
-    public final ActivityTestRule<ProfilePage> profilePageRule =
-            new ActivityTestRule<>(ProfilePage.class);
+    public final ActivityTestRule<MyProfilePage> profilePageRule =
+            new ActivityTestRule<>(MyProfilePage.class);
 
     /**
      * Helper method to avoid duplication
