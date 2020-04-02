@@ -45,7 +45,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             startActivityForResult(profileModificationIntent, LAUNCH_PROFILE_MODIF_INTENT);
         });
 
-
         googleSignIn();
     }
 
@@ -120,8 +119,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
     public void onClick(View view) {
         super.displayNotFinishedFunctionalityMessage();
     }
-
-
 
 
     /**

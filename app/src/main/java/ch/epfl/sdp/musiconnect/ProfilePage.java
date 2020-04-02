@@ -26,8 +26,6 @@ public abstract class ProfilePage extends Page {
 
     private String testusername = "testUser";
 
-
-
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
