@@ -87,6 +87,7 @@ public class UserCreation extends Page {
                 }
             }
         });
+        
 
 
         // Check for existing Google Sign In account, if the user is already signed in
