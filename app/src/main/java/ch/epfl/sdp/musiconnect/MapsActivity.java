@@ -542,7 +542,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             h.put("email", m.getEmailAddress());
             h.put("birthday", m.getBirthday());
             h.put("Lat", m.getLocation().getLatitude());
-            h.put("Long", m.getLocation().getLongitude());
+            h.put("Lon", m.getLocation().getLongitude());
 
             db.updateDoc(m.getUserName(), h);
         }

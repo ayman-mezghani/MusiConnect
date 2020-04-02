@@ -11,6 +11,9 @@ import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 public class VisitorProfilePage extends ProfilePage implements DbCallback {
     private DataBase db;
+    private String newUsername;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,28 +43,23 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
     private void loadProfileContent() {
         Intent intent = getIntent();
         if (intent.hasExtra("UserName")) {
-            String newUsername = intent.getStringExtra("UserName");
-            //db.readDoc();
-
-            String sTitle = newUsername + "'s profile";
-            title.setText(sTitle);
-
-            firstName.setText(intent.getStringExtra("FirstName"));
-
-            lastName.setText(intent.getStringExtra("LastName"));
-
-            username.setText(intent.getStringExtra("UserName"));
-
-            mail.setText(intent.getStringExtra("EmailAddress"));
-
-            int[] birthdayContent = intent.getIntArrayExtra("Birthday");
-            String sBirthday = birthdayContent[0] + "." + birthdayContent[1] + "." + birthdayContent[2];
-            birthday.setText(sBirthday);
+            newUsername = intent.getStringExtra("UserName");
+            db.readDoc(newUsername, this);
         }
     }
 
     @Override
     public void onCallback(Map data) {
+        String sTitle = newUsername + "'s profile";
+        title.setText(sTitle);
 
+        firstName.setText(data.get("first_name").toString());
+        lastName.setText(data.get("last_name").toString());
+        username.setText(newUsername);
+        mail.setText(data.get("email").toString());
+        Map<String, Object> date = (Map<String, Object>) data.get("birthday");
+        String userBirthday = date.get("date") + "/" + date.get("month") + "/" + date.get("year");
+
+        birthday.setText(userBirthday);
     }
 }
