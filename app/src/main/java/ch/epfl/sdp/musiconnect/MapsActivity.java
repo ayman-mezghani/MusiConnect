@@ -376,6 +376,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
           
             Musician m = (Musician) marker.getTag();
             profileIntent.putExtra("UserName", m.getUserName());
+            profileIntent.putExtra("Test", false);
 
             this.startActivity(profileIntent);
         }
@@ -533,9 +534,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         allUsers.add(person2);
         allUsers.add(person3);
 
-        for (Musician m: allUsers) {
-            dbAdapter.add(m);
-        }
+
     }
 
     public static class Utility{

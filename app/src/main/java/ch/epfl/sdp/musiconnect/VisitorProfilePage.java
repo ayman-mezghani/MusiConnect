@@ -16,7 +16,6 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
     private String newUsername;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +37,19 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         birthday = findViewById(R.id.birthday);
 
 
-        loadProfileContent();
+        Intent intent = getIntent();
+        boolean test = intent.getBooleanExtra("Test", false);
+        if (!test) {
+            loadProfileContent();
+        } else {
+            int[] birthday = intent.getIntArrayExtra("Birthday");
+            Musician alyx = new Musician(intent.getStringExtra("FirstName"),
+                    intent.getStringExtra("LastName"),
+                    intent.getStringExtra("UserName"),
+                    intent.getStringExtra("Email"),
+                    new MyDate(birthday[2], birthday[1], birthday[0]));
+            onCallback(alyx);
+        }
     }
 
 
@@ -54,12 +65,12 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
 
     public void onCallback(User user) {
         Musician m = (Musician) user;
-        String sTitle = newUsername + "'s profile";
+        String sTitle = m.getUserName() + "'s profile";
         title.setText(sTitle);
 
         firstName.setText(m.getFirstName());
         lastName.setText(m.getLastName());
-        username.setText(newUsername);
+        username.setText(m.getUserName());
         mail.setText(m.getEmailAddress());
 
         MyDate date = m.getBirthday();
