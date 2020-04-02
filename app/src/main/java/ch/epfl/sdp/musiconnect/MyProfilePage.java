@@ -3,37 +3,23 @@ package ch.epfl.sdp.musiconnect;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.firebase.storage.FirebaseStorage;
-
-import java.io.IOException;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
-import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 
 public class MyProfilePage extends ProfilePage implements View.OnClickListener {
 
-
     private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
-
-
-
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -60,6 +46,10 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         });
 
 
+        googleSignIn();
+    }
+
+    private void googleSignIn(){
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

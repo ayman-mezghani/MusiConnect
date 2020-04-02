@@ -17,16 +17,14 @@ import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 
-public class ProfilePage extends Page {
+public abstract class ProfilePage extends Page {
     protected TextView title, firstName, lastName, username, mail, birthday;
     protected static int VIDEO_REQUEST = 101;
     protected Uri videoUri = null;
     protected VideoView mVideoView;
     protected ImageView imgVw;
 
-
     private String testusername = "testUser";
-
 
 
 

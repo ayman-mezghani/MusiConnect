@@ -100,19 +100,6 @@ public class MenuTests {
     }
 
     @Test
-    public void testMapsOpensWithMainMarker() {
-        assert(true);
-
-        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        openActionsMenu(R.string.map);
-
-        UiObject marker = device.findObject(new UiSelector().descriptionContains("You"));
-        marker.waitForExists(5000);
-
-        assert(true);
-    }
-
-    @Test
     public void testLogOut() {
         //openActionsMenu(R.string.signout);
         //intended(hasComponent(GoogleLogin.class.getName()));
