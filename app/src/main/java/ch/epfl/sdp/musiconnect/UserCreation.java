@@ -14,8 +14,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.auth.FirebaseAuthCredentialsProvider;
 
 import java.util.Calendar;
 
@@ -33,6 +36,8 @@ public class UserCreation extends Page {
     int dayOfMonth;
     Calendar calendar;
     protected EditText etFirstName, etLastName, etUserName, etMail;
+
+    public static User MAINUSER;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,11 +88,13 @@ public class UserCreation extends Page {
                     Musician musician = new Musician(firstname, lastname, username, email, d);
                     musician.setLocation(new MyLocation(0, 0));
 
+                    MAINUSER = musician;
+
                     DbAdapter db = new DbAdapter(new DataBase());
                     db.add(musician);
 
                     StartActivityAndFinish(new Intent(UserCreation.this, StartPage.class));
-                    
+
                 } else {
                     Toast.makeText(this, "Select a date of birth", Toast.LENGTH_LONG).show();
                 }
@@ -107,6 +114,7 @@ public class UserCreation extends Page {
             etFirstName.setText(account.getGivenName());
             etLastName.setText(account.getFamilyName());
             etMail.setText(account.getEmail());
+//            etUserName.setText(account.getId());
         }
     }
 

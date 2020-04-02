@@ -34,6 +34,6 @@ public class VideoRecordingTests {
                         VideoPlayingTests.childAtPosition(VideoPlayingTests.childAtPosition(withClassName(is("android.widget.LinearLayout")),
                                         0),1),isDisplayed()));
 
-        //appCompatButton.perform(click());
+        appCompatButton.perform(click());
     }
 }
