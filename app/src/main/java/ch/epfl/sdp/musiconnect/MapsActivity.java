@@ -1,18 +1,25 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.Manifest;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -34,39 +41,66 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.R;
 
+import static ch.epfl.sdp.musiconnect.MapsActivity.Utility.generateWarning;
+
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
-        GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+        GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener, AdapterView.OnItemSelectedListener {
+    private Date timeLastUpdt;
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
-    private static final String TAG = "MapsActivity";
+
     private FusedLocationProviderClient fusedLocationClient;
     private boolean locationPermissionGranted;
     private Location setLoc;
+    private Spinner spinner;
+
+    private boolean updatePos = true;
+
+    private static final String FILE_NAME = "cachePos.txt";
 
     private GoogleMap mMap;
     private View mapView;
     private UiSettings mUiSettings;
-    private List<Pair<String,LatLng>> profiles = new ArrayList<>();
-    private Marker marker;
 
-    private double lat = -34;
-    private double lon = 151;
+    private int delay;                                          //delay to updating the users list in ms
+    private List<Musician> allUsers = new ArrayList<>();        //all users "near" the current user's position
+    private List<Musician> profiles = new ArrayList<>();        //all users within the radius set by the user in the app
+    private List<Marker> markers = new ArrayList<>();           //markers on the map associated to profiles
+
+
+    private Marker marker;                                      //main user's marker
+
     private Circle circle;
-    private double radius = 5000;
+
+    private int threshold = 50; // meters
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle b = intent.getBundleExtra("Location");
             Location location = b.getParcelable("Location");
-            if (location != null) {
-                setLocation(location);
-            }
+            setLocation(location);
+
         }
     };
 
@@ -75,6 +109,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        spinner = findViewById(R.id.distanceThreshold);
+        String[] items = getResources().getStringArray(R.array.distance_array);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+        spinner.setSelection(2);
+
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -88,6 +130,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
@@ -99,8 +148,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
+     * This is where we can add markers or lines, add listeners or move the camera.
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
@@ -110,45 +158,83 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mUiSettings = mMap.getUiSettings();
 
+        //If there's a connection, fetch Users in the general area; else, load them from cache
+        if(checkConnection()){
+            createPlaceHolderUsers();
+        }else{
+            loadUsersFromCache();
+        }
+
+
         //Set UI settings
         mUiSettings.setZoomControlsEnabled(true);
 
         //Set circle
         CircleOptions circleOptions = new CircleOptions()
-                .center(new LatLng(lat,lon))
-                .radius(radius);
+                .center(new LatLng(-34, 151))
+                .radius(threshold);
         circle = mMap.addCircle(circleOptions);
 
 
-        //Get users and place their marker
-        profiles.add(new Pair<>("User1", new LatLng(lat+0.1,lon)));
-        profiles.add(new Pair<>("User2", new LatLng(lat,lon+0.1)));
-        profiles.add(new Pair<>("User3", new LatLng(lat-0.1,lon-0.1)));
-        loadProfilesMarker(profiles);
+        //place users' markers
+        updateProfileList();
+        loadProfilesMarker();
+
+        //sets listeners on map markers
         mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
 
-        mapView.setContentDescription("Google Map Ready");
+        //Handler that updates users list
+        Handler handler = new Handler();
+        delay = 1000;
+
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                boolean co = checkConnection();
+                boolean loc = checkLocationServices();
+
+                if (!co) {
+                    updatePos = false;
+                    delay = 5000;
+                    generateWarning(MapsActivity.this,"Error: No internet connection. Showing the only last musicians found since " + sdf.format(timeLastUpdt), Utility.warningTypes.Toast);
+                } else if(!loc){
+                    updatePos = false;
+                    delay = 5000;
+                    generateWarning(MapsActivity.this,"Error: couldn't update your location", Utility.warningTypes.Toast);
+                } else {
+                    updatePos = true;
+                    timeLastUpdt = Calendar.getInstance().getTime();
+                    updateUsers();
+                    updateProfileList();
+                    loadProfilesMarker();
+                }
+                handler.postDelayed(this, delay);
+            }
+        }, delay);
     }
-          
-         
+
+
     private void getLastLocation() {
         if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationPermissionGranted = true;
             fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
                 if (location != null) {
                     setLocation(location);
                 } else {
                     // Here it could be either location is turned off or there was not enough time for
                     // the first location to arrive
-                    Toast.makeText(this, "Location is disabled", Toast.LENGTH_LONG)
-                            .show();
+                    //either way, we remove all markers, stop updating the location, and send an error message to the user
+                    updatePos = false;
+                    for(Marker m:markers){
+                        m.remove();
+                    }
+                    markers.clear();
+                    delay = 20000;
+                    generateWarning(MapsActivity.this,"There was a problem retrieving your location; Please check you are connected to a network", Utility.warningTypes.Alert);
                 }
                 startLocationService();
 
             });
         } else {
-            locationPermissionGranted = false;
             checkLocationPermission();
         }
     }
@@ -167,6 +253,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void setLocation(Location location) {
+
+        if(!updatePos){
+            return;
+        }
+
         if (marker != null) {
             marker.remove();
         }
@@ -177,68 +268,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerName));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(10.0f));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
             circle.setCenter(latLng);
 
-            mapView.setContentDescription("Google Map Ready");
         }
     }
-
 
 
     private void startLocationService() {
-        if (!isLocationServiceRunning()) {
-            Intent serviceIntent = new Intent(this, LocationService.class);
-            startService(serviceIntent);
-        }
+        LocationPermission.startLocationService(this);
     }
-
-    private boolean isLocationServiceRunning() {
-        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
-            if("ch.epfl.sdp.musiconnect.LocationService".equals(service.service.getClassName())) {
-                Log.d(TAG, "isLocationServiceRunning: location service is already running.");
-                return true;
-            }
-        }
-        Log.d(TAG, "isLocationServiceRunning: location service is not running.");
-        return false;
-    }
-
 
 
     private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             locationPermissionGranted = false;
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-                new AlertDialog.Builder(this)
-                        .setTitle("Location Permission Needed")
-                        .setMessage("This app needs the Location permission, please accept to use location functionality")
-                        .setPositiveButton("OK", (dialogInterface, i) -> {
-                            //Prompt the user once explanation has been shown
-                            ActivityCompat.requestPermissions(this,
-                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                    LocationService.MY_PERMISSIONS_REQUEST_LOCATION);
-                        })
-                        .setNegativeButton("cancel", (dialog, which) -> dialog.dismiss())
-                        .create()
-                        .show();
-
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        LocationService.MY_PERMISSIONS_REQUEST_LOCATION);
-            }
+            LocationPermission.sendLocationPermission(this);
         } else {
             locationPermissionGranted = true;
             getLastLocation();
@@ -247,63 +293,276 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case LocationService.MY_PERMISSIONS_REQUEST_LOCATION:
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted. Do the location-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
-                        Toast.makeText(this, getString(R.string.perm_granted), Toast.LENGTH_LONG)
-                                .show();
-
-                        locationPermissionGranted = true;
-                        getLastLocation();
-                    }
-
-                } else {
-                    // permission denied. Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(this, getString(R.string.perm_denied), Toast.LENGTH_LONG)
-                            .show();
-
-                    locationPermissionGranted = false;
-                }
-                // other 'case' lines to check for other
-                // permissions this app might request
+        if (LocationPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults)) {
+            locationPermissionGranted = true;
+            getLastLocation();
+        } else {
+            locationPermissionGranted = false;
         }
-
-
     }
 
-    private void loadProfilesMarker(List<Pair<String,LatLng>> profiles){
-        for(Pair<String,LatLng> p:profiles){
-            Marker marker = mMap.addMarker(new MarkerOptions()
-                    .position(p.second)
-                    .title(p.first));
-            marker.setTag(p);
+    //fetches users coordinates, updates them, and save them to cache
+    //(right now, only creates random nearby position and saves user to cache until database is implemented)
+    private void updateUsers(){
+        if(setLoc == null){             //Might be called before we get the first update to the location;
+            return;
+        }
 
+        Random random = new Random();
+
+        for(Musician m:allUsers){
+            double lat = setLoc.getLatitude() + (((double)random.nextInt(5)-2.5) /100);
+            double lng = setLoc.getLongitude() + (((double)random.nextInt(5)-2.5) /100);
+            m.setLocation(new MyLocation(lat,lng));
+        }
+
+        saveUsersToCache();
+    }
+
+    //From the users around the area, picks the ones that are within the threshold distance.
+    private void updateProfileList() {
+        if(setLoc == null){             //Might be called before we get the first update to the location;
+            return;
+        } else{
+            delay = 20000;              //sets a 20 sec long delay on updates when everything is in place
+        }
+
+        profiles.clear();
+        for (Musician m : allUsers) {
+            Location l = new Location("");
+            l.setLatitude(m.getLocation().getLatitude());
+            l.setLongitude(m.getLocation().getLongitude());
+            if (setLoc.distanceTo(l) <= threshold) {
+                profiles.add(m);
+            }
+        }
+
+        circle.setRadius(threshold);
+    }
+
+    //Loads the profile on the map as markers, with associated information
+    private void loadProfilesMarker() {
+        for (Marker m : markers) {
+            m.remove();
+        }
+        markers.clear();
+
+        for(Musician m:profiles){
+            LatLng latlng = new LatLng(m.getLocation().getLatitude(), m.getLocation().getLongitude());
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(latlng)
+                    .title(m.getUserName()));
+            marker.setTag(m);
+            markers.add(marker);
         }
     }
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        if(profiles.contains(marker.getTag())) {
-            if(!marker.isInfoWindowShown()) {
+        if (profiles.contains(marker.getTag())) {
+            if (!marker.isInfoWindowShown()) {
                 marker.showInfoWindow();
-                return false;
             }
         }
         return false;
     }
+
     @Override
     public void onInfoWindowClick(Marker marker) {
         if(profiles.contains(marker.getTag())) {
-            Intent profileIntent = new Intent(MapsActivity.this, ProfilePage.class);
+            Intent profileIntent = new Intent(MapsActivity.this, VisitorProfilePage.class);
+          
+            Musician m = (Musician) marker.getTag();
+            profileIntent.putExtra("FirstName", m.getFirstName());
+            profileIntent.putExtra("LastName", m.getLastName());
+            profileIntent.putExtra("UserName", m.getUserName());
+            profileIntent.putExtra("EmailAddress", m.getEmailAddress());
+
+            // MyDate is not parcelable...
+            int[] birthday = {m.getBirthday().getYear(), m.getBirthday().getMonth(), m.getBirthday().getDate()};
+            profileIntent.putExtra("Birthday", birthday);
+
             this.startActivity(profileIntent);
         }
     }
 
+    protected boolean checkConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+    protected boolean checkLocationServices(){
+        LocationManager lm = (LocationManager)MapsActivity.this.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch(Exception ex) {}
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch(Exception ex) {}
+
+        if(!gps_enabled && !network_enabled) {
+            return false;
+        } else{
+            return true;
+        }
+
+    }
+
+
+
+    private void saveUsersToCache() {
+        FileOutputStream fos = null;
+        String toCache = sdf.format(timeLastUpdt) + "\n";
+        for(Musician p:allUsers){
+            String birthdate = p.getBirthday().getYear() + "/" + p.getBirthday().getMonth() + "/" + p.getBirthday().getDate();
+            toCache = toCache + p.getFirstName() + "," + p.getLastName() + "," + p.getUserName() + ","
+                    + p.getEmailAddress() + "," + birthdate + ","
+                    + String.valueOf(p.getLocation().getLatitude()) + "," + String.valueOf(p.getLocation().getLongitude()) + "\n";
+        }
+        try {
+            fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+            fos.write(toCache.getBytes());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void loadUsersFromCache() {
+        FileInputStream fis = null;
+
+        try {
+            fis = openFileInput(FILE_NAME);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            String text;
+            List<String> cached = new ArrayList<>();
+
+            while ((text = br.readLine()) != null) {
+                cached.add(text);
+            }
+
+            timeLastUpdt = sdf.parse(cached.get(0));
+
+            allUsers.clear();
+            for (int i = 1; i < cached.size(); i++) {
+                String[] strProfile = cached.get(i).split(",");
+                String[] birthdate = strProfile[4].split("/");
+                MyDate birthday = new MyDate(Integer.valueOf(birthdate[0]),
+                        Integer.valueOf(birthdate[1]),
+                        Integer.valueOf(birthdate[2]),0,0);
+                Musician p = new Musician(strProfile[0],strProfile[1],strProfile[2],strProfile[3],
+                        birthday);
+                p.setLocation(new MyLocation(Double.valueOf(strProfile[5]),Double.valueOf(strProfile[6])));
+                allUsers.add(p);
+            }
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            timeLastUpdt = Calendar.getInstance().getTime();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String selected = parent.getItemAtPosition(position).toString()
+                .replaceAll("m", "");
+        int meters = 1;
+
+        if (selected.contains("k")) {
+            meters = 1000;
+            selected = selected.replaceAll("k", "");
+        }
+
+        try {
+            threshold = Integer.parseInt(selected) * meters;
+        } catch (NumberFormatException e) {
+            threshold = 0;
+        }
+
+        spinner.setSelection(position);
+
+        updateProfileList();
+        loadProfilesMarker();
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    //Should be replaced by a function that fetch user from the database; right now it generates 3 fixed users
+    private void createPlaceHolderUsers(){
+
+        Musician person1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
+        Musician person2 = new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", new MyDate(1992, 9, 20));
+        Musician person3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
+
+        person1.setLocation(new MyLocation(46.52, 6.52));
+        person2.setLocation(new MyLocation(46.51, 6.45));
+        person3.setLocation(new MyLocation(46.519, 6.57));
+
+        allUsers.add(person1);
+        allUsers.add(person2);
+        allUsers.add(person3);
+
+
+
+    }
+
+    public static class Utility{
+        public enum warningTypes{
+            Toast,
+            Alert
+        }
+
+        //creates warning message when something goes wrong; Toast is a simple message at the bottom of the screen, Alert is an alertDialog box
+        public static void generateWarning(Context context, String message, warningTypes type) {
+            switch (type) {
+                case Toast:
+                    Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+                    break;
+                case Alert:
+                    AlertDialog wrng = new AlertDialog.Builder(context).create();
+                    wrng.setTitle("Warning!");
+                    wrng.setMessage(message);
+                    wrng.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            (dialog, which) -> dialog.dismiss());
+                    wrng.show();
+                    break;
+            }
+        }
+    }
 }

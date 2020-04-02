@@ -1,11 +1,12 @@
 package ch.epfl.sdp.musiconnect;
 
 import org.junit.Test;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.util.Set;
-import java.util.HashSet;
 
 /**
  * @author Manuel Pellegrini, EPFL

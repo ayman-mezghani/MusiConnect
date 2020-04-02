@@ -1,6 +1,7 @@
 package ch.epfl.sdp.musiconnect;
 
 import org.junit.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -361,7 +362,7 @@ public class MyDateClassUnitTests {
 
         double latitude = 0.0;
         double longitude = 0.0;
-        Location location = new Location(latitude, longitude);
+        MyLocation location = new MyLocation(latitude, longitude);
 
         assertEquals(false, day.equals(location));
     }

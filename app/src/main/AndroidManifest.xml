@@ -7,7 +7,11 @@
          location permissions for the 'MyLocation' functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-feature
+        android:name="android.hardware.camera2"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -16,7 +20,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".musiconnect.UserCreation"></activity>
+        <activity android:name=".musiconnect.GoogleLogin">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -25,30 +36,21 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
         <activity android:name=".musiconnect.MapsActivity" />
-
         <activity android:name=".musiconnect.SettingsPage" />
         <activity android:name=".musiconnect.HelpPage" />
-        <activity android:name=".musiconnect.ProfilePage" />
-        <activity android:name=".musiconnect.StartPage">
-
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".musiconnect.MyProfilePage" />
+        <activity android:name=".musiconnect.ProfileModification" />
+        <activity android:name=".musiconnect.StartPage"/>
+        <activity android:name=".musiconnect.VisitorProfilePage" />
 
         <service
             android:name=".musiconnect.LocationService"
             android:stopWithTask="true" />
-
     </application>
 
 </manifest>

@@ -1,35 +1,85 @@
 package ch.epfl.sdp.musiconnect;
 
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.VideoView;
+
+import com.google.firebase.storage.FirebaseStorage;
+
+import java.io.IOException;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
+import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 
-public class ProfilePage extends StartPage implements View.OnClickListener {
+public abstract class ProfilePage extends Page {
+    protected TextView title, firstName, lastName, username, mail, birthday;
+    protected static int VIDEO_REQUEST = 101;
+    protected Uri videoUri = null;
+    protected VideoView mVideoView;
+    protected ImageView imgVw;
 
-    Button editProfile;
+    private String testusername = "testUser";
 
+
+
+    @SuppressLint("MissingSuperCall")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_page);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        editProfile = findViewById(R.id.btnEditProfile);
-        editProfile.setOnClickListener(this);
+        if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK) {
+            videoUri = data.getData();
+
+            CloudStorage storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
+            try {
+                storage.upload(videoUri, CloudStorage.FileType.video, testusername);
+            } catch (IOException e) {
+                Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
+            }
+        }
+
+        showVideo();
+
+//        TODO: refresh the intent, may be useful after video change
+//        finish();
+//        overridePendingTransition( 0, 0);
+//        startActivity(getIntent());
+//        overridePendingTransition( 0, 0);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == R.id.my_profile)
-            return true;
-        else
-            super.onOptionsItemSelected(item);
-        return true;
+    protected void showVideo() {
+        if (videoUri != null) {
+            mVideoView.setVideoURI(videoUri);
+            mVideoView.start();
+            mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    mVideoView.start();
+                }
+            });
+        }
     }
 
-    public void onClick(View view) {
-        super.displayNotFinishedFunctionalityMessage();
+    protected void getVideoUri() {
+        CloudStorage storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
+        String path = testusername + "/" + CloudStorage.FileType.video;
+        String saveName = testusername + "_" + CloudStorage.FileType.video;
+        try {
+            storage.download(path, saveName, new CloudCallback() {
+                @Override
+                public void onCallback(Uri fileUri) {
+                    videoUri = fileUri;
+                    showVideo();
+                }
+            });
+        } catch (IOException e) {
+            Toast.makeText(this, "An error occured, please contact support.", Toast.LENGTH_LONG).show();
+        }
     }
+
 }

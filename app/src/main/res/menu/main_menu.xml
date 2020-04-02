@@ -13,9 +13,9 @@
         android:title="@string/help"
         app:showAsAction="always" />
 
-    <item android:id="@+id/my_profile"
+    <item  android:id="@+id/my_profile"
         android:title="@string/my_profile"
-        app:showAsAction="never" />
+        app:showAsAction="never"/>
 
     <item android:id="@+id/map"
         android:title="@string/map"
@@ -23,6 +23,10 @@
 
     <item android:id="@+id/settings"
         android:title="@string/settings"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/signout"
+        android:title="@string/signout"
         app:showAsAction="never" />
 
 

@@ -3,19 +3,21 @@ package ch.epfl.sdp.musiconnect;
 
 import android.content.Intent;
 
+import androidx.test.espresso.intent.Intents;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiSelector;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import androidx.test.espresso.intent.Intents;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.UiObject;
-import androidx.test.uiautomator.UiSelector;
 import ch.epfl.sdp.R;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -37,14 +39,23 @@ public class MenuTests {
     public final ActivityTestRule<StartPage> startPageRule =
             new ActivityTestRule<>(StartPage.class);
 
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule =
+            GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
+
+    private UiDevice device;
+
+
     // Before and after methods are used in order to accept tests with intents
     @Before
-    public void initIntents() { Intents.init(); }
+    public void initIntents() {
+        Intents.init();
+        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        MapsLocationTest.clickAlert(device);
+    }
 
     @After
-    public void releaseIntents() {
-        Intents.release();
-    }
+    public void releaseIntents() { Intents.release(); }
 
     @Test
     public void testSearchClickShouldDisplayMessage() {
@@ -76,7 +87,7 @@ public class MenuTests {
 
         Intent profileIntent = new Intent();
         startPageRule.launchActivity(profileIntent);
-        intended(hasComponent(ProfilePage.class.getName()));
+        intended(hasComponent(MyProfilePage.class.getName()));
     }
 
     @Test
@@ -89,15 +100,8 @@ public class MenuTests {
     }
 
     @Test
-    public void testMapsOpensWithMainMarker() {
-        assert(true);
-
-        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        openActionsMenu(R.string.map);
-
-        UiObject marker = device.findObject(new UiSelector().descriptionContains("You"));
-        marker.waitForExists(5000);
-
-        assert(true);
+    public void testLogOut() {
+        //openActionsMenu(R.string.signout);
+        //intended(hasComponent(GoogleLogin.class.getName()));
     }
 }

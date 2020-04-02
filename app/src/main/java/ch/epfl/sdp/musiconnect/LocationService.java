@@ -1,10 +1,14 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Looper;
@@ -20,6 +24,8 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class LocationService extends Service {
@@ -33,8 +39,9 @@ public class LocationService extends Service {
     private final static long UPDATE_INTERVAL = 5 * 1000;
     private final static long FASTEST_INTERVAL = 3 * 1000;
 
-    private final double THRESHOLD = 0.00002;
+    private final float THRESHOLD = 5.0f; // 5 meters
 
+    private boolean connected = false;
 
     private LocationCallback locationCallback = new LocationCallback() {
         @Override
@@ -43,10 +50,8 @@ public class LocationService extends Service {
 
             Location location = locationResult.getLastLocation();
 
-            if (lastLocation == null || (location != null &&
-                    (Math.abs(lastLocation.getLatitude() - location.getLatitude()) > THRESHOLD ||
-                            Math.abs(lastLocation.getLatitude() - location.getLatitude()) > THRESHOLD))) {
 
+            if (lastLocation == null || location.distanceTo(lastLocation) > THRESHOLD) {
                 lastLocation = location;
                 sendMessageToActivity(location);
             }
@@ -87,7 +92,6 @@ public class LocationService extends Service {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            //Location Permission already granted
             Log.d(TAG, "getLocation: getting location information.");
             fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
         } else {
@@ -104,4 +108,7 @@ public class LocationService extends Service {
         intent.putExtra("Location", b);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
+
+
+
 }
