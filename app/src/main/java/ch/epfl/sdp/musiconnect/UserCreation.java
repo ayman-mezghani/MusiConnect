@@ -21,9 +21,10 @@ import java.util.HashMap;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.DbAdapter;
 
 public class UserCreation extends Page {
-    public static String username;
+    public static Musician mainUser;
     private static final int GALLERY_REQUEST_CODE = 123;
     private ImageView profilePicture;
     TextView date;
@@ -64,13 +65,21 @@ public class UserCreation extends Page {
         // signout if user choose cancel
         findViewById(R.id.btnUserCreationCancel).setOnClickListener(v -> signOut());
 
+
+        etFirstName = findViewById(R.id.etFirstname);
+        etLastName = findViewById(R.id.etLastName);
+        etUserName = findViewById(R.id.etUsername);
+        etMail = findViewById(R.id.etMail);
+
         findViewById(R.id.btnUserCreationCreate).setOnClickListener(v -> {
             if(checkUserCreationInput()) {
                 if (((TextView) findViewById(R.id.etDate)).getText().toString().trim().length() > 0) {
-                    // TODO: Insert Data in database
-                    username = etUserName.getText().toString();
+                    // TODO: Insert Data in database properly (MyDate specifically)
+                    mainUser = new Musician(etFirstName.getText().toString(),etLastName.getText().toString(),
+                            etUserName.getText().toString(),etMail.getText().toString(), new MyDate(1990,1,1));
                     DataBase db = new DataBase();
-                    db.addDoc(new HashMap<String,Object>(){}, username);
+                    DbAdapter Adb = new DbAdapter(db);
+                    Adb.add(mainUser);
                     StartActivityAndFinish(new Intent(UserCreation.this, StartPage.class));
                 }
                 else {
@@ -79,10 +88,6 @@ public class UserCreation extends Page {
             }
         });
 
-        etFirstName = findViewById(R.id.etFirstname);
-        etLastName = findViewById(R.id.etLastName);
-        etUserName = findViewById(R.id.etUsername);
-        etMail = findViewById(R.id.etMail);
 
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.

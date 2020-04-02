@@ -61,6 +61,7 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 import ch.epfl.sdp.R;
@@ -74,6 +75,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
     private DataBase db = new DataBase();
+    private DbAdapter Adb = new DbAdapter(db);
 
     private FusedLocationProviderClient fusedLocationClient;
     private boolean locationPermissionGranted;
@@ -317,16 +319,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         for(Musician m:allUsers){
-            db.readDoc(m.getUserName(), new DbCallback() {
+            Adb.read(m.getUserName(), new DbCallback() {
                 @Override
-                public void onCallback(Map data) {
-                    m.setLocation(new MyLocation((double)data.get("Lat"),(double)data.get("Lon")));
+                public void onCallback(User user) {
+                    MyLocation l = user.getLocation();
+                    m.setLocation(l);
                     updateProfileList();
                 }
             });
         }
 
-        //saveUsersToCache();
     }
 
     //From the users around the area, picks the ones that are within the threshold distance.
@@ -539,9 +541,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void createPlaceHolderUsers(){
         Random random = new Random();
 
-        double r1 = ((double)random.nextInt(5)-2.5) /100;
-        double r2 = ((double)random.nextInt(5)-2.5) /100;
-        double r3 = ((double)random.nextInt(5)-2.5) /100;
+        double r1 = ((double)random.nextInt(5)-2.5) /200;
+        double r2 = ((double)random.nextInt(5)-2.5) /200;
+        double r3 = ((double)random.nextInt(5)-2.5) /200;
 
 
         Musician person1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
@@ -557,39 +559,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         allUsers.add(person3);
 
 
-        db.addDoc(new HashMap<String, Object>() {
-            {
-                put("Lat", person1.getLocation().getLatitude());
-                put("Lon", person1.getLocation().getLongitude());
-            }
-        }, person1.getUserName());
-        db.addDoc(new HashMap<String, Object>() {
-            {
-                put("Lat", person2.getLocation().getLatitude());
-                put("Lon", person2.getLocation().getLongitude());
-            }
-        }, person2.getUserName());
-        db.addDoc(new HashMap<String, Object>() {
-            {
-                put("Lat", person3.getLocation().getLatitude());
-                put("Lon", person3.getLocation().getLongitude());
-            }
-        }, person3.getUserName());
+        Adb.add(person1);
+        Adb.add(person2);
+        Adb.add(person3);
 
 
 
     }
 
     private void updateMyLocToDb(){
-        if(UserCreation.username != null) {
-            db.updateDoc(UserCreation.username, new HashMap<String, Object>() {
-                {
-                    put("Lat", setLoc.getLatitude());
-                    put("Lon", setLoc.getLongitude());
-                }
-            });
+        if(UserCreation.mainUser != null) {
+            UserCreation.mainUser.setLocation(new MyLocation(setLoc.getLatitude(),setLoc.getLongitude()));
+            Adb.update(UserCreation.mainUser);
         } else {
-            generateWarning(MapsActivity.this,"Error: current user's username is Null", Utility.warningTypes.Toast);
+            generateWarning(MapsActivity.this,"Error: couldn't update your location to the cloud", Utility.warningTypes.Toast);
         }
     }
 
