@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,6 +20,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import java.util.Calendar;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.DbAdapter;
 
 public class UserCreation extends Page {
     private static final int GALLERY_REQUEST_CODE = 123;
@@ -44,14 +47,19 @@ public class UserCreation extends Page {
         month = calendar.get(Calendar.MONTH);
         dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
-        date.setOnClickListener(v ->{
+        date.setOnClickListener(v -> {
             datePickerDialog = new DatePickerDialog(UserCreation.this,
-                    (datePicker, year, month, day) -> date.setText(day + "/" + (month + 1) + "/" + year + " (" + getAge(year, month, day) + " years)"), year, month, dayOfMonth);
+                    (datePicker, year, month, day) -> {
+                date.setText(day + "/" + (month + 1) + "/" + year + " (" + getAge(year, month, day) + " years)");
+                this.year = year;
+                this.month = month + 1;
+                this.dayOfMonth = day;
+                    }, year, month, dayOfMonth);
             datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
             datePickerDialog.show();
         });
 
-        profilePicture.setOnClickListener(v ->{
+        profilePicture.setOnClickListener(v -> {
             Intent gallery = new Intent();
             gallery.setType("image/*");
             gallery.setAction(Intent.ACTION_GET_CONTENT);
@@ -62,12 +70,25 @@ public class UserCreation extends Page {
         findViewById(R.id.btnUserCreationCancel).setOnClickListener(v -> signOut());
 
         findViewById(R.id.btnUserCreationCreate).setOnClickListener(v -> {
-            if(checkUserCreationInput()) {
+            if (checkUserCreationInput()) {
                 if (((TextView) findViewById(R.id.etDate)).getText().toString().trim().length() > 0) {
                     // TODO: Insert Data in database
+
+                    String username = etUserName.getText().toString();
+                    String firstname = etFirstName.getText().toString();
+                    String lastname = etLastName.getText().toString();
+                    String email = etMail.getText().toString();
+                    MyDate d = new MyDate(year, month, dayOfMonth);
+
+                    Musician musician = new Musician(firstname, lastname, username, email, d);
+                    musician.setLocation(new MyLocation(0, 0));
+
+                    DbAdapter db = new DbAdapter(new DataBase());
+                    db.add(musician);
+
                     StartActivityAndFinish(new Intent(UserCreation.this, StartPage.class));
-                }
-                else {
+                    
+                } else {
                     Toast.makeText(this, "Select a date of birth", Toast.LENGTH_LONG).show();
                 }
             }
@@ -82,23 +103,22 @@ public class UserCreation extends Page {
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
-        if(account != null){
+        if (account != null) {
             etFirstName.setText(account.getGivenName());
             etLastName.setText(account.getFamilyName());
             etMail.setText(account.getEmail());
         }
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK && data != null){
+        if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             profilePicture.setImageURI(data.getData());
         }
     }
 
-    public String getAge(int year, int month, int day){
+    public String getAge(int year, int month, int day) {
         Calendar dob = Calendar.getInstance();
         Calendar today = Calendar.getInstance();
 
@@ -106,7 +126,7 @@ public class UserCreation extends Page {
 
         int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
 
-        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)){
+        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
             age--;
         }
 
@@ -118,19 +138,19 @@ public class UserCreation extends Page {
     }
 
     public boolean checkUserCreationInput() {
-        if(isEmpty(etFirstName)){
+        if (isEmpty(etFirstName)) {
             Toast.makeText(this, "Fill Firstname field", Toast.LENGTH_LONG).show();
             return false;
         }
-        if(isEmpty(etLastName)){
+        if (isEmpty(etLastName)) {
             Toast.makeText(this, "Fill Lastname field", Toast.LENGTH_LONG).show();
             return false;
         }
-        if(isEmpty(etUserName)){
+        if (isEmpty(etUserName)) {
             Toast.makeText(this, "Fill Username field", Toast.LENGTH_LONG).show();
             return false;
         }
-        if(isEmpty(etMail)){
+        if (isEmpty(etMail)) {
             Toast.makeText(this, "Fill Email field", Toast.LENGTH_LONG).show();
             return false;
         }
