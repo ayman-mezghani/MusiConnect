@@ -24,7 +24,6 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         dbAdapter = new DbAdapter(db);
 
         setContentView(R.layout.activity_visitor_profile_page);
-
         mVideoView = findViewById(R.id.videoView);
         getVideoUri();
 
@@ -35,7 +34,6 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         username = findViewById(R.id.username);
         mail = findViewById(R.id.mail);
         birthday = findViewById(R.id.birthday);
-
 
         Intent intent = getIntent();
         boolean test = intent.getBooleanExtra("Test", false);
