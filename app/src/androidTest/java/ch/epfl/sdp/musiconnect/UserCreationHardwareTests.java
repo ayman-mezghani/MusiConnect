@@ -110,7 +110,7 @@ public class UserCreationHardwareTests {
         closeSoftKeyboard();
         onView(withId(R.id.etUsername)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bobbeber"));
         closeSoftKeyboard();
-        onView(withId(R.id.etMail)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob@bob.ch"));
+        onView(withId(R.id.etMail)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob@gmail.com"));
         closeSoftKeyboard();
         onView(withId(R.id.etDate)).perform(ViewActions.scrollTo()).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2000, 1, 1));
