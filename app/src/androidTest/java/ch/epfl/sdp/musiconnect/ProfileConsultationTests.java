@@ -21,8 +21,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class ProfileConsultationTests {
     @Rule
-    public final ActivityTestRule<ProfilePage> profilePageRule =
-            new ActivityTestRule<>(ProfilePage.class);
+    public final ActivityTestRule<MyProfilePage> profilePageRule =
+            new ActivityTestRule<>(MyProfilePage.class);
 
     // Before and after methods are used in order to accept tests with intents
     @Before
