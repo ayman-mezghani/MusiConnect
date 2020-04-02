@@ -4,7 +4,11 @@ import ch.epfl.sdp.musiconnect.Musician;
 
 public class DbAdapter {
 
-    private DataBase db = new DataBase();
+    private DataBase db;
+
+    public DbAdapter(DataBase db) {
+        this.db = db;
+    }
 
     public void add(Musician musician) {
         db.addDoc(musician.getUserName(), new SimplifiedMusician(musician));

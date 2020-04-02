@@ -21,13 +21,15 @@ public class SimplifiedMusician {
     private Date joinDate;
     private GeoPoint location;
 
-    private static final String USERNAME = "username";
-    private static final String FIRSTNAME = "firstName";
-    private static final String LASTNAME = "lastName";
-    private static final String EMAIL = "email";
-    private static final String BIRTHDAY = "birthday";
-    private static final String JOINDATE = "joinDate";
-    private static final String LOCATION = "location";
+    static final String UID = "uid";
+    static final String USERNAME = "username";
+    static final String FIRSTNAME = "firstName";
+    static final String LASTNAME = "lastName";
+    static final String EMAIL = "email";
+    static final String BIRTHDAY = "birthday";
+    static final String JOINDATE = "joinDate";
+    static final String LOCATION = "location";
+
     private static final int YEAR_BIAS = 1900;
     private static final int MONTH_BIAS = 1;
 
@@ -63,13 +65,13 @@ public class SimplifiedMusician {
 
     public Map<String, Object> toMap() {
         Map<String, Object> res = new HashMap<>();
-        res.put("username", username);
-        res.put("firstName", firstName);
-        res.put("lastName", lastName);
-        res.put("email", email);
-        res.put("birthday", birthday);
-        res.put("joinDate", joinDate);
-        res.put("location", location);
+        res.put(USERNAME, username);
+        res.put(FIRSTNAME, firstName);
+        res.put(LASTNAME, lastName);
+        res.put(EMAIL, email);
+        res.put(BIRTHDAY, birthday);
+        res.put(JOINDATE, joinDate);
+        res.put(LOCATION, location);
         return res;
     }
 
