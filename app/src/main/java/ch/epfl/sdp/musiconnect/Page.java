@@ -47,7 +47,7 @@ public abstract class Page extends AppCompatActivity {
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.my_profile:
-                Intent profileIntent = new Intent(this, ProfilePage.class);
+                Intent profileIntent = new Intent(this, MyProfilePage.class);
                 this.startActivity(profileIntent);
                 break;
             case R.id.settings:
@@ -89,13 +89,16 @@ public abstract class Page extends AppCompatActivity {
 
         if(account == null && !test)
             startActivity(new Intent(this, GoogleLogin.class));
+        // TODO:
+        //else if(account != null && account.getEmail() isn't in database)
+        //  startActivity(new Intent(this, UserCreation.class));
     }
 
-    private void signOut() {
+     protected void signOut() {
         mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, task -> {
-                    startActivity(new Intent(Page.this, GoogleLogin.class));
-                    finish();
-                });
+            .addOnCompleteListener(this, task -> {
+                startActivity(new Intent(Page.this, GoogleLogin.class));
+                finish();
+            });
     }
 }
