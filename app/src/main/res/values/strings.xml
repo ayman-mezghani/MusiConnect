@@ -81,10 +81,10 @@
     <string name="myMusicianFinderLastName"></string>
     <string name="musicianFinderUserName">Username</string>
     <string name="myMusicianFinderUserName"></string>
-    <string name="musicianFinderInstruments">Instruments</string>
+    <string name="musicianFinderInstruments">Instrument</string>
     <string name="myMusicianFinderInstruments"></string>
-    <string name="musicianFinderLevels">Levels</string>
-    <string name="myMusicianFinderLevels"></string>
+    <string name="musicianFinderLevels">Level</string>
+    <string name="myMusicianFinderLevels">Select level</string>
     <string name="musicianFinderButton">Find musician</string>
 
     <string name="bandFinderTitle">Band finder</string>
@@ -95,5 +95,39 @@
     <string name="bandFinderLevels">Levels</string>
     <string name="myBandFinderLevels"></string>
     <string name="bandFinderButton">Find band</string>
+
+    <string-array name="instruments_array">
+        <item>Accordion</item>
+        <item>Bagpipes</item>
+        <item>Banjo</item>
+        <item>Bass</item>
+        <item>Cello</item>
+        <item>Clarinet</item>
+        <item>Drums</item>
+        <item>Flute</item>
+        <item>Guitar</item>
+        <item>Harp</item>
+        <item>Oboe</item>
+        <item>Organ</item>
+        <item>Piano</item>
+        <item>Saxophone</item>
+        <item>Tambourine</item>
+        <item>Triangle</item>
+        <item>Trombone</item>
+        <item>Trumpet</item>
+        <item>Tuba</item>
+        <item>Ukulele</item>
+        <item>Viola</item>
+        <item>Violin</item>
+        <item>Voice</item>
+        <item>Xylophone</item>
+    </string-array>
+
+    <string-array name="levels_array">
+        <item>Beginner</item>
+        <item>Intermediate</item>
+        <item>Advanced</item>
+        <item>Professional</item>
+    </string-array>
 
 </resources>
