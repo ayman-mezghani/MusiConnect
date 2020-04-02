@@ -3,15 +3,23 @@ package ch.epfl.sdp.musiconnect;
 import android.content.Intent;
 import android.os.Bundle;
 
+import java.util.Map;
+
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.DbCallback;
 
-public class VisitorProfilePage extends ProfilePage {
-
+public class VisitorProfilePage extends ProfilePage implements DbCallback {
+    private DataBase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        db = new DataBase();
+
         setContentView(R.layout.activity_visitor_profile_page);
+
         mVideoView = findViewById(R.id.videoView);
         getVideoUri();
 
@@ -31,8 +39,11 @@ public class VisitorProfilePage extends ProfilePage {
     // This function should take something like userID as input
     private void loadProfileContent() {
         Intent intent = getIntent();
-        if (intent.hasExtra("FirstName")) {
-            String sTitle = intent.getStringExtra("UserName") + "'s profile";
+        if (intent.hasExtra("UserName")) {
+            String newUsername = intent.getStringExtra("UserName");
+            //db.readDoc();
+
+            String sTitle = newUsername + "'s profile";
             title.setText(sTitle);
 
             firstName.setText(intent.getStringExtra("FirstName"));
@@ -47,5 +58,10 @@ public class VisitorProfilePage extends ProfilePage {
             String sBirthday = birthdayContent[0] + "." + birthdayContent[1] + "." + birthdayContent[2];
             birthday.setText(sBirthday);
         }
+    }
+
+    @Override
+    public void onCallback(Map data) {
+
     }
 }
