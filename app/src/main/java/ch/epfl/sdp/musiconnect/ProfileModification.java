@@ -15,6 +15,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.GeoPoint;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -97,22 +100,25 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
      */
     private void updateDatabaseFields(String[] newFields) {
         DataBase db = new DataBase();
+        DbAdapter adapter = new DbAdapter(db);
         Map<String, Object> data = new HashMap<>();
-        String[] keys = {"first_name", "last_name", "user_name", "email", "birthday"};
+        String[] keys = {"firstName", "lastName", "username", "email", "birthday"};
         for (int i = 0; i < keys.length; ++i) {
             if (keys[i].equals("birthday")) {
                 @SuppressLint("SimpleDateFormat")
-                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy"); // KEEP THIS DATE FORMAT !
                 try {
                     Date d = format.parse(newFields[i]);
-                    data.put(keys[i], d);
+                    data.put(keys[i], new Timestamp(d));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             } else
                 data.put(keys[i], newFields[i]);
         }
-        db.updateDoc(username, data);
+        data.put("location", new GeoPoint(0, 0));
+        Musician me = new SimplifiedMusician(data).toMusician();
+        adapter.update(me);
     }
 
     private String[] getNewTextFields() {
