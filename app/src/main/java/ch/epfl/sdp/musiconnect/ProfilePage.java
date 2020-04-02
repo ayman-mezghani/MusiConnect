@@ -27,7 +27,6 @@ import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 
-
 public class ProfilePage extends Page implements View.OnClickListener {
 
     private static int VIDEO_REQUEST = 101;
@@ -40,7 +39,6 @@ public class ProfilePage extends Page implements View.OnClickListener {
     private String testusername = "testUser";
 
     private ImageView imgVw;
-    private TextView id;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -50,26 +48,6 @@ public class ProfilePage extends Page implements View.OnClickListener {
 
         mVideoView = findViewById(R.id.videoView);
         getVideoUri();
-
-        Intent intent = getIntent();
-        if (intent.hasExtra("FirstName")) {
-            TextView firstNameView = findViewById(R.id.myFirstname);
-            firstNameView.setText(intent.getStringExtra("FirstName"));
-
-            TextView lastNameView = findViewById(R.id.myLastname);
-            lastNameView.setText(intent.getStringExtra("LastName"));
-
-            TextView userNameView = findViewById(R.id.myUsername);
-            userNameView.setText(intent.getStringExtra("UserName"));
-
-            TextView emailView = findViewById(R.id.myMail);
-            emailView.setText(intent.getStringExtra("EmailAddress"));
-
-            TextView birthdayView = findViewById(R.id.myBirthday);
-            int[] birthday = intent.getIntArrayExtra("Birthday");
-            String s = birthday[0] + "." + birthday[1] + "." + birthday[2];
-            birthdayView.setText(s);
-        }
 
         imgVw = findViewById(R.id.imgView);
         firstName = findViewById(R.id.myFirstname);
