@@ -214,8 +214,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     timeLastUpdt = Calendar.getInstance().getTime();
                     saveUsersToCache();
                     updateUsers();
-                    if(setLoc != null)
-                        updateMyLocToDb();
                 }
                 handler.postDelayed(this, delay);
             }
@@ -280,6 +278,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
             circle.setCenter(latLng);
 
+        }
+
+        if(UserCreation.mainUser != null) {
+            UserCreation.mainUser.setLocation(new MyLocation(setLoc.getLatitude(),setLoc.getLongitude()));
+            Adb.update(UserCreation.mainUser);
+        } else {
+            generateWarning(MapsActivity.this,"Error: couldn't update your location to the cloud", Utility.warningTypes.Toast);
         }
     }
 
@@ -565,15 +570,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
-    }
-
-    private void updateMyLocToDb(){
-        if(UserCreation.mainUser != null) {
-            UserCreation.mainUser.setLocation(new MyLocation(setLoc.getLatitude(),setLoc.getLongitude()));
-            Adb.update(UserCreation.mainUser);
-        } else {
-            generateWarning(MapsActivity.this,"Error: couldn't update your location to the cloud", Utility.warningTypes.Toast);
-        }
     }
 
     public static class Utility{
