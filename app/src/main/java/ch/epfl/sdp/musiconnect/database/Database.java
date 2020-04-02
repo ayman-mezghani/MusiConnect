@@ -11,6 +11,7 @@ public interface Database {
     }
 
     void addDoc(Map<String, Object> m, String docName);
+//    void addDoc(User u, String docName);
 
     void deleteDoc(String docName);
 
@@ -19,4 +20,6 @@ public interface Database {
     void deleteFieldsInDoc(String docName, List<String> fields);
 
     void readDoc(String docName, DbCallback dbCallback);
+
+
 }

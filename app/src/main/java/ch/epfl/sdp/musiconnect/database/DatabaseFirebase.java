@@ -9,11 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FirebaseDatabase implements Database {
+import ch.epfl.sdp.musiconnect.User;
+
+public class DatabaseFirebase implements Database {
     private static final String TAG = "DataBase";
     private FirebaseFirestore db;
 
-    public FirebaseDatabase() {
+    public DatabaseFirebase() {
         this.db = FirebaseFirestore.getInstance();
     }
 
@@ -22,6 +24,12 @@ public class FirebaseDatabase implements Database {
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
     }
+
+//    public void addDoc(User u, String docName) {
+//        db.collection("users").document(docName).set(u)
+//                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
+//                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
+//    }
 
     public void deleteDoc(String docName) {
         db.collection("users").document(docName).delete()
