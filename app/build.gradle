@@ -59,8 +59,10 @@ dependencies {
 
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
-
+    
+    // Need this for intent tests
     androidTestImplementation("com.android.support.test.espresso:espresso-intents:3.2.0")
+
 
     // Need this for datepicker tests
     androidTestImplementation('com.android.support.test.espresso:espresso-contrib:3.0.2') {
@@ -71,8 +73,6 @@ dependencies {
         exclude module: 'recyclerview-v7'
         exclude module: 'appcompat-v7'
     }
-    // Need this for intent tests
-
 }
 
 tasks.withType(Test) {
