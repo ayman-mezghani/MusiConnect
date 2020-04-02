@@ -17,10 +17,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.util.Calendar;
+import java.util.HashMap;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.database.DataBase;
 
 public class UserCreation extends Page {
+    public static String username;
     private static final int GALLERY_REQUEST_CODE = 123;
     private ImageView profilePicture;
     TextView date;
@@ -65,6 +68,9 @@ public class UserCreation extends Page {
             if(checkUserCreationInput()) {
                 if (((TextView) findViewById(R.id.etDate)).getText().toString().trim().length() > 0) {
                     // TODO: Insert Data in database
+                    username = etUserName.getText().toString();
+                    DataBase db = new DataBase();
+                    db.addDoc(new HashMap<String,Object>(){}, username);
                     StartActivityAndFinish(new Intent(UserCreation.this, StartPage.class));
                 }
                 else {

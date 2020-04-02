@@ -53,10 +53,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+
+import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 import ch.epfl.sdp.R;
 
@@ -68,6 +73,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Date timeLastUpdt;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
+    private DataBase db = new DataBase();
 
     private FusedLocationProviderClient fusedLocationClient;
     private boolean locationPermissionGranted;
@@ -204,9 +210,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 } else {
                     updatePos = true;
                     timeLastUpdt = Calendar.getInstance().getTime();
+                    saveUsersToCache();
                     updateUsers();
-                    updateProfileList();
-                    loadProfilesMarker();
+                    if(setLoc != null)
+                        updateMyLocToDb();
                 }
                 handler.postDelayed(this, delay);
             }
@@ -308,15 +315,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
 
-        Random random = new Random();
 
         for(Musician m:allUsers){
-            double lat = setLoc.getLatitude() + (((double)random.nextInt(5)-2.5) /100);
-            double lng = setLoc.getLongitude() + (((double)random.nextInt(5)-2.5) /100);
-            m.setLocation(new MyLocation(lat,lng));
+            db.readDoc(m.getUserName(), new DbCallback() {
+                @Override
+                public void onCallback(Map data) {
+                    m.setLocation(new MyLocation((double)data.get("Lat"),(double)data.get("Lon")));
+                    updateProfileList();
+                }
+            });
         }
 
-        saveUsersToCache();
+        //saveUsersToCache();
     }
 
     //From the users around the area, picks the ones that are within the threshold distance.
@@ -338,6 +348,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         circle.setRadius(threshold);
+
+        loadProfilesMarker();
     }
 
     //Loads the profile on the map as markers, with associated information
@@ -524,21 +536,60 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //Should be replaced by a function that fetch user from the database; right now it generates 3 fixed users
     private void createPlaceHolderUsers(){
+        Random random = new Random();
+
+        double r1 = ((double)random.nextInt(5)-2.5) /100;
+        double r2 = ((double)random.nextInt(5)-2.5) /100;
+        double r3 = ((double)random.nextInt(5)-2.5) /100;
+
 
         Musician person1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
         Musician person2 = new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", new MyDate(1992, 9, 20));
         Musician person3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
 
-        person1.setLocation(new MyLocation(46.52, 6.52));
-        person2.setLocation(new MyLocation(46.51, 6.45));
-        person3.setLocation(new MyLocation(46.519, 6.57));
+        person1.setLocation(new MyLocation(46.52 + r1, 6.52 + r1));
+        person2.setLocation(new MyLocation(46.51 + r2, 6.45 + r2));
+        person3.setLocation(new MyLocation(46.519 + r3, 6.57 + r3));
 
         allUsers.add(person1);
         allUsers.add(person2);
         allUsers.add(person3);
 
 
+        db.addDoc(new HashMap<String, Object>() {
+            {
+                put("Lat", person1.getLocation().getLatitude());
+                put("Lon", person1.getLocation().getLongitude());
+            }
+        }, person1.getUserName());
+        db.addDoc(new HashMap<String, Object>() {
+            {
+                put("Lat", person2.getLocation().getLatitude());
+                put("Lon", person2.getLocation().getLongitude());
+            }
+        }, person2.getUserName());
+        db.addDoc(new HashMap<String, Object>() {
+            {
+                put("Lat", person3.getLocation().getLatitude());
+                put("Lon", person3.getLocation().getLongitude());
+            }
+        }, person3.getUserName());
 
+
+
+    }
+
+    private void updateMyLocToDb(){
+        if(UserCreation.username != null) {
+            db.updateDoc(UserCreation.username, new HashMap<String, Object>() {
+                {
+                    put("Lat", setLoc.getLatitude());
+                    put("Lon", setLoc.getLongitude());
+                }
+            });
+        } else {
+            generateWarning(MapsActivity.this,"Error: current user's username is Null", Utility.warningTypes.Toast);
+        }
     }
 
     public static class Utility{
@@ -564,4 +615,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
+
+
 }
