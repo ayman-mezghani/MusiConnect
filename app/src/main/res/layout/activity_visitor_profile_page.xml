@@ -22,7 +22,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
-                android:text="@string/myprofile"
                 android:textAlignment="center"
                 android:textSize="30sp"
                 android:textStyle="bold" />
@@ -60,7 +59,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="John"
                     android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout
@@ -82,7 +80,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Doe"
                     android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout
@@ -104,7 +101,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="JohnDoe"
                     android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout
@@ -126,7 +122,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="john.doe@gmail.com"
                     android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout
@@ -148,7 +143,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="01/01/2020"
                     android:textSize="18sp" />
             </LinearLayout>
         </LinearLayout>

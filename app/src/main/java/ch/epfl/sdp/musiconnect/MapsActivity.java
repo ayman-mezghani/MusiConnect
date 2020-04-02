@@ -56,6 +56,7 @@ import java.util.Random;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.DbAdapter;
 
 import static ch.epfl.sdp.musiconnect.MapsActivity.Utility.generateWarning;
 
@@ -85,6 +86,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private List<Marker> markers = new ArrayList<>();           //markers on the map associated to profiles
 
     private DataBase db;
+    private DbAdapter dbAdapter;
 
     private Marker marker;                                      //main user's marker
 
@@ -116,6 +118,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         spinner.setSelection(2);
 
         db = new DataBase();
+        dbAdapter = new DbAdapter(db);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -374,10 +377,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Musician m = (Musician) marker.getTag();
             profileIntent.putExtra("UserName", m.getUserName());
 
-            // MyDate is not parcelable...
-            int[] birthday = {m.getBirthday().getYear(), m.getBirthday().getMonth(), m.getBirthday().getDate()};
-            profileIntent.putExtra("Birthday", birthday);
-
             this.startActivity(profileIntent);
         }
     }
@@ -535,16 +534,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         allUsers.add(person3);
 
         for (Musician m: allUsers) {
-            Map<String, Object> h = new HashMap<>();
-            h.put("first_name", m.getFirstName());
-            h.put("last_name", m.getLastName());
-            h.put("user_name", m.getUserName());
-            h.put("email", m.getEmailAddress());
-            h.put("birthday", m.getBirthday());
-            h.put("Lat", m.getLocation().getLatitude());
-            h.put("Lon", m.getLocation().getLongitude());
-
-            db.updateDoc(m.getUserName(), h);
+            dbAdapter.add(m);
         }
     }
 

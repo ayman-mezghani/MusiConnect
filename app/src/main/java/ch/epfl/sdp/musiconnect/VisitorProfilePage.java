@@ -7,10 +7,12 @@ import java.util.Map;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 public class VisitorProfilePage extends ProfilePage implements DbCallback {
     private DataBase db;
+    private DbAdapter dbAdapter;
     private String newUsername;
 
 
@@ -20,6 +22,7 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         super.onCreate(savedInstanceState);
 
         db = new DataBase();
+        dbAdapter = new DbAdapter(db);
 
         setContentView(R.layout.activity_visitor_profile_page);
 
@@ -44,22 +47,23 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         Intent intent = getIntent();
         if (intent.hasExtra("UserName")) {
             newUsername = intent.getStringExtra("UserName");
-            db.readDoc(newUsername, this);
+            dbAdapter.read(newUsername, this);
         }
     }
 
-    @Override
-    public void onCallback(Map data) {
+
+    public void onCallback(User user) {
+        Musician m = (Musician) user;
         String sTitle = newUsername + "'s profile";
         title.setText(sTitle);
 
-        firstName.setText(data.get("first_name").toString());
-        lastName.setText(data.get("last_name").toString());
+        firstName.setText(m.getFirstName());
+        lastName.setText(m.getLastName());
         username.setText(newUsername);
-        mail.setText(data.get("email").toString());
-        Map<String, Object> date = (Map<String, Object>) data.get("birthday");
-        String userBirthday = date.get("date") + "/" + date.get("month") + "/" + date.get("year");
+        mail.setText(m.getEmailAddress());
 
-        birthday.setText(userBirthday);
+        MyDate date = m.getBirthday();
+        String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
+        birthday.setText(s);
     }
 }
