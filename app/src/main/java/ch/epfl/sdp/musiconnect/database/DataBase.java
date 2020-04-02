@@ -17,8 +17,8 @@ public class DataBase {
         this.db = FirebaseFirestore.getInstance();
     }
 
-    public void addDoc(Map<String, Object> m, String docName) {
-        db.collection("users").document(docName).set(m)
+    public void addDoc(String docName, SimplifiedMusician m) {
+        db.collection("newtest").document(docName).set(m)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
     }

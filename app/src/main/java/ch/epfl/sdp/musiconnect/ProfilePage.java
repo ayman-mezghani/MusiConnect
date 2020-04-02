@@ -19,13 +19,19 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
+import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.DbAdapter;
 
 public class ProfilePage extends Page implements View.OnClickListener {
 
@@ -45,6 +51,8 @@ public class ProfilePage extends Page implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
+
+        db2();
 
         mVideoView = findViewById(R.id.videoView);
         getVideoUri();
@@ -87,6 +95,31 @@ public class ProfilePage extends Page implements View.OnClickListener {
 
             Glide.with(this).load(String.valueOf(personPhoto)).into(imgVw);
         }
+    }
+
+//    public void db1() {
+//        DataBase db = new DataBase();
+//
+//        Map<String, Object> res = new HashMap<>();
+//        res.put("uid", null);
+//        res.put("username", "user1");
+//        res.put("first_name", "us");
+//        res.put("last_name", "er");
+//        res.put("birthday", new Date());
+//        res.put("email", "user@gmail.com");
+//        res.put("join_date", new Date());
+//        GeoPoint loc = new GeoPoint(0,0);
+//        res.put("location", loc);
+//
+//        db.addDoc(res, "adapter test");
+//    }
+
+    public void db2() {
+        DbAdapter db = new DbAdapter();
+
+        Musician musician = new Musician("john", "smith", "jsm", "js@gmail.com", new MyDate(2000,1,1));
+        musician.setLocation(new MyLocation(0,0));
+        db.add(musician);
     }
 
     public void captureVideo(View view) {
