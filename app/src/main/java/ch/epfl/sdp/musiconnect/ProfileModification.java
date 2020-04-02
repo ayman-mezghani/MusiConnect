@@ -3,17 +3,22 @@ package ch.epfl.sdp.musiconnect;
 import androidx.appcompat.app.AppCompatActivity;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.*;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -94,8 +99,19 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         DataBase db = new DataBase();
         Map<String, Object> data = new HashMap<>();
         String[] keys = {"first_name", "last_name", "user_name", "email", "birthday"};
-        for (int i = 0; i < keys.length; ++i)
-            data.put(keys[i], newFields[i]);
+        for (int i = 0; i < keys.length; ++i) {
+            if (keys[i].equals("birthday")) {
+                @SuppressLint("SimpleDateFormat")
+                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                try {
+                    Date d = format.parse(newFields[i]);
+                    data.put(keys[i], d);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            } else
+                data.put(keys[i], newFields[i]);
+        }
         db.updateDoc(username, data);
     }
 
