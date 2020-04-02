@@ -94,10 +94,10 @@
                     android:textSize="30sp"
                     android:textStyle="bold" />
 
-                <EditText
+                <Spinner
                     android:id="@+id/myBandFinderInstrumentsID"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/myBandFinderInstruments"
                     android:textSize="30sp" />
@@ -118,10 +118,10 @@
                     android:textSize="30sp"
                     android:textStyle="bold" />
 
-                <EditText
+                <Spinner
                     android:id="@+id/myBandFinderLevelsID"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/myBandFinderLevels"
                     android:textSize="30sp" />

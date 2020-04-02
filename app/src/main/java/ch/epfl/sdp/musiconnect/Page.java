@@ -58,9 +58,10 @@ public abstract class Page extends AppCompatActivity {
                 Intent helpIntent = new Intent(this, HelpPage.class);
                 this.startActivity(helpIntent);
                 break;
-            // In comments right now to avoid duplication
-//            case R.id.search:
-//                return true;
+            case R.id.search:
+                Intent searchIntent = new Intent(this, FinderPage.class);
+                this.startActivity(searchIntent);
+                break;
             case R.id.map:
                 Intent mapsIntent = new Intent(this, MapsActivity.class);
                 this.startActivity(mapsIntent);
