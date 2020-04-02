@@ -12,7 +12,6 @@ import ch.epfl.sdp.R;
  * @author Manuel Pellegrini, EPFL
  */
 public class FinderPage extends Page implements View.OnClickListener {
-    
 
     private TextView title;
     private Button findMusician;
