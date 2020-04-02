@@ -26,8 +26,6 @@ public abstract class ProfilePage extends Page {
 
     private String testusername = "testUser";
 
-
-
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -56,12 +54,7 @@ public abstract class ProfilePage extends Page {
         if (videoUri != null) {
             mVideoView.setVideoURI(videoUri);
             mVideoView.start();
-            mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mVideoView.start();
-                }
-            });
+            mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
         }
     }
 
@@ -70,12 +63,9 @@ public abstract class ProfilePage extends Page {
         String path = testusername + "/" + CloudStorage.FileType.video;
         String saveName = testusername + "_" + CloudStorage.FileType.video;
         try {
-            storage.download(path, saveName, new CloudCallback() {
-                @Override
-                public void onCallback(Uri fileUri) {
-                    videoUri = fileUri;
-                    showVideo();
-                }
+            storage.download(path, saveName, fileUri -> {
+                videoUri = fileUri;
+                showVideo();
             });
         } catch (IOException e) {
             Toast.makeText(this, "An error occured, please contact support.", Toast.LENGTH_LONG).show();
