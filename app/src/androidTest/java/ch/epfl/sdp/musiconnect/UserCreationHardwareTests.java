@@ -103,6 +103,7 @@ public class UserCreationHardwareTests {
 
     @Test
     public void allInputSetted(){
+
         onView(withId(R.id.etFirstname)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob"));
         closeSoftKeyboard();
         onView(withId(R.id.etLastName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("bernard"));
