@@ -36,8 +36,7 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         birthday = findViewById(R.id.birthday);
 
         Intent intent = getIntent();
-        boolean test = intent.getBooleanExtra("Test", false);
-        if (!test) {
+        if (!intent.getBooleanExtra("Test", false)) {
             loadProfileContent();
         } else {
             int[] birthday = intent.getIntArrayExtra("Birthday");
