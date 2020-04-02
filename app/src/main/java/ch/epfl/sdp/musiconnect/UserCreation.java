@@ -66,10 +66,6 @@ public class UserCreation extends Page {
         findViewById(R.id.btnUserCreationCancel).setOnClickListener(v -> signOut());
 
 
-        etFirstName = findViewById(R.id.etFirstname);
-        etLastName = findViewById(R.id.etLastName);
-        etUserName = findViewById(R.id.etUsername);
-        etMail = findViewById(R.id.etMail);
 
         findViewById(R.id.btnUserCreationCreate).setOnClickListener(v -> {
             if(checkUserCreationInput()) {
@@ -88,6 +84,11 @@ public class UserCreation extends Page {
             }
         });
 
+
+        etFirstName = findViewById(R.id.etFirstname);
+        etLastName = findViewById(R.id.etLastName);
+        etUserName = findViewById(R.id.etUsername);
+        etMail = findViewById(R.id.etMail);
 
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
