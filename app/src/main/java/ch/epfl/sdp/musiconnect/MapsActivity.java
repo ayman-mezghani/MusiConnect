@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -14,8 +13,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -50,7 +47,6 @@ import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -58,13 +54,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.DbAdapter;
 
 import static ch.epfl.sdp.musiconnect.MapsActivity.Utility.generateWarning;
 
@@ -226,6 +223,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
                 if (location != null) {
                     setLocation(location);
+                    startLocationService();
                 } else {
                     // Here it could be either location is turned off or there was not enough time for
                     // the first location to arrive
@@ -238,7 +236,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     delay = 20000;
                     generateWarning(MapsActivity.this,"There was a problem retrieving your location; Please check you are connected to a network", Utility.warningTypes.Alert);
                 }
-                startLocationService();
 
             });
         } else {
@@ -392,14 +389,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Intent profileIntent = new Intent(MapsActivity.this, VisitorProfilePage.class);
           
             Musician m = (Musician) marker.getTag();
-            profileIntent.putExtra("FirstName", m.getFirstName());
-            profileIntent.putExtra("LastName", m.getLastName());
             profileIntent.putExtra("UserName", m.getUserName());
-            profileIntent.putExtra("EmailAddress", m.getEmailAddress());
-
-            // MyDate is not parcelable...
-            int[] birthday = {m.getBirthday().getYear(), m.getBirthday().getMonth(), m.getBirthday().getDate()};
-            profileIntent.putExtra("Birthday", birthday);
+            profileIntent.putExtra("Test", false);
 
             this.startActivity(profileIntent);
         }
@@ -563,13 +554,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         allUsers.add(person2);
         allUsers.add(person3);
 
-
         Adb.add(person1);
         Adb.add(person2);
         Adb.add(person3);
-
-
-
     }
 
     public static class Utility{
