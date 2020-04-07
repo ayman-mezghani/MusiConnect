@@ -17,6 +17,10 @@ public class Event {
     private final String defaultMessage = "Come watch and play!";
 
     public Event(User creator) {
+        if (creator == null) {
+            throw new IllegalArgumentException();
+        }
+
         this.creator = creator;
         participants = new ArrayList<>();
         participants.add(creator);
@@ -33,10 +37,18 @@ public class Event {
     }
 
     public void register(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException();
+        }
+
         participants.add(user);
     }
 
     public void unregister(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException();
+        }
+
         participants.remove(user);
     }
 
@@ -45,6 +57,9 @@ public class Event {
     }
 
     public void setLocation(Location location) {
+        if (location == null) {
+            throw new IllegalArgumentException();
+        }
         this.location = location;
     }
 
@@ -53,6 +68,10 @@ public class Event {
     }
 
     public void setDateTime(MyDate dateTime) {
+        if (dateTime == null) {
+            throw new IllegalArgumentException();
+        }
+
         this.dateTime = dateTime;
     }
 
@@ -69,6 +88,9 @@ public class Event {
     }
 
     public void setTitle(String title) {
+        if (title == null) {
+            throw new IllegalArgumentException();
+        }
         this.title = title;
     }
 
@@ -77,6 +99,9 @@ public class Event {
     }
 
     public void setMessage(String message) {
+        if (title == null) {
+            throw new IllegalArgumentException();
+        }
         this.message = message;
     }
 
