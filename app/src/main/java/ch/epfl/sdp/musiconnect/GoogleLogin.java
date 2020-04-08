@@ -17,12 +17,20 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.DbAdapter;
+import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 public class GoogleLogin extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 0;
     private static final String TAG = "Error";
+
+    private boolean alreadyExists = false;
+
     private GoogleSignInClient mGoogleSignInClient;
     private SignInButton signin;
     GoogleSignInOptions gso;
@@ -52,7 +60,7 @@ public class GoogleLogin extends AppCompatActivity {
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
-        if(account != null)
+        if (account != null)
             startActivity(new Intent(this, StartPage.class));
 
     }
@@ -79,14 +87,27 @@ public class GoogleLogin extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
-            // TODO :
-            // if(account.getEmail() is in database){
-            //  startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class));
-            //  finish();
-            // }
-            // else
-              startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.UserCreation.class));
-              finish();
+            DbAdapter db = new DbAdapter(new DataBase());
+
+            db.exists(account.getEmail(), new DbCallback() {
+                @Override
+                public void existsCallback(boolean exists) {
+                    if (exists) {
+                        CurrentUser.getInstance(GoogleLogin.this);
+                        startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class));
+                    } else {
+                        startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.UserCreation.class));
+                    }
+                }
+            });
+
+//            // TODO :
+//            if (alreadyExists) {
+//                startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class));
+//            } else {
+//                startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.UserCreation.class));
+//            }
+            finish();
 
             // Signed in successfully
 

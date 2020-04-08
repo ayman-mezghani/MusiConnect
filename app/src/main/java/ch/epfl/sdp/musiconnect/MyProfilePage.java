@@ -18,11 +18,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
+import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 public class MyProfilePage extends ProfilePage implements View.OnClickListener {
 
     private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
     private DbAdapter dbAdapter;
+    private boolean test = true;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -52,49 +54,70 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         });
 
 //        googleSignIn();
-//        loadProfileContent();
+        loadProfileContent();
 
     }
 
     private void loadProfileContent() {
-        dbAdapter.read(CurrentUser.getInstance(this).email, user -> {
-            Musician m = (Musician) user;
+        boolean istest;
 
-            firstName.setText(m.getFirstName());
-            lastName.setText(m.getLastName());
-            username.setText(m.getUserName());
-            email.setText(m.getEmailAddress());
+        try {
+            Class.forName("androidx.test.espresso.Espresso");
+            istest = true;
+        } catch (ClassNotFoundException e) {
+            istest = false;
+        }
 
-            MyDate date = m.getBirthday();
-            String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
-            birthday.setText(s);
-        });
-    }
+        if (!istest) {
+            dbAdapter.read(CurrentUser.getInstance(this).email, new DbCallback() {
+                @Override
+                public void readCallback(User user) {
+                    Musician m = (Musician) user;
 
-    private void googleSignIn() {
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
+                    firstName.setText(m.getFirstName());
+                    lastName.setText(m.getLastName());
+                    username.setText(m.getUserName());
+                    email.setText(m.getEmailAddress());
 
-        // Build a GoogleSignInClient with the options specified by gso.
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+                    MyDate date = m.getBirthday();
+                    String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
+                    birthday.setText(s);
+                }
+            });
+        } else {
+            firstName.setText("default");
+            lastName.setText("user");
+            username.setText("defuser");
+            email.setText("defuser@gmail.com");
 
-        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
-        if (acct != null) {
-            String personName = acct.getDisplayName();
-            String personEmail = acct.getEmail();
-            //String personId = acct.getId();
-            Uri personPhoto = acct.getPhotoUrl();
-
-            firstName.setText(personName.split(" ")[0]);
-            lastName.setText(personName.split(" ")[1]);
-            email.setText(personEmail);
-
-            Glide.with(this).load(String.valueOf(personPhoto)).into(imgVw);
+            birthday.setText("01/01/2000");
         }
     }
+
+//    private void googleSignIn() {
+//        // Configure sign-in to request the user's ID, email address, and basic
+//        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+//        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestEmail()
+//                .build();
+//
+//        // Build a GoogleSignInClient with the options specified by gso.
+//        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+//
+//        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+//        if (acct != null) {
+//            String personName = acct.getDisplayName();
+//            String personEmail = acct.getEmail();
+//            //String personId = acct.getId();
+//            Uri personPhoto = acct.getPhotoUrl();
+//
+//            firstName.setText(personName.split(" ")[0]);
+//            lastName.setText(personName.split(" ")[1]);
+//            email.setText(personEmail);
+//
+//            Glide.with(this).load(String.valueOf(personPhoto)).into(imgVw);
+//        }
+//    }
 
     public void captureVideo(View view) {
         Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);

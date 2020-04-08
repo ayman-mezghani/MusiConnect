@@ -53,7 +53,7 @@ public class UserCreationHardwareTests {
         closeSoftKeyboard();
         onView(withId(R.id.etLastName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("bernard"));
         closeSoftKeyboard();
-        onView(withId(R.id.etMail)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob@bob.ch"));
+        onView(withId(R.id.etMail)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob@gmail.com"));
         closeSoftKeyboard();
 
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
@@ -93,7 +93,7 @@ public class UserCreationHardwareTests {
         closeSoftKeyboard();
         onView(withId(R.id.etUsername)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bobbeber"));
         closeSoftKeyboard();
-        onView(withId(R.id.etMail)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob@bob.ch"));
+        onView(withId(R.id.etMail)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob@gmail.com"));
         closeSoftKeyboard();
 
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());

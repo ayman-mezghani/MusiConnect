@@ -43,7 +43,7 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
                     intent.getStringExtra("UserName"),
                     intent.getStringExtra("Email"),
                     new MyDate(birthday[2], birthday[1], birthday[0]));
-            onCallback(alyx);
+            readCallback(alyx);
         }
     }
 
@@ -58,7 +58,7 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
     }
 
 
-    public void onCallback(User user) {
+    public void readCallback(User user) {
         Musician m = (Musician) user;
         String sTitle = m.getUserName() + "'s profile";
         title.setText(sTitle);

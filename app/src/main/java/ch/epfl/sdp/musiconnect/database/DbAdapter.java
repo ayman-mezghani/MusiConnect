@@ -33,4 +33,8 @@ public class DbAdapter {
     public void read(String index, DbCallback dbCallback) {
         db.readDoc(index, dbCallback);
     }
+
+    public void exists(String index, DbCallback dbCallback) {
+        db.docExists(index, dbCallback);
+    }
 }
