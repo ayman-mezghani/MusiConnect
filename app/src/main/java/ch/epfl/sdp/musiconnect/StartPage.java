@@ -17,13 +17,10 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
-
-
 public class StartPage extends Page {
     private static final String TAG = "MainActivity";
     private FusedLocationProviderClient fusedLocationClient;
     private Location userLocation;
-
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override

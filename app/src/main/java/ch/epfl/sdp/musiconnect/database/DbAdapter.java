@@ -11,15 +11,15 @@ public class DbAdapter {
     }
 
     public void add(Musician musician) {
-        db.addDoc(musician.getUserName(), new SimplifiedMusician(musician));
+        db.addDoc(musician.getEmailAddress(), new SimplifiedMusician(musician));
     }
 
     public void delete(Musician musician) {
-        db.deleteDoc(musician.getUserName());
+        db.deleteDoc(musician.getEmailAddress());
     }
 
     public void update(Musician musician) {
-        db.updateDoc(musician.getUserName(), (new SimplifiedMusician(musician)).toMap());
+        db.updateDoc(musician.getEmailAddress(), (new SimplifiedMusician(musician)).toMap());
     }
 
 //    public void deleteFieldsInDoc(String docName, List<String> fields) {
@@ -30,7 +30,7 @@ public class DbAdapter {
 //        this.updateDoc(docName, updates);
 //    }
 
-    public void read(String username, DbCallback dbCallback) {
-        db.readDoc(username, dbCallback);
+    public void read(String index, DbCallback dbCallback) {
+        db.readDoc(index, dbCallback);
     }
 }

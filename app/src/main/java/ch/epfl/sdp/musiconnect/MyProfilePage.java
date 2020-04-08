@@ -16,15 +16,21 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.DbAdapter;
 
 public class MyProfilePage extends ProfilePage implements View.OnClickListener {
 
     private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
+    private DbAdapter dbAdapter;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        dbAdapter = new DbAdapter(new DataBase());
+
         setContentView(R.layout.activity_profile_page);
 
         mVideoView = findViewById(R.id.videoView);
@@ -34,7 +40,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         firstName = findViewById(R.id.myFirstname);
         lastName = findViewById(R.id.myLastname);
         username = findViewById(R.id.myUsername);
-        mail = findViewById(R.id.myMail);
+        email = findViewById(R.id.myMail);
         birthday = findViewById(R.id.myBirthday);
 
         Button editProfile = findViewById(R.id.btnEditProfile);
@@ -45,11 +51,27 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             startActivityForResult(profileModificationIntent, LAUNCH_PROFILE_MODIF_INTENT);
         });
 
+//        googleSignIn();
+        loadProfileContent();
 
-        googleSignIn();
     }
 
-    private void googleSignIn(){
+    private void loadProfileContent() {
+        dbAdapter.read(CurrentUser.getInstance(this).email, user -> {
+            Musician m = (Musician) user;
+
+            firstName.setText(m.getFirstName());
+            lastName.setText(m.getLastName());
+            username.setText(m.getUserName());
+            email.setText(m.getEmailAddress());
+
+            MyDate date = m.getBirthday();
+            String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
+            birthday.setText(s);
+        });
+    }
+
+    private void googleSignIn() {
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -68,7 +90,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
 
             firstName.setText(personName.split(" ")[0]);
             lastName.setText(personName.split(" ")[1]);
-            mail.setText(personEmail);
+            email.setText(personEmail);
 
             Glide.with(this).load(String.valueOf(personPhoto)).into(imgVw);
         }
@@ -95,7 +117,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             firstName.setText(newFields[0]);
             lastName.setText(newFields[1]);
             username.setText(newFields[2]);
-            mail.setText(newFields[3]);
+            email.setText(newFields[3]);
             birthday.setText(newFields[4]);
             showVideo();
         }
@@ -122,17 +144,16 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
     }
 
 
-
-
     /**
      * Automatically fill the edit texts of profile modification page with actual string values
+     *
      * @param intent
      */
     private void sendInformation(Intent intent) {
         intent.putExtra("FIRST_NAME", firstName.getText().toString());
         intent.putExtra("LAST_NAME", lastName.getText().toString());
         intent.putExtra("USERNAME", username.getText().toString());
-        intent.putExtra("MAIL", mail.getText().toString());
+        intent.putExtra("MAIL", email.getText().toString());
         intent.putExtra("BIRTHDAY", birthday.getText().toString());
     }
 }

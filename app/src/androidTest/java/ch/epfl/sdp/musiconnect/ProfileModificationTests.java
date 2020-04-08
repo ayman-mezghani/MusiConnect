@@ -53,20 +53,16 @@ public class ProfileModificationTests {
         onView(withId(R.id.newUsername)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("BobMallet"));
         onView(withId(R.id.newEmailAddress)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("bob.mallet@gmail.com"));
         closeSoftKeyboard();
+
+        onView(withId(R.id.newBirthday)).perform(ViewActions.scrollTo()).perform(click());
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2000, 1, 1));
+        onView(withText("OK")).perform(click());
+
         clickButtonWithText(R.string.save_profile);
         onView(withId(R.id.myFirstname)).check(matches(withText("Bob")));
         onView(withId(R.id.myLastname)).check(matches(withText("Mallet")));
         onView(withId(R.id.myUsername)).check(matches(withText("BobMallet")));
         onView(withId(R.id.myMail)).check(matches(withText("bob.mallet@gmail.com")));
-    }
-
-    @Test
-    public void testChangeDateShouldUpdateField() {
-        clickButtonWithText(R.string.edit_profile_button_text);
-        onView(withId(R.id.newBirthday)).perform(ViewActions.scrollTo()).perform(click());
-        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2000, 1, 1));
-        onView(withText("OK")).perform(click());
-        clickButtonWithText(R.string.save_profile);
         onView(withId(R.id.myBirthday)).check(matches(withText("01/01/2000")));
     }
 }

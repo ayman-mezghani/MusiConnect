@@ -3,6 +3,7 @@ package ch.epfl.sdp.musiconnect;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -31,14 +32,11 @@ public class UserCreation extends Page {
     private ImageView profilePicture;
     TextView date;
     DatePickerDialog datePickerDialog;
-    int year;
-    int month;
-    int dayOfMonth;
+    int year, month, dayOfMonth;
     Calendar calendar;
     protected EditText etFirstName, etLastName, etUserName, etMail;
 
-    public static User MAINUSER;
-
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,10 +53,10 @@ public class UserCreation extends Page {
         date.setOnClickListener(v -> {
             datePickerDialog = new DatePickerDialog(UserCreation.this,
                     (datePicker, year, month, day) -> {
-                date.setText(day + "/" + (month + 1) + "/" + year + " (" + getAge(year, month, day) + " years)");
-                this.year = year;
-                this.month = month + 1;
-                this.dayOfMonth = day;
+                        date.setText(day + "/" + (month + 1) + "/" + year + " (" + getAge(year, month, day) + " years)");
+                        this.year = year;
+                        this.month = month + 1;
+                        this.dayOfMonth = day;
                     }, year, month, dayOfMonth);
             datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
             datePickerDialog.show();
@@ -88,10 +86,10 @@ public class UserCreation extends Page {
                     Musician musician = new Musician(firstname, lastname, username, email, d);
                     musician.setLocation(new MyLocation(0, 0));
 
-                    MAINUSER = musician;
-
                     DbAdapter db = new DbAdapter(new DataBase());
                     db.add(musician);
+
+                    CurrentUser.getInstance(this);
 
                     StartActivityAndFinish(new Intent(UserCreation.this, StartPage.class));
 

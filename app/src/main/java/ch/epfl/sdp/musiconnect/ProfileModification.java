@@ -2,19 +2,29 @@ package ch.epfl.sdp.musiconnect;
 
 import androidx.appcompat.app.AppCompatActivity;
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.database.*;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.GeoPoint;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class ProfileModification extends AppCompatActivity implements View.OnClickListener {
 
@@ -56,6 +66,7 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
                 String[] newFields = getNewTextFields();
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("newFields", newFields);
+                updateDatabaseFields(newFields);
                 setResult(Activity.RESULT_OK, returnIntent);
                 finish();
                 break;
@@ -81,6 +92,34 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
             f.setText(params[idx]);
             ++idx;
         }
+    }
+
+    /**
+     * Update the new values to the database
+     * @param newFields: new values to write
+     */
+    private void updateDatabaseFields(String[] newFields) {
+        DataBase db = new DataBase();
+        DbAdapter adapter = new DbAdapter(db);
+        Map<String, Object> data = new HashMap<>();
+        String[] keys = {"firstName", "lastName", "username", "email", "birthday"};
+        for (int i = 0; i < keys.length; ++i) {
+            if (keys[i].equals("birthday")) {
+                @SuppressLint("SimpleDateFormat")
+                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy"); // KEEP THIS DATE FORMAT !
+                try {
+                    Date d = format.parse(newFields[i]);
+                    data.put(keys[i], new Timestamp(d));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            } else
+                data.put(keys[i], newFields[i]);
+        }
+        data.put("location", new GeoPoint(0, 0));
+
+        Musician me = new SimplifiedMusician(data).toMusician();
+        adapter.update(me);
     }
 
     private String[] getNewTextFields() {
