@@ -52,7 +52,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         });
 
 //        googleSignIn();
-        loadProfileContent();
+//        loadProfileContent();
 
     }
 
