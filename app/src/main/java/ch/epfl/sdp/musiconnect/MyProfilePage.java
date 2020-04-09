@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -73,21 +72,15 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         }
     }
 
-    public void captureVideo(View view) {
-        Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-
-        if (videoIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(videoIntent, VIDEO_REQUEST);
-        }
+    @Override
+    public void onStart() {
+        super.onStart();
+        getVideoUri();
     }
 
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK) {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-
         if (requestCode == LAUNCH_PROFILE_MODIF_INTENT && resultCode == Activity.RESULT_OK) {
             String[] newFields = data.getStringArrayExtra("newFields");
             assert newFields != null;
@@ -96,7 +89,15 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             username.setText(newFields[2]);
             mail.setText(newFields[3]);
             birthday.setText(newFields[4]);
-            showVideo();
+            String videoUriString = data.getStringExtra("videoUri");
+
+            if (videoUriString != null){
+                videoUri = Uri.parse(videoUriString);
+                showVideo();
+            }
+            else{
+                getVideoUri();
+            }
         }
 
 
