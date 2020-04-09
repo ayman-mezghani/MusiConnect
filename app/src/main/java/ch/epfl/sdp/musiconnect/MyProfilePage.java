@@ -81,6 +81,13 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        getVideoUri();
+    }
+
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -96,7 +103,17 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             username.setText(newFields[2]);
             mail.setText(newFields[3]);
             birthday.setText(newFields[4]);
-            showVideo();
+            String videoUriString = data.getStringExtra("videoUri");
+
+            if (videoUriString != null){
+                videoUri = Uri.parse(videoUriString);
+                showVideo();
+            }
+            else{
+                getVideoUri();
+            }
+
+
         }
 
 
