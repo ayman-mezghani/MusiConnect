@@ -3,8 +3,6 @@ package ch.epfl.sdp.musiconnect;
 import android.content.Intent;
 import android.os.Bundle;
 
-import java.util.Map;
-
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
@@ -32,7 +30,7 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         firstName = findViewById(R.id.firstname);
         lastName = findViewById(R.id.lastname);
         username = findViewById(R.id.username);
-        mail = findViewById(R.id.mail);
+        email = findViewById(R.id.mail);
         birthday = findViewById(R.id.birthday);
 
         Intent intent = getIntent();
@@ -45,7 +43,7 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
                     intent.getStringExtra("UserName"),
                     intent.getStringExtra("Email"),
                     new MyDate(birthday[2], birthday[1], birthday[0]));
-            onCallback(alyx);
+            readCallback(alyx);
         }
     }
 
@@ -60,7 +58,7 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
     }
 
 
-    public void onCallback(User user) {
+    public void readCallback(User user) {
         Musician m = (Musician) user;
         String sTitle = m.getUserName() + "'s profile";
         title.setText(sTitle);
@@ -68,7 +66,7 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         firstName.setText(m.getFirstName());
         lastName.setText(m.getLastName());
         username.setText(m.getUserName());
-        mail.setText(m.getEmailAddress());
+        email.setText(m.getEmailAddress());
 
         MyDate date = m.getBirthday();
         String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();

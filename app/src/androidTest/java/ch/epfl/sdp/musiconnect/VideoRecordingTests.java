@@ -38,7 +38,7 @@ public class VideoRecordingTests {
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.btnEditProfile), withText("Edit profile"),
                         childAtPosition(childAtPosition(withClassName(is("android.widget.LinearLayout")),
-                                        3),0)));
+                                3),0)));
         appCompatButton.perform(scrollTo(), click());
 
         ViewInteraction appCompatButton2 = onView(

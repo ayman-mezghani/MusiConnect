@@ -18,7 +18,7 @@ import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 
 public abstract class ProfilePage extends Page {
-    protected TextView title, firstName, lastName, username, mail, birthday;
+    protected TextView title, firstName, lastName, username, email, birthday;
     protected static int VIDEO_REQUEST = 101;
     protected Uri videoUri = null;
     protected VideoView mVideoView;
@@ -59,5 +59,4 @@ public abstract class ProfilePage extends Page {
             Toast.makeText(this, "An error occured, please contact support.", Toast.LENGTH_LONG).show();
         }
     }
-
 }
