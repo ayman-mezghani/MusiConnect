@@ -53,26 +53,16 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_modification);
 
-        editFields = new EditText[] {
-                findViewById(R.id.newFirstName),
-                findViewById(R.id.newLastName),
-                findViewById(R.id.newUsername),
-                findViewById(R.id.newEmailAddress),
-                findViewById(R.id.newBirthday)};
+        editFields = new EditText[] {findViewById(R.id.newFirstName), findViewById(R.id.newLastName), findViewById(R.id.newUsername), findViewById(R.id.newEmailAddress), findViewById(R.id.newBirthday)};
 
         manageDatePickerDialog(editFields[4]);
 
-        firstName = getIntent().getStringExtra("FIRST_NAME");
-        lastName = getIntent().getStringExtra("LAST_NAME");
-        username = getIntent().getStringExtra("USERNAME");
-        mail = getIntent().getStringExtra("MAIL");
-        birthday = getIntent().getStringExtra("BIRTHDAY");
+        onCreateGetIntentsFields();
+
         setEditTextFields(editFields, new String[]{firstName, lastName, username, mail, birthday});
 
-        Button saveProfile = findViewById(R.id.btnSaveProfile);
-        saveProfile.setOnClickListener(this);
-        Button doNotSaveProfile = findViewById(R.id.btnDoNotSaveProfile);
-        doNotSaveProfile.setOnClickListener(this);
+        findViewById(R.id.btnSaveProfile).setOnClickListener(this);
+        findViewById(R.id.btnDoNotSaveProfile).setOnClickListener(this);
 
         mVideoView = findViewById(R.id.videoViewEdit);
         findViewById(R.id.btnCaptureVideo).setOnClickListener(v -> captureVideo());
@@ -93,28 +83,39 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         }
     }
 
+    private void onCreateGetIntentsFields() {
+        firstName = getIntent().getStringExtra("FIRST_NAME");
+        lastName = getIntent().getStringExtra("LAST_NAME");
+        username = getIntent().getStringExtra("USERNAME");
+        mail = getIntent().getStringExtra("MAIL");
+        birthday = getIntent().getStringExtra("BIRTHDAY");
+    }
+
+    private void btnSave() {
+        String[] newFields = getNewTextFields();
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("newFields", newFields);
+
+        // Upload video to cloud storage
+        if(videoRecorded) {
+            returnIntent.putExtra("videoUri", videoUri.toString());
+            storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
+            try {
+                storage.upload(videoUri, CloudStorage.FileType.video, testusername);
+            } catch (IOException e) {
+                Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
+            }
+        }
+
+        updateDatabaseFields(newFields);
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnSaveProfile:
-                String[] newFields = getNewTextFields();
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra("newFields", newFields);
-
-                // Upload video to cloud storage
-                if(videoRecorded) {
-                    returnIntent.putExtra("videoUri", videoUri.toString());
-                    storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
-                    try {
-                        storage.upload(videoUri, CloudStorage.FileType.video, testusername);
-                    } catch (IOException e) {
-                        Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                updateDatabaseFields(newFields);
-                setResult(Activity.RESULT_OK, returnIntent);
-                finish();
+                btnSave();
                 break;
             case R.id.btnDoNotSaveProfile:
                 finish(); // Close current activity and do not save anything
