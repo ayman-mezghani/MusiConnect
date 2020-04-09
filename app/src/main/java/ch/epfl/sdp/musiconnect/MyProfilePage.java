@@ -58,7 +58,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
 
     }
 
-    private void loadProfileContent() {
+    private boolean checktest() {
         boolean istest;
 
         try {
@@ -67,18 +67,19 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         } catch (ClassNotFoundException e) {
             istest = false;
         }
+        return istest;
+    }
 
-        if (!istest) {
+    private void loadProfileContent() {
+        if (!checktest()) {
             dbAdapter.read(CurrentUser.getInstance(this).email, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
                     Musician m = (Musician) user;
-
                     firstName.setText(m.getFirstName());
                     lastName.setText(m.getLastName());
                     username.setText(m.getUserName());
                     email.setText(m.getEmailAddress());
-
                     MyDate date = m.getBirthday();
                     String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
                     birthday.setText(s);
@@ -89,7 +90,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             lastName.setText("user");
             username.setText("defuser");
             email.setText("defuser@gmail.com");
-
             birthday.setText("01/01/2000");
         }
     }

@@ -16,9 +16,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DataBase;
-import ch.epfl.sdp.musiconnect.database.DbAdapter;
-import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 
 public abstract class Page extends AppCompatActivity {
@@ -91,12 +88,8 @@ public abstract class Page extends AppCompatActivity {
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
-        if (account == null && !test)
-            startActivity(new Intent(this, GoogleLogin.class));
-            // TODO: this blocks the activity because it performs non stop queries
-        else if (account != null) {
+        if (!test) {
             if (!CurrentUser.getInstance(this).getCreatedFlag() && this.getClass() != UserCreation.class) {
-                Log.d("noUserCreated", String.valueOf(this.getClass()));
                 startActivity(new Intent(this, GoogleLogin.class));
             }
         }
