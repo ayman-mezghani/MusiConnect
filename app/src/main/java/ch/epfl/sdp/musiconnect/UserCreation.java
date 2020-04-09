@@ -1,25 +1,21 @@
 package ch.epfl.sdp.musiconnect;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.DatePicker;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.GoogleAuthUtil;
+import androidx.annotation.Nullable;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.firestore.auth.FirebaseAuthCredentialsProvider;
 
 import java.util.Calendar;
 
@@ -89,10 +85,11 @@ public class UserCreation extends Page {
                     DbAdapter db = new DbAdapter(new DataBase());
                     db.add(musician);
 
-                    CurrentUser.getInstance(this);
+                    CurrentUser.getInstance(this).setCreatedFlag();
 
                     StartActivityAndFinish(new Intent(UserCreation.this, StartPage.class));
-
+                    GoogleLogin.finishActivity();
+                    finish();
                 } else {
                     Toast.makeText(this, "Select a date of birth", Toast.LENGTH_LONG).show();
                 }
@@ -112,8 +109,31 @@ public class UserCreation extends Page {
             etFirstName.setText(account.getGivenName());
             etLastName.setText(account.getFamilyName());
             etMail.setText(account.getEmail());
-//            etUserName.setText(account.getId());
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.user_creation_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.help:
+                Intent helpIntent = new Intent(this, HelpPage.class);
+                this.startActivity(helpIntent);
+                break;
+            case R.id.signout:
+                signOut();
+                break;
+            default:
+                displayNotFinishedFunctionalityMessage();
+                return false;
+        }
+        return true;
     }
 
     @Override

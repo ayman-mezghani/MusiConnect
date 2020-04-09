@@ -11,6 +11,7 @@ public class CurrentUser {
 
     // variable of type String
     public String email;
+    private boolean createdFlag = false;
 
     // private constructor restricted to this class itself
     private CurrentUser(Context context) {
@@ -26,5 +27,13 @@ public class CurrentUser {
             single_instance = new CurrentUser(context);
 
         return single_instance;
+    }
+
+    public void setCreatedFlag() {
+        this.createdFlag = true;
+    }
+
+    public boolean getCreatedFlag() {
+        return createdFlag;
     }
 }

@@ -2,6 +2,7 @@ package ch.epfl.sdp.musiconnect;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,6 +16,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.DbAdapter;
+import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 
 public abstract class Page extends AppCompatActivity {
@@ -87,18 +91,22 @@ public abstract class Page extends AppCompatActivity {
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
-        if(account == null && !test)
+        if (account == null && !test)
             startActivity(new Intent(this, GoogleLogin.class));
-        // TODO:
-        //else if(account != null && account.getEmail() isn't in database)
-        //  startActivity(new Intent(this, UserCreation.class));
+            // TODO: this blocks the activity because it performs non stop queries
+        else if (account != null) {
+            if (!CurrentUser.getInstance(this).getCreatedFlag() && this.getClass() != UserCreation.class) {
+                Log.d("noUserCreated", String.valueOf(this.getClass()));
+                startActivity(new Intent(this, GoogleLogin.class));
+            }
+        }
     }
 
-     protected void signOut() {
+    protected void signOut() {
         mGoogleSignInClient.signOut()
-            .addOnCompleteListener(this, task -> {
-                startActivity(new Intent(Page.this, GoogleLogin.class));
-                finish();
-            });
+                .addOnCompleteListener(this, task -> {
+                    startActivity(new Intent(Page.this, GoogleLogin.class));
+                    finish();
+                });
     }
 }
