@@ -65,6 +65,7 @@
     <string name="cloud_upload_invalid_file_path">Invalid file path</string>
     <string name="cloud_delete_successful">File deleted successfully</string>
     <string name="cloud_delete_failed">File delete failed</string>
+    <string name="age_too_low">Age is too low, please change your birth date.</string>
     <string name="signout">Sign Out</string>
     <string name="UserCreation">User Creation</string>
     <string name="btn_cancel">Cancel</string>

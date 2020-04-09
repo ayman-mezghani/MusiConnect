@@ -3,13 +3,13 @@ package ch.epfl.sdp.musiconnect;
 import androidx.appcompat.app.AppCompatActivity;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.*;
+import ch.epfl.sdp.musiconnect.UserCreation.*;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -64,6 +64,10 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         switch (view.getId()) {
             case R.id.btnSaveProfile:
                 String[] newFields = getNewTextFields();
+                if (!isInputDateValid()) {
+                    Toast.makeText(this, R.string.age_too_low, Toast.LENGTH_LONG).show();
+                    break;
+                }
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("newFields", newFields);
                 updateDatabaseFields(newFields);
@@ -84,6 +88,18 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    /**
+     * Check the correctness of the input date
+     * @return true if age >= 13
+     */
+    private boolean isInputDateValid() {
+        UserCreation uc = new UserCreation();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        return Integer.parseInt(uc.getAge(year, month, day)) >= 13;
     }
 
     private void setEditTextFields(EditText[] fields, String[] params) {
