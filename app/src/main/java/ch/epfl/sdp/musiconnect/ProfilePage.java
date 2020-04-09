@@ -29,19 +29,7 @@ public abstract class ProfilePage extends Page {
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK) {
-            videoUri = data.getData();
-
-            CloudStorage storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
-            try {
-                storage.upload(videoUri, CloudStorage.FileType.video, testusername);
-            } catch (IOException e) {
-                Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
-            }
-        }
-
-        showVideo();
+        getVideoUri();
 
 //        TODO: refresh the intent, may be useful after video change
 //        finish();

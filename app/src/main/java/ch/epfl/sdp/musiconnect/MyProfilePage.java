@@ -53,7 +53,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             startActivityForResult(profileModificationIntent, LAUNCH_PROFILE_MODIF_INTENT);
         });
 
-//        googleSignIn();
         loadProfileContent();
 
     }
@@ -94,31 +93,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         }
     }
 
-//    private void googleSignIn() {
-//        // Configure sign-in to request the user's ID, email address, and basic
-//        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-//        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                .requestEmail()
-//                .build();
-//
-//        // Build a GoogleSignInClient with the options specified by gso.
-//        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-//
-//        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
-//        if (acct != null) {
-//            String personName = acct.getDisplayName();
-//            String personEmail = acct.getEmail();
-//            //String personId = acct.getId();
-//            Uri personPhoto = acct.getPhotoUrl();
-//
-//            firstName.setText(personName.split(" ")[0]);
-//            lastName.setText(personName.split(" ")[1]);
-//            email.setText(personEmail);
-//
-//            Glide.with(this).load(String.valueOf(personPhoto)).into(imgVw);
-//        }
-//    }
-
     public void captureVideo(View view) {
         Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 
@@ -127,13 +101,15 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        getVideoUri();
+    }
+
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK) {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-
         if (requestCode == LAUNCH_PROFILE_MODIF_INTENT && resultCode == Activity.RESULT_OK) {
             String[] newFields = data.getStringArrayExtra("newFields");
             assert newFields != null;
@@ -142,9 +118,16 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             username.setText(newFields[2]);
             email.setText(newFields[3]);
             birthday.setText(newFields[4]);
-            showVideo();
-        }
+            String videoUriString = data.getStringExtra("videoUri");
 
+            if (videoUriString != null){
+                videoUri = Uri.parse(videoUriString);
+                showVideo();
+            }
+            else{
+                getVideoUri();
+            }
+        }
 
 //        TODO: refresh the intent, may be useful after video change
 //        finish();
