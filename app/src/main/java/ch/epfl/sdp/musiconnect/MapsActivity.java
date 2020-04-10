@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -50,18 +51,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-
-import ch.epfl.sdp.musiconnect.database.DataBase;
-import ch.epfl.sdp.musiconnect.database.DbAdapter;
-import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
+import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 import static ch.epfl.sdp.musiconnect.MapsActivity.Utility.generateWarning;
 
@@ -277,9 +273,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
 
-        if(UserCreation.mainUser != null) {
-            UserCreation.mainUser.setLocation(new MyLocation(setLoc.getLatitude(),setLoc.getLongitude()));
-            Adb.update(UserCreation.mainUser);
+        if(CurrentUser.getInstance(this).getCreatedFlag() == true) {
+            //UserCreation.mainUser.setLocation(new MyLocation(setLoc.getLatitude(),setLoc.getLongitude()));
+            //Adb.update(UserCreation.mainUser);
+            GeoPoint loc = new GeoPoint(setLoc.getLatitude(),setLoc.getLongitude());
+            String email = CurrentUser.getInstance(this).email;
+            db.updateDoc(email,new HashMap<String, Object>(){{
+                put("location",loc);
+            }});
         } else {
             generateWarning(MapsActivity.this,"Error: couldn't update your location to the cloud", Utility.warningTypes.Toast);
         }
@@ -321,9 +322,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         for(Musician m:allUsers){
-            Adb.read(m.getUserName(), new DbCallback() {
+            Adb.read(m.getEmailAddress(), new DbCallback() {
                 @Override
-                public void onCallback(User user) {
+                public void readCallback(User user) {
                     MyLocation l = user.getLocation();
                     m.setLocation(l);
                     updateProfileList();

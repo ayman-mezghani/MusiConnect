@@ -2,6 +2,7 @@ package ch.epfl.sdp.musiconnect;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -87,18 +88,18 @@ public abstract class Page extends AppCompatActivity {
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
-        if(account == null && !test)
-            startActivity(new Intent(this, GoogleLogin.class));
-        // TODO:
-        //else if(account != null && account.getEmail() isn't in database)
-        //  startActivity(new Intent(this, UserCreation.class));
+        if (!test) {
+            if (!CurrentUser.getInstance(this).getCreatedFlag() && this.getClass() != UserCreation.class) {
+                startActivity(new Intent(this, GoogleLogin.class));
+            }
+        }
     }
 
-     protected void signOut() {
+    protected void signOut() {
         mGoogleSignInClient.signOut()
-            .addOnCompleteListener(this, task -> {
-                startActivity(new Intent(Page.this, GoogleLogin.class));
-                finish();
-            });
+                .addOnCompleteListener(this, task -> {
+                    startActivity(new Intent(Page.this, GoogleLogin.class));
+                    finish();
+                });
     }
 }

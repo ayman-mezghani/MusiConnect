@@ -18,7 +18,7 @@ import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 
 public abstract class ProfilePage extends Page {
-    protected TextView title, firstName, lastName, username, mail, birthday;
+    protected TextView title, firstName, lastName, username, email, birthday;
     protected static int VIDEO_REQUEST = 101;
     protected Uri videoUri = null;
     protected VideoView mVideoView;
@@ -29,19 +29,7 @@ public abstract class ProfilePage extends Page {
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK) {
-            videoUri = data.getData();
-
-            CloudStorage storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
-            try {
-                storage.upload(videoUri, CloudStorage.FileType.video, testusername);
-            } catch (IOException e) {
-                Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
-            }
-        }
-
-        showVideo();
+        getVideoUri();
 
 //        TODO: refresh the intent, may be useful after video change
 //        finish();
@@ -71,5 +59,4 @@ public abstract class ProfilePage extends Page {
             Toast.makeText(this, "An error occured, please contact support.", Toast.LENGTH_LONG).show();
         }
     }
-
 }
