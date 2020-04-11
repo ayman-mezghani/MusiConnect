@@ -18,12 +18,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.util.Calendar;
+import java.util.HashMap;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 
 public class UserCreation extends Page {
+    //public static Musician mainUser;
     private static final int GALLERY_REQUEST_CODE = 123;
     private ImageView profilePicture;
     TextView date;
@@ -68,9 +70,19 @@ public class UserCreation extends Page {
         // signout if user choose cancel
         findViewById(R.id.btnUserCreationCancel).setOnClickListener(v -> signOut());
 
+
+
         findViewById(R.id.btnUserCreationCreate).setOnClickListener(v -> {
             if (checkUserCreationInput()) {
                 if (((TextView) findViewById(R.id.etDate)).getText().toString().trim().length() > 0) {
+/*<<<<<<< HEAD
+                    // TODO: Insert Data in database properly (MyDate specifically)
+                    mainUser = new Musician(etFirstName.getText().toString(),etLastName.getText().toString(),
+                            etUserName.getText().toString(),etMail.getText().toString(), new MyDate(1990,1,1));
+                    DataBase db = new DataBase();
+                    DbAdapter Adb = new DbAdapter(db);
+                    Adb.add(mainUser);
+=======*/
                     // TODO: Insert Data in database
 
                     String username = etUserName.getText().toString();
@@ -87,6 +99,7 @@ public class UserCreation extends Page {
 
                     CurrentUser.getInstance(this).setCreatedFlag();
 
+
                     StartActivityAndFinish(new Intent(UserCreation.this, StartPage.class));
                     GoogleLogin.finishActivity();
                     finish();
@@ -95,6 +108,7 @@ public class UserCreation extends Page {
                 }
             }
         });
+
 
         etFirstName = findViewById(R.id.etFirstname);
         etLastName = findViewById(R.id.etLastName);
