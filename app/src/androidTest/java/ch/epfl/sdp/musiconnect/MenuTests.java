@@ -10,7 +10,6 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
-import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
 
 import org.junit.After;
@@ -88,7 +87,7 @@ public class MenuTests {
 
         Intent profileIntent = new Intent();
         startPageRule.launchActivity(profileIntent);
-        intended(hasComponent(ProfilePage.class.getName()));
+        intended(hasComponent(MyProfilePage.class.getName()));
     }
 
     @Test
@@ -98,19 +97,6 @@ public class MenuTests {
         Intent settingsIntent = new Intent();
         startPageRule.launchActivity(settingsIntent);
         intended(hasComponent(SettingsPage.class.getName()));
-    }
-
-    @Test
-    public void testMapsOpensWithMainMarker() {
-        assert(true);
-
-        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        openActionsMenu(R.string.map);
-
-        UiObject marker = device.findObject(new UiSelector().descriptionContains("You"));
-        marker.waitForExists(5000);
-
-        assert(true);
     }
 
     @Test

@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/ayman-mezghani/MusiConnect.svg?branch=master)](https://travis-ci.org/ayman-mezghani/MusiConnect)
+[![Build Status](https://api.cirrus-ci.com/github/ayman-mezghani/MusiConnect.svg)](https://cirrus-ci.com/github/ayman-mezghani/MusiConnect)
 [![Maintainability](https://api.codeclimate.com/v1/badges/7d48f8b222b5301a9c7d/maintainability)](https://codeclimate.com/github/ayman-mezghani/MusiConnect/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/7d48f8b222b5301a9c7d/test_coverage)](https://codeclimate.com/github/ayman-mezghani/MusiConnect/test_coverage)
 

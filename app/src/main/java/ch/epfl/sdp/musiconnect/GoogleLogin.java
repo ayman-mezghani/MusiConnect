@@ -1,11 +1,11 @@
 package ch.epfl.sdp.musiconnect;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -16,17 +16,25 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.DbAdapter;
+import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 public class GoogleLogin extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 0;
     private static final String TAG = "Error";
+    private static GoogleLogin thisActivity;
+
     private GoogleSignInClient mGoogleSignInClient;
     private SignInButton signin;
+    GoogleSignInOptions gso;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        thisActivity = this;
         setContentView(R.layout.activity_google_login);
 
         signin = findViewById(R.id.sign_in_button);
@@ -34,7 +42,7 @@ public class GoogleLogin extends AppCompatActivity {
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
         // Build a GoogleSignInClient with the options specified by gso.
@@ -49,9 +57,24 @@ public class GoogleLogin extends AppCompatActivity {
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
-        if(account != null)
-            startActivity(new Intent(this, StartPage.class));
+        if (account != null) {
+            DbAdapter db = new DbAdapter(new DataBase());
 
+            db.exists(account.getEmail(), new DbCallback() {
+                @Override
+                public void existsCallback(boolean exists) {
+                    if (exists) {
+                        CurrentUser.getInstance(GoogleLogin.this).setCreatedFlag();
+                        startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class));
+                        finish();
+                    }
+//                    else {
+//                        startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.UserCreation.class));
+//                    }
+//                    finish();
+                }
+            });
+        }
     }
 
     private void signIn() {
@@ -72,12 +95,32 @@ public class GoogleLogin extends AppCompatActivity {
         }
     }
 
+    public static void finishActivity() {
+        if (thisActivity != null)
+            thisActivity.finish();
+    }
+
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+
+            DbAdapter db = new DbAdapter(new DataBase());
+
+            db.exists(account.getEmail(), new DbCallback() {
+                @Override
+                public void existsCallback(boolean exists) {
+                    if (exists) {
+                        CurrentUser.getInstance(GoogleLogin.this).setCreatedFlag();
+                        startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class));
+                        finish();
+                    } else {
+                        startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.UserCreation.class));
+                    }
+                }
+            });
+
             // Signed in successfully
-            startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class));
-            finish();
+
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.

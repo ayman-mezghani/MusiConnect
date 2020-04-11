@@ -40,6 +40,9 @@
     <string name="perm_denied">Permission denied</string>
     <string name="show_users">Show users within :</string>
 
+
+    <string name="max_threshold">10km</string>
+
     <string-array name="distance_array">
         <item>10m</item>
         <item>20m</item>
@@ -50,7 +53,7 @@
         <item>1km</item>
         <item>2km</item>
         <item>5km</item>
-        <item>10km</item>
+        <item>@string/max_threshold</item>
     </string-array>
 
     <string name="cloud_upload_successful">File uploaded successfully</string>
@@ -63,6 +66,14 @@
     <string name="cloud_delete_successful">File deleted successfully</string>
     <string name="cloud_delete_failed">File delete failed</string>
     <string name="signout">Sign Out</string>
-
+    <string name="UserCreation">User Creation</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="start_using_application">Start using application</string>
+    <string name="musician">Musician</string>
+    <string name="band">Band</string>
+    <string name="event_manager">Event Manager</string>
+    <string name="welcome_message">Welcome to MusiConnect !</string>
+    <string name="info_message">Please navigate the app using the menu.</string>
+    <string name="add_change_video">add/Change Video</string>
 
 </resources>

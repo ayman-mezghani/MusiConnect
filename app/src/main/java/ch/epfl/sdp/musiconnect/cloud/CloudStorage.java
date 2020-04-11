@@ -43,7 +43,7 @@ public class CloudStorage {
                         Toast.makeText(context, R.string.cloud_upload_successful, Toast.LENGTH_LONG).show();
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(context, R.string.cloud_upload_failed, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(context, R.string.cloud_upload_failed, Toast.LENGTH_LONG).show();
                         Log.d(TAG, Objects.requireNonNull(e.getMessage()));
                     });
         } else {
@@ -67,7 +67,7 @@ public class CloudStorage {
                 })
                 .addOnFailureListener(e -> {
                     // Handle any errors
-                    Toast.makeText(context, R.string.cloud_download_failed, Toast.LENGTH_LONG).show();
+//                    Toast.makeText(context, R.string.cloud_download_failed, Toast.LENGTH_LONG).show();
                     Log.d(TAG, Objects.requireNonNull(e.getMessage()));
                 });
     }

@@ -1,7 +1,8 @@
 package ch.epfl.sdp.musiconnect.database;
 
-import java.util.Map;
+import ch.epfl.sdp.musiconnect.User;
 
 public interface DbCallback {
-    void onCallback(Map data);
+    default void readCallback(User user) {}
+    default void existsCallback(boolean exists) {}
 }

@@ -2,6 +2,7 @@ package ch.epfl.sdp.musiconnect;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -47,7 +48,7 @@ public abstract class Page extends AppCompatActivity {
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.my_profile:
-                Intent profileIntent = new Intent(this, ProfilePage.class);
+                Intent profileIntent = new Intent(this, MyProfilePage.class);
                 this.startActivity(profileIntent);
                 break;
             case R.id.settings:
@@ -87,11 +88,14 @@ public abstract class Page extends AppCompatActivity {
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
-        if(account == null && !test)
-            startActivity(new Intent(this, GoogleLogin.class));
+        if (!test) {
+            if (!CurrentUser.getInstance(this).getCreatedFlag() && this.getClass() != UserCreation.class) {
+                startActivity(new Intent(this, GoogleLogin.class));
+            }
+        }
     }
 
-    private void signOut() {
+    protected void signOut() {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, task -> {
                     startActivity(new Intent(Page.this, GoogleLogin.class));

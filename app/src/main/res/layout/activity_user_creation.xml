@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".musiconnect.MyProfilePage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
-
-    <LinearLayout android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    android:fillViewport="false">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".musiconnect.ProfilePage">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -17,22 +18,64 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/myProfileTitle"
+                android:id="@+id/userCreationTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
-                android:text="@string/myprofile"
+                android:text="@string/UserCreation"
                 android:textAlignment="center"
                 android:textSize="30sp"
                 android:textStyle="bold" />
+        </LinearLayout>
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/imgView"
-                android:layout_width="150dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:textStyle="bold" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/userProfilePicture"
+                android:layout_width="162px"
+                android:layout_height="162px"
+                android:layout_weight="1"
+                app:srcCompat="@mipmap/ic_launcher_foreground" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Choose one of three types:" />
+                <RadioButton
+                    android:id="@+id/rbMusician"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/musician" />
+
+                <RadioButton
+                    android:id="@+id/rbBand"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/band" />
+
+                <RadioButton
+                    android:id="@+id/rbEventManager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/event_manager" />
+            </RadioGroup>
         </LinearLayout>
 
         <LinearLayout
@@ -50,13 +93,14 @@
                     android:id="@+id/myProfileFirstname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1.5"
                     android:text="@string/first_name"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/myFirstname"
+                <EditText
+                    android:id="@+id/etFirstname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -71,13 +115,14 @@
                     android:id="@+id/myProfileLastname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_weight="1.5"
+                    android:layout_marginStart="10dp"
                     android:text="@string/last_name"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/myLastname"
+                <EditText
+                    android:id="@+id/etLastName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -92,13 +137,14 @@
                     android:id="@+id/myProfileUsername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_weight="1.5"
                     android:text="@string/username_field"
-                    android:textSize="18sp"
+                    android:layout_marginStart="10dp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/myUsername"
+                <EditText
+                    android:id="@+id/etUsername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -113,13 +159,14 @@
                     android:id="@+id/myProfileEmailAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_weight="1.5"
+                    android:layout_marginStart="10dp"
                     android:text="@string/email_address"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/myMail"
+                <EditText
+                    android:id="@+id/etMail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -134,16 +181,19 @@
                     android:id="@+id/myProfileBirthday"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_weight="1.5"
                     android:text="@string/date_of_birth"
-                    android:textSize="18sp"
+                    android:layout_marginStart="10dp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/myBirthday"
+                <EditText
+                    android:id="@+id/etDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:focusable="false"
+                    android:longClickable="false"
                     android:textSize="18sp" />
             </LinearLayout>
         </LinearLayout>
@@ -153,26 +203,24 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1">
-
-            <VideoView
-                android:id="@+id/videoView"
-                android:layout_gravity="center"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_weight="1">
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/btnEditProfile"
+                    android:id="@+id/btnUserCreationCancel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/edit_profile_button_text" />
+                    android:text="@string/btn_cancel" />
+
+                <Button
+                    android:id="@+id/btnUserCreationCreate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/start_using_application" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
