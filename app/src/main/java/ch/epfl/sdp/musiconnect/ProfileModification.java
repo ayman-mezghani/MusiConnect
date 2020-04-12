@@ -3,7 +3,6 @@ package ch.epfl.sdp.musiconnect;
 import androidx.appcompat.app.AppCompatActivity;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.*;
-import ch.epfl.sdp.musiconnect.UserCreation.*;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
