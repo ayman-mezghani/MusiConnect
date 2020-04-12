@@ -75,5 +75,6 @@
     <string name="event_manager">Event Manager</string>
     <string name="welcome_message">Welcome to MusiConnect !</string>
     <string name="info_message">Please navigate the app using the menu.</string>
+    <string name="add_change_video">add/Change Video</string>
 
 </resources>

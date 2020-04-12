@@ -50,7 +50,7 @@
                     android:id="@+id/myProfileFirstname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:text="@string/first_name"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -60,7 +60,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="John"
                     android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout
@@ -72,7 +71,7 @@
                     android:id="@+id/myProfileLastname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:text="@string/last_name"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -82,7 +81,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Doe"
                     android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout
@@ -94,7 +92,7 @@
                     android:id="@+id/myProfileUsername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:text="@string/username_field"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -104,7 +102,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="JohnDoe"
                     android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout
@@ -116,7 +113,7 @@
                     android:id="@+id/myProfileEmailAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:text="@string/email_address"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -126,7 +123,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="john.doe@gmail.com"
                     android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout
@@ -138,7 +134,7 @@
                     android:id="@+id/myProfileBirthday"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:text="@string/date_of_birth"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -148,7 +144,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="01/01/2020"
                     android:textSize="18sp" />
             </LinearLayout>
         </LinearLayout>
@@ -170,25 +165,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:gravity="center"
             android:layout_weight="1">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/btnEditProfile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/edit_profile_button_text" />
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="add/Edit Video"
-                    android:onClick="captureVideo"/>
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
