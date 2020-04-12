@@ -100,6 +100,15 @@ public class MenuTests {
     }
 
     @Test
+    public void testMapClickShouldStartNewIntent() {
+        openActionsMenu(R.string.map);
+
+        Intent mapIntent = new Intent();
+        startPageRule.launchActivity(mapIntent);
+        intended(hasComponent(MapsActivity.class.getName()));
+    }
+
+    @Test
     public void testLogOut() {
         //openActionsMenu(R.string.signout);
         //intended(hasComponent(GoogleLogin.class.getName()));

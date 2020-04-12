@@ -104,11 +104,6 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
             case R.id.btnDoNotSaveProfile:
                 finish(); // Close current activity and do not save anything
                 break;
-            default:
-                // In case another thing happens, simply close the activity and display an error message
-                Toast.makeText(this, getString(R.string.error_in_current_process), Toast.LENGTH_SHORT).show();
-                finish();
-                break;
         }
     }
 
