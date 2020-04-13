@@ -34,6 +34,7 @@ import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.SimplifiedMusician;
 
 public class ProfileModification extends AppCompatActivity implements View.OnClickListener {
+    private static String collection = "newtest";
 
     String firstName, lastName, username, mail, birthday;
     EditText[] editFields;
@@ -157,7 +158,7 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         data.put("location", new GeoPoint(0, 0));
 
         Musician me = new SimplifiedMusician(data).toMusician();
-        adapter.update(me);
+        adapter.update(collection, me);
     }
 
     private void btnSave(String[] newFields) {

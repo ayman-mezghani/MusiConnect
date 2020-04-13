@@ -21,6 +21,7 @@ import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 public class GoogleLogin extends AppCompatActivity {
+    private static String collection = "newtest";
 
     private static final int RC_SIGN_IN = 0;
     private static final String TAG = "Error";
@@ -60,7 +61,7 @@ public class GoogleLogin extends AppCompatActivity {
         if (account != null) {
             DbAdapter db = new DbAdapter(new DataBase());
 
-            db.exists(account.getEmail(), new DbCallback() {
+            db.exists(collection, account.getEmail(), new DbCallback() {
                 @Override
                 public void existsCallback(boolean exists) {
                     if (exists) {
@@ -106,7 +107,7 @@ public class GoogleLogin extends AppCompatActivity {
 
             DbAdapter db = new DbAdapter(new DataBase());
 
-            db.exists(account.getEmail(), new DbCallback() {
+            db.exists(collection, account.getEmail(), new DbCallback() {
                 @Override
                 public void existsCallback(boolean exists) {
                     if (exists) {

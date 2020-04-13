@@ -26,6 +26,7 @@ import ch.epfl.sdp.musiconnect.database.DbAdapter;
 
 public class UserCreation extends Page {
     //public static Musician mainUser;
+    private static String collection = "newtest";
     private static final int GALLERY_REQUEST_CODE = 123;
     private ImageView profilePicture;
     TextView date;
@@ -95,7 +96,7 @@ public class UserCreation extends Page {
                     musician.setLocation(new MyLocation(0, 0));
 
                     DbAdapter db = new DbAdapter(new DataBase());
-                    db.add(musician);
+                    db.add(collection, musician);
 
                     CurrentUser.getInstance(this).setCreatedFlag();
 

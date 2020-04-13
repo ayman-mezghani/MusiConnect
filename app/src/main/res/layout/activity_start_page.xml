@@ -46,85 +46,99 @@
                 android:layout_height="match_parent">
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/floatingActionButton"
-                    android:layout_width="124dp"
-                    android:layout_height="74dp"
+                    android:id="@+id/fab_menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginRight="@dimen/fab_margin"
+                    android:layout_marginBottom="@dimen/fab_margin"
 
                     android:clickable="true"
                     android:focusable="true"
 
-                    android:scaleType="fitCenter"
                     app:backgroundTint="#FFFFFF"
-
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.954"
-                    app:layout_constraintStart_toStartOf="parent"
 
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.948"
+
                     app:srcCompat="@drawable/ic_add_36dp" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/floatingActionButton1"
+                    android:id="@+id/fab_button_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="140dp"
 
                     android:baselineAlignBottom="false"
-                    android:clickable="true"
-
-                    android:focusable="true"
-
-                    app:backgroundTint="#FFFFFF"
-                    app:layout_constraintBottom_toTopOf="@+id/floatingActionButton"
-                    app:layout_constraintEnd_toEndOf="@id/floatingActionButton"
-                    app:layout_constraintHorizontal_bias="1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.900"
-                    app:srcCompat="@drawable/ic_apps_apps" />
-
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="TextView"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/floatingActionButton1"
-                    app:layout_constraintHorizontal_bias="0.950"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/floatingActionButton1"
-                    app:layout_constraintVertical_bias="0.100" />
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/floatingActionButton2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
 
                     android:clickable="true"
                     android:focusable="true"
-
                     app:backgroundTint="#FFFFFF"
-                    app:layout_constraintBottom_toTopOf="@+id/floatingActionButton1"
-                    app:layout_constraintEnd_toEndOf="@id/floatingActionButton1"
+                    app:layout_constraintBottom_toTopOf="@+id/fab_menu"
+                    app:layout_constraintEnd_toEndOf="@+id/fab_menu"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
-
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.900"
+                    app:layout_constraintVertical_bias="0.8"
                     app:srcCompat="@drawable/ic_apps_apps" />
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/fab_tv_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TextView"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/floatingActionButton2"
+                    android:text="@string/add_users"
+                    android:visibility="invisible"
+
+                    app:layout_constraintBottom_toBottomOf="@+id/fab_button_1"
+                    app:layout_constraintEnd_toStartOf="@+id/fab_button_1"
                     app:layout_constraintHorizontal_bias="0.95"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/floatingActionButton2"
-                    app:layout_constraintVertical_bias="0.063" />
+                    app:layout_constraintTop_toTopOf="@+id/fab_button_1"
+                    app:layout_constraintVertical_bias="0.5" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab_button_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginStart="324dp"
+                    android:layout_marginTop="80dp"
+
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:backgroundTint="#FFFFFF"
+                    app:layout_constraintBottom_toTopOf="@+id/fab_button_1"
+                    app:layout_constraintEnd_toEndOf="@+id/fab_button_1"
+
+                    android:visibility="invisible"
+
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.8"
+                    app:srcCompat="@drawable/ic_apps_apps" />
+
+                <TextView
+                    android:id="@+id/fab_tv_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_event"
+
+                    android:visibility="invisible"
+
+                    app:layout_constraintBottom_toBottomOf="@+id/fab_button_2"
+                    app:layout_constraintEnd_toStartOf="@+id/fab_button_2"
+                    app:layout_constraintHorizontal_bias="0.95"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/fab_button_2"
+                    app:layout_constraintVertical_bias="0.5" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </FrameLayout>

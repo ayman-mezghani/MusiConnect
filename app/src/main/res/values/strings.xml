@@ -1,5 +1,4 @@
 <resources>
-
     <string name="app_name">MusiConnect</string>
     <string name="title_activity_main_page">MainPage</string>
     <string name="login">Login</string>
@@ -40,7 +39,6 @@
     <string name="perm_denied">Permission denied</string>
     <string name="show_users">Show users within :</string>
 
-
     <string name="max_threshold">10km</string>
 
     <string-array name="distance_array">
@@ -76,5 +74,6 @@
     <string name="welcome_message">Welcome to MusiConnect !</string>
     <string name="info_message">Please navigate the app using the menu.</string>
     <string name="add_change_video">add/Change Video</string>
-
+    <string name="add_users">Add Users</string>
+    <string name="add_event">Add event</string>
 </resources>

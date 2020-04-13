@@ -21,6 +21,7 @@ import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 public class MyProfilePage extends ProfilePage implements View.OnClickListener {
+    private static String collection = "newtest";
 
     private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
     private DbAdapter dbAdapter;
@@ -71,7 +72,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
 
     private void loadProfileContent() {
         if (!checktest()) {
-            dbAdapter.read(CurrentUser.getInstance(this).email, new DbCallback() {
+            dbAdapter.read(collection, CurrentUser.getInstance(this).email, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
                     Musician m = (Musician) user;

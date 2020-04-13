@@ -9,6 +9,8 @@ import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 public class VisitorProfilePage extends ProfilePage implements DbCallback {
+    private static String collection = "newtest";
+
     private DataBase db;
     private DbAdapter dbAdapter;
     private String newUsername;
@@ -53,7 +55,7 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         Intent intent = getIntent();
         if (intent.hasExtra("UserName")) {
             newUsername = intent.getStringExtra("UserName");
-            dbAdapter.read(newUsername, this);
+            dbAdapter.read(collection, newUsername, this);
         }
     }
 
