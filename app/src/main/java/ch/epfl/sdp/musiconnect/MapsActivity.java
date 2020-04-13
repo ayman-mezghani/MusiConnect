@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -51,12 +52,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
+import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 import static ch.epfl.sdp.musiconnect.MapsActivity.Utility.generateWarning;
 
@@ -66,6 +67,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Date timeLastUpdt;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
+    private DataBase db = new DataBase();
+    private DbAdapter Adb = new DbAdapter(db);
 
     private FusedLocationProviderClient fusedLocationClient;
     private boolean locationPermissionGranted;
@@ -85,8 +88,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private List<Musician> profiles = new ArrayList<>();        //all users within the radius set by the user in the app
     private List<Marker> markers = new ArrayList<>();           //markers on the map associated to profiles
 
-    private DataBase db;
-    private DbAdapter dbAdapter;
 
     private Marker marker;                                      //main user's marker
 
@@ -117,8 +118,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         spinner.setOnItemSelectedListener(this);
         spinner.setSelection(2);
 
-        db = new DataBase();
-        dbAdapter = new DbAdapter(db);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -206,9 +205,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 } else {
                     updatePos = true;
                     timeLastUpdt = Calendar.getInstance().getTime();
+                    saveUsersToCache();
                     updateUsers();
-                    updateProfileList();
-                    loadProfilesMarker();
                 }
                 handler.postDelayed(this, delay);
             }
@@ -274,6 +272,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             circle.setCenter(latLng);
 
         }
+
+        if(CurrentUser.getInstance(this).getCreatedFlag() == true) {
+            //UserCreation.mainUser.setLocation(new MyLocation(setLoc.getLatitude(),setLoc.getLongitude()));
+            //Adb.update(UserCreation.mainUser);
+            GeoPoint loc = new GeoPoint(setLoc.getLatitude(),setLoc.getLongitude());
+            String email = CurrentUser.getInstance(this).email;
+            db.updateDoc(email,new HashMap<String, Object>(){{
+                put("location",loc);
+            }});
+        } else {
+            generateWarning(MapsActivity.this,"Error: couldn't update your location to the cloud", Utility.warningTypes.Toast);
+        }
     }
 
 
@@ -310,15 +320,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
 
-        Random random = new Random();
 
         for(Musician m:allUsers){
-            double lat = setLoc.getLatitude() + (((double)random.nextInt(5)-2.5) /100);
-            double lng = setLoc.getLongitude() + (((double)random.nextInt(5)-2.5) /100);
-            m.setLocation(new MyLocation(lat,lng));
+            Adb.read(m.getEmailAddress(), new DbCallback() {
+                @Override
+                public void readCallback(User user) {
+                    MyLocation l = user.getLocation();
+                    m.setLocation(l);
+                    updateProfileList();
+                }
+            });
         }
 
-        saveUsersToCache();
     }
 
     //From the users around the area, picks the ones that are within the threshold distance.
@@ -340,6 +353,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         circle.setRadius(threshold);
+
+        loadProfilesMarker();
     }
 
     //Loads the profile on the map as markers, with associated information
@@ -521,20 +536,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //Should be replaced by a function that fetch user from the database; right now it generates 3 fixed users
     private void createPlaceHolderUsers(){
+        Random random = new Random();
+
+        double r1 = ((double)random.nextInt(5)-2.5) /200;
+        double r2 = ((double)random.nextInt(5)-2.5) /200;
+        double r3 = ((double)random.nextInt(5)-2.5) /200;
+
 
         Musician person1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
         Musician person2 = new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", new MyDate(1992, 9, 20));
         Musician person3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
 
-        person1.setLocation(new MyLocation(46.52, 6.52));
-        person2.setLocation(new MyLocation(46.51, 6.45));
-        person3.setLocation(new MyLocation(46.519, 6.57));
+        person1.setLocation(new MyLocation(46.52 + r1, 6.52 + r1));
+        person2.setLocation(new MyLocation(46.51 + r2, 6.45 + r2));
+        person3.setLocation(new MyLocation(46.519 + r3, 6.57 + r3));
 
         allUsers.add(person1);
         allUsers.add(person2);
         allUsers.add(person3);
 
-
+        Adb.add(person1);
+        Adb.add(person2);
+        Adb.add(person3);
     }
 
     public static class Utility{
@@ -560,4 +583,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
+
+
 }

@@ -25,7 +25,7 @@ public class GoogleLoginTests {
     @Test
     public void signInButtonClick(){
         onView(withId(R.id.sign_in_button)).check(matches(isDisplayed()));
-        //onView(withId(R.id.sign_in_button)).perform(click());
+        onView(withId(R.id.sign_in_button)).perform(click());
     }
 
     @Test

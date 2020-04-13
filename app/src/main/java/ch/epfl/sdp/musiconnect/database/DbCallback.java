@@ -3,5 +3,6 @@ package ch.epfl.sdp.musiconnect.database;
 import ch.epfl.sdp.musiconnect.User;
 
 public interface DbCallback {
-    void onCallback(User user);
+    default void readCallback(User user) {}
+    default void existsCallback(boolean exists) {}
 }
