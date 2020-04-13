@@ -36,4 +36,8 @@ public class CurrentUser {
     public boolean getCreatedFlag() {
         return createdFlag;
     }
+
+    public static void flush() {
+        single_instance = null;
+    }
 }

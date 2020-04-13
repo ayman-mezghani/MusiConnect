@@ -41,7 +41,7 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
     final Calendar calendar = Calendar.getInstance();
 
     protected static int VIDEO_REQUEST = 101;
-    private String testusername = "testUser";
+//    private String testusername = "testUser";
     protected Uri videoUri = null;
     private VideoView mVideoView;
     private CloudStorage storage;
@@ -68,8 +68,8 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         findViewById(R.id.btnCaptureVideo).setOnClickListener(v -> captureVideo());
 
         storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
-        String path = testusername + "/" + CloudStorage.FileType.video;
-        String saveName = testusername + "_" + CloudStorage.FileType.video;
+        String path = mail + "/" + CloudStorage.FileType.video;
+        String saveName = mail + "_" + CloudStorage.FileType.video;
         try {
             storage.download(path, saveName, fileUri -> {
                 videoUri = fileUri;
@@ -101,7 +101,7 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
             returnIntent.putExtra("videoUri", videoUri.toString());
             storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
             try {
-                storage.upload(videoUri, CloudStorage.FileType.video, testusername);
+                storage.upload(videoUri, CloudStorage.FileType.video, mail);
             } catch (IOException e) {
                 Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
             }
@@ -222,5 +222,4 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
             mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
         }
     }
-
 }

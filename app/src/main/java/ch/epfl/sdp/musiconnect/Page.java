@@ -98,6 +98,7 @@ public abstract class Page extends AppCompatActivity {
     protected void signOut() {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, task -> {
+                    CurrentUser.flush();
                     startActivity(new Intent(Page.this, GoogleLogin.class));
                     finish();
                 });

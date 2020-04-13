@@ -2,7 +2,6 @@ package ch.epfl.sdp.musiconnect;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,8 +12,6 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import java.io.IOException;
 
-import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 
 public abstract class ProfilePage extends Page {
@@ -23,13 +20,14 @@ public abstract class ProfilePage extends Page {
     protected Uri videoUri = null;
     protected VideoView mVideoView;
     protected ImageView imgVw;
+    protected String userEmail;
 
-    private String testusername = "testUser";
+//    private String testusername = "testUser";
 
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        getVideoUri();
+        getVideoUri(userEmail);
 
 //        TODO: refresh the intent, may be useful after video change
 //        finish();
@@ -46,10 +44,10 @@ public abstract class ProfilePage extends Page {
         }
     }
 
-    protected void getVideoUri() {
+    protected void getVideoUri(String s) {
         CloudStorage storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
-        String path = testusername + "/" + CloudStorage.FileType.video;
-        String saveName = testusername + "_" + CloudStorage.FileType.video;
+        String path = s + "/" + CloudStorage.FileType.video;
+        String saveName = s + "_" + CloudStorage.FileType.video;
         try {
             storage.download(path, saveName, fileUri -> {
                 videoUri = fileUri;
