@@ -24,13 +24,13 @@ public class DataBase {
         this.db = FirebaseFirestore.getInstance();
     }
 
-    public void addDoc(String docName, SimplifiedMusician m) {
+    void addDoc(String docName, SimplifiedMusician m) {
         db.collection("newtest").document(docName).set(m)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
     }
 
-    public void deleteDoc(String docName) {
+    void deleteDoc(String docName) {
         db.collection("newtest").document(docName).delete()
                 .addOnSuccessListener(bVoid -> Log.d(TAG, "DocumentSnapshot successfully deleted!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));
