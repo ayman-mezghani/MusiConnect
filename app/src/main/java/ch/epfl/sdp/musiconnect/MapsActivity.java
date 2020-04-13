@@ -55,6 +55,8 @@ import java.util.List;
 import java.util.Random;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.RoomDatabase.AppDatabase;
+import ch.epfl.sdp.musiconnect.RoomDatabase.MusicianDao;
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
@@ -69,6 +71,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private DataBase db = new DataBase();
     private DbAdapter Adb = new DbAdapter(db);
+
+    private AppDatabase localDb = AppDatabase.getInstance(this);
 
     private FusedLocationProviderClient fusedLocationClient;
     private boolean locationPermissionGranted;
@@ -205,6 +209,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 } else {
                     updatePos = true;
                     timeLastUpdt = Calendar.getInstance().getTime();
+                    clearCachedUsers();
                     saveUsersToCache();
                     updateUsers();
                 }
@@ -432,6 +437,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void saveUsersToCache() {
+
+        MusicianDao musicianDao = localDb.musicianDao();
+
+        musicianDao.insertAll(allUsers.toArray(new Musician[allUsers.size()]));
+
+        /*
         FileOutputStream fos = null;
         String toCache = sdf.format(timeLastUpdt) + "\n";
         for(Musician p:allUsers){
@@ -455,10 +466,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     e.printStackTrace();
                 }
             }
-        }
+        }*/
     }
 
     private void loadUsersFromCache() {
+
+        MusicianDao musicianDao = localDb.musicianDao();
+
+        allUsers = musicianDao.getAll();
+        /*
         FileInputStream fis = null;
 
         try {
@@ -503,7 +519,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     e.printStackTrace();
                 }
             }
-        }
+        }*/
+    }
+
+    private void clearCachedUsers(){
+        MusicianDao musicianDao = localDb.musicianDao();
+
+        musicianDao.nukeTable();
     }
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

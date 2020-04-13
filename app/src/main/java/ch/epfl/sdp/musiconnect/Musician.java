@@ -1,5 +1,7 @@
 package ch.epfl.sdp.musiconnect;
 
+import androidx.room.Entity;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -7,10 +9,11 @@ import java.util.Set;
 /**
  * @author Manuel Pellegrini, EPFL
  */
+@Entity
 public class Musician extends Person implements Performer {
 
     private String videoURL;
-    private Map<Instrument, Level> instruments;
+    public Map<Instrument, Level> instruments;
 
     private static final int MAX_VIDEO_URL_LENGTH = 2048;
 
