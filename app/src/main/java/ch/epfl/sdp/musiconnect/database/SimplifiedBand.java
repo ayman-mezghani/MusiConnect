@@ -13,7 +13,7 @@ import java.util.Set;
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
 
-public class simplifiedBand {
+public class SimplifiedBand {
     private String uid = null;
     private String leader;
     private String bandName;
@@ -26,10 +26,10 @@ public class simplifiedBand {
     static final String URLVIDEO = "UrlVideo";
     static final String MEMBERS = "members";
 
-    public simplifiedBand() {
+    public SimplifiedBand() {
     }
 
-    public simplifiedBand(Band band) {
+    public SimplifiedBand(Band band) {
 //        this.uid = uid;
         this.leader = band.getLeaderEmailAddress();
         this.bandName = band.getBandName();
@@ -39,7 +39,7 @@ public class simplifiedBand {
         this.urlVideo = band.getVideoURL();
     }
 
-    public simplifiedBand(Map<String, Object> map) {
+    public SimplifiedBand(Map<String, Object> map) {
         this.leader = map.get(LEADER) == null ? "" : (String) map.get(LEADER);
         this.bandName = map.get(BANDNAME) == null ? "" : (String) map.get(BANDNAME);
         if(map.get(MEMBERS) != null) {

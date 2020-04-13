@@ -14,6 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ch.epfl.sdp.musiconnect.Band;
+import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.User;
+
 public class DataBase {
     private static final String TAG = "DataBase";
     private FirebaseFirestore db;
@@ -49,13 +53,27 @@ public class DataBase {
         }
         this.updateDoc(collection, docName, updates);
     }
-
     public void readDoc(String collection, String docName, DbCallback dbCallback) {
         db.collection(collection).document(docName).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     Map<String, Object> data = documentSnapshot.getData();
-                    SimplifiedMusician m = new SimplifiedMusician(data);
-                    dbCallback.readCallback(m.toMusician());
+                    if(data.get("Leader") != null) {
+                        DbAdapter da = new DbAdapter(this);
+                        da.read("newtest", (String) data.get("Leader"), new DbCallback() {
+                            @Override
+                            public void readCallback(User user) {
+                                dbCallback.readCallback(new Band((String) data.get("BandName"), (Musician) user));
+                            }
+                        });
+                    } else {
+                        SimplifiedMusician m = new SimplifiedMusician(data);
+                        dbCallback.readCallback(m.toMusician());
+                    }
+/*
+                    if(documentSnapshot.getDocument().getKey().getPath() .toString().split("/")[0].equals("Band")){
+
+                    }
+*/
                 })
                 .addOnFailureListener(e -> Log.w(TAG, "Error reading document", e));
     }

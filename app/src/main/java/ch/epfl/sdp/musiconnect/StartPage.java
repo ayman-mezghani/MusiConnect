@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -22,6 +23,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.DbAdapter;
+import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 public class StartPage extends Page {
     private static final String TAG = "MainActivity";
@@ -31,6 +35,7 @@ public class StartPage extends Page {
     private Animation fabOpen, fabClose, fabClockWise, fabAntiClockWise;
     private TextView fabTv1, fabTv2;
     private boolean isOpen = false;
+    private DbAdapter dbAdapter;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
@@ -51,6 +56,8 @@ public class StartPage extends Page {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_page);
 
+        dbAdapter = new DbAdapter(new DataBase());
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         checkLocationPermission();
 
@@ -67,7 +74,20 @@ public class StartPage extends Page {
         fabAntiClockWise = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_anti_clockwise);
 
         fab_menu.setOnClickListener(v -> fabMenuClick());
-        fab_button_1.setOnClickListener(v -> {});
+        fab_button_1.setOnClickListener(v -> {
+            Toast.makeText(this, CurrentUser.getInstance(this).email, Toast.LENGTH_SHORT).show();
+
+            dbAdapter.read("Band", CurrentUser.getInstance(this).email, new DbCallback() {
+
+                @Override
+                public void readCallback(User user) {
+                    Band b = (Band) user;
+
+                }
+            });
+        });
+
+
     }
 
     private void fabMenuClick() {
