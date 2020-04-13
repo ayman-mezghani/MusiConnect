@@ -9,6 +9,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +50,7 @@ public class DataBase {
         this.updateDoc(docName, updates);
     }
 
-    public void readDoc(String docName, DbCallback dbCallback) {
+    void readDoc(String docName, DbCallback dbCallback) {
         db.collection("newtest").document(docName).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     Map<String, Object> data = documentSnapshot.getData();
@@ -58,7 +60,7 @@ public class DataBase {
                 .addOnFailureListener(e -> Log.w(TAG, "Error reading document", e));
     }
 
-    public void docExists(String docName, DbCallback dbCallback) {
+    void docExists(String docName, DbCallback dbCallback) {
         db.collection("newtest").document(docName).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -69,6 +71,25 @@ public class DataBase {
                         } else {
                             Log.d(TAG, "Failed with: ", task.getException());
                         }
+                    }
+                });
+    }
+
+    public void query() {
+        db.collection("newtest")
+                .whereEqualTo("email", "musiconnectsdp@gmail.com")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+
                     }
                 });
     }
