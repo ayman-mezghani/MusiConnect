@@ -34,9 +34,6 @@ public class Musician extends Person implements Performer {
     }
 
     public String getVideoURL() {
-        if (videoURL.isEmpty()) {
-            throw new Error("No video URL is present");
-        }
 
         return videoURL;
     }

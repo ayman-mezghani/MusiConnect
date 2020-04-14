@@ -53,6 +53,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.RoomDatabase.AppDatabase;
@@ -72,7 +74,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DataBase db = new DataBase();
     private DbAdapter Adb = new DbAdapter(db);
 
-    private AppDatabase localDb = AppDatabase.getInstance(this);
+    private AppDatabase localDb;
+    private Executor mExecutor = Executors.newSingleThreadExecutor();
 
     private FusedLocationProviderClient fusedLocationClient;
     private boolean locationPermissionGranted;
@@ -131,6 +134,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         checkLocationPermission();
+
+        localDb = AppDatabase.getInstance(this);
     }
 
 
@@ -166,6 +171,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //If there's a connection, fetch Users in the general area; else, load them from cache
         if(checkConnection()){
             createPlaceHolderUsers();
+            clearCachedUsers();
         }else{
             loadUsersFromCache();
         }
@@ -201,7 +207,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (!co) {
                     updatePos = false;
                     delay = 5000;
-                    generateWarning(MapsActivity.this,"Error: No internet connection. Showing the only last musicians found since " + sdf.format(timeLastUpdt), Utility.warningTypes.Toast);
+                    generateWarning(MapsActivity.this,"Error: No internet connection. Showing the only last musicians found before losing connection", Utility.warningTypes.Toast);
                 } else if(!loc){
                     updatePos = false;
                     delay = 5000;
@@ -209,9 +215,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 } else {
                     updatePos = true;
                     timeLastUpdt = Calendar.getInstance().getTime();
+                    updateUsers();
                     clearCachedUsers();
                     saveUsersToCache();
-                    updateUsers();
                 }
                 handler.postDelayed(this, delay);
             }
@@ -440,7 +446,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         MusicianDao musicianDao = localDb.musicianDao();
 
-        musicianDao.insertAll(allUsers.toArray(new Musician[allUsers.size()]));
+        mExecutor.execute(() -> {
+            musicianDao.insertAll(allUsers.toArray(new Musician[allUsers.size()]));
+        });
+
+
 
         /*
         FileOutputStream fos = null;
@@ -473,7 +483,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         MusicianDao musicianDao = localDb.musicianDao();
 
-        allUsers = musicianDao.getAll();
+        mExecutor.execute(() -> {
+            allUsers = musicianDao.getAll();
+        });
+
         /*
         FileInputStream fis = null;
 
@@ -524,8 +537,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void clearCachedUsers(){
         MusicianDao musicianDao = localDb.musicianDao();
-
-        musicianDao.nukeTable();
+        mExecutor.execute(() -> {
+            musicianDao.nukeTable();
+        });
     }
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
