@@ -452,31 +452,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
-        /*
-        FileOutputStream fos = null;
-        String toCache = sdf.format(timeLastUpdt) + "\n";
-        for(Musician p:allUsers){
-            String birthdate = p.getBirthday().getYear() + "/" + p.getBirthday().getMonth() + "/" + p.getBirthday().getDate();
-            toCache = toCache + p.getFirstName() + "," + p.getLastName() + "," + p.getUserName() + ","
-                    + p.getEmailAddress() + "," + birthdate + ","
-                    + String.valueOf(p.getLocation().getLatitude()) + "," + String.valueOf(p.getLocation().getLongitude()) + "\n";
-        }
-        try {
-            fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
-            fos.write(toCache.getBytes());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }*/
     }
 
     private void loadUsersFromCache() {
@@ -487,52 +462,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             allUsers = musicianDao.getAll();
         });
 
-        /*
-        FileInputStream fis = null;
 
-        try {
-            fis = openFileInput(FILE_NAME);
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader br = new BufferedReader(isr);
-            String text;
-            List<String> cached = new ArrayList<>();
-
-            while ((text = br.readLine()) != null) {
-                cached.add(text);
-            }
-
-            timeLastUpdt = sdf.parse(cached.get(0));
-
-            allUsers.clear();
-            for (int i = 1; i < cached.size(); i++) {
-                String[] strProfile = cached.get(i).split(",");
-                String[] birthdate = strProfile[4].split("/");
-                MyDate birthday = new MyDate(Integer.valueOf(birthdate[0]),
-                        Integer.valueOf(birthdate[1]),
-                        Integer.valueOf(birthdate[2]),0,0);
-                Musician p = new Musician(strProfile[0],strProfile[1],strProfile[2],strProfile[3],
-                        birthday);
-                p.setLocation(new MyLocation(Double.valueOf(strProfile[5]),Double.valueOf(strProfile[6])));
-                allUsers.add(p);
-            }
-
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            timeLastUpdt = Calendar.getInstance().getTime();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }*/
     }
 
     private void clearCachedUsers(){

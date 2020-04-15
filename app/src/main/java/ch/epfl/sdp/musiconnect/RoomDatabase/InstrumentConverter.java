@@ -36,8 +36,6 @@ public class InstrumentConverter {
             if(entry.length != 2){
                 return new HashMap<Instrument, Level>();
             }
-            entry[0] = entry[0].substring("ch.epfl.sdp.musiconnect.Instrument.".length());
-            entry[1] = entry[1].substring("ch.epfl.sdp.musiconnect.Level.".length());
             if(entry[0].length() == 0 || entry[1].length() == 0){
                 return new HashMap<Instrument, Level>();
             }

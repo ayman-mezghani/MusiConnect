@@ -24,7 +24,6 @@ public class MusicianClassUnitTests {
 
         String videoURL = "www.john-lennon.uk/MyVideo";
 
-        assertThrows(Error.class, () -> john.getVideoURL());
         john.setVideoURL(videoURL);
         assertEquals(videoURL, john.getVideoURL());
     }
