@@ -35,7 +35,7 @@ public class DataBase {
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
     }
 
-    public void addBand(String collection, String docName, Band b) {
+    public void addBand(String collection, String docName, SimplifiedBand b) {
         db.collection(collection).document(docName).set(b)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));

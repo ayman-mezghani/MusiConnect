@@ -76,4 +76,7 @@
     <string name="add_change_video">add/Change Video</string>
     <string name="add_users">Add Users</string>
     <string name="add_event">Add event</string>
+    <string name="band_creation">Band Creation</string>
+    <string name="band_name">Band name</string>
+    <string name="band_name_cant_be_empty">Band name can\'t be empty</string>
 </resources>

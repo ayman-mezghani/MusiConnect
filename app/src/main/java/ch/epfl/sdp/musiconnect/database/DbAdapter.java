@@ -16,7 +16,7 @@ public class DbAdapter {
     }
 
     public void add(String collection, Band b) {
-        db.addBand(collection, b.getLeaderEmailAddress(), b);
+        db.addBand(collection, b.getLeaderEmailAddress(), new SimplifiedBand(b));
     }
 
     public void delete(String collection, Musician musician) {

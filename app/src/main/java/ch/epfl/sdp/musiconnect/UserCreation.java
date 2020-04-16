@@ -99,20 +99,21 @@ public class UserCreation extends Page {
                     CurrentUser.getInstance(this).setTypeOfUser(TypeOfUser.valueOf(rdb.getText().toString()));
 
                     DbAdapter db = new DbAdapter(new DataBase());
+                    Musician musician = new Musician(firstname, lastname, username, email, d);
+                    musician.setLocation(new MyLocation(0, 0));
+
+                    db.add(collection, musician);
+                    CurrentUser.getInstance(this).setMusician(musician);
 
                     switch (CurrentUser.getInstance(this).getTypeOfUser()) {
                         case Band:
-                            // TODO: add band to database
+                            StartActivityAndFinish(new Intent(UserCreation.this, BandCreation.class));
                             break;
                         case Musician:
-                            Musician musician = new Musician(firstname, lastname, username, email, d);
-                            musician.setLocation(new MyLocation(0, 0));
-
-                            db.add(collection, musician);
+                            StartActivityAndFinish(new Intent(UserCreation.this, StartPage.class));
                             break;
                     }
 
-                    StartActivityAndFinish(new Intent(UserCreation.this, StartPage.class));
                     GoogleLogin.finishActivity();
                     finish();
                 } else {
@@ -207,7 +208,7 @@ public class UserCreation extends Page {
         return true;
     }
 
-    private void StartActivityAndFinish(Intent i) {
+    protected void StartActivityAndFinish(Intent i) {
         startActivity(i);
         finish();
     }

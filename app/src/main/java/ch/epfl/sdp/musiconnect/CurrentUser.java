@@ -5,6 +5,8 @@ import android.content.Context;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
+import java.util.IllegalFormatException;
+
 public class CurrentUser {
     // static variable single_instance of type Singleton
     private static CurrentUser single_instance = null;
@@ -13,6 +15,8 @@ public class CurrentUser {
     public String email;
     private boolean createdFlag = false;
     private TypeOfUser type;
+    private String bandName;
+    private Musician m;
 
     // private constructor restricted to this class itself
     private CurrentUser(Context context) {
@@ -39,5 +43,23 @@ public class CurrentUser {
     }
 
     public TypeOfUser getTypeOfUser() { return this.type; }
+
     public void setTypeOfUser(TypeOfUser t) { this.type = t; }
+
+    public String getBandName() { return this.bandName; }
+
+    public void setBandName(String bandName) {
+        if (this.type == TypeOfUser.Band)
+            this.bandName = bandName;
+        else
+            throw new IllegalArgumentException("You can only set a band name if you are a band");
+    }
+
+    public void setMusician(Musician m) {
+        this.m = m;
+    }
+
+    public Musician getMusician() {
+        return this.m;
+    }
 }
