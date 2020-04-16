@@ -13,8 +13,8 @@ import static org.junit.Assert.assertTrue;
 
 public class CurrentUserTest {
     @Rule
-    public final ActivityTestRule<StartPage> startPageRule =
-            new ActivityTestRule<>(StartPage.class);
+    public final ActivityTestRule<GoogleLogin> pageRule =
+            new ActivityTestRule<>(GoogleLogin.class);
 
     @Before
     public void stallBefore() {
@@ -23,20 +23,20 @@ public class CurrentUserTest {
 
     @Test
     public void flagNotSet() {
-        Context context = startPageRule.getActivity();
+        Context context = pageRule.getActivity();
         assertFalse(CurrentUser.getInstance(context).getCreatedFlag());
     }
 
     @Test
     public void flagSet() {
-        Context context = startPageRule.getActivity();
+        Context context = pageRule.getActivity();
         CurrentUser.getInstance(context).setCreatedFlag();
         assertTrue(CurrentUser.getInstance(context).getCreatedFlag());
     }
 
     @Test
     public void flushTest() {
-        Context context = startPageRule.getActivity();
+        Context context = pageRule.getActivity();
         CurrentUser.getInstance(context).setCreatedFlag();
         assertTrue(CurrentUser.getInstance(context).getCreatedFlag());
         CurrentUser.flush();
