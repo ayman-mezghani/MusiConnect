@@ -105,6 +105,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:maxLength="16"
                     android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout
@@ -127,6 +128,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:maxLength="16"
                     android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout
@@ -149,6 +151,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:maxLength="16"
                     android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout
@@ -171,6 +174,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:maxLength="64"
                     android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout

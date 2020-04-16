@@ -19,14 +19,12 @@ public class BandCreation extends UserCreation {
 
         findViewById(R.id.btnBandCreationCancel).setOnClickListener(v -> signOut());
         etBandName = findViewById(R.id.etBandName);
-        findViewById(R.id.btnUserCreationCreate).setOnClickListener(v -> {
+        findViewById(R.id.btnBandCreationCreate).setOnClickListener(v -> {
             if (!isEmpty(etBandName)) {
                 Band band = new Band(etBandName.getText().toString(), CurrentUser.getInstance(this).getMusician());
                 (new DbAdapter(new DataBase())).add("Band", band);
 
                 StartActivityAndFinish(new Intent(BandCreation.this, StartPage.class));
-                GoogleLogin.finishActivity();
-                finish();
             } else {
                 Toast.makeText(this, R.string.band_name_cant_be_empty, Toast.LENGTH_LONG).show();
             }
