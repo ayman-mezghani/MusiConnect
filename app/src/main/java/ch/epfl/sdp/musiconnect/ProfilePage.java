@@ -1,7 +1,5 @@
 package ch.epfl.sdp.musiconnect;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.net.Uri;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,20 +21,6 @@ public abstract class ProfilePage extends Page {
     protected VideoView mVideoView;
     protected ImageView imgVw;
     protected String userEmail;
-
-//    private String testusername = "testUser";
-
-    @SuppressLint("MissingSuperCall")
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        getVideoUri(userEmail);
-
-//        TODO: refresh the intent, may be useful after video change
-//        finish();
-//        overridePendingTransition( 0, 0);
-//        startActivity(getIntent());
-//        overridePendingTransition( 0, 0);
-    }
 
     protected void showVideo() {
         if (videoUri != null) {

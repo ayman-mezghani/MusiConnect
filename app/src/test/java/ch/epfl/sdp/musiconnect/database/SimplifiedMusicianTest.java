@@ -119,7 +119,7 @@ public class SimplifiedMusicianTest {
     }
 
     @Test
-    public void gohstMusician() {
+    public void ghostMusician() {
         SimplifiedMusician sm = new SimplifiedMusician();
         Map<String, Object> m = sm.toMap();
         for (String key : m.keySet()) {

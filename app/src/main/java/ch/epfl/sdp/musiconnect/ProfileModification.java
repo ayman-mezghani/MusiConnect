@@ -41,9 +41,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
     final Calendar calendar = Calendar.getInstance();
 
     protected static int VIDEO_REQUEST = 101;
-//    private String testusername = "testUser";
-//    protected Uri videoUri = null;
-//    private VideoView mVideoView;
+
     private CloudStorage storage;
     private boolean videoRecorded = false;
 
@@ -68,20 +66,6 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
         findViewById(R.id.btnCaptureVideo).setOnClickListener(v -> captureVideo());
 
         getVideoUri(mail);
-//        storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
-//        String path = mail + "/" + CloudStorage.FileType.video;
-//        String saveName = mail + "_" + CloudStorage.FileType.video;
-//        try {
-//            storage.download(path, saveName, fileUri -> {
-//                videoUri = fileUri;
-//
-//                mVideoView.setVideoURI(videoUri);
-//                mVideoView.start();
-//                mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
-//            });
-//        } catch (IOException e) {
-//            Toast.makeText(this, "An error occured, please contact support.", Toast.LENGTH_LONG).show();
-//        }
     }
 
     private void onCreateGetIntentsFields() {
@@ -237,10 +221,6 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
             videoRecorded = true;
         }
 
-        if (videoUri != null) {
-            mVideoView.setVideoURI(videoUri);
-            mVideoView.start();
-            mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
-        }
+        showVideo();
     }
 }
