@@ -1,5 +1,6 @@
 package ch.epfl.sdp.musiconnect.database;
 
+import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
 
 public class DbAdapter {
@@ -11,7 +12,11 @@ public class DbAdapter {
     }
 
     public void add(String collection, Musician musician) {
-        db.addDoc(collection, musician.getEmailAddress(), new SimplifiedMusician(musician));
+        db.addMusician(collection, musician.getEmailAddress(), new SimplifiedMusician(musician));
+    }
+
+    public void add(String collection, Band b) {
+        db.addBand(collection, b.getLeaderEmailAddress(), b);
     }
 
     public void delete(String collection, Musician musician) {

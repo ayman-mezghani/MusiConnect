@@ -22,6 +22,8 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.List;
+
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
@@ -36,6 +38,7 @@ public class StartPage extends Page {
     private TextView fabTv1, fabTv2;
     private boolean isOpen = false;
     private DbAdapter dbAdapter;
+    private Band b;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
@@ -56,7 +59,6 @@ public class StartPage extends Page {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_page);
 
-        dbAdapter = new DbAdapter(new DataBase());
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         checkLocationPermission();
@@ -76,15 +78,18 @@ public class StartPage extends Page {
         fab_menu.setOnClickListener(v -> fabMenuClick());
         fab_button_1.setOnClickListener(v -> {
             Toast.makeText(this, CurrentUser.getInstance(this).email, Toast.LENGTH_SHORT).show();
-
+            dbAdapter = new DbAdapter(new DataBase());
             dbAdapter.read("Band", CurrentUser.getInstance(this).email, new DbCallback() {
 
                 @Override
                 public void readCallback(User user) {
-                    Band b = (Band) user;
-
+                    b = (Band) user;
                 }
             });
+        });
+
+        fab_button_2.setOnClickListener(v -> {
+            Toast.makeText(this, "band", Toast.LENGTH_SHORT).show();
         });
 
 

@@ -1,5 +1,12 @@
 package ch.epfl.sdp.musiconnect;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -12,6 +19,7 @@ public class Band extends User implements Performer {
     private Musician leader;
     private Set<Musician> members;
     private String videoURL;
+    private List<String> musicianEmails;
 
     private static final int MAX_BAND_NAME_LENGTH = 16;
     private static final int MAX_VIDEO_URL_LENGTH = 2048;
@@ -96,6 +104,10 @@ public class Band extends User implements Performer {
     }
 
     public boolean containsMember(Musician member) {
+        for(Musician m: members) {
+            if (m.getEmailAddress().equals(member.getEmailAddress()))
+                return true;
+        }
         return members.contains(member);
     }
 
@@ -131,6 +143,23 @@ public class Band extends User implements Performer {
         }
 
         return tmp;
+    }
+
+    public void setMusicianEmailAdresses(List<String> listEmailAdress) {
+        this.musicianEmails = listEmailAdress;
+//        for(String emailAdress: listEmailAdress)
+//            this.musicianEmails.add(emailAdress);
+    }
+
+    public List<String> getMusicianEmailsAdress() {
+        if(!members.isEmpty() && members.size() > 1){
+            musicianEmails.clear();
+            for(Musician m: members) {
+                musicianEmails.add(m.getEmailAddress());
+            }
+        }
+
+        return this.musicianEmails;
     }
 
 }

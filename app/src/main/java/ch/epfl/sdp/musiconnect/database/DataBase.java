@@ -13,6 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
@@ -28,8 +29,14 @@ public class DataBase {
         this.db = FirebaseFirestore.getInstance();
     }
 
-    public void addDoc(String collection, String docName, SimplifiedMusician m) {
+    public void addMusician(String collection, String docName, SimplifiedMusician m) {
         db.collection(collection).document(docName).set(m)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
+                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
+    }
+
+    public void addBand(String collection, String docName, Band b) {
+        db.collection(collection).document(docName).set(b)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
     }
@@ -58,11 +65,29 @@ public class DataBase {
                 .addOnSuccessListener(documentSnapshot -> {
                     Map<String, Object> data = documentSnapshot.getData();
                     if(data.get("Leader") != null) {
+
                         DbAdapter da = new DbAdapter(this);
                         da.read("newtest", (String) data.get("Leader"), new DbCallback() {
                             @Override
                             public void readCallback(User user) {
-                                dbCallback.readCallback(new Band((String) data.get("BandName"), (Musician) user));
+                                Band b = new Band((String) data.get("BandName"), (Musician) user);
+                                b.setVideoURL(data.get("VideoUrl").toString());
+                                b.setMusicianEmailAdresses((List<String>) data.get("Members"));
+                                DbAdapter da = new DbAdapter(new DataBase());
+
+                                for(String me: b.getMusicianEmailsAdress()){
+                                    da.read("newtest", me, new DbCallback() {
+                                        @Override
+                                        public void readCallback(User user) {
+                                            try {
+                                                b.addMember((Musician) user);
+                                            } catch (IllegalArgumentException e) {
+                                            }
+                                        }
+                                    });
+                                }
+
+                                dbCallback.readCallback(b);
                             }
                         });
                     } else {

@@ -65,9 +65,17 @@ public class GoogleLogin extends AppCompatActivity {
                 @Override
                 public void existsCallback(boolean exists) {
                     if (exists) {
-                        CurrentUser.getInstance(GoogleLogin.this).setCreatedFlag();
-                        startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class));
-                        finish();
+                        db.read("newtest", account.getEmail(), new DbCallback() {
+                            @Override
+                            public void readCallback(User u) {
+
+                                CurrentUser.getInstance(GoogleLogin.this).setCreatedFlag();
+                                startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class));
+                                finish();
+                            }
+                        });
+
+
                     }
 //                    else {
 //                        startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.UserCreation.class));

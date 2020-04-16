@@ -9,6 +9,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +36,7 @@ public class UserCreation extends Page {
     int year, month, dayOfMonth;
     Calendar calendar;
     protected EditText etFirstName, etLastName, etUserName, etMail;
+    private RadioGroup rdg;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -43,6 +46,7 @@ public class UserCreation extends Page {
 
         date = findViewById(R.id.etDate);
         profilePicture = findViewById(R.id.userProfilePicture);
+        rdg = findViewById(R.id.rdg);
 
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
@@ -71,8 +75,6 @@ public class UserCreation extends Page {
         // signout if user choose cancel
         findViewById(R.id.btnUserCreationCancel).setOnClickListener(v -> signOut());
 
-
-
         findViewById(R.id.btnUserCreationCreate).setOnClickListener(v -> {
             if (checkUserCreationInput()) {
                 if (((TextView) findViewById(R.id.etDate)).getText().toString().trim().length() > 0) {
@@ -92,14 +94,23 @@ public class UserCreation extends Page {
                     String email = etMail.getText().toString();
                     MyDate d = new MyDate(year, month, dayOfMonth);
 
-                    Musician musician = new Musician(firstname, lastname, username, email, d);
-                    musician.setLocation(new MyLocation(0, 0));
+                    CurrentUser.getInstance(this).setCreatedFlag();
+                    RadioButton rdb = findViewById(rdg.getCheckedRadioButtonId());
+                    CurrentUser.getInstance(this).setTypeOfUser(TypeOfUser.valueOf(rdb.getText().toString()));
 
                     DbAdapter db = new DbAdapter(new DataBase());
-                    db.add(collection, musician);
 
-                    CurrentUser.getInstance(this).setCreatedFlag();
+                    switch (CurrentUser.getInstance(this).getTypeOfUser()) {
+                        case Band:
+                            // TODO: add band to database
+                            break;
+                        case Musician:
+                            Musician musician = new Musician(firstname, lastname, username, email, d);
+                            musician.setLocation(new MyLocation(0, 0));
 
+                            db.add(collection, musician);
+                            break;
+                    }
 
                     StartActivityAndFinish(new Intent(UserCreation.this, StartPage.class));
                     GoogleLogin.finishActivity();
@@ -109,7 +120,6 @@ public class UserCreation extends Page {
                 }
             }
         });
-
 
         etFirstName = findViewById(R.id.etFirstname);
         etLastName = findViewById(R.id.etLastName);

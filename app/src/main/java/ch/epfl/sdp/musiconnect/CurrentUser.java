@@ -12,6 +12,7 @@ public class CurrentUser {
     // variable of type String
     public String email;
     private boolean createdFlag = false;
+    private TypeOfUser type;
 
     // private constructor restricted to this class itself
     private CurrentUser(Context context) {
@@ -36,4 +37,7 @@ public class CurrentUser {
     public boolean getCreatedFlag() {
         return createdFlag;
     }
+
+    public TypeOfUser getTypeOfUser() { return this.type; }
+    public void setTypeOfUser(TypeOfUser t) { this.type = t; }
 }
