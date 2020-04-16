@@ -13,13 +13,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.musiconnect.RoomDatabase.AppDatabase;
+import ch.epfl.sdp.musiconnect.RoomDatabase.InstrumentConverter;
 import ch.epfl.sdp.musiconnect.RoomDatabase.MusicianDao;
+import ch.epfl.sdp.musiconnect.RoomDatabase.MyDateConverter;
+import ch.epfl.sdp.musiconnect.RoomDatabase.MyLocationConverter;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -144,6 +148,36 @@ public class RoomDatabaseTest {
                 user1.getFirstName()+user1.getLastName()+user1.getEmailAddress()+user1.getUserName()+user1.getAge()+user1.getVideoURL());
         assertEquals(person1.getJoinDate(),user1.getJoinDate());
         assertTrue(person1.instruments.equals(user1.instruments));
+    }
+
+    @Test
+    public void instrumentConverterTest(){
+        HashMap<Instrument,Level> map = new HashMap<>();
+        for(Instrument i:Instrument.values()){
+            for(Level l:Level.values()){
+
+                map.put(i,l);
+            }
+        }
+        assertTrue(map.equals(InstrumentConverter.toInstrumentMap(InstrumentConverter.toStringList(map))));
+    }
+
+    @Test
+    public void myDateConverterTest(){
+        MyDate date1 = new MyDate(9,9,9,9,9);
+        MyDate date2 = new MyDate(666,6,6);
+
+        assertTrue(date1.equals(MyDateConverter.fromTimestamp(MyDateConverter.dateToTimestamp(date1))));
+        assertTrue(date2.equals(MyDateConverter.fromTimestamp(MyDateConverter.dateToTimestamp(date2))));
+    }
+
+    @Test
+    public void myLocationTest(){
+        MyLocation loc1 = new MyLocation(80,80);
+        MyLocation loc2 = new MyLocation(-80,-80);
+
+        assertTrue(loc1.equals(MyLocationConverter.strToMyLocation(MyLocationConverter.myLocationToString(loc1))));
+        assertTrue(loc2.equals(MyLocationConverter.strToMyLocation(MyLocationConverter.myLocationToString(loc2))));
     }
 
     public static void waitALittle(int t) {
