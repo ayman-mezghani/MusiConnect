@@ -3,8 +3,11 @@ package ch.epfl.sdp.musiconnect;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -27,6 +30,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 import ch.epfl.sdp.musiconnect.database.DataBase;
@@ -34,6 +39,9 @@ import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.SimplifiedMusician;
 
 public class ProfileModification extends AppCompatActivity implements View.OnClickListener {
+
+    public static final String MUSICIAN_CHANNEL = "musician_channel";
+    public static final String MANAGER_CHANNEL = "manager_channel";
 
     String firstName, lastName, username, mail, birthday;
     EditText[] editFields;
@@ -52,33 +60,74 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_modification);
 
-        editFields = new EditText[] {findViewById(R.id.newFirstName), findViewById(R.id.newLastName), findViewById(R.id.newUsername), findViewById(R.id.newEmailAddress), findViewById(R.id.newBirthday)};
+        editFields = new EditText[] {
+                findViewById(R.id.newFirstName),
+                findViewById(R.id.newLastName),
+                findViewById(R.id.newUsername),
+                findViewById(R.id.newEmailAddress),
+                findViewById(R.id.newBirthday)
+        };
 
         manageDatePickerDialog(editFields[4]);
-
         onCreateGetIntentsFields();
-
         setEditTextFields(editFields, new String[]{firstName, lastName, username, mail, birthday});
+
+        mVideoView = findViewById(R.id.videoViewEdit);
 
         findViewById(R.id.btnSaveProfile).setOnClickListener(this);
         findViewById(R.id.btnDoNotSaveProfile).setOnClickListener(this);
-
-        mVideoView = findViewById(R.id.videoViewEdit);
         findViewById(R.id.btnCaptureVideo).setOnClickListener(v -> captureVideo());
 
         storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
         String path = testusername + "/" + CloudStorage.FileType.video;
         String saveName = testusername + "_" + CloudStorage.FileType.video;
+
         try {
             storage.download(path, saveName, fileUri -> {
                 videoUri = fileUri;
-
                 mVideoView.setVideoURI(videoUri);
                 mVideoView.start();
                 mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
             });
         } catch (IOException e) {
             Toast.makeText(this, "An error occured, please contact support.", Toast.LENGTH_LONG).show();
+        }
+
+        // NOTIFICATION PART
+        createNotificationChannels();
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, MUSICIAN_CHANNEL)
+                .setSmallIcon(R.drawable.ic_notification_icon)
+                .setContentTitle("Profile Change")
+                .setContentText("Profile is being changed.")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(0, builder.build());
+    }
+
+    private void createNotificationChannels() {
+        // Oreo API lvl 26
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Musicians and band with default importance
+            NotificationChannel mChannel = new NotificationChannel(
+                    MUSICIAN_CHANNEL,
+                    "Musician Channel",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            mChannel.setDescription("Notification channel used for musicians and bands.");
+
+            // Event managers with high importance
+            NotificationChannel eChannel = new NotificationChannel(
+                    MANAGER_CHANNEL,
+                    "Event Manager Channel",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            mChannel.setDescription("Notification channel used for event managers.");
+
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            assert manager != null;
+            manager.createNotificationChannel(mChannel);
+            manager.createNotificationChannel(eChannel);
         }
     }
 
