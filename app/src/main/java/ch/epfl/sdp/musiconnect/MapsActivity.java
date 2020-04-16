@@ -201,7 +201,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 } else if(!loc){
                     updatePos = false;
                     delay = 5000;
-                    generateWarning(MapsActivity.this,"Error: couldn't update your location", Utility.warningTypes.Toast);
+                    generateWarning(MapsActivity.this,"Error: couldn't update your location", Utility.warningTypes.Alert);
                 } else {
                     updatePos = true;
                     timeLastUpdt = Calendar.getInstance().getTime();
@@ -282,7 +282,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 put("location",loc);
             }});
         } else {
-            generateWarning(MapsActivity.this,"Error: couldn't update your location to the cloud", Utility.warningTypes.Toast);
+//            generateWarning(MapsActivity.this,"Error: couldn't update your location to the cloud", Utility.warningTypes.Toast);
         }
     }
 
