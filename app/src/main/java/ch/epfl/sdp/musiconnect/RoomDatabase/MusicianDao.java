@@ -17,11 +17,7 @@ public interface MusicianDao {
     List<Musician> getAll();
 
     @Query("SELECT * FROM musician WHERE emailAddress IN (:musicianEmail)")
-    List<Musician> loadAllByIds(int[] musicianEmail);
-
-    @Query("SELECT * FROM musician WHERE firstName LIKE :first AND " +
-            "lastName LIKE :last LIMIT 1")
-    Musician findByName(String first, String last);
+    List<Musician> loadAllByIds(String[] musicianEmail);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Musician... users);

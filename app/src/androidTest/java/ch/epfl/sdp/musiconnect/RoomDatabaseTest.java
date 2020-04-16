@@ -73,6 +73,7 @@ public class RoomDatabaseTest {
         person1.addInstrument(Instrument.BAGPIPES,Level.PROFESSIONAL);
         person1.addInstrument(Instrument.BANJO,Level.BEGINNER);
         person1.setVideoURL("test.com");
+        person1.setLocation(new MyLocation(40,40));
         mExecutor.execute(() -> {
             musicianDao.insertAll(person1);
         });
@@ -82,7 +83,12 @@ public class RoomDatabaseTest {
         waitALittle(2);
         assertEquals(1,users.size());
         Musician user1 = users.get(0);
-        assertEquals(person1.toString(),user1.toString());
+        //assertEquals(person1.toString(),user1.toString());
+        assertEquals(person1.getFirstName()+person1.getLastName()+person1.getEmailAddress()+person1.getUserName()+person1.getAge()+person1.getVideoURL(),
+                user1.getFirstName()+user1.getLastName()+user1.getEmailAddress()+user1.getUserName()+user1.getAge()+user1.getVideoURL());
+        assertEquals(person1.getJoinDate(),user1.getJoinDate());
+        assertTrue(person1.instruments.equals(user1.instruments));
+        assertTrue(person1.getLocation().equals(new MyLocation(40,40)));
     }
 
     @Test
@@ -111,8 +117,33 @@ public class RoomDatabaseTest {
         });
         waitALittle(2);
         assertEquals(1,users.size());
-        assertEquals(person1.toString(),users.get(0).toString());
+        Musician user1 = users.get(0);
+        assertEquals(person1.getFirstName()+person1.getLastName()+person1.getEmailAddress()+person1.getUserName()+person1.getAge()+person1.getVideoURL(),
+                user1.getFirstName()+user1.getLastName()+user1.getEmailAddress()+user1.getUserName()+user1.getAge()+user1.getVideoURL());
+        assertEquals(person1.getJoinDate(),user1.getJoinDate());
+        assertTrue(person1.instruments.equals(user1.instruments));
+    }
 
+
+    @Test
+    public void canFetchMusicianBasedOnEmail(){
+        Musician person1 = new Musician("Sauce", "deSaucisse", "test", "sauce@gmail.com", new MyDate(1990, 10, 25));
+        Musician person2 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
+        mExecutor.execute(() -> {
+            musicianDao.insertAll(person1);
+            musicianDao.insertAll(person2);
+        });
+        waitALittle(2);
+        mExecutor.execute(() -> {
+            users = musicianDao.loadAllByIds(new String[]{"sauce@gmail.com"});
+        });
+        waitALittle(2);
+        assertEquals(1,users.size());
+        Musician user1 = users.get(0);
+        assertEquals(person1.getFirstName()+person1.getLastName()+person1.getEmailAddress()+person1.getUserName()+person1.getAge()+person1.getVideoURL(),
+                user1.getFirstName()+user1.getLastName()+user1.getEmailAddress()+user1.getUserName()+user1.getAge()+user1.getVideoURL());
+        assertEquals(person1.getJoinDate(),user1.getJoinDate());
+        assertTrue(person1.instruments.equals(user1.instruments));
     }
 
     public static void waitALittle(int t) {
