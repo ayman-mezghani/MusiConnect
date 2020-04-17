@@ -91,12 +91,14 @@ public class VideoPlayingTests {
         appCompatTextView.perform(click());
     }
 
-    private String packageName = "ch.epfl.sdp.musiconnect";
-    private String videoSource = "android.resource://"+packageName+"/"+ R.raw.minion;
-
+//    private String packageName = "ch.epfl.sdp.musiconnect";
     @Test
     public void playVideoTest() throws InterruptedException {
         MapsLocationTest.clickAllow();
+
+        String packageName = mActivityTestRule.getActivity().getPackageName();
+        String videoSource = "android.resource://"+packageName+"/"+ R.raw.minion;
+
         goToMyProfilePage();
 
         ((MyProfilePage) getCurrentActivity()).videoUri = Uri.parse(videoSource);
