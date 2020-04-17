@@ -40,6 +40,7 @@ public class StartPage extends Page {
     private boolean isOpen = false;
     private DbAdapter dbAdapter;
     private Band b;
+    private boolean test=true;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
@@ -101,22 +102,24 @@ public class StartPage extends Page {
             db.add("Band", b);
         });
 
-        DbAdapter db = new DbAdapter(new DataBase());
-        db.read("newtest", CurrentUser.getInstance(this).email, new DbCallback() {
-            @Override
-            public void readCallback(User u) {
-                CurrentUser.getInstance(StartPage.this).setMusician((Musician) u);
+        if(!test) {
+            DbAdapter db = new DbAdapter(new DataBase());
+            db.read("newtest", CurrentUser.getInstance(this).email, new DbCallback() {
+                @Override
+                public void readCallback(User u) {
+                    CurrentUser.getInstance(StartPage.this).setMusician((Musician) u);
 
-                if(((Musician) u).getType() == TypeOfUser.Band) {
-                    db.read("Band", CurrentUser.getInstance(StartPage.this).email, new DbCallback() {
-                        @Override
-                        public void readCallback(User u) {
+                    if(((Musician) u).getType() == TypeOfUser.Band) {
+                        db.read("Band", CurrentUser.getInstance(StartPage.this).email, new DbCallback() {
+                            @Override
+                            public void readCallback(User u) {
                             b = (Band) u;
-                        }
-                    });
+                            }
+                        });
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private void fabMenuClick() {

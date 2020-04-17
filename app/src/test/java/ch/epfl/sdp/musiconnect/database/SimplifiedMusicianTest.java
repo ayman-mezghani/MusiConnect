@@ -12,6 +12,7 @@ import java.util.Map;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.MyLocation;
+import ch.epfl.sdp.musiconnect.TypeOfUser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -74,6 +75,7 @@ public class SimplifiedMusicianTest {
         map.put(SimplifiedMusician.FIRSTNAME, null);
         map.put(SimplifiedMusician.LASTNAME, null);
         map.put(SimplifiedMusician.EMAIL, null);
+        map.put(SimplifiedMusician.TYPEOFUSER, null);
         map.put(SimplifiedMusician.BIRTHDAY, null);
         map.put(SimplifiedMusician.JOINDATE, null);
         map.put(SimplifiedMusician.LOCATION, null);
@@ -84,6 +86,7 @@ public class SimplifiedMusicianTest {
         assertEquals("", sMusician.getFirstName());
         assertEquals("", sMusician.getLastName());
         assertEquals("", sMusician.getEmail());
+        assertEquals("", sMusician.getTypeOfUser());
         assertEquals((Timestamp) map.get(SimplifiedMusician.BIRTHDAY), sMusician.getBirthday());
         assertEquals((Timestamp) map.get(SimplifiedMusician.JOINDATE), sMusician.getJoinDate());
         assertEquals((GeoPoint) map.get(SimplifiedMusician.LOCATION), sMusician.getLocation());
@@ -112,13 +115,16 @@ public class SimplifiedMusicianTest {
         assertEquals((String) map.get(SimplifiedMusician.FIRSTNAME), (String) mapClone.get(SimplifiedMusician.FIRSTNAME));
         assertEquals((String) map.get(SimplifiedMusician.LASTNAME), (String) mapClone.get(SimplifiedMusician.LASTNAME));
         assertEquals((String) map.get(SimplifiedMusician.EMAIL), (String) mapClone.get(SimplifiedMusician.EMAIL));
+        assertEquals((String) map.get(SimplifiedMusician.TYPEOFUSER), (String) mapClone.get(SimplifiedMusician.TYPEOFUSER));
         assertEquals((Timestamp) map.get(SimplifiedMusician.BIRTHDAY), new Timestamp((Date) mapClone.get(SimplifiedMusician.BIRTHDAY)));
         assertEquals((Timestamp) map.get(SimplifiedMusician.JOINDATE), new Timestamp((Date) mapClone.get(SimplifiedMusician.JOINDATE)));
         assertEquals((GeoPoint) map.get(SimplifiedMusician.LOCATION), (GeoPoint) mapClone.get(SimplifiedMusician.LOCATION));
     }
 
     private Musician testMusician() {
-        return new Musician("firstName", "lastName", "username", "email@gmail.com", new MyDate(2000, 1, 1));
+        Musician m = new Musician("firstName", "lastName", "username", "email@gmail.com", new MyDate(2000, 1, 1));
+        m.setType(TypeOfUser.Musician);
+        return m;
     }
 
     private Map<String, Object> testMap() {
@@ -127,6 +133,7 @@ public class SimplifiedMusicianTest {
         map.put(SimplifiedMusician.FIRSTNAME, "firstName");
         map.put(SimplifiedMusician.LASTNAME, "lastName");
         map.put(SimplifiedMusician.EMAIL, "email@gmail.com");
+        map.put(SimplifiedMusician.TYPEOFUSER, TypeOfUser.Musician.toString());
         map.put(SimplifiedMusician.BIRTHDAY, new Timestamp(new Date()));
         map.put(SimplifiedMusician.JOINDATE, new Timestamp(new Date()));
         map.put(SimplifiedMusician.LOCATION, new GeoPoint(0, 0));
