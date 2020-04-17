@@ -22,6 +22,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sdp.R;
@@ -78,21 +79,44 @@ public class StartPage extends Page {
         fab_menu.setOnClickListener(v -> fabMenuClick());
         fab_button_1.setOnClickListener(v -> {
             Toast.makeText(this, CurrentUser.getInstance(this).email, Toast.LENGTH_SHORT).show();
-            dbAdapter = new DbAdapter(new DataBase());
-            dbAdapter.read("Band", CurrentUser.getInstance(this).email, new DbCallback() {
+            ArrayList<String> ls = new ArrayList<>();
+            ls.add("aymanmezghani97@gmail.com");
+            ls.add("seboll13@gmail.com");
+            DbAdapter db = new DbAdapter(new DataBase());
 
-                @Override
-                public void readCallback(User user) {
-                    b = (Band) user;
-                }
-            });
+            for (String str: ls) {
+                db.read("newtest", str, new DbCallback() {
+                    @Override
+                    public void readCallback(User u) {
+                        b.addMember((Musician) u);
+                    }
+                });
+            }
         });
 
         fab_button_2.setOnClickListener(v -> {
             Toast.makeText(this, "band", Toast.LENGTH_SHORT).show();
+            DbAdapter db = new DbAdapter(new DataBase());
+
+            db.add("Band", b);
         });
 
+        DbAdapter db = new DbAdapter(new DataBase());
+        db.read("newtest", CurrentUser.getInstance(this).email, new DbCallback() {
+            @Override
+            public void readCallback(User u) {
+                CurrentUser.getInstance(StartPage.this).setMusician((Musician) u);
 
+                if(((Musician) u).getType() == TypeOfUser.Band) {
+                    db.read("Band", CurrentUser.getInstance(StartPage.this).email, new DbCallback() {
+                        @Override
+                        public void readCallback(User u) {
+                            b = (Band) u;
+                        }
+                    });
+                }
+            }
+        });
     }
 
     private void fabMenuClick() {

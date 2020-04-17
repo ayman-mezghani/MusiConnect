@@ -101,6 +101,7 @@ public class UserCreation extends Page {
                     DbAdapter db = new DbAdapter(new DataBase());
                     Musician musician = new Musician(firstname, lastname, username, email, d);
                     musician.setLocation(new MyLocation(0, 0));
+                    musician.setType(CurrentUser.getInstance(this).getTypeOfUser());
 
                     db.add(collection, musician);
                     CurrentUser.getInstance(this).setMusician(musician);

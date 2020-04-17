@@ -63,15 +63,18 @@ public class DataBase {
         db.collection(collection).document(docName).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     Map<String, Object> data = documentSnapshot.getData();
-                    if(data.get("Leader") != null) {
+                    if(data.get("leader") != null) {
 
                         DbAdapter da = new DbAdapter(this);
-                        da.read("newtest", (String) data.get("Leader"), new DbCallback() {
+                        da.read("newtest", (String) data.get("leader"), new DbCallback() {
                             @Override
                             public void readCallback(User user) {
-                                Band b = new Band((String) data.get("BandName"), (Musician) user);
-                                b.setVideoURL(data.get("VideoUrl").toString());
-                                b.setMusicianEmailAdresses((List<String>) data.get("Members"));
+                                Band b = new Band((String) data.get("bandName"), (Musician) user);
+
+                                if(data.get("videoUrl") != null)
+                                    b.setVideoURL(data.get("videoUrl").toString());
+
+                                b.setMusicianEmailAdresses((List<String>) data.get("members"));
                                 DbAdapter da = new DbAdapter(new DataBase());
 
                                 for(String me: b.getMusicianEmailsAdress()){

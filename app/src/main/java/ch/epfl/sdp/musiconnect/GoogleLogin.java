@@ -70,6 +70,7 @@ public class GoogleLogin extends AppCompatActivity {
                             public void readCallback(User u) {
 
                                 CurrentUser.getInstance(GoogleLogin.this).setCreatedFlag();
+                                CurrentUser.getInstance(GoogleLogin.this).setMusician((Musician) u);
                                 startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class));
                                 finish();
                             }
