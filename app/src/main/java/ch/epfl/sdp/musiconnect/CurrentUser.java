@@ -8,18 +8,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 public class CurrentUser {
     // static variable single_instance of type Singleton
     private static CurrentUser single_instance = null;
+    public final String email;
 
-    // variable of type String
-    public String email;
     private boolean createdFlag = false;
-
-    // private constructor restricted to this class itself
-    private CurrentUser(Context context) {
-        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(context);
-        if (acct != null) {
-            email = acct.getEmail();
-        }
-    }
+    private GoogleSignInAccount acct;
 
     // static method to create instance of Singleton class
     public static CurrentUser getInstance(Context context) {
@@ -35,5 +27,17 @@ public class CurrentUser {
 
     public boolean getCreatedFlag() {
         return createdFlag;
+    }
+
+    public static void flush() {
+        single_instance = null;
+    }
+
+    // private constructor restricted to this class itself
+    private CurrentUser(Context context) {
+        acct = GoogleSignIn.getLastSignedInAccount(context);
+        if (acct != null) {
+            email = acct.getEmail();
+        } else email = "";
     }
 }
