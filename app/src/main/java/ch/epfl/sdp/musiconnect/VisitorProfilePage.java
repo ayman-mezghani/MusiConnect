@@ -3,24 +3,35 @@ package ch.epfl.sdp.musiconnect;
 import android.content.Intent;
 import android.os.Bundle;
 
-import java.util.Map;
-
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
-import ch.epfl.sdp.musiconnect.database.DbCallback;
 
-public class VisitorProfilePage extends ProfilePage implements DbCallback {
+public class VisitorProfilePage extends ProfilePage {
     private DataBase db;
     private DbAdapter dbAdapter;
-    private String newUsername;
+    private String newUsername;    private boolean isTest;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        db = new DataBase();
+        try {
+            Class.forName("androidx.test.espresso.Espresso");
+            isTest = true;
+        } catch (ClassNotFoundException e) {
+            isTest = false;
+        }
+
+        if (isTest) {
+            db = new DataBase();
+            // db = new MockDatabase();
+        } else {
+            db = new DataBase();
+        }
+
         dbAdapter = new DbAdapter(db);
 
         setContentView(R.layout.activity_visitor_profile_page);
@@ -35,18 +46,8 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         mail = findViewById(R.id.mail);
         birthday = findViewById(R.id.birthday);
 
-        Intent intent = getIntent();
-        if (!intent.getBooleanExtra("Test", false)) {
-            loadProfileContent();
-        } else {
-            int[] birthday = intent.getIntArrayExtra("Birthday");
-            Musician alyx = new Musician(intent.getStringExtra("FirstName"),
-                    intent.getStringExtra("LastName"),
-                    intent.getStringExtra("UserName"),
-                    intent.getStringExtra("Email"),
-                    new MyDate(birthday[2], birthday[1], birthday[0]));
-            onCallback(alyx);
-        }
+
+        loadProfileContent();
     }
 
 
@@ -55,23 +56,24 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         Intent intent = getIntent();
         if (intent.hasExtra("UserName")) {
             newUsername = intent.getStringExtra("UserName");
-            dbAdapter.read(newUsername, this);
+            dbAdapter.read(newUsername, user -> {
+                if (user != null) {
+                    Musician m = (Musician) user;
+                    String sTitle = m.getUserName() + "'s profile";
+                    title.setText(sTitle);
+
+                    firstName.setText(m.getFirstName());
+                    lastName.setText(m.getLastName());
+                    username.setText(m.getUserName());
+                    mail.setText(m.getEmailAddress());
+
+                    MyDate date = m.getBirthday();
+                    String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
+                    birthday.setText(s);
+                } else {
+                    // setContentView(ProfileNotFound);
+                }
+            });
         }
-    }
-
-
-    public void onCallback(User user) {
-        Musician m = (Musician) user;
-        String sTitle = m.getUserName() + "'s profile";
-        title.setText(sTitle);
-
-        firstName.setText(m.getFirstName());
-        lastName.setText(m.getLastName());
-        username.setText(m.getUserName());
-        mail.setText(m.getEmailAddress());
-
-        MyDate date = m.getBirthday();
-        String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
-        birthday.setText(s);
     }
 }

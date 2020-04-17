@@ -20,6 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".musiconnect.EventPage"></activity>
         <activity android:name=".musiconnect.UserCreation" />
         <activity android:name=".musiconnect.GoogleLogin">
             <intent-filter>
@@ -45,7 +46,7 @@
         <activity android:name=".musiconnect.HelpPage" />
         <activity android:name=".musiconnect.MyProfilePage" />
         <activity android:name=".musiconnect.ProfileModification" />
-        <activity android:name=".musiconnect.StartPage"/>
+        <activity android:name=".musiconnect.StartPage" />
         <activity android:name=".musiconnect.VisitorProfilePage" />
 
         <service

@@ -2,34 +2,45 @@ package ch.epfl.sdp.musiconnect;
 
 import android.location.Location;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.firestore.GeoPoint;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Event {
+    private final int eid;
     private User creator;
     private List<User> participants; // Users that will contribute to the event (e.g. two musicians doing a duo at x event)
-    private Location location;
+    private LatLng location;
+    private String address;
     private MyDate dateTime;
     private boolean visible;
     private String title;
     private String message;
-    private final String defaultTitle = "Event";
-    private final String defaultMessage = "Come watch and play!";
+    private final String DEFAULT_TITLE = "Event";
+    private final String DEFAULT_MESSAGE = "Come watch and play!";
 
-    public Event(User creator) {
-        if (creator == null) {
+    public Event(User creator, int eid) {
+        if (creator == null || eid < 0) {
             throw new IllegalArgumentException();
         }
+        this.eid = eid;
 
         this.creator = creator;
         participants = new ArrayList<>();
         participants.add(creator);
 
-        location = new Location("");
+        location = new LatLng(0, 0);
         dateTime = new MyDate();
         visible = false;
-        title = defaultTitle;
-        message = defaultMessage;
+        title = DEFAULT_TITLE;
+        message = DEFAULT_MESSAGE;
+        address = "";
+    }
+
+    public int getEid() {
+        return eid;
     }
 
     public User getCreator() {
@@ -45,7 +56,7 @@ public class Event {
     }
 
     public void unregister(User user) {
-        if (user == null) {
+        if (user == null || !participants.contains(user)) {
             throw new IllegalArgumentException();
         }
 
@@ -56,15 +67,48 @@ public class Event {
         return participants;
     }
 
-    public void setLocation(Location location) {
-        if (location == null) {
+    private boolean checkLocationValues(double latitude, double longitude) {
+        return (latitude > -90) && (latitude < 90) &&
+                (longitude > -180) && (longitude < 180);
+    }
+
+
+    public void setAddress(String address) {
+        if (address == null) {
             throw new IllegalArgumentException();
         }
-        this.location = location;
+
+        this.address = address;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setLocation(Location location) {
+        if (!checkLocationValues(location.getLatitude(), location.getLongitude())) {
+            throw new IllegalArgumentException();
+        }
+
+        this.location = new LatLng(location.getLatitude(), location.getLongitude());
+    }
+
+    public void setLocation(double latitude, double longitude) {
+        if (!checkLocationValues(latitude, longitude)) {
+            throw new IllegalArgumentException();
+        }
+        location = new LatLng(latitude, longitude);
     }
 
     public Location getLocation() {
-        return location;
+        Location l = new Location("");
+        l.setLatitude(location.latitude);
+        l.setLongitude(location.longitude);
+        return l;
+    }
+
+    public GeoPoint getGeoPoint() {
+        return new GeoPoint(location.latitude, location.longitude);
     }
 
     public void setDateTime(MyDate dateTime) {
@@ -99,7 +143,7 @@ public class Event {
     }
 
     public void setMessage(String message) {
-        if (title == null) {
+        if (message == null) {
             throw new IllegalArgumentException();
         }
         this.message = message;

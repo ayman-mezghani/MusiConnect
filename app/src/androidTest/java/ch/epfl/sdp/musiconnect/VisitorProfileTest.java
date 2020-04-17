@@ -79,7 +79,6 @@ public class VisitorProfileTest {
         intent.putExtra("Email", m.getEmailAddress());
         int[] birthday = {m.getBirthday().getDate(), m.getBirthday().getMonth(), m.getBirthday().getYear()};
         intent.putExtra("Birthday", birthday);
-        intent.putExtra("Test", true);
         visitorActivityTestRule.launchActivity(intent);
 
 
@@ -87,5 +86,4 @@ public class VisitorProfileTest {
         onView(withId(R.id.firstname)).check(matches(withText("Alice")));
         onView(withId(R.id.username)).check(matches(withText("Alyx")));
     }
-
 }
