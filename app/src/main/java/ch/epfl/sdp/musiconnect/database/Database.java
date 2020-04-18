@@ -3,7 +3,7 @@ package ch.epfl.sdp.musiconnect.database;
 import java.util.List;
 import java.util.Map;
 
-interface Database {
+public interface Database {
     void addDoc(String docName, SimplifiedMusician m);
 
     void deleteDoc(String docName);
