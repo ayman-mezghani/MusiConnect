@@ -39,10 +39,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.GeoPoint;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -61,8 +58,6 @@ import static ch.epfl.sdp.musiconnect.MapsActivity.Utility.generateWarning;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener, AdapterView.OnItemSelectedListener {
-    private Date timeLastUpdt;
-    private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
     private DataBase db = new DataBase();
     private DbAdapter Adb = new DbAdapter(db);
@@ -207,7 +202,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     generateWarning(MapsActivity.this,"Error: couldn't update your location", Utility.warningTypes.Alert);
                 } else {
                     updatePos = true;
-                    timeLastUpdt = Calendar.getInstance().getTime();
                     updateUsers();
                     clearCachedUsers();
                     saveUsersToCache();
