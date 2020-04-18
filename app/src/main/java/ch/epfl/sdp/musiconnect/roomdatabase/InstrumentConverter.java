@@ -1,13 +1,11 @@
-package ch.epfl.sdp.musiconnect.RoomDatabase;
+package ch.epfl.sdp.musiconnect.roomdatabase;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.room.TypeConverter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import ch.epfl.sdp.musiconnect.Instrument;

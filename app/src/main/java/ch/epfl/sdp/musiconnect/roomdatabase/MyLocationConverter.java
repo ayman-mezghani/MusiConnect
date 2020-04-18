@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect.RoomDatabase;
+package ch.epfl.sdp.musiconnect.roomdatabase;
 
 import androidx.room.TypeConverter;
 

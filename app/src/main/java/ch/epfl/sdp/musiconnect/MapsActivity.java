@@ -47,8 +47,8 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.RoomDatabase.AppDatabase;
-import ch.epfl.sdp.musiconnect.RoomDatabase.MusicianDao;
+import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
+import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;

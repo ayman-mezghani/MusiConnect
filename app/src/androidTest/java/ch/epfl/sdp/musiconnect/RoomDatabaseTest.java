@@ -1,16 +1,11 @@
 package ch.epfl.sdp.musiconnect;
 
-import androidx.test.espresso.intent.Intents;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,11 +14,11 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import ch.epfl.sdp.musiconnect.RoomDatabase.AppDatabase;
-import ch.epfl.sdp.musiconnect.RoomDatabase.InstrumentConverter;
-import ch.epfl.sdp.musiconnect.RoomDatabase.MusicianDao;
-import ch.epfl.sdp.musiconnect.RoomDatabase.MyDateConverter;
-import ch.epfl.sdp.musiconnect.RoomDatabase.MyLocationConverter;
+import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
+import ch.epfl.sdp.musiconnect.roomdatabase.InstrumentConverter;
+import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
+import ch.epfl.sdp.musiconnect.roomdatabase.MyDateConverter;
+import ch.epfl.sdp.musiconnect.roomdatabase.MyLocationConverter;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
