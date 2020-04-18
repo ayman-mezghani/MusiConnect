@@ -36,7 +36,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         setContentView(R.layout.activity_profile_page);
 
         mVideoView = findViewById(R.id.videoView);
-        getVideoUri();
+
 
         imgVw = findViewById(R.id.imgView);
         firstName = findViewById(R.id.myFirstname);
@@ -54,7 +54,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         });
 
         loadProfileContent();
-
+        getVideoUri(userEmail);
     }
 
     private boolean checktest() {
@@ -71,7 +71,8 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
 
     private void loadProfileContent() {
         if (!checktest()) {
-            dbAdapter.read(CurrentUser.getInstance(this).email, new DbCallback() {
+            userEmail = CurrentUser.getInstance(this).email;
+            dbAdapter.read(userEmail, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
                     Musician m = (Musician) user;
@@ -104,7 +105,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-        getVideoUri();
+    //        getVideoUri(userEmail);
     }
 
     @SuppressLint("MissingSuperCall")
@@ -120,12 +121,11 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             birthday.setText(newFields[4]);
             String videoUriString = data.getStringExtra("videoUri");
 
-            if (videoUriString != null){
+            if (videoUriString != null) {
                 videoUri = Uri.parse(videoUriString);
                 showVideo();
-            }
-            else{
-                getVideoUri();
+            } else {
+                getVideoUri(userEmail);
             }
         }
 

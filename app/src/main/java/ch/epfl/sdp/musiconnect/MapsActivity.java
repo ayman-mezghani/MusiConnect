@@ -201,7 +201,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 } else if(!loc){
                     updatePos = false;
                     delay = 5000;
-                    generateWarning(MapsActivity.this,"Error: couldn't update your location", Utility.warningTypes.Toast);
+                    generateWarning(MapsActivity.this,"Error: couldn't update your location", Utility.warningTypes.Alert);
                 } else {
                     updatePos = true;
                     timeLastUpdt = Calendar.getInstance().getTime();
@@ -282,7 +282,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 put("location",loc);
             }});
         } else {
-            generateWarning(MapsActivity.this,"Error: couldn't update your location to the cloud", Utility.warningTypes.Toast);
+//            generateWarning(MapsActivity.this,"Error: couldn't update your location to the cloud", Utility.warningTypes.Toast);
         }
     }
 
@@ -390,7 +390,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Intent profileIntent = new Intent(MapsActivity.this, VisitorProfilePage.class);
           
             Musician m = (Musician) marker.getTag();
-            profileIntent.putExtra("UserName", m.getUserName());
+            profileIntent.putExtra("UserEmail", m.getEmailAddress());
             profileIntent.putExtra("Test", false);
 
             this.startActivity(profileIntent);
@@ -544,7 +544,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         Musician person1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
-        Musician person2 = new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", new MyDate(1992, 9, 20));
+        Musician person2 = new Musician("Alice", "Bardon", "Alyx", "aymanmezghani97@gmail.com", new MyDate(1992, 9, 20));
         Musician person3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
 
         person1.setLocation(new MyLocation(46.52 + r1, 6.52 + r1));

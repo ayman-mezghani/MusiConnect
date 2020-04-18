@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -29,21 +28,20 @@ import java.util.Locale;
 import java.util.Map;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.SimplifiedMusician;
 
-public class ProfileModification extends AppCompatActivity implements View.OnClickListener {
+public class ProfileModification extends ProfilePage implements View.OnClickListener {
 
     String firstName, lastName, username, mail, birthday;
     EditText[] editFields;
     final Calendar calendar = Calendar.getInstance();
 
     protected static int VIDEO_REQUEST = 101;
-    private String testusername = "testUser";
-    protected Uri videoUri = null;
-    private VideoView mVideoView;
+
     private CloudStorage storage;
     private boolean videoRecorded = false;
 
@@ -67,20 +65,7 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         mVideoView = findViewById(R.id.videoViewEdit);
         findViewById(R.id.btnCaptureVideo).setOnClickListener(v -> captureVideo());
 
-        storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
-        String path = testusername + "/" + CloudStorage.FileType.video;
-        String saveName = testusername + "_" + CloudStorage.FileType.video;
-        try {
-            storage.download(path, saveName, fileUri -> {
-                videoUri = fileUri;
-
-                mVideoView.setVideoURI(videoUri);
-                mVideoView.start();
-                mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
-            });
-        } catch (IOException e) {
-            Toast.makeText(this, "An error occured, please contact support.", Toast.LENGTH_LONG).show();
-        }
+        getVideoUri(mail);
     }
 
     private void onCreateGetIntentsFields() {
@@ -89,41 +74,29 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         username = getIntent().getStringExtra("USERNAME");
         mail = getIntent().getStringExtra("MAIL");
         birthday = getIntent().getStringExtra("BIRTHDAY");
+        initCalendarDate(birthday);
     }
 
-    private void btnSave() {
-        String[] newFields = getNewTextFields();
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("newFields", newFields);
-
-        // Upload video to cloud storage
-        if(videoRecorded) {
-            returnIntent.putExtra("videoUri", videoUri.toString());
-            storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
-            try {
-                storage.upload(videoUri, CloudStorage.FileType.video, testusername);
-            } catch (IOException e) {
-                Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
-            }
-        }
-
-        updateDatabaseFields(newFields);
-        setResult(Activity.RESULT_OK, returnIntent);
-        finish();
+    private void initCalendarDate(String sDate) {
+        String[] tempArray = sDate.split("/");
+        calendar.set(Calendar.YEAR, Integer.parseInt(tempArray[2]));
+        calendar.set(Calendar.MONTH, Integer.parseInt(tempArray[1])-1);
+        calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(tempArray[0]));
     }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnSaveProfile:
-                btnSave();
+                String[] newFields = getNewTextFields();
+                if (!isInputDateValid()) {
+                    Toast.makeText(this, R.string.age_too_low, Toast.LENGTH_LONG).show();
+                    break;
+                }
+                btnSave(newFields);
                 break;
             case R.id.btnDoNotSaveProfile:
                 finish(); // Close current activity and do not save anything
-                break;
-            default:
-                // In case another thing happens, simply close the activity and display an error message
-                Toast.makeText(this, getString(R.string.error_in_current_process), Toast.LENGTH_SHORT).show();
-                finish();
                 break;
         }
     }
@@ -131,6 +104,18 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    /**
+     * Check the correctness of the input date
+     * @return true if age >= 13
+     */
+    private boolean isInputDateValid() {
+        UserCreation uc = new UserCreation();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        return Integer.parseInt(uc.getAge(year, month, day)) >= 13;
     }
 
     private void setEditTextFields(EditText[] fields, String[] params) {
@@ -167,6 +152,26 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
 
         Musician me = new SimplifiedMusician(data).toMusician();
         adapter.update(me);
+    }
+
+    private void btnSave(String[] newFields) {
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("newFields", newFields);
+
+        // Upload video to cloud storage
+        if(videoRecorded) {
+            returnIntent.putExtra("videoUri", videoUri.toString());
+            storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
+            try {
+                storage.upload(videoUri, CloudStorage.FileType.video, mail);
+            } catch (IOException e) {
+                Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
+            }
+        }
+
+        updateDatabaseFields(newFields);
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
     }
 
     private String[] getNewTextFields() {
@@ -216,11 +221,6 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
             videoRecorded = true;
         }
 
-        if (videoUri != null) {
-            mVideoView.setVideoURI(videoUri);
-            mVideoView.start();
-            mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
-        }
+        showVideo();
     }
-
 }

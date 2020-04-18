@@ -1,8 +1,5 @@
 package ch.epfl.sdp.musiconnect;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,20 +20,7 @@ public abstract class ProfilePage extends Page {
     protected Uri videoUri = null;
     protected VideoView mVideoView;
     protected ImageView imgVw;
-
-    private String testusername = "testUser";
-
-    @SuppressLint("MissingSuperCall")
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        getVideoUri();
-
-//        TODO: refresh the intent, may be useful after video change
-//        finish();
-//        overridePendingTransition( 0, 0);
-//        startActivity(getIntent());
-//        overridePendingTransition( 0, 0);
-    }
+    protected String userEmail;
 
     protected void showVideo() {
         if (videoUri != null) {
@@ -46,14 +30,22 @@ public abstract class ProfilePage extends Page {
         }
     }
 
-    protected void getVideoUri() {
+    protected void getVideoUri(String s) {
         CloudStorage storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
-        String path = testusername + "/" + CloudStorage.FileType.video;
-        String saveName = testusername + "_" + CloudStorage.FileType.video;
+        String path = s + "/" + CloudStorage.FileType.video;
+        String saveName = s + "_" + CloudStorage.FileType.video;
         try {
-            storage.download(path, saveName, fileUri -> {
-                videoUri = fileUri;
-                showVideo();
+            storage.download(path, saveName, new CloudCallback() {
+                @Override
+                public void onSuccess(Uri fileUri) {
+                    videoUri = fileUri;
+                    showVideo();
+                }
+                @Override
+                public void onFailure() {
+                    videoUri = Uri.parse("android.resource://"+getPackageName()+"/"+ R.raw.minion);
+                    showVideo();
+                }
             });
         } catch (IOException e) {
             Toast.makeText(this, "An error occured, please contact support.", Toast.LENGTH_LONG).show();
