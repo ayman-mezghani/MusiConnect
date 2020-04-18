@@ -4,19 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.FirebaseDatabase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 public class VisitorProfilePage extends ProfilePage implements DbCallback {
-    private DataBase db;
+    private FirebaseDatabase db;
     private DbAdapter dbAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        db = new DataBase();
+        db = new FirebaseDatabase();
         dbAdapter = new DbAdapter(db);
 
         setContentView(R.layout.activity_visitor_profile_page);

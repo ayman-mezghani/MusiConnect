@@ -17,7 +17,7 @@ public class CurrentUserTest {
             new ActivityTestRule<>(GoogleLogin.class);
 
     @Before
-    public void stallBefore() {
+    public void flushBefore() {
         CurrentUser.flush();
     }
 

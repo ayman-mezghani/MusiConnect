@@ -4,9 +4,9 @@ import ch.epfl.sdp.musiconnect.Musician;
 
 public class DbAdapter {
 
-    private DataBase db;
+    private Database db;
 
-    public DbAdapter(DataBase db) {
+    public DbAdapter(Database db) {
         this.db = db;
     }
 

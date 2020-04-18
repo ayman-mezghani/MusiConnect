@@ -1,5 +1,7 @@
 package ch.epfl.sdp.musiconnect.database;
 
+import androidx.annotation.Nullable;
+
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -121,5 +123,15 @@ public class SimplifiedMusician {
 
     public GeoPoint getLocation() {
         return location;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        SimplifiedMusician that = (SimplifiedMusician) obj;
+        return this.username == that.getUsername()
+                && this.firstName == that.getFirstName()
+                && this.lastName == that.getLastName()
+                && this.email == that.getEmail()
+                && this.birthday.toString().equals(that.getBirthday().toString());
     }
 }

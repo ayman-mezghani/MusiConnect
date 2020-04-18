@@ -4,15 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.widget.VideoView;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
@@ -28,9 +24,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
-import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.FirebaseDatabase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.SimplifiedMusician;
 
@@ -131,7 +126,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
      * @param newFields: new values to write
      */
     private void updateDatabaseFields(String[] newFields) {
-        DataBase db = new DataBase();
+        FirebaseDatabase db = new FirebaseDatabase();
         DbAdapter adapter = new DbAdapter(db);
         Map<String, Object> data = new HashMap<>();
         String[] keys = {"firstName", "lastName", "username", "email", "birthday"};

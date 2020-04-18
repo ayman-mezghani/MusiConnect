@@ -10,13 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.FirebaseDatabase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 
@@ -31,7 +26,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dbAdapter = new DbAdapter(new DataBase());
+        dbAdapter = new DbAdapter(new FirebaseDatabase());
 
         setContentView(R.layout.activity_profile_page);
 

@@ -55,7 +55,7 @@ import java.util.List;
 import java.util.Random;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.FirebaseDatabase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 
@@ -67,7 +67,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Date timeLastUpdt;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
-    private DataBase db = new DataBase();
+    private FirebaseDatabase db = new FirebaseDatabase();
     private DbAdapter Adb = new DbAdapter(db);
 
     private FusedLocationProviderClient fusedLocationClient;

@@ -18,10 +18,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.util.Calendar;
-import java.util.HashMap;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.FirebaseDatabase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 
 public class UserCreation extends Page {
@@ -94,7 +93,7 @@ public class UserCreation extends Page {
                     Musician musician = new Musician(firstname, lastname, username, email, d);
                     musician.setLocation(new MyLocation(0, 0));
 
-                    DbAdapter db = new DbAdapter(new DataBase());
+                    DbAdapter db = new DbAdapter(new FirebaseDatabase());
                     db.add(musician);
 
                     CurrentUser.getInstance(this).setCreatedFlag();

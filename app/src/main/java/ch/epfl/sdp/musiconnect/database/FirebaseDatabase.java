@@ -14,32 +14,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DataBase {
+public class FirebaseDatabase implements Database {
     private static final String TAG = "DataBase";
     private FirebaseFirestore db;
 
-    public DataBase() {
+    public FirebaseDatabase() {
         this.db = FirebaseFirestore.getInstance();
     }
 
+    @Override
     public void addDoc(String docName, SimplifiedMusician m) {
         db.collection("newtest").document(docName).set(m)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
     }
 
+    @Override
     public void deleteDoc(String docName) {
         db.collection("newtest").document(docName).delete()
                 .addOnSuccessListener(bVoid -> Log.d(TAG, "DocumentSnapshot successfully deleted!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));
     }
 
+    @Override
     public void updateDoc(String docName, Map<String, Object> newValueMap) {
         db.collection("newtest").document(docName).update(newValueMap)
                 .addOnSuccessListener(cVoid -> Log.d(TAG, "DocumentSnapshot successfully updated!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
     }
 
+    @Override
     public void deleteFieldsInDoc(String docName, List<String> fields) {
         Map<String, Object> updates = new HashMap<>();
         for (String str : fields) {
@@ -48,6 +52,7 @@ public class DataBase {
         this.updateDoc(docName, updates);
     }
 
+    @Override
     public void readDoc(String docName, DbCallback dbCallback) {
         db.collection("newtest").document(docName).get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -58,6 +63,7 @@ public class DataBase {
                 .addOnFailureListener(e -> Log.w(TAG, "Error reading document", e));
     }
 
+    @Override
     public void docExists(String docName, DbCallback dbCallback) {
         db.collection("newtest").document(docName).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
