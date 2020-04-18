@@ -91,8 +91,8 @@ public class RoomDatabaseTest {
         assertEquals(person1.getFirstName()+person1.getLastName()+person1.getEmailAddress()+person1.getUserName()+person1.getAge()+person1.getVideoURL(),
                 user1.getFirstName()+user1.getLastName()+user1.getEmailAddress()+user1.getUserName()+user1.getAge()+user1.getVideoURL());
         assertEquals(person1.getJoinDate(),user1.getJoinDate());
-        assertTrue(person1.instruments.equals(user1.instruments));
-        assertTrue(person1.getLocation().equals(new MyLocation(40,40)));
+        assertEquals(person1.instruments,(user1.instruments));
+        assertEquals(person1.getLocation(),(new MyLocation(40,40)));
     }
 
     @Test
@@ -125,7 +125,7 @@ public class RoomDatabaseTest {
         assertEquals(person1.getFirstName()+person1.getLastName()+person1.getEmailAddress()+person1.getUserName()+person1.getAge()+person1.getVideoURL(),
                 user1.getFirstName()+user1.getLastName()+user1.getEmailAddress()+user1.getUserName()+user1.getAge()+user1.getVideoURL());
         assertEquals(person1.getJoinDate(),user1.getJoinDate());
-        assertTrue(person1.instruments.equals(user1.instruments));
+        assertEquals(person1.instruments,(user1.instruments));
     }
 
 
@@ -147,7 +147,7 @@ public class RoomDatabaseTest {
         assertEquals(person1.getFirstName()+person1.getLastName()+person1.getEmailAddress()+person1.getUserName()+person1.getAge()+person1.getVideoURL(),
                 user1.getFirstName()+user1.getLastName()+user1.getEmailAddress()+user1.getUserName()+user1.getAge()+user1.getVideoURL());
         assertEquals(person1.getJoinDate(),user1.getJoinDate());
-        assertTrue(person1.instruments.equals(user1.instruments));
+        assertEquals(person1.instruments,(user1.instruments));
     }
 
     @Test
@@ -159,7 +159,7 @@ public class RoomDatabaseTest {
                 map.put(i,l);
             }
         }
-        assertTrue(map.equals(InstrumentConverter.toInstrumentMap(InstrumentConverter.toStringList(map))));
+        assertEquals(map, (InstrumentConverter.toInstrumentMap(InstrumentConverter.toStringList(map))));
     }
 
     @Test
@@ -167,17 +167,22 @@ public class RoomDatabaseTest {
         MyDate date1 = new MyDate(9,9,9,9,9);
         MyDate date2 = new MyDate(666,6,6);
 
-        assertTrue(date1.equals(MyDateConverter.fromTimestamp(MyDateConverter.dateToTimestamp(date1))));
-        assertTrue(date2.equals(MyDateConverter.fromTimestamp(MyDateConverter.dateToTimestamp(date2))));
+        assertEquals(date1, (MyDateConverter.fromTimestamp(MyDateConverter.dateToTimestamp(date1))));
+        assertEquals(date2, (MyDateConverter.fromTimestamp(MyDateConverter.dateToTimestamp(date2))));
     }
 
     @Test
-    public void myLocationTest(){
+    public void myLocationConverterTest(){
         MyLocation loc1 = new MyLocation(80,80);
         MyLocation loc2 = new MyLocation(-80,-80);
+        String loc3 = "-60.0,60.0";
+        String loc4 = "50.0,-70.0";
 
-        assertTrue(loc1.equals(MyLocationConverter.strToMyLocation(MyLocationConverter.myLocationToString(loc1))));
-        assertTrue(loc2.equals(MyLocationConverter.strToMyLocation(MyLocationConverter.myLocationToString(loc2))));
+        assertEquals(loc1, (MyLocationConverter.strToMyLocation(MyLocationConverter.myLocationToString(loc1))));
+        assertEquals(loc2, (MyLocationConverter.strToMyLocation(MyLocationConverter.myLocationToString(loc2))));
+        assertEquals(loc3,MyLocationConverter.myLocationToString(MyLocationConverter.strToMyLocation(loc3)));
+        assertEquals(loc4,MyLocationConverter.myLocationToString(MyLocationConverter.strToMyLocation(loc4)));
+
     }
 
     public static void waitALittle(int t) {
