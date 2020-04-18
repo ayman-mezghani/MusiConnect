@@ -13,7 +13,7 @@ import java.util.Set;
 public class Musician extends Person implements Performer {
 
     private String videoURL;
-    public Map<Instrument, Level> instruments;
+    private Map<Instrument, Level> instruments;
 
     private static final int MAX_VIDEO_URL_LENGTH = 2048;
 
@@ -22,6 +22,14 @@ public class Musician extends Person implements Performer {
         super(firstName, lastName, userName, emailAddress, birthday);
         videoURL = "";
         instruments = new HashMap<Instrument, Level>();
+    }
+
+    public Map<Instrument,Level> getInstruments(){
+        return instruments;
+    }
+
+    public void setInstruments(Map<Instrument,Level> instr){
+        instruments = instr;
     }
 
 

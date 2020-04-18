@@ -7,7 +7,7 @@ import android.location.Location;
  */
 public abstract class User {
 
-    public MyDate joinDate;
+    private MyDate joinDate;
     private MyLocation location;
 
     private static final double EPFL_LATITUDE = 46.5185941;
@@ -23,6 +23,8 @@ public abstract class User {
     public MyDate getJoinDate() {
         return new MyDate(joinDate);
     }
+
+    public void setJoinDate(MyDate join){ joinDate = new MyDate(join);}
 
     public void setLocation(MyLocation location) {
         this.location.setLocation(location);

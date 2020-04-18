@@ -2,6 +2,7 @@ package ch.epfl.sdp.musiconnect;
 
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,6 +27,24 @@ public class MusicianClassUnitTests {
 
         john.setVideoURL(videoURL);
         assertEquals(videoURL, john.getVideoURL());
+    }
+
+    @Test
+    public void getterAndSetterOfInstruments() {
+        String firstName = "John";
+        String lastName = "Lennon";
+        String userName = "JohnLennon";
+        String emailAddress = "john.lennon@gmail.com";
+        MyDate birthday = new MyDate(1940, 10, 9);
+        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
+
+        HashMap<Instrument,Level> instruments = new HashMap<Instrument,Level>(){{
+            put(Instrument.ACCORDION,Level.INTERMEDIATE);
+            put(Instrument.BAGPIPES,Level.BEGINNER);
+        }};
+
+        john.setInstruments(instruments);
+        assertEquals(instruments, john.getInstruments());
     }
 
     @Test

@@ -86,7 +86,7 @@ public class RoomDatabaseTest {
         assertEquals(person1.getFirstName()+person1.getLastName()+person1.getEmailAddress()+person1.getUserName()+person1.getAge()+person1.getVideoURL(),
                 user1.getFirstName()+user1.getLastName()+user1.getEmailAddress()+user1.getUserName()+user1.getAge()+user1.getVideoURL());
         assertEquals(person1.getJoinDate(),user1.getJoinDate());
-        assertEquals(person1.instruments,(user1.instruments));
+        assertEquals(person1.getInstruments(),(user1.getInstruments()));
         assertEquals(person1.getLocation(),(new MyLocation(40,40)));
     }
 
@@ -120,7 +120,7 @@ public class RoomDatabaseTest {
         assertEquals(person1.getFirstName()+person1.getLastName()+person1.getEmailAddress()+person1.getUserName()+person1.getAge()+person1.getVideoURL(),
                 user1.getFirstName()+user1.getLastName()+user1.getEmailAddress()+user1.getUserName()+user1.getAge()+user1.getVideoURL());
         assertEquals(person1.getJoinDate(),user1.getJoinDate());
-        assertEquals(person1.instruments,(user1.instruments));
+        assertEquals(person1.getInstruments(),(user1.getInstruments()));
     }
 
 
@@ -142,7 +142,7 @@ public class RoomDatabaseTest {
         assertEquals(person1.getFirstName()+person1.getLastName()+person1.getEmailAddress()+person1.getUserName()+person1.getAge()+person1.getVideoURL(),
                 user1.getFirstName()+user1.getLastName()+user1.getEmailAddress()+user1.getUserName()+user1.getAge()+user1.getVideoURL());
         assertEquals(person1.getJoinDate(),user1.getJoinDate());
-        assertEquals(person1.instruments,(user1.instruments));
+        assertEquals(person1.getInstruments(),(user1.getInstruments()));
     }
 
     @Test
