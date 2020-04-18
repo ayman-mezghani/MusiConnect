@@ -63,12 +63,13 @@ public class CloudStorage {
                     // Local temp file has been created
 //                    Toast.makeText(context, R.string.cloud_download_successful, Toast.LENGTH_LONG).show();
                     Log.e(TAG, "File created. Created " + localFile.toString());
-                    cloudCallback.onCallback(Uri.fromFile(localFile));
+                    cloudCallback.onSuccess(Uri.fromFile(localFile));
                 })
                 .addOnFailureListener(e -> {
                     // Handle any errors
 //                    Toast.makeText(context, R.string.cloud_download_failed, Toast.LENGTH_LONG).show();
                     Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+                    cloudCallback.onFailure();
                 });
     }
 
