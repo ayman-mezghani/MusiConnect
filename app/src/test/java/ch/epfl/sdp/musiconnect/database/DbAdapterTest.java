@@ -24,7 +24,7 @@ public class DbAdapterTest {
     public void init() {
         musician = new Musician(firstName, lastName, username, emailAddress, birthDate);
         SimplifiedMusician sm = new SimplifiedMusician(musician);
-        dbAdapter = new DbAdapter(new MockDatabase(emailAddress, sm, sm.toMap()));
+        dbAdapter = new DbAdapter(new MockDatabaseForUT(emailAddress, sm, sm.toMap()));
     }
 
     @Test

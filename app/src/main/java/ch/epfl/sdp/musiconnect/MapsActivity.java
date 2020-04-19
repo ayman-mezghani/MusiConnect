@@ -47,6 +47,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.FirebaseDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
@@ -60,8 +61,7 @@ import static ch.epfl.sdp.musiconnect.MapsActivity.Utility.generateWarning;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener, AdapterView.OnItemSelectedListener {
 
-    private Database db = new FirebaseDatabase();
-    private DbAdapter Adb = new DbAdapter(db);
+    private DbAdapter Adb = DbGenerator.getDbInstance();
 
     private AppDatabase localDb;
     private Executor mExecutor = Executors.newSingleThreadExecutor();
@@ -272,7 +272,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
 
-        if(CurrentUser.getInstance(this).getCreatedFlag() == true) {
+       /* if(CurrentUser.getInstance(this).getCreatedFlag()) {
             //UserCreation.mainUser.setLocation(new MyLocation(setLoc.getLatitude(),setLoc.getLongitude()));
             //Adb.update(UserCreation.mainUser);
             GeoPoint loc = new GeoPoint(setLoc.getLatitude(),setLoc.getLongitude());
@@ -282,7 +282,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }});
         } else {
 //            generateWarning(MapsActivity.this,"Error: couldn't update your location to the cloud", Utility.warningTypes.Toast);
-        }
+        }*/
     }
 
 

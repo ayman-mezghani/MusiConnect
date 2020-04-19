@@ -9,6 +9,8 @@ import androidx.test.espresso.intent.rule.IntentsTestRule;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.epfl.sdp.R;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -26,11 +28,20 @@ public class GoogleLoginTests {
     public void signInButtonClick(){
         onView(withId(R.id.sign_in_button)).check(matches(isDisplayed()));
         onView(withId(R.id.sign_in_button)).perform(click());
+        waitALittle(3);
     }
 
     @Test
     public void onActivityResult(){
         // Simulate the on activity result call
         ((GoogleLogin ) VideoPlayingTests.getCurrentActivity()).onActivityResult(0  ,0,null);
+    }
+
+    public static void waitALittle(int t) {
+        try {
+            TimeUnit.SECONDS.sleep(t);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

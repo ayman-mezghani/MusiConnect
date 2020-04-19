@@ -62,7 +62,7 @@ public class RoomDatabaseTest {
         mExecutor.execute(() -> {
             users = musicianDao.getAll();
         });
-        waitALittle(2);
+        waitALittle(5);
         assertTrue(users.isEmpty());
     }
 
@@ -79,7 +79,7 @@ public class RoomDatabaseTest {
         mExecutor.execute(() -> {
             users = musicianDao.getAll();
         });
-        waitALittle(2);
+        waitALittle(5);
         assertEquals(1,users.size());
         Musician user1 = users.get(0);
         //assertEquals(person1.toString(),user1.toString());
@@ -105,7 +105,7 @@ public class RoomDatabaseTest {
         mExecutor.execute(() -> {
             users = musicianDao.getAll();
         });
-        waitALittle(2);
+        waitALittle(5);
         assertEquals(2,users.size());
 
         mExecutor.execute(() -> {
@@ -114,7 +114,7 @@ public class RoomDatabaseTest {
         mExecutor.execute(() -> {
             users = musicianDao.getAll();
         });
-        waitALittle(2);
+        waitALittle(5);
         assertEquals(1,users.size());
         Musician user1 = users.get(0);
         assertEquals(person1.getFirstName()+person1.getLastName()+person1.getEmailAddress()+person1.getUserName()+person1.getAge()+person1.getVideoURL(),
@@ -132,11 +132,11 @@ public class RoomDatabaseTest {
             musicianDao.insertAll(person1);
             musicianDao.insertAll(person2);
         });
-        waitALittle(2);
+        waitALittle(5);
         mExecutor.execute(() -> {
             users = musicianDao.loadAllByIds(new String[]{"sauce@gmail.com"});
         });
-        waitALittle(2);
+        waitALittle(5);
         assertEquals(1,users.size());
         Musician user1 = users.get(0);
         assertEquals(person1.getFirstName()+person1.getLastName()+person1.getEmailAddress()+person1.getUserName()+person1.getAge()+person1.getVideoURL(),

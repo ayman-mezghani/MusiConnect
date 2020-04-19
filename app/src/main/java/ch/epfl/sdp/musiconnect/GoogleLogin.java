@@ -15,9 +15,9 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.FirebaseDatabase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
 
 public class GoogleLogin extends AppCompatActivity {
 
@@ -57,7 +57,7 @@ public class GoogleLogin extends AppCompatActivity {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
         if (account != null) {
-            DbAdapter db = new DbAdapter(new FirebaseDatabase());
+            DbAdapter db = DbGenerator.getDbInstance();
 
             db.exists(account.getEmail(), new DbCallback() {
                 @Override
@@ -103,7 +103,9 @@ public class GoogleLogin extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
-            DbAdapter db = new DbAdapter(new FirebaseDatabase());
+            DbAdapter db = DbGenerator.getDbInstance();
+
+            Log.d("AppStatus", "here");
 
             db.exists(account.getEmail(), new DbCallback() {
                 @Override

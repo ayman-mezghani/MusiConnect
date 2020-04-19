@@ -9,13 +9,13 @@ import ch.epfl.sdp.musiconnect.User;
 
 import static org.junit.Assert.assertEquals;
 
-public class MockDatabase implements Database {
+public class MockDatabaseForUT implements Database {
 
     private String expectedDocName;
     private SimplifiedMusician expectedSimplifiedMusician;
     private Map<String, Object> expectedNewValueMap;
 
-    MockDatabase(String expectedDocName, SimplifiedMusician expectedSimplifiedMusician, Map<String, Object> expectedNewValueMap) {
+    MockDatabaseForUT(String expectedDocName, SimplifiedMusician expectedSimplifiedMusician, Map<String, Object> expectedNewValueMap) {
         this.expectedDocName = expectedDocName;
         this.expectedSimplifiedMusician = expectedSimplifiedMusician;
         this.expectedNewValueMap = expectedNewValueMap;

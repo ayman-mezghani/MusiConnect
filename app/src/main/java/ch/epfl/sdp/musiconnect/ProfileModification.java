@@ -25,6 +25,7 @@ import java.util.Map;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.FirebaseDatabase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.SimplifiedMusician;
@@ -126,8 +127,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
      * @param newFields: new values to write
      */
     private void updateDatabaseFields(String[] newFields) {
-        FirebaseDatabase db = new FirebaseDatabase();
-        DbAdapter adapter = new DbAdapter(db);
+        DbAdapter adapter = DbGenerator.getDbInstance();
         Map<String, Object> data = new HashMap<>();
         String[] keys = {"firstName", "lastName", "username", "email", "birthday"};
         for (int i = 0; i < keys.length; ++i) {
