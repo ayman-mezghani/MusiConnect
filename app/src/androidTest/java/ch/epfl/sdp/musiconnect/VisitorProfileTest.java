@@ -70,7 +70,8 @@ public class VisitorProfileTest {
 
     @Test
     public void testNoMarkerTransitionToProfile() {
-        Musician m = new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", new MyDate(1992, 9, 20));
+        MyDate date = new MyDate(1992, 9, 20);
+        Musician m = new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", date);
 
         Intent intent = new Intent();
         intent.putExtra("FirstName", m.getFirstName());
@@ -82,8 +83,10 @@ public class VisitorProfileTest {
         visitorActivityTestRule.launchActivity(intent);
 
 
-
         onView(withId(R.id.firstname)).check(matches(withText("Alice")));
+        onView(withId(R.id.lastname)).check(matches(withText("Bardon")));
         onView(withId(R.id.username)).check(matches(withText("Alyx")));
+        onView(withId(R.id.mail)).check(matches(withText("alyx92@gmail.com")));
+        onView(withId(R.id.birthday)).check(matches(withText(date.toString())));
     }
 }

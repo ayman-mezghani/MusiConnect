@@ -10,7 +10,8 @@ import ch.epfl.sdp.musiconnect.database.DbAdapter;
 public class VisitorProfilePage extends ProfilePage {
     private DataBase db;
     private DbAdapter dbAdapter;
-    private String newUsername;    private boolean isTest;
+    private String newUsername;
+    private boolean isTest;
 
 
 
@@ -18,20 +19,7 @@ public class VisitorProfilePage extends ProfilePage {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try {
-            Class.forName("androidx.test.espresso.Espresso");
-            isTest = true;
-        } catch (ClassNotFoundException e) {
-            isTest = false;
-        }
-
-        if (isTest) {
-            db = new DataBase();
-            // db = new MockDatabase();
-        } else {
-            db = new DataBase();
-        }
-
+        db = new DataBase();
         dbAdapter = new DbAdapter(db);
 
         setContentView(R.layout.activity_visitor_profile_page);

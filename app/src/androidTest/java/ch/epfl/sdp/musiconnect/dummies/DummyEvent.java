@@ -14,7 +14,7 @@ public class DummyEvent {
         dm = new DummyMusician();
         events = new ArrayList<>();
 
-        Event e1 = new Event(dm.getMusician(1), 0);
+        Event e1 = new Event(dm.getMusician(0), 0);
 
         e1.setAddress("Westminster, London, England");
         e1.setLocation(51.5007, 0.1245);

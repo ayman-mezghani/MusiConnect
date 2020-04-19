@@ -75,4 +75,7 @@
     <string name="welcome_message">Welcome to MusiConnect !</string>
     <string name="info_message">Please navigate the app using the menu.</string>
 
+    <string name="event_not_found">Event not found...</string>
+    <string name="profile_not_found">Profile not found...</string>
+
 </resources>
