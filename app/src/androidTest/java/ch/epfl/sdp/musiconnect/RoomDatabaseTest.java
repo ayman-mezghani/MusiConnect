@@ -30,7 +30,6 @@ public class RoomDatabaseTest {
     private AppDatabase roomDb;
     private MusicianDao musicianDao;
     private Executor mExecutor = Executors.newSingleThreadExecutor();
-    private List<Musician> allUsers = new ArrayList<>();
     private List<Musician> users = new ArrayList<>();
 
 
@@ -40,19 +39,16 @@ public class RoomDatabaseTest {
             new ActivityTestRule<>(StartPage.class);
 
     @Before
-    public void saveDatabaseContentsBeforeTesting() {
+    public void instantiateTestRoomDatabase() {
         roomDb = AppDatabase.getInstance(startPageRule.getActivity().getApplicationContext());
         musicianDao = roomDb.musicianDao();
-        mExecutor.execute(() -> {
-            allUsers = musicianDao.getAll();
-            musicianDao.nukeTable();
-        });
     }
 
+
     @After
-    public void putBackDatabaseContents() {
+    public void cleanDatabaseAfterTest() {
         mExecutor.execute(() -> {
-            musicianDao.insertAll(allUsers.toArray(new Musician[allUsers.size()]));
+            musicianDao.nukeTable();
         });
     }
 
