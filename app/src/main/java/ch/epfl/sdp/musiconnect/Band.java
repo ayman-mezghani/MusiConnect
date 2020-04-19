@@ -35,6 +35,7 @@ public class Band extends User implements Performer {
         }
 
         this.bandName = bandName;
+        name = bandName;
     }
 
     public String getBandName() {

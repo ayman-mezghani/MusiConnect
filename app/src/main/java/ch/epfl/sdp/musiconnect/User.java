@@ -7,6 +7,7 @@ import android.location.Location;
  */
 public abstract class User {
 
+    String name;
     private MyDate joinDate;
     private MyLocation location;
 
@@ -28,6 +29,9 @@ public abstract class User {
         this.location.setLocation(location);
     }
 
+    public String getName() {
+        return name;
+    }
 
     public MyLocation getLocation() {
         return location.getLocation();

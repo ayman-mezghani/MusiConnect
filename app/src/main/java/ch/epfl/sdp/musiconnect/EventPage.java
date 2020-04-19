@@ -16,6 +16,7 @@ public class EventPage extends AppCompatActivity {
     private TextView titleView, creatorView, locationView, timeView, descriptionView;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +30,6 @@ public class EventPage extends AppCompatActivity {
         }
 
         if (isTest) {
-            db = new DataBase();
             // db = new MockDatabase();
         } else {
             db = new DataBase();
@@ -48,9 +48,9 @@ public class EventPage extends AppCompatActivity {
 
     private void retrieveEventInfo() {
         // TODO retrieve event from database
-        Event event = createDummyEvent();
+        // Event event = createDummyEvent();
 
-        loadEventInfo(event);
+        // loadEventInfo(event);
     }
 
     private void loadEventInfo(Event event) {
@@ -59,21 +59,13 @@ public class EventPage extends AppCompatActivity {
         }
 
         titleView.setText(event.getTitle());
-        creatorView.setText(event.getCreator().toString());
+        creatorView.setText(event.getCreator().getName());
         locationView.setText(event.getAddress());
         timeView.setText(event.getDateTime().toString());
         descriptionView.setText(event.getMessage());
     }
 
-    private Event createDummyEvent() {
-        Musician dummyUser = new Musician("Alice", "LeGrand", "Alice", "a@gmail.com", new MyDate());
-        Event dummyEvent = new Event(dummyUser, 0);
-        dummyEvent.setAddress("Westminster, London, England");
-        dummyEvent.setLocation(51.5007, 0.1245);
-        dummyEvent.setDateTime(new MyDate(2020, 9, 21, 14, 30));
-        dummyEvent.setTitle("Event at Big Ben!");
-        dummyEvent.setMessage("Playing at Big Ben, come watch us play!");
+    // TODO test getName()
 
-        return dummyEvent;
-    }
+
 }
