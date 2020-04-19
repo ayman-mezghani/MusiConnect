@@ -18,7 +18,7 @@ import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 
 public abstract class ProfilePage extends Page {
-    protected TextView title, firstName, lastName, username, mail, birthday;
+    protected TextView titleView, firstNameView, lastNameView, usernameView, mailView, birthdayView;
     protected static int VIDEO_REQUEST = 101;
     protected Uri videoUri = null;
     protected VideoView mVideoView;

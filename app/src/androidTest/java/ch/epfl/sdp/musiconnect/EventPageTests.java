@@ -26,14 +26,19 @@ public class EventPageTests {
 
     @Test
     public void loadPageShouldShowCorrectEvent() {
-        DummyEvent de = new DummyEvent();
-        Event event = de.getEvent(0);
+        Musician m1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
+        m1.setLocation(new MyLocation(46.52, 6.52));
+
+        Event event = new Event(m1, 0);
+        event.setAddress("Westminster, London, England");
+        event.setLocation(51.5007, 0.1245);
+        event.setDateTime(new MyDate(2020, 9, 21, 14, 30));
+        event.setTitle("Event at Big Ben!");
+        event.setMessage("Playing at Big Ben, come watch us play!");
 
         Intent intent = new Intent();
         intent.putExtra("EID", 0);
         eventPageRule.launchActivity(intent);
-
-        String name = event.getCreator().getName();
 
         onView(withId(R.id.eventTitle)).check(matches(withText(event.getTitle())));
         onView(withId(R.id.eventCreatorField)).check(matches(withText(event.getCreator().getName())));

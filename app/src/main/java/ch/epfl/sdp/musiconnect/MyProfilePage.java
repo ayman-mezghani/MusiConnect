@@ -31,11 +31,11 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         getVideoUri();
 
         imgVw = findViewById(R.id.imgView);
-        firstName = findViewById(R.id.myFirstname);
-        lastName = findViewById(R.id.myLastname);
-        username = findViewById(R.id.myUsername);
-        mail = findViewById(R.id.myMail);
-        birthday = findViewById(R.id.myBirthday);
+        firstNameView = findViewById(R.id.myFirstname);
+        lastNameView = findViewById(R.id.myLastname);
+        usernameView = findViewById(R.id.myUsername);
+        mailView = findViewById(R.id.myMail);
+        birthdayView = findViewById(R.id.myBirthday);
 
         Button editProfile = findViewById(R.id.btnEditProfile);
         editProfile.setOnClickListener(v -> {
@@ -65,9 +65,9 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             //String personId = acct.getId();
             Uri personPhoto = acct.getPhotoUrl();
 
-            firstName.setText(personName.split(" ")[0]);
-            lastName.setText(personName.split(" ")[1]);
-            mail.setText(personEmail);
+            firstNameView.setText(personName.split(" ")[0]);
+            lastNameView.setText(personName.split(" ")[1]);
+            mailView.setText(personEmail);
 
             Glide.with(this).load(String.valueOf(personPhoto)).into(imgVw);
         }
@@ -91,11 +91,11 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         if (requestCode == LAUNCH_PROFILE_MODIF_INTENT && resultCode == Activity.RESULT_OK) {
             String[] newFields = data.getStringArrayExtra("newFields");
             assert newFields != null;
-            firstName.setText(newFields[0]);
-            lastName.setText(newFields[1]);
-            username.setText(newFields[2]);
-            mail.setText(newFields[3]);
-            birthday.setText(newFields[4]);
+            firstNameView.setText(newFields[0]);
+            lastNameView.setText(newFields[1]);
+            usernameView.setText(newFields[2]);
+            mailView.setText(newFields[3]);
+            birthdayView.setText(newFields[4]);
             showVideo();
         }
 
@@ -126,10 +126,10 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
      * @param intent
      */
     private void sendInformation(Intent intent) {
-        intent.putExtra("FIRST_NAME", firstName.getText().toString());
-        intent.putExtra("LAST_NAME", lastName.getText().toString());
-        intent.putExtra("USERNAME", username.getText().toString());
-        intent.putExtra("MAIL", mail.getText().toString());
-        intent.putExtra("BIRTHDAY", birthday.getText().toString());
+        intent.putExtra("FIRST_NAME", firstNameView.getText().toString());
+        intent.putExtra("LAST_NAME", lastNameView.getText().toString());
+        intent.putExtra("USERNAME", usernameView.getText().toString());
+        intent.putExtra("MAIL", mailView.getText().toString());
+        intent.putExtra("BIRTHDAY", birthdayView.getText().toString());
     }
 }
