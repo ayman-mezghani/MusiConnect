@@ -58,10 +58,7 @@ public class VisitorProfilePage extends ProfilePage {
                 lastNameView.setText(m.getLastName());
                 usernameView.setText(m.getUserName());
                 mailView.setText(m.getEmailAddress());
-
-                MyDate date = m.getBirthday();
-                String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
-                birthdayView.setText(s);
+                birthdayView.setText(m.getBirthday().toString());
 
                 /*
                 dbAdapter.read(newUsername, user -> {
