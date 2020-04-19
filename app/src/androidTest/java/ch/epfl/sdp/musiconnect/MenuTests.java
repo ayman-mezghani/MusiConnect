@@ -107,10 +107,4 @@ public class MenuTests {
         startPageRule.launchActivity(mapIntent);
         intended(hasComponent(MapsActivity.class.getName()));
     }
-
-    @Test
-    public void testLogOut() {
-        //openActionsMenu(R.string.signout);
-        //intended(hasComponent(GoogleLogin.class.getName()));
-    }
 }
