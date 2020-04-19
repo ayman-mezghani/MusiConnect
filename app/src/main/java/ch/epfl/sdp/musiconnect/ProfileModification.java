@@ -3,19 +3,12 @@ package ch.epfl.sdp.musiconnect;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.widget.VideoView;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
@@ -30,30 +23,24 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.SimplifiedMusician;
 
-public class ProfileModification extends AppCompatActivity implements View.OnClickListener {
+import static ch.epfl.sdp.musiconnect.Notifications.MUSICIAN_CHANNEL;
 
-    public static final String MUSICIAN_CHANNEL = "musician_channel";
-    public static final String MANAGER_CHANNEL = "manager_channel";
+public class ProfileModification extends ProfilePage implements View.OnClickListener {
 
     String firstName, lastName, username, mail, birthday;
     EditText[] editFields;
     final Calendar calendar = Calendar.getInstance();
 
     protected static int VIDEO_REQUEST = 101;
-    private String testusername = "testUser";
-    protected Uri videoUri = null;
-    private VideoView mVideoView;
+
     private CloudStorage storage;
     private boolean videoRecorded = false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,71 +59,13 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         onCreateGetIntentsFields();
         setEditTextFields(editFields, new String[]{firstName, lastName, username, mail, birthday});
 
-        mVideoView = findViewById(R.id.videoViewEdit);
-
         findViewById(R.id.btnSaveProfile).setOnClickListener(this);
         findViewById(R.id.btnDoNotSaveProfile).setOnClickListener(this);
+
+        mVideoView = findViewById(R.id.videoViewEdit);
         findViewById(R.id.btnCaptureVideo).setOnClickListener(v -> captureVideo());
 
-        storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
-        String path = testusername + "/" + CloudStorage.FileType.video;
-        String saveName = testusername + "_" + CloudStorage.FileType.video;
-
-        try {
-            storage.download(path, saveName, fileUri -> {
-                videoUri = fileUri;
-                mVideoView.setVideoURI(videoUri);
-                mVideoView.start();
-                mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
-            });
-        } catch (IOException e) {
-            Toast.makeText(this, "An error occured, please contact support.", Toast.LENGTH_LONG).show();
-        }
-
-        // NOTIFICATION PART
-        createNotificationChannels();
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, MUSICIAN_CHANNEL)
-                .setSmallIcon(R.drawable.ic_notification_icon)
-                .setContentTitle("Profile Change")
-                .setContentText("Profile is being changed.")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(0, builder.build());
-    }
-
-    private void createNotificationChannels() {
-        // Oreo API lvl 26
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Musicians and band with default importance
-            NotificationChannel mChannel = new NotificationChannel(
-                    MUSICIAN_CHANNEL,
-                    "Musician Channel",
-                    NotificationManager.IMPORTANCE_DEFAULT
-            );
-            mChannel.setDescription("Notification channel used for musicians and bands.");
-
-            // Event managers with high importance
-            NotificationChannel eChannel = new NotificationChannel(
-                    MANAGER_CHANNEL,
-                    "Event Manager Channel",
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-            mChannel.setDescription("Notification channel used for event managers.");
-
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            assert manager != null;
-            manager.createNotificationChannel(mChannel);
-            manager.createNotificationChannel(eChannel);
-        }
-    }
-
-    private void onCreateGetIntentsFields() {
-        firstName = getIntent().getStringExtra("FIRST_NAME");
-        lastName = getIntent().getStringExtra("LAST_NAME");
-        username = getIntent().getStringExtra("USERNAME");
-        mail = getIntent().getStringExtra("MAIL");
-        birthday = getIntent().getStringExtra("BIRTHDAY");
+        getVideoUri(mail);
     }
 
     @Override
@@ -156,9 +85,30 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         }
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK) {
+            videoUri = data.getData();
+            videoRecorded = true;
+        }
+        showVideo();
+    }
+
+    private void onCreateGetIntentsFields() {
+        firstName = getIntent().getStringExtra("FIRST_NAME");
+        lastName = getIntent().getStringExtra("LAST_NAME");
+        username = getIntent().getStringExtra("USERNAME");
+        mail = getIntent().getStringExtra("MAIL");
+        birthday = getIntent().getStringExtra("BIRTHDAY");
+        initCalendarDate(birthday);
+    }
+
+    private void initCalendarDate(String sDate) {
+        String[] tempArray = sDate.split("/");
+        calendar.set(Calendar.YEAR, Integer.parseInt(tempArray[2]));
+        calendar.set(Calendar.MONTH, Integer.parseInt(tempArray[1])-1);
+        calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(tempArray[0]));
     }
 
     /**
@@ -173,12 +123,29 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         return Integer.parseInt(uc.getAge(year, month, day)) >= 13;
     }
 
+    /**
+     * At start, change default values of EditText fields to profile value
+     * @param fields: array of fields to change
+     * @param params: value to change to
+     */
     private void setEditTextFields(EditText[] fields, String[] params) {
         int idx = 0;
         for (EditText f: fields) {
             f.setText(params[idx]);
             ++idx;
         }
+    }
+
+    /**
+     * At stop, get the values of EditText fields
+     * @return: the new values
+     */
+    private String[] getNewTextFields() {
+        int l = editFields.length;
+        String[] newFields = new String[l];
+        for (int i = 0; i < editFields.length; i++)
+            newFields[i] = editFields[i].getText().toString();
+        return newFields;
     }
 
     /**
@@ -209,6 +176,10 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         adapter.update(me);
     }
 
+    /**
+     * Save the changes to profile page on save button click
+     * @param newFields: fields to update database content with
+     */
     private void btnSave(String[] newFields) {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("newFields", newFields);
@@ -218,7 +189,7 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
             returnIntent.putExtra("videoUri", videoUri.toString());
             storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
             try {
-                storage.upload(videoUri, CloudStorage.FileType.video, testusername);
+                storage.upload(videoUri, CloudStorage.FileType.video, mail);
             } catch (IOException e) {
                 Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
             }
@@ -227,14 +198,6 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         updateDatabaseFields(newFields);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
-    }
-
-    private String[] getNewTextFields() {
-        int l = editFields.length;
-        String[] newFields = new String[l];
-        for (int i = 0; i < editFields.length; i++)
-            newFields[i] = editFields[i].getText().toString();
-        return newFields;
     }
 
     /**
@@ -266,21 +229,4 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
             startActivityForResult(videoIntent, VIDEO_REQUEST);
         }
     }
-
-    @SuppressLint("MissingSuperCall")
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK) {
-            videoUri = data.getData();
-            videoRecorded = true;
-        }
-
-        if (videoUri != null) {
-            mVideoView.setVideoURI(videoUri);
-            mVideoView.start();
-            mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
-        }
-    }
-
 }

@@ -11,8 +11,6 @@ import ch.epfl.sdp.musiconnect.database.DbCallback;
 public class VisitorProfilePage extends ProfilePage implements DbCallback {
     private DataBase db;
     private DbAdapter dbAdapter;
-    private String newUsername;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +21,6 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
 
         setContentView(R.layout.activity_visitor_profile_page);
         mVideoView = findViewById(R.id.videoView);
-        getVideoUri();
 
         imgVw = findViewById(R.id.imgView);
         title = findViewById(R.id.profileTitle);
@@ -45,15 +42,17 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
                     new MyDate(birthday[2], birthday[1], birthday[0]));
             readCallback(alyx);
         }
+
+        getVideoUri(userEmail);
     }
 
 
     // This function should take something like userID as input
     private void loadProfileContent() {
         Intent intent = getIntent();
-        if (intent.hasExtra("UserName")) {
-            newUsername = intent.getStringExtra("UserName");
-            dbAdapter.read(newUsername, this);
+        if (intent.hasExtra("UserEmail")) {
+            userEmail = intent.getStringExtra("UserEmail");
+            dbAdapter.read(userEmail, this);
         }
     }
 
