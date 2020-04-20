@@ -42,6 +42,9 @@ public class RoomDatabaseTest {
     public void instantiateTestRoomDatabase() {
         roomDb = AppDatabase.getInstance(startPageRule.getActivity().getApplicationContext());
         musicianDao = roomDb.musicianDao();
+        mExecutor.execute(() -> {
+            musicianDao.nukeTable();
+        });
     }
 
 
