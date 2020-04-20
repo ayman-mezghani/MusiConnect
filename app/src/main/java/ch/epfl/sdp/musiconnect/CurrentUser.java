@@ -35,9 +35,25 @@ public class CurrentUser {
 
     // private constructor restricted to this class itself
     private CurrentUser(Context context) {
-        acct = GoogleSignIn.getLastSignedInAccount(context);
-        if (acct != null) {
-            email = acct.getEmail();
-        } else email = "";
+        if(!checktest()) {
+            acct = GoogleSignIn.getLastSignedInAccount(context);
+            if (acct != null) {
+                email = acct.getEmail();
+            } else email = "";
+        }else{
+            email = "defuser@gmail.com";
+        }
+    }
+
+    private boolean checktest() {
+        boolean istest;
+
+        try {
+            Class.forName("androidx.test.espresso.Espresso");
+            istest = true;
+        } catch (ClassNotFoundException e) {
+            istest = false;
+        }
+        return istest;
     }
 }

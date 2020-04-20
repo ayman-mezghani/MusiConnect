@@ -6,25 +6,37 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
+import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
+import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
+import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
+
+import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
 
 public class MyProfilePage extends ProfilePage implements View.OnClickListener {
 
     private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
     private DbAdapter dbAdapter;
     private boolean test = true;
+    private Musician currentCachedUser;
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -57,21 +69,16 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         getVideoUri(userEmail);
     }
 
-    private boolean checktest() {
-        boolean istest;
-
-        try {
-            Class.forName("androidx.test.espresso.Espresso");
-            istest = true;
-        } catch (ClassNotFoundException e) {
-            istest = false;
-        }
-        return istest;
-    }
-
     private void loadProfileContent() {
-        if (!checktest()) {
-            userEmail = CurrentUser.getInstance(this).email;
+        Executor mExecutor = Executors.newSingleThreadExecutor();
+        AppDatabase localDb = AppDatabase.getInstance(this);
+        MusicianDao mdao = localDb.musicianDao();
+        userEmail = CurrentUser.getInstance(this).email;
+        mExecutor.execute(() -> {
+            List<Musician> result = mdao.loadAllByIds(new String[]{userEmail});
+            currentCachedUser = result.isEmpty() ? null : result.get(0);
+        });
+        if (checkConnection(MyProfilePage.this)) {
             dbAdapter.read(userEmail, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
@@ -83,16 +90,30 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
                     MyDate date = m.getBirthday();
                     String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
                     birthday.setText(s);
+                    if (currentCachedUser == null) {
+                        mExecutor.execute(() -> {
+                            mdao.insertAll(m);
+                        });
+                    }
                 }
             });
+
         } else {
-            firstName.setText("default");
-            lastName.setText("user");
-            username.setText("defuser");
-            email.setText("defuser@gmail.com");
-            birthday.setText("01/01/2000");
+            if (currentCachedUser == null) {
+                Toast.makeText(this, "Unable to fetch profile information; please connect to internet", Toast.LENGTH_LONG).show();
+            } else {
+                firstName.setText(currentCachedUser.getFirstName());
+                lastName.setText(currentCachedUser.getLastName());
+                username.setText(currentCachedUser.getUserName());
+                email.setText(currentCachedUser.getEmailAddress());
+                MyDate date = currentCachedUser.getBirthday();
+                String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
+                birthday.setText(s);
+            }
         }
+
     }
+
 
     public void captureVideo(View view) {
         Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
@@ -105,7 +126,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-    //        getVideoUri(userEmail);
+        //        getVideoUri(userEmail);
     }
 
     @SuppressLint("MissingSuperCall")

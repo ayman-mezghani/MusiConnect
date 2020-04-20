@@ -53,6 +53,7 @@ import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 
+import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
 import static ch.epfl.sdp.musiconnect.MapsActivity.Utility.generateWarning;
 
 
@@ -157,7 +158,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mUiSettings = mMap.getUiSettings();
 
         //If there's a connection, fetch Users in the general area; else, load them from cache
-        if(checkConnection()){
+        if(checkConnection(MapsActivity.this)){
             createPlaceHolderUsers();
             clearCachedUsers();
         }else{
@@ -189,7 +190,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         handler.postDelayed(new Runnable() {
             public void run() {
-                boolean co = checkConnection();
+                boolean co = checkConnection(MapsActivity.this);
                 boolean loc = checkLocationServices();
 
                 if (!co) {
@@ -392,17 +393,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             profileIntent.putExtra("Test", false);
 
             this.startActivity(profileIntent);
-        }
-    }
-
-    protected boolean checkConnection() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            //we are connected to a network
-            return true;
-        } else {
-            return false;
         }
     }
 

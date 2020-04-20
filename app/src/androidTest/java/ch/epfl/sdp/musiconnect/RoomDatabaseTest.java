@@ -142,6 +142,20 @@ public class RoomDatabaseTest {
     }
 
     @Test
+    public void fetchingUnknowEmailReturnsEmpty(){
+        Musician person1 = new Musician("Sauce", "deSaucisse", "test", "sauce@gmail.com", new MyDate(1990, 10, 25));
+        mExecutor.execute(() -> {
+            musicianDao.insertAll(person1);
+        });
+        waitALittle(2);
+        mExecutor.execute(() -> {
+            users = musicianDao.loadAllByIds(new String[]{"callmecarson41@gmail.com"});
+        });
+        waitALittle(2);
+        assertTrue(users.isEmpty());
+    }
+
+    @Test
     public void instrumentConverterTest(){
         HashMap<Instrument,Level> map = new HashMap<>();
         for(Instrument i:Instrument.values()){
