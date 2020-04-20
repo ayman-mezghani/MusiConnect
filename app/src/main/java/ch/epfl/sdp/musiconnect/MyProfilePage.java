@@ -20,6 +20,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DataBase;
@@ -59,10 +60,14 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
 
         Button editProfile = findViewById(R.id.btnEditProfile);
         editProfile.setOnClickListener(v -> {
-            Intent profileModificationIntent = new Intent(this, ProfileModification.class);
-            sendInformation(profileModificationIntent);
-            // Permits sending information from child to parent activity
-            startActivityForResult(profileModificationIntent, LAUNCH_PROFILE_MODIF_INTENT);
+            if(currentCachedUser != null) {
+                Intent profileModificationIntent = new Intent(this, ProfileModification.class);
+                sendInformation(profileModificationIntent);
+                // Permits sending information from child to parent activity
+                startActivityForResult(profileModificationIntent, LAUNCH_PROFILE_MODIF_INTENT);
+            } else {
+                Toast.makeText(MyProfilePage.this,"Error loading profile; cannot edit",Toast.LENGTH_LONG);
+            }
         });
 
         loadProfileContent();
@@ -99,6 +104,11 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             });
 
         } else {
+            try {                                           //wait for async thread to fetch cached profile
+                TimeUnit.MILLISECONDS.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             if (currentCachedUser == null) {
                 Toast.makeText(this, "Unable to fetch profile information; please connect to internet", Toast.LENGTH_LONG).show();
             } else {

@@ -437,6 +437,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mExecutor.execute(() -> {
             allUsers = musicianDao.getAll();
+            List<Musician> currentUser = musicianDao.loadAllByIds(new String[]{CurrentUser.getInstance(MapsActivity.this).email});
+            allUsers.removeAll(currentUser);
         });
 
 
