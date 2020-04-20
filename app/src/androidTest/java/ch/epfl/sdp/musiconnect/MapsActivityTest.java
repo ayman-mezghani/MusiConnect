@@ -83,8 +83,9 @@ public class MapsActivityTest {
     }
 
     @Test
-    public void testChangeRadiusShouldMakeReceiveNotifications() {
+    public void testChangeRadiusShouldMakeReceiveNotifications() throws InterruptedException {
         openActionsMenu(R.string.map);
+        Thread.sleep(1000);
         onView(withId(R.id.distanceThreshold)).perform(click());
         onView(withText("10km")).perform(click());
         assert(true); // temporary waiting for notification tests

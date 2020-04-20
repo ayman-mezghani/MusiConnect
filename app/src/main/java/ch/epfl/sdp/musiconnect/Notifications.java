@@ -48,15 +48,13 @@ public class Notifications extends AppCompatActivity {
      * @param id: default = 0
      * @param context: current calling activity context
      * @param priority: priority level (DEFAULT for standard user, HIGH for Manager)
-     * @param title: notification title
-     * @param text: what to write
      */
-    protected void sendNotification(String channel, int id, Context context, int priority, String title, String text) {
+    protected void sendNotification(String channel, int id, Context context, int priority) {
         createNotificationChannels();
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channel)
                 .setSmallIcon(R.drawable.ic_notification_icon)
-                .setContentTitle(title)
-                .setContentText(text)
+                .setContentTitle("MusiConnect notification")
+                .setContentText("A musician is nearby !")
                 .setPriority(priority);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);

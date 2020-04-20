@@ -347,9 +347,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         MUSICIAN_CHANNEL,
                         0,
                         this,
-                        NotificationCompat.PRIORITY_DEFAULT,
-                        "A MUSICIAN IS CLOSE",
-                        "User is within " + threshold/1000 + "[km]."
+                        NotificationCompat.PRIORITY_DEFAULT
                 );
             }
         }
