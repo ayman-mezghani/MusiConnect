@@ -21,11 +21,16 @@ import com.google.firebase.storage.FirebaseStorage;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
@@ -33,6 +38,11 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.SimplifiedMusician;
+import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
+import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
+
+import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
+import static ch.epfl.sdp.musiconnect.roomdatabase.MyDateConverter.dateToMyDate;
 
 public class ProfileModification extends ProfilePage implements View.OnClickListener {
 
@@ -44,6 +54,8 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
 
     private CloudStorage storage;
     private boolean videoRecorded = false;
+
+    private List<Musician> result; //used to fetch from room database
 
 
     @Override
@@ -128,39 +140,20 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
 
     /**
      * Update the new values to the database
-     * @param newFields: new values to write
+     * @param modCurrent: profile of current user that has been modified
      */
-    private void updateDatabaseFields(String[] newFields) {
+    private void updateDatabaseFields(Musician modCurrent) {
+        while(!checkConnection(ProfileModification.this)) { //semi-busy waiting for the connection to be back up
+            try {
+                TimeUnit.SECONDS.sleep(20);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         DataBase db = new DataBase();
         DbAdapter adapter = new DbAdapter(db);
-        Map<String, Object> data = new HashMap<>();
-        String[] keys = {"firstName", "lastName", "username", "email", "birthday"};
-        for (int i = 0; i < keys.length; ++i) {
-            if (keys[i].equals("birthday")) {
-                @SuppressLint("SimpleDateFormat")
-                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy"); // KEEP THIS DATE FORMAT !
-                try {
-                    Date d = format.parse(newFields[i]);
-                    data.put(keys[i], new Timestamp(d));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            } else
-                data.put(keys[i], newFields[i]);
-        }
-        data.put("location", new GeoPoint(0, 0));
-
-        Musician me = new SimplifiedMusician(data).toMusician();
-        adapter.update(me);
-    }
-
-    private void btnSave(String[] newFields) {
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("newFields", newFields);
-
-        // Upload video to cloud storage
+        adapter.update(modCurrent);
         if(videoRecorded) {
-            returnIntent.putExtra("videoUri", videoUri.toString());
             storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
             try {
                 storage.upload(videoUri, CloudStorage.FileType.video, mail);
@@ -168,8 +161,64 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
                 Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
             }
         }
+    }
 
-        updateDatabaseFields(newFields);
+    private void btnSave(String[] newFields) {
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("newFields", newFields);
+
+        Executor mExecutor = Executors.newSingleThreadExecutor();
+        AppDatabase localDb = AppDatabase.getInstance(this);
+        MusicianDao mdao = localDb.musicianDao();
+        String userEmail = CurrentUser.getInstance(this).email;
+        //fetches cached user profile
+        mExecutor.execute(() -> {
+            result = mdao.loadAllByIds(new String[]{userEmail});
+        });
+        while(result == null) {         //semi-busy waiting for async thread
+            try {
+                TimeUnit.MILLISECONDS.sleep(500);
+            } catch (InterruptedException e) {
+                result = new ArrayList<Musician>();
+            }
+        }
+        if(result.isEmpty()){
+            Toast.makeText(ProfileModification.this,"Error: couldn't update profile",Toast.LENGTH_LONG);
+            finish();
+            return;
+        }
+
+        Musician currentCachedMusician = result.get(0);
+        result = null;
+        //update cached profile
+        currentCachedMusician.setFirstName(newFields[0]);
+        currentCachedMusician.setLastName(newFields[1]);
+        currentCachedMusician.setUserName(newFields[2]);
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy"); // KEEP THIS DATE FORMAT !
+        MyDate cUserBirthday = currentCachedMusician.getBirthday();
+        try {
+            Date d = format.parse(newFields[4]);
+            cUserBirthday = dateToMyDate(d);
+
+        } catch (ParseException e) {
+            Toast.makeText(ProfileModification.this,"Error: couldn't update profile",Toast.LENGTH_LONG);
+            finish();
+            return;
+        }
+        currentCachedMusician.setBirthday(cUserBirthday);
+
+        // Upload video to cloud storage
+        if(videoRecorded) {
+            returnIntent.putExtra("videoUri", videoUri.toString());
+        }
+
+        //launches the update to the database on another thread, so that it doesn't hang up the app if not connected to internet
+        mExecutor.execute(() -> {
+            mdao.updateUsers(new Musician[]{currentCachedMusician});
+            updateDatabaseFields(currentCachedMusician);
+        });
+
+
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }

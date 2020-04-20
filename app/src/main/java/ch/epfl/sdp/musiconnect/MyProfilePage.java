@@ -60,14 +60,11 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
 
         Button editProfile = findViewById(R.id.btnEditProfile);
         editProfile.setOnClickListener(v -> {
-            if(currentCachedUser != null) {
                 Intent profileModificationIntent = new Intent(this, ProfileModification.class);
                 sendInformation(profileModificationIntent);
                 // Permits sending information from child to parent activity
                 startActivityForResult(profileModificationIntent, LAUNCH_PROFILE_MODIF_INTENT);
-            } else {
-                Toast.makeText(MyProfilePage.this,"Error loading profile; cannot edit",Toast.LENGTH_LONG);
-            }
+
         });
 
         loadProfileContent();
@@ -79,11 +76,12 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         AppDatabase localDb = AppDatabase.getInstance(this);
         MusicianDao mdao = localDb.musicianDao();
         userEmail = CurrentUser.getInstance(this).email;
+        //fetches the current user's profile
         mExecutor.execute(() -> {
             List<Musician> result = mdao.loadAllByIds(new String[]{userEmail});
             currentCachedUser = result.isEmpty() ? null : result.get(0);
         });
-        if (checkConnection(MyProfilePage.this)) {
+        if (checkConnection(MyProfilePage.this)) {              //gets profile info from database
             dbAdapter.read(userEmail, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
@@ -95,7 +93,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
                     MyDate date = m.getBirthday();
                     String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
                     birthday.setText(s);
-                    if (currentCachedUser == null) {
+                    if (currentCachedUser == null) {            //if user profile isn't cached,cache it
                         mExecutor.execute(() -> {
                             mdao.insertAll(m);
                         });
@@ -111,7 +109,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             }
             if (currentCachedUser == null) {
                 Toast.makeText(this, "Unable to fetch profile information; please connect to internet", Toast.LENGTH_LONG).show();
-            } else {
+            } else {                                        //set profile info based on cache
                 firstName.setText(currentCachedUser.getFirstName());
                 lastName.setText(currentCachedUser.getLastName());
                 username.setText(currentCachedUser.getUserName());
