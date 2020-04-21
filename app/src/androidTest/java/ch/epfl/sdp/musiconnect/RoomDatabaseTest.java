@@ -20,6 +20,7 @@ import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 import ch.epfl.sdp.musiconnect.roomdatabase.MyDateConverter;
 import ch.epfl.sdp.musiconnect.roomdatabase.MyLocationConverter;
 
+import static ch.epfl.sdp.musiconnect.WaitUtility.waitALittle;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -193,12 +194,5 @@ public class RoomDatabaseTest {
 
     }
 
-    public static void waitALittle(int t) {
-        try {
-            TimeUnit.SECONDS.sleep(t);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 
 }

@@ -56,6 +56,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
     private boolean videoRecorded = false;
 
     private List<Musician> result; //used to fetch from room database
+    public static boolean changeStaged = false;    //indicates if there are changes not commited to online database yet
 
 
     @Override
@@ -161,9 +162,11 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
                 Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
             }
         }
+        changeStaged = false;
     }
 
     private void btnSave(String[] newFields) {
+        changeStaged = true;
         Intent returnIntent = new Intent();
         returnIntent.putExtra("newFields", newFields);
 

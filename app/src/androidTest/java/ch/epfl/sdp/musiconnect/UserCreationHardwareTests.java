@@ -24,6 +24,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sdp.musiconnect.WaitUtility.waitALittle;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 
@@ -39,7 +40,7 @@ public class UserCreationHardwareTests {
     @Test
     public void AllEmptyInputTest() {
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
-        CloudStorageTest.waitALittle(1);
+        waitALittle(1);
         onView(withText("Fill Firstname field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
@@ -53,7 +54,7 @@ public class UserCreationHardwareTests {
         closeSoftKeyboard();
 
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
-        CloudStorageTest.waitALittle(1);
+        waitALittle(1);
         onView(withText("Fill Username field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
@@ -67,7 +68,7 @@ public class UserCreationHardwareTests {
         closeSoftKeyboard();
 
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
-        CloudStorageTest.waitALittle(1);
+        waitALittle(1);
         onView(withText("Fill Email field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
@@ -77,7 +78,7 @@ public class UserCreationHardwareTests {
         closeSoftKeyboard();
 
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
-        CloudStorageTest.waitALittle(1);
+        waitALittle(1);
         onView(withText("Fill Lastname field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
@@ -93,7 +94,7 @@ public class UserCreationHardwareTests {
         closeSoftKeyboard();
 
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
-        CloudStorageTest.waitALittle(1);
+        waitALittle(1);
         onView(withText("Select a date of birth")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 

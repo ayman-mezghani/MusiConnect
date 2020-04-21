@@ -13,7 +13,6 @@ import org.junit.runner.RunWith;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
@@ -26,6 +25,7 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sdp.musiconnect.WaitUtility.waitALittle;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
@@ -73,11 +73,4 @@ public class ProfileConsultationTests {
         assertEquals("defuser",result.get(0).getUserName());
     }
 
-    public static void waitALittle(int t) {
-        try {
-            TimeUnit.SECONDS.sleep(t);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 }
