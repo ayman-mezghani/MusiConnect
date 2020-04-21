@@ -93,7 +93,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
                     MyDate date = m.getBirthday();
                     String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
                     birthday.setText(s);
-                    if (!currentCachedUser.equals(m) && !ProfileModification.changeStaged) {            //if user profile isn't cached,cache it
+                    if (currentCachedUser == null || (!currentCachedUser.equals(m) && !ProfileModification.changeStaged)) {            //if user profile isn't cached,cache it
                         mExecutor.execute(() -> {
                             mdao.insertAll(m);
                         });
