@@ -27,8 +27,8 @@
     <string name="username_field">Username :</string>
     <string name="new_username">New username</string>
     <string name="edit_profile_button_text">Edit profile</string>
-    <string name="do_not_save_profile">Don\'t save</string>
-    <string name="save_profile">Save</string>
+    <string name="do_not_save">Don\'t save</string>
+    <string name="save">Save</string>
     <string name="capture_video">Capture video</string>
 
     <string name="help_message">Help is on the way !</string>
@@ -77,5 +77,6 @@
 
     <string name="event_not_found">Event not found...</string>
     <string name="profile_not_found">Profile not found...</string>
+    <string name="create_an_event">Create an event</string>
 
 </resources>

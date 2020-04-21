@@ -17,7 +17,7 @@ public class Event {
     private MyDate dateTime;
     private boolean visible;
     private String title;
-    private String message;
+    private String description;
     private final String DEFAULT_TITLE = "Event";
     private final String DEFAULT_MESSAGE = "Come watch and play!";
 
@@ -35,7 +35,7 @@ public class Event {
         dateTime = new MyDate();
         visible = false;
         title = DEFAULT_TITLE;
-        message = DEFAULT_MESSAGE;
+        description = DEFAULT_MESSAGE;
         address = "";
     }
 
@@ -68,8 +68,8 @@ public class Event {
     }
 
     private boolean checkLocationValues(double latitude, double longitude) {
-        return (latitude > -90) && (latitude < 90) &&
-                (longitude > -180) && (longitude < 180);
+        return (!(latitude > -90)) || (!(latitude < 90)) ||
+                (!(longitude > -180)) || (!(longitude < 180));
     }
 
 
@@ -86,7 +86,7 @@ public class Event {
     }
 
     public void setLocation(Location location) {
-        if (!checkLocationValues(location.getLatitude(), location.getLongitude())) {
+        if (checkLocationValues(location.getLatitude(), location.getLongitude())) {
             throw new IllegalArgumentException();
         }
 
@@ -94,7 +94,7 @@ public class Event {
     }
 
     public void setLocation(double latitude, double longitude) {
-        if (!checkLocationValues(latitude, longitude)) {
+        if (checkLocationValues(latitude, longitude)) {
             throw new IllegalArgumentException();
         }
         location = new LatLng(latitude, longitude);
@@ -142,14 +142,14 @@ public class Event {
         return title;
     }
 
-    public void setMessage(String message) {
-        if (message == null) {
+    public void setDescription(String description) {
+        if (description == null) {
             throw new IllegalArgumentException();
         }
-        this.message = message;
+        this.description = description;
     }
 
-    public String getMessage() {
-        return message;
+    public String getDescription() {
+        return description;
     }
 }

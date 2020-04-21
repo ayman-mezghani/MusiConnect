@@ -176,13 +176,13 @@
                     android:id="@+id/btnDoNotSaveProfile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/do_not_save_profile" />
+                    android:text="@string/do_not_save" />
 
                 <Button
                     android:id="@+id/btnSaveProfile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/save_profile" />
+                    android:text="@string/save" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

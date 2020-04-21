@@ -53,9 +53,9 @@ public class EventTest {
         e.setTitle(NEW_TITLE);
         assertEquals(NEW_TITLE, e.getTitle());
 
-        assertEquals(DEFAULT_MESSAGE, e.getMessage());
-        e.setMessage(NEW_MESSAGE);
-        assertEquals(NEW_MESSAGE, e.getMessage());
+        assertEquals(DEFAULT_MESSAGE, e.getDescription());
+        e.setDescription(NEW_MESSAGE);
+        assertEquals(NEW_MESSAGE, e.getDescription());
     }
 
     @Test
@@ -75,7 +75,7 @@ public class EventTest {
         assertThrows(IllegalArgumentException.class, () -> e.setLocation(300, 0));
         assertThrows(IllegalArgumentException.class, () -> e.setDateTime(null));
         assertThrows(IllegalArgumentException.class, () -> e.setTitle(null));
-        assertThrows(IllegalArgumentException.class, () -> e.setMessage(null));
+        assertThrows(IllegalArgumentException.class, () -> e.setDescription(null));
     }
 
 }

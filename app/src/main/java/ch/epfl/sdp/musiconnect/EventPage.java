@@ -3,14 +3,12 @@ package ch.epfl.sdp.musiconnect;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 
 
-public class EventPage extends AppCompatActivity {
+public class EventPage extends Page {
     private DataBase db;
     private DbAdapter dbAdapter;
     private boolean isTest;
@@ -28,7 +26,7 @@ public class EventPage extends AppCompatActivity {
 
         titleView = findViewById(R.id.eventTitle);
         creatorView = findViewById(R.id.eventCreatorField);
-        locationView = findViewById(R.id.eventLocationField);
+        locationView = findViewById(R.id.eventAddressField);
         timeView = findViewById(R.id.eventTimeField);
         descriptionView = findViewById(R.id.eventDescriptionField);
 
@@ -58,6 +56,7 @@ public class EventPage extends AppCompatActivity {
         loadEventInfo(event);
     }
 
+    // TODO show participants name
     private void loadEventInfo(Event event) {
         if (event == null) {
             loadNullEvent();
@@ -66,12 +65,12 @@ public class EventPage extends AppCompatActivity {
             creatorView.setText(event.getCreator().getName());
             locationView.setText(event.getAddress());
             timeView.setText(event.getDateTime().toString());
-            descriptionView.setText(event.getMessage());
+            descriptionView.setText(event.getDescription());
         }
     }
 
     private void loadNullEvent() {
-        setContentView(R.layout.null_event_page);
+        setContentView(R.layout.activity_event_page_null);
     }
 
     // TODO This function is to be deleted / replaced by MockDatabase query
@@ -85,7 +84,7 @@ public class EventPage extends AppCompatActivity {
             e1.setLocation(51.5007, 0.1245);
             e1.setDateTime(new MyDate(2020, 9, 21, 14, 30));
             e1.setTitle("Event at Big Ben!");
-            e1.setMessage("Playing at Big Ben, come watch us play!");
+            e1.setDescription("Playing at Big Ben, come watch us play!");
 
             return e1;
         }

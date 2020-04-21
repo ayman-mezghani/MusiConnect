@@ -41,7 +41,7 @@ public class ProfileModificationTests {
     public void testEditProfileAndDoNotSaveShouldDoNothing() {
         clickButtonWithText(R.string.edit_profile_button_text);
         onView(withId(R.id.newFirstName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob"));
-        clickButtonWithText(R.string.do_not_save_profile);
+        clickButtonWithText(R.string.do_not_save);
         assert(true);
     }
 
@@ -58,7 +58,7 @@ public class ProfileModificationTests {
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2000, 1, 1));
         onView(withText("OK")).perform(click());
 
-        clickButtonWithText(R.string.save_profile);
+        clickButtonWithText(R.string.save);
         onView(withId(R.id.myFirstname)).check(matches(withText("Bob")));
         onView(withId(R.id.myLastname)).check(matches(withText("Mallet")));
         onView(withId(R.id.myUsername)).check(matches(withText("BobMallet")));

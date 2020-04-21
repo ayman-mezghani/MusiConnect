@@ -33,7 +33,7 @@ public class EventPageTests {
         event.setLocation(51.5007, 0.1245);
         event.setDateTime(new MyDate(2020, 9, 21, 14, 30));
         event.setTitle("Event at Big Ben!");
-        event.setMessage("Playing at Big Ben, come watch us play!");
+        event.setDescription("Playing at Big Ben, come watch us play!");
 
         Intent intent = new Intent();
         intent.putExtra("EID", 0);
@@ -41,9 +41,9 @@ public class EventPageTests {
 
         onView(withId(R.id.eventTitle)).check(matches(withText(event.getTitle())));
         onView(withId(R.id.eventCreatorField)).check(matches(withText(event.getCreator().getName())));
-        onView(withId(R.id.eventLocationField)).check(matches(withText(event.getAddress())));
+        onView(withId(R.id.eventAddressField)).check(matches(withText(event.getAddress())));
         onView(withId(R.id.eventTimeField)).check(matches(withText(event.getDateTime().toString())));
-        onView(withId(R.id.eventDescriptionField)).check(matches(withText(event.getMessage())));
+        onView(withId(R.id.eventDescriptionField)).check(matches(withText(event.getDescription())));
     }
 
     @Test

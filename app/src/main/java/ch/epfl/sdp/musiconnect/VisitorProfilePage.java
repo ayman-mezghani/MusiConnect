@@ -41,10 +41,10 @@ public class VisitorProfilePage extends ProfilePage {
 
     private void loadProfileContent() {
         Intent intent = getIntent();
-        if (!intent.hasExtra("UserName")) {
+        if (!intent.hasExtra("USERNAME")) {
             loadNullProfile();
         } else {
-            username = intent.getStringExtra("UserName");
+            username = intent.getStringExtra("USERNAME");
             
             Musician m = getUserFromUsername(username);
 
@@ -65,16 +65,13 @@ public class VisitorProfilePage extends ProfilePage {
                     if (user != null) {
                         Musician m = (Musician) user;
                         String sTitle = m.getUserName() + "'s profile";
-                        title.setText(sTitle);
+                        titleView.setText(sTitle);
 
-                        firstName.setText(m.getFirstName());
-                        lastName.setText(m.getLastName());
-                        username.setText(m.getUserName());
-                        mail.setText(m.getEmailAddress());
-
-                        MyDate date = m.getBirthday();
-                        String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
-                        birthday.setText(s);
+                        firstNameView.setText(m.getFirstName());
+                        lastNameView.setText(m.getLastName());
+                        usernameView.setText(m.getUserName());
+                        mailView.setText(m.getEmailAddress());
+                        birthdayView.setText(m.getBirthday().toString());
                     } else {
                         // setContentView(ProfileNotFound);
                     }
@@ -87,7 +84,7 @@ public class VisitorProfilePage extends ProfilePage {
     }
 
     private void loadNullProfile() {
-
+        setContentView(R.layout.activity_visitor_profile_page_null);
     }
 
     // TODO replace by MockDatabase

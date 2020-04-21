@@ -375,7 +375,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Intent profileIntent = new Intent(MapsActivity.this, VisitorProfilePage.class);
 
             Musician m = (Musician) marker.getTag();
-            profileIntent.putExtra("UserName", m.getUserName());
+            profileIntent.putExtra("USERNAME", m.getUserName());
             this.startActivity(profileIntent);
         }
     }
