@@ -69,8 +69,7 @@ public class VisitorProfileTest {
 
     @Test
     public void testNoMarkerTransitionToProfile() {
-        MyDate date = new MyDate(1992, 9, 20);
-        Musician m1 = new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", date);
+        Musician m1 = new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", new MyDate(1992, 9, 20));
         Musician m2 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
         Musician m3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
 
@@ -81,15 +80,16 @@ public class VisitorProfileTest {
 
     private void testMusician(Musician m) {
         Intent intent = new Intent();
-        intent.putExtra("UserName", m.getUserName());
+        intent.putExtra("USERNAME", m.getUserName());
         visitorActivityTestRule.launchActivity(intent);
 
+        onView(withId(R.id.visitorProfileFirstname)).check(matches(withText(m.getFirstName())));
+        onView(withId(R.id.visitorProfileLastname)).check(matches(withText(m.getLastName())));
+        onView(withId(R.id.visitorProfileUsername)).check(matches(withText(m.getUserName())));
+        onView(withId(R.id.visitorProfileEmail)).check(matches(withText(m.getEmailAddress())));
+        onView(withId(R.id.visitorProfileBirthday)).check(matches(withText(m.getBirthday().toString())));
 
-        onView(withId(R.id.firstname)).check(matches(withText(m.getFirstName())));
-        onView(withId(R.id.lastname)).check(matches(withText(m.getLastName())));
-        onView(withId(R.id.username)).check(matches(withText(m.getUserName())));
-        onView(withId(R.id.mail)).check(matches(withText(m.getEmailAddress())));
-        onView(withId(R.id.birthday)).check(matches(withText(m.getBirthday().toString())));
+        visitorActivityTestRule.finishActivity();
     }
 
     @Test

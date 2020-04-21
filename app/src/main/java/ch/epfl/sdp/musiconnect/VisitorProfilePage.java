@@ -28,11 +28,11 @@ public class VisitorProfilePage extends ProfilePage {
 
         imgVw = findViewById(R.id.imgView);
         titleView = findViewById(R.id.profileTitle);
-        firstNameView = findViewById(R.id.firstname);
-        lastNameView = findViewById(R.id.lastname);
-        usernameView = findViewById(R.id.username);
-        mailView = findViewById(R.id.mail);
-        birthdayView = findViewById(R.id.birthday);
+        firstNameView = findViewById(R.id.visitorProfileFirstname);
+        lastNameView = findViewById(R.id.visitorProfileLastname);
+        usernameView = findViewById(R.id.visitorProfileUsername);
+        mailView = findViewById(R.id.visitorProfileEmail);
+        birthdayView = findViewById(R.id.visitorProfileBirthday);
 
 
         loadProfileContent();

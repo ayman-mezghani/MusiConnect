@@ -55,7 +55,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/firstname"
+                    android:id="@+id/visitorProfileFirstname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -76,7 +76,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/lastname"
+                    android:id="@+id/visitorProfileLastname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -97,7 +97,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/username"
+                    android:id="@+id/visitorProfileUsername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -118,7 +118,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/mail"
+                    android:id="@+id/visitorProfileEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -139,7 +139,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/birthday"
+                    android:id="@+id/visitorProfileBirthday"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
