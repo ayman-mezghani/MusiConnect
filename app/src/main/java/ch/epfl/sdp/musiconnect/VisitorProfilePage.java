@@ -86,18 +86,16 @@ public class VisitorProfilePage extends ProfilePage {
 
     // TODO replace by MockDatabase
     private Musician getUserFromEmail(String email) {
-        if (email == null) {
-            return null;
-        }
-
-        if (email.equals("palpha@gmail.com")) {
-            return new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
-        }
-        if (email.equals("alyx92@gmail.com")) {
-            return new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", new MyDate(1992, 9, 20));
-        }
-        if (email.equals("callmecarson41@gmail.com")) {
-            return new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
+        if (email != null) {
+            if (email.equals("palpha@gmail.com")) {
+                return new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
+            }
+            if (email.equals("alyx92@gmail.com")) {
+                return new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", new MyDate(1992, 9, 20));
+            }
+            if (email.equals("callmecarson41@gmail.com")) {
+                return new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
+            }
         }
         return null;
     }

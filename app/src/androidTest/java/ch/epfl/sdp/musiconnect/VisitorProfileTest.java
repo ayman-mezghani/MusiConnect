@@ -97,7 +97,7 @@ public class VisitorProfileTest {
         Intent intent = new Intent();
         visitorActivityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.title)).check(matches(withText("Profile not found...")));
+        onView(withId(R.id.visitorProfileTitle)).check(matches(withText("Profile not found...")));
     }
 
     @Test
@@ -106,7 +106,7 @@ public class VisitorProfileTest {
         intent.putExtra("Username", (String) null);
         visitorActivityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.title)).check(matches(withText("Profile not found...")));
+        onView(withId(R.id.visitorProfileTitle)).check(matches(withText("Profile not found...")));
     }
 
     @Test
@@ -115,6 +115,6 @@ public class VisitorProfileTest {
         intent.putExtra("Username", "NotAUsername");
         visitorActivityTestRule.launchActivity(intent);
 
-        onView(withId(R.id.title)).check(matches(withText("Profile not found...")));
+        onView(withId(R.id.visitorProfileTitle)).check(matches(withText("Profile not found...")));
     }
 }
