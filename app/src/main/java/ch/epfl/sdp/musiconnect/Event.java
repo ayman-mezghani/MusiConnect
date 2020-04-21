@@ -11,6 +11,8 @@ import java.util.List;
 public class Event {
     private final int eid;
     private final User creator;
+
+    private List<User> participants;
     private List<Musician> musicians;
     private List<Band> bands;
 
@@ -51,6 +53,7 @@ public class Event {
     }
 
     private void setup() {
+        participants = new ArrayList<>();
         location = new LatLng(0, 0);
         dateTime = new MyDate();
         visible = false;
@@ -73,6 +76,7 @@ public class Event {
         }
 
         musicians.add(musician);
+        participants.add(musician);
     }
 
     public void unregister(Musician musician) {
@@ -81,6 +85,7 @@ public class Event {
         }
 
         musicians.remove(musician);
+        participants.remove(musician);
     }
 
 
@@ -90,6 +95,7 @@ public class Event {
         }
 
         bands.add(band);
+        participants.add(band);
     }
 
     public void unregister(Band band) {
@@ -98,6 +104,7 @@ public class Event {
         }
 
         bands.remove(band);
+        participants.remove(band);
     }
 
     public List<Musician> getMusicians() {
@@ -106,6 +113,10 @@ public class Event {
 
     public List<Band> getBands() {
         return bands;
+    }
+
+    public List<User> getParticipants() {
+        return participants;
     }
 
     private boolean checkLocationValues(double latitude, double longitude) {

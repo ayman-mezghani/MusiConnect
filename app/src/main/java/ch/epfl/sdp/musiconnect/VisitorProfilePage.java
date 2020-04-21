@@ -89,17 +89,20 @@ public class VisitorProfilePage extends ProfilePage {
 
     // TODO replace by MockDatabase
     private Musician getUserFromUsername(String username) {
-        if (username != null) {
-            if (username.equals("PAlpha")) {
-                return new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
-            }
-            if (username.equals("Alyx")) {
-                return new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", new MyDate(1992, 9, 20));
-            }
-            if (username.equals("CallmeCarson")) {
-                return new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
-            }
+        if (username == null) {
+            return null;
         }
+
+        if (username.equals("PAlpha")) {
+            return new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
+        }
+        if (username.equals("Alyx")) {
+            return new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", new MyDate(1992, 9, 20));
+        }
+        if (username.equals("CallmeCarson")) {
+            return new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
+        }
+
         return null;
     }
 }
