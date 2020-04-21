@@ -49,7 +49,7 @@
                     android:id="@+id/profileFirstname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:text="@string/first_name"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -71,7 +71,7 @@
                     android:id="@+id/profileLastname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:text="@string/last_name"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -93,7 +93,7 @@
                     android:id="@+id/profileUsername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:text="@string/username_field"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -115,7 +115,7 @@
                     android:id="@+id/profileEmailAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:text="@string/email_address"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -137,7 +137,7 @@
                     android:id="@+id/profileBirthday"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:text="@string/date_of_birth"
                     android:textSize="18sp"
                     android:textStyle="bold" />

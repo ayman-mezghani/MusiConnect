@@ -37,35 +37,34 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.GeoPoint;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
+import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
+import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 import static ch.epfl.sdp.musiconnect.MapsActivity.Utility.generateWarning;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
-    private Date timeLastUpdt;
-    private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
+
+    private DataBase db = new DataBase();
+    private DbAdapter Adb = new DbAdapter(db);
+
+    private AppDatabase localDb;
+    private Executor mExecutor = Executors.newSingleThreadExecutor();
 
     private FusedLocationProviderClient fusedLocationClient;
     private boolean locationPermissionGranted;
@@ -85,8 +84,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private List<Musician> profiles = new ArrayList<>();        //all users within the radius set by the user in the app
     private List<Marker> markers = new ArrayList<>();           //markers on the map associated to profiles
 
-    private DataBase db;
-    private DbAdapter dbAdapter;
 
     private Marker marker;                                      //main user's marker
 
@@ -145,8 +142,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         spinner.setSelection(2);
 
-        db = new DataBase();
-        dbAdapter = new DbAdapter(db);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -156,6 +151,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         checkLocationPermission();
+
+        localDb = AppDatabase.getInstance(this);
     }
 
 
@@ -191,6 +188,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //If there's a connection, fetch Users in the general area; else, load them from cache
         if(checkConnection()){
             createPlaceHolderUsers();
+            clearCachedUsers();
         }else{
             loadUsersFromCache();
         }
@@ -226,17 +224,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (!co) {
                     updatePos = false;
                     delay = 5000;
-                    generateWarning(MapsActivity.this,"Error: No internet connection. Showing the only last musicians found since " + sdf.format(timeLastUpdt), Utility.warningTypes.Toast);
+                    generateWarning(MapsActivity.this,"Error: No internet connection. Showing the only last musicians found before losing connection", Utility.warningTypes.Toast);
                 } else if(!loc){
                     updatePos = false;
                     delay = 5000;
-                    generateWarning(MapsActivity.this,"Error: couldn't update your location", Utility.warningTypes.Toast);
+                    generateWarning(MapsActivity.this,"Error: couldn't update your location", Utility.warningTypes.Alert);
                 } else {
                     updatePos = true;
-                    timeLastUpdt = Calendar.getInstance().getTime();
                     updateUsers();
-                    updateProfileList();
-                    loadProfilesMarker();
+                    clearCachedUsers();
+                    saveUsersToCache();
                 }
                 handler.postDelayed(this, delay);
             }
@@ -302,6 +299,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             circle.setCenter(latLng);
 
         }
+
+        if(CurrentUser.getInstance(this).getCreatedFlag() == true) {
+            //UserCreation.mainUser.setLocation(new MyLocation(setLoc.getLatitude(),setLoc.getLongitude()));
+            //Adb.update(UserCreation.mainUser);
+            GeoPoint loc = new GeoPoint(setLoc.getLatitude(),setLoc.getLongitude());
+            String email = CurrentUser.getInstance(this).email;
+            db.updateDoc(email,new HashMap<String, Object>(){{
+                put("location",loc);
+            }});
+        } else {
+//            generateWarning(MapsActivity.this,"Error: couldn't update your location to the cloud", Utility.warningTypes.Toast);
+        }
     }
 
 
@@ -338,15 +347,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
 
-        Random random = new Random();
 
         for(Musician m:allUsers){
-            double lat = setLoc.getLatitude() + (((double)random.nextInt(5)-2.5) /100);
-            double lng = setLoc.getLongitude() + (((double)random.nextInt(5)-2.5) /100);
-            m.setLocation(new MyLocation(lat,lng));
+            Adb.read(m.getEmailAddress(), new DbCallback() {
+                @Override
+                public void readCallback(User user) {
+                    MyLocation l = user.getLocation();
+                    m.setLocation(l);
+                    updateProfileList();
+                }
+            });
         }
 
-        saveUsersToCache();
     }
 
     //From the users around the area, picks the ones that are within the threshold distance.
@@ -368,6 +380,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         circle.setRadius(threshold);
+
+        loadProfilesMarker();
     }
 
     //Loads the profile on the map as markers, with associated information
@@ -401,9 +415,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onInfoWindowClick(Marker marker) {
         if(profiles.contains(marker.getTag())) {
             Intent profileIntent = new Intent(MapsActivity.this, VisitorProfilePage.class);
-
+          
             Musician m = (Musician) marker.getTag();
-            profileIntent.putExtra("USERNAME", m.getUserName());
+            profileIntent.putExtra("UserEmail", m.getEmailAddress());
+
             this.startActivity(profileIntent);
         }
     }
@@ -443,97 +458,60 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void saveUsersToCache() {
-        FileOutputStream fos = null;
-        String toCache = sdf.format(timeLastUpdt) + "\n";
-        for(Musician p:allUsers){
-            String birthdate = p.getBirthday().getYear() + "/" + p.getBirthday().getMonth() + "/" + p.getBirthday().getDate();
-            toCache = toCache + p.getFirstName() + "," + p.getLastName() + "," + p.getUserName() + ","
-                    + p.getEmailAddress() + "," + birthdate + ","
-                    + String.valueOf(p.getLocation().getLatitude()) + "," + String.valueOf(p.getLocation().getLongitude()) + "\n";
-        }
-        try {
-            fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
-            fos.write(toCache.getBytes());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+
+        MusicianDao musicianDao = localDb.musicianDao();
+
+        mExecutor.execute(() -> {
+            musicianDao.insertAll(allUsers.toArray(new Musician[allUsers.size()]));
+        });
+
+
+
     }
 
     private void loadUsersFromCache() {
-        FileInputStream fis = null;
 
-        try {
-            fis = openFileInput(FILE_NAME);
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader br = new BufferedReader(isr);
-            String text;
-            List<String> cached = new ArrayList<>();
+        MusicianDao musicianDao = localDb.musicianDao();
 
-            while ((text = br.readLine()) != null) {
-                cached.add(text);
-            }
-
-            timeLastUpdt = sdf.parse(cached.get(0));
-
-            allUsers.clear();
-            for (int i = 1; i < cached.size(); i++) {
-                String[] strProfile = cached.get(i).split(",");
-                String[] birthdate = strProfile[4].split("/");
-                MyDate birthday = new MyDate(Integer.valueOf(birthdate[0]),
-                        Integer.valueOf(birthdate[1]),
-                        Integer.valueOf(birthdate[2]),0,0);
-                Musician p = new Musician(strProfile[0],strProfile[1],strProfile[2],strProfile[3],
-                        birthday);
-                p.setLocation(new MyLocation(Double.valueOf(strProfile[5]),Double.valueOf(strProfile[6])));
-                allUsers.add(p);
-            }
+        mExecutor.execute(() -> {
+            allUsers = musicianDao.getAll();
+        });
 
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            timeLastUpdt = Calendar.getInstance().getTime();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+    }
+
+    private void clearCachedUsers(){
+        MusicianDao musicianDao = localDb.musicianDao();
+        mExecutor.execute(() -> {
+            musicianDao.nukeTable();
+        });
     }
 
 
     //Should be replaced by a function that fetch user from the database; right now it generates 3 fixed users
     private void createPlaceHolderUsers(){
+        Random random = new Random();
+
+        double r1 = ((double)random.nextInt(5)-2.5) /200;
+        double r2 = ((double)random.nextInt(5)-2.5) /200;
+        double r3 = ((double)random.nextInt(5)-2.5) /200;
+
 
         Musician person1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
-        Musician person2 = new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", new MyDate(1992, 9, 20));
+        Musician person2 = new Musician("Alice", "Bardon", "Alyx", "aymanmezghani97@gmail.com", new MyDate(1992, 9, 20));
         Musician person3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
 
-        person1.setLocation(new MyLocation(46.52, 6.52));
-        person2.setLocation(new MyLocation(46.51, 6.45));
-        person3.setLocation(new MyLocation(46.519, 6.57));
+        person1.setLocation(new MyLocation(46.52 + r1, 6.52 + r1));
+        person2.setLocation(new MyLocation(46.51 + r2, 6.45 + r2));
+        person3.setLocation(new MyLocation(46.519 + r3, 6.57 + r3));
 
         allUsers.add(person1);
         allUsers.add(person2);
         allUsers.add(person3);
 
-
+        Adb.add(person1);
+        Adb.add(person2);
+        Adb.add(person3);
     }
 
     public static class Utility{
@@ -559,4 +537,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
+
+
 }

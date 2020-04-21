@@ -19,16 +19,19 @@ import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.core.IsNot.not;
 
 @RunWith(AndroidJUnit4.class)
 public class ProfileModificationTests {
     @Rule
     public final ActivityTestRule<MyProfilePage> profilePageRule =
             new ActivityTestRule<>(MyProfilePage.class);
-
     /**
      * Helper method to avoid duplication
      * @param text: text to recognize on the clickable object
@@ -42,7 +45,17 @@ public class ProfileModificationTests {
         clickButtonWithText(R.string.edit_profile_button_text);
         onView(withId(R.id.newFirstName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob"));
         clickButtonWithText(R.string.do_not_save);
-        assert(true);
+        onView(withId(R.id.myFirstname)).check(matches(not(withText("Bob"))));
+    }
+
+    @Test
+    public void testSelectASmallDateShouldDisplayErrorMessage() {
+        clickButtonWithText(R.string.edit_profile_button_text);
+        onView(withId(R.id.newBirthday)).perform(ViewActions.scrollTo()).perform(click());
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2015, 1, 1));
+        onView(withText("OK")).perform(click());
+        clickButtonWithText(R.string.save);
+        onView(withText(R.string.age_too_low)).inRoot(withDecorView(not(profilePageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
     @Test

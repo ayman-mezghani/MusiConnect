@@ -80,7 +80,7 @@ public class VisitorProfileTest {
 
     private void testMusician(Musician m) {
         Intent intent = new Intent();
-        intent.putExtra("USERNAME", m.getUserName());
+        intent.putExtra("UserEmail", m.getEmailAddress());
         visitorActivityTestRule.launchActivity(intent);
 
         onView(withId(R.id.visitorProfileFirstname)).check(matches(withText(m.getFirstName())));

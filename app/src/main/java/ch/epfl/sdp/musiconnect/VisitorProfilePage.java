@@ -10,9 +10,6 @@ import ch.epfl.sdp.musiconnect.database.DbAdapter;
 public class VisitorProfilePage extends ProfilePage {
     private DataBase db;
     private DbAdapter dbAdapter;
-    private String username;
-    private boolean isTest;
-
 
 
     @Override
@@ -24,29 +21,31 @@ public class VisitorProfilePage extends ProfilePage {
 
         setContentView(R.layout.activity_visitor_profile_page);
         mVideoView = findViewById(R.id.videoView);
-        getVideoUri();
 
         imgVw = findViewById(R.id.imgView);
+
         titleView = findViewById(R.id.visitorProfileTitle);
         firstNameView = findViewById(R.id.visitorProfileFirstname);
         lastNameView = findViewById(R.id.visitorProfileLastname);
         usernameView = findViewById(R.id.visitorProfileUsername);
-        mailView = findViewById(R.id.visitorProfileEmail);
+        emailView = findViewById(R.id.visitorProfileEmail);
         birthdayView = findViewById(R.id.visitorProfileBirthday);
 
 
         loadProfileContent();
+
+        getVideoUri(userEmail);
     }
 
 
     private void loadProfileContent() {
         Intent intent = getIntent();
-        if (!intent.hasExtra("USERNAME")) {
+        if (!intent.hasExtra("UserEmail")) {
             loadNullProfile();
         } else {
-            username = intent.getStringExtra("USERNAME");
+            userEmail = intent.getStringExtra("UserEmail");
             
-            Musician m = getUserFromUsername(username);
+            Musician m = getUserFromEmail(userEmail);
 
             if (m == null) {
                 loadNullProfile();
@@ -61,9 +60,11 @@ public class VisitorProfilePage extends ProfilePage {
                 birthdayView.setText(m.getBirthday().toString());
 
                 /*
-                dbAdapter.read(newUsername, user -> {
-                    if (user != null) {
-                        Musician m = (Musician) user;
+                dbAdapter.read(userEmail, user -> {
+                    if (user == null) {
+                        loadNullProfile();
+                    } else {
+                    Musician m = (Musician) user;
                         String sTitle = m.getUserName() + "'s profile";
                         titleView.setText(sTitle);
 
@@ -72,14 +73,10 @@ public class VisitorProfilePage extends ProfilePage {
                         usernameView.setText(m.getUserName());
                         mailView.setText(m.getEmailAddress());
                         birthdayView.setText(m.getBirthday().toString());
-                    } else {
-                        // setContentView(ProfileNotFound);
-                    }
-                });*/
+                            }
+                        });*/
 
             }
-
-
         }
     }
 
@@ -88,21 +85,20 @@ public class VisitorProfilePage extends ProfilePage {
     }
 
     // TODO replace by MockDatabase
-    private Musician getUserFromUsername(String username) {
-        if (username == null) {
+    private Musician getUserFromEmail(String email) {
+        if (email == null) {
             return null;
         }
 
-        if (username.equals("PAlpha")) {
+        if (email.equals("palpha@gmail.com")) {
             return new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
         }
-        if (username.equals("Alyx")) {
+        if (email.equals("alyx92@gmail.com")) {
             return new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", new MyDate(1992, 9, 20));
         }
-        if (username.equals("CallmeCarson")) {
+        if (email.equals("callmecarson41@gmail.com")) {
             return new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
         }
-
         return null;
     }
 }

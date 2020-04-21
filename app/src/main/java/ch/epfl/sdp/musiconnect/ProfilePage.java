@@ -1,8 +1,5 @@
 package ch.epfl.sdp.musiconnect;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,37 +15,12 @@ import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 
 public abstract class ProfilePage extends Page {
-    protected TextView titleView, firstNameView, lastNameView, usernameView, mailView, birthdayView;
+    protected TextView titleView, firstNameView, lastNameView, usernameView, emailView, birthdayView;
     protected static int VIDEO_REQUEST = 101;
     protected Uri videoUri = null;
     protected VideoView mVideoView;
     protected ImageView imgVw;
-
-    private String testusername = "testUser";
-
-    @SuppressLint("MissingSuperCall")
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK) {
-            videoUri = data.getData();
-
-            CloudStorage storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
-            try {
-                storage.upload(videoUri, CloudStorage.FileType.video, testusername);
-            } catch (IOException e) {
-                Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
-            }
-        }
-
-        showVideo();
-
-//        TODO: refresh the intent, may be useful after video change
-//        finish();
-//        overridePendingTransition( 0, 0);
-//        startActivity(getIntent());
-//        overridePendingTransition( 0, 0);
-    }
+    protected String userEmail;
 
     protected void showVideo() {
         if (videoUri != null) {
@@ -58,18 +30,25 @@ public abstract class ProfilePage extends Page {
         }
     }
 
-    protected void getVideoUri() {
+    protected void getVideoUri(String s) {
         CloudStorage storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
-        String path = testusername + "/" + CloudStorage.FileType.video;
-        String saveName = testusername + "_" + CloudStorage.FileType.video;
+        String path = s + "/" + CloudStorage.FileType.video;
+        String saveName = s + "_" + CloudStorage.FileType.video;
         try {
-            storage.download(path, saveName, fileUri -> {
-                videoUri = fileUri;
-                showVideo();
+            storage.download(path, saveName, new CloudCallback() {
+                @Override
+                public void onSuccess(Uri fileUri) {
+                    videoUri = fileUri;
+                    showVideo();
+                }
+                @Override
+                public void onFailure() {
+                    videoUri = Uri.parse("android.resource://"+getPackageName()+"/"+ R.raw.minion);
+                    showVideo();
+                }
             });
         } catch (IOException e) {
             Toast.makeText(this, "An error occured, please contact support.", Toast.LENGTH_LONG).show();
         }
     }
-
 }
