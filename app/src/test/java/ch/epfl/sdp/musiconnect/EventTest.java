@@ -25,15 +25,15 @@ public class EventTest {
         Event e = new Event(m, 0);
 
         assertEquals(m.getFirstName(), ((Musician)e.getCreator()).getFirstName());
-        assertEquals(m.getFirstName(), ((Musician)e.getParticipants().get(0)).getFirstName());
+        assertEquals(m.getFirstName(), ((Musician)e.getMusicians().get(0)).getFirstName());
 
         assertEquals(0, e.getEid());
 
         e.register(n);
-        assertTrue(e.getParticipants().contains(n));
+        assertTrue(e.getMusicians().contains(n));
 
         e.unregister(n);
-        assertFalse(e.getParticipants().contains(n));
+        assertFalse(e.getMusicians().contains(n));
 
         e.setLocation(0, 0);
         assertEquals(0.0, e.getGeoPoint().getLatitude());

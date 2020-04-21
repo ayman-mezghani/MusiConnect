@@ -62,7 +62,7 @@ import static ch.epfl.sdp.musiconnect.MapsActivity.Utility.generateWarning;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
-        GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener, AdapterView.OnItemSelectedListener {
+        GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
     private Date timeLastUpdt;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
@@ -114,7 +114,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String[] items = getResources().getStringArray(R.array.distance_array);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selected = parent.getItemAtPosition(position).toString()
+                        .replaceAll("m", "");
+                int meters = 1;
+
+                if (selected.contains("k")) {
+                    meters = 1000;
+                    selected = selected.replaceAll("k", "");
+                }
+
+                try {
+                    threshold = Integer.parseInt(selected) * meters;
+                } catch (NumberFormatException e) {
+                    threshold = 0;
+                }
+
+                spinner.setSelection(position);
+
+                updateProfileList();
+                loadProfilesMarker();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
         spinner.setSelection(2);
 
         db = new DataBase();
@@ -488,34 +516,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String selected = parent.getItemAtPosition(position).toString()
-                .replaceAll("m", "");
-        int meters = 1;
 
-        if (selected.contains("k")) {
-            meters = 1000;
-            selected = selected.replaceAll("k", "");
-        }
-
-        try {
-            threshold = Integer.parseInt(selected) * meters;
-        } catch (NumberFormatException e) {
-            threshold = 0;
-        }
-
-        spinner.setSelection(position);
-
-        updateProfileList();
-        loadProfilesMarker();
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
 
     //Should be replaced by a function that fetch user from the database; right now it generates 3 fixed users
     private void createPlaceHolderUsers(){

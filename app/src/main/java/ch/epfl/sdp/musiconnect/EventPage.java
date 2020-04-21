@@ -11,8 +11,7 @@ import ch.epfl.sdp.musiconnect.database.DbAdapter;
 public class EventPage extends Page {
     private DataBase db;
     private DbAdapter dbAdapter;
-    private boolean isTest;
-    private TextView titleView, creatorView, locationView, timeView, descriptionView;
+    private TextView titleView, creatorView, locationView, timeView, participantsView, descriptionView;
 
 
 
@@ -28,6 +27,7 @@ public class EventPage extends Page {
         creatorView = findViewById(R.id.eventCreatorField);
         locationView = findViewById(R.id.eventAddressField);
         timeView = findViewById(R.id.eventTimeField);
+        participantsView = findViewById(R.id.eventParticipantsField);
         descriptionView = findViewById(R.id.eventDescriptionField);
 
         retrieveEventInfo();
@@ -36,7 +36,7 @@ public class EventPage extends Page {
     private void retrieveEventInfo() {
         // TODO retrieve event from database
         // TODO test using mock database instead
-        // TODO setup new Dbcallback for events
+        // TODO setup new DbCallback for events
 
         int eid = getIntent().getIntExtra("EID", -1);
 
@@ -56,7 +56,6 @@ public class EventPage extends Page {
         loadEventInfo(event);
     }
 
-    // TODO show participants name
     private void loadEventInfo(Event event) {
         if (event == null) {
             loadNullEvent();
@@ -65,6 +64,12 @@ public class EventPage extends Page {
             creatorView.setText(event.getCreator().getName());
             locationView.setText(event.getAddress());
             timeView.setText(event.getDateTime().toString());
+
+            StringBuilder s = new StringBuilder();
+            for (User user : event.getMusicians()) {
+                s.append(user.getName()).append(System.lineSeparator());
+            }
+            participantsView.setText(s.toString());
             descriptionView.setText(event.getDescription());
         }
     }
@@ -77,13 +82,14 @@ public class EventPage extends Page {
     private Event createDummyEvent(int eid) {
         if (eid == 0) {
             Musician m1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
-            m1.setLocation(new MyLocation(46.52, 6.52));
+            Musician m2 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
 
             Event e1 = new Event(m1, 0);
             e1.setAddress("Westminster, London, England");
             e1.setLocation(51.5007, 0.1245);
             e1.setDateTime(new MyDate(2020, 9, 21, 14, 30));
             e1.setTitle("Event at Big Ben!");
+            e1.register(m2);
             e1.setDescription("Playing at Big Ben, come watch us play!");
 
             return e1;

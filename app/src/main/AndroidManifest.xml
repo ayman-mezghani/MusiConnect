@@ -20,7 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".musiconnect.EventCreationPage"></activity>
+        <activity android:name=".musiconnect.EventCreation"></activity>
         <activity android:name=".musiconnect.EventPage" />
         <activity android:name=".musiconnect.UserCreation" />
         <activity android:name=".musiconnect.GoogleLogin">

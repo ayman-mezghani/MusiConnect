@@ -27,7 +27,7 @@ public class VisitorProfilePage extends ProfilePage {
         getVideoUri();
 
         imgVw = findViewById(R.id.imgView);
-        titleView = findViewById(R.id.profileTitle);
+        titleView = findViewById(R.id.visitorProfileTitle);
         firstNameView = findViewById(R.id.visitorProfileFirstname);
         lastNameView = findViewById(R.id.visitorProfileLastname);
         usernameView = findViewById(R.id.visitorProfileUsername);

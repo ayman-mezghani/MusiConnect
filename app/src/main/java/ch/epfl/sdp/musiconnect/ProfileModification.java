@@ -9,7 +9,6 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -53,16 +52,16 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         birthday = getIntent().getStringExtra("BIRTHDAY");
         setEditTextFields(editFields, new String[]{firstName, lastName, username, mail, birthday});
 
-        Button saveProfile = findViewById(R.id.btnSaveProfile);
+        Button saveProfile = findViewById(R.id.btnSaveEvent);
         saveProfile.setOnClickListener(this);
-        Button doNotSaveProfile = findViewById(R.id.btnDoNotSaveProfile);
+        Button doNotSaveProfile = findViewById(R.id.btnDoNotSaveEvent);
         doNotSaveProfile.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btnSaveProfile:
+            case R.id.btnSaveEvent:
                 String[] newFields = getNewTextFields();
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("newFields", newFields);
@@ -70,7 +69,7 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
                 setResult(Activity.RESULT_OK, returnIntent);
                 finish();
                 break;
-            case R.id.btnDoNotSaveProfile:
+            case R.id.btnDoNotSaveEvent:
                 finish(); // Close current activity and do not save anything
                 break;
             default:

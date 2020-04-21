@@ -173,13 +173,13 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/btnDoNotSaveProfile"
+                    android:id="@+id/btnDoNotSaveEvent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/do_not_save" />
 
                 <Button
-                    android:id="@+id/btnSaveProfile"
+                    android:id="@+id/btnSaveEvent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/save" />

@@ -10,8 +10,10 @@ import java.util.List;
 
 public class Event {
     private final int eid;
-    private User creator;
-    private List<User> participants; // Users that will contribute to the event (e.g. two musicians doing a duo at x event)
+    private final User creator;
+    private List<Musician> musicians;
+    private List<Band> bands;
+
     private LatLng location;
     private String address;
     private MyDate dateTime;
@@ -21,16 +23,34 @@ public class Event {
     private final String DEFAULT_TITLE = "Event";
     private final String DEFAULT_MESSAGE = "Come watch and play!";
 
-    public Event(User creator, int eid) {
+    public Event(Musician creator, int eid) {
         if (creator == null || eid < 0) {
             throw new IllegalArgumentException();
         }
         this.eid = eid;
 
         this.creator = creator;
-        participants = new ArrayList<>();
-        participants.add(creator);
+        musicians = new ArrayList<>();
+        musicians.add(creator);
 
+        setup();
+    }
+
+
+    public Event(Band creator, int eid) {
+        if (creator == null || eid < 0) {
+            throw new IllegalArgumentException();
+        }
+        this.eid = eid;
+
+        this.creator = creator;
+        bands = new ArrayList<>();
+        bands.add(creator);
+
+        setup();
+    }
+
+    private void setup() {
         location = new LatLng(0, 0);
         dateTime = new MyDate();
         visible = false;
@@ -47,24 +67,45 @@ public class Event {
         return creator;
     }
 
-    public void register(User user) {
-        if (user == null) {
+    public void register(Musician musician) {
+        if (musician == null) {
             throw new IllegalArgumentException();
         }
 
-        participants.add(user);
+        musicians.add(musician);
     }
 
-    public void unregister(User user) {
-        if (user == null || !participants.contains(user)) {
+    public void unregister(Musician musician) {
+        if (musician == null) {
             throw new IllegalArgumentException();
         }
 
-        participants.remove(user);
+        musicians.remove(musician);
     }
 
-    public List<User> getParticipants() {
-        return participants;
+
+    public void register(Band band) {
+        if (band == null) {
+            throw new IllegalArgumentException();
+        }
+
+        bands.add(band);
+    }
+
+    public void unregister(Band band) {
+        if (band == null) {
+            throw new IllegalArgumentException();
+        }
+
+        bands.remove(band);
+    }
+
+    public List<Musician> getMusicians() {
+        return musicians;
+    }
+
+    public List<Band> getBands() {
+        return bands;
     }
 
     private boolean checkLocationValues(double latitude, double longitude) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".musiconnect.EventCreationPage"
+    tools:context=".musiconnect.EventCreation"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_weight="3">
+            android:layout_weight="2">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -51,13 +51,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:text="Event title: "
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/newEventTitle"
+                    android:id="@+id/eventCreationNewEventTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -74,13 +74,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:text="Event address: "
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/newEventAddress"
+                    android:id="@+id/eventCreationNewEventAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -101,18 +101,77 @@
                     android:text="Event time: "
                     android:textSize="18sp"
                     android:textStyle="bold" />
-
                 <EditText
-                    android:id="@+id/newEventTime"
+                    android:id="@+id/eventCreationNewEventDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:focusable="false"
+                    android:longClickable="false"
+                    android:hint="New event date"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/eventCreationNewEventTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:focusable="false"
+                    android:longClickable="false"
                     android:hint="New event time"
                     android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/eventParticipants"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="2"
+                    android:text="Participants: "
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/eventCreationNewEventParticipants"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/eventCreationAddParticipants"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="Add Participant" />
+
+                <Button
+                    android:id="@+id/eventCreationRemoveParticipants"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="Remove Participant" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -124,14 +183,22 @@
                     android:text="Event description: "
                     android:textSize="18sp"
                     android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/newEventDescription"
+                    android:id="@+id/eventCreationNewEventDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:hint="New event description"
                     android:textSize="18sp" />
+
             </LinearLayout>
 
         </LinearLayout>
@@ -141,6 +208,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -148,13 +216,13 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/btnDoNotSaveProfile"
+                    android:id="@+id/eventCreationBtnDoNotSaveEvent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/do_not_save" />
 
                 <Button
-                    android:id="@+id/btnSaveProfile"
+                    android:id="@+id/eventCreationBtnSaveEvent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/save" />

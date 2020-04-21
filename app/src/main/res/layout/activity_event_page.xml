@@ -14,7 +14,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.3"
+            android:layout_weight="3"
             android:orientation="horizontal">
 
             <TextView
@@ -33,7 +33,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_weight="5"
             android:orientation="vertical">
 
             <LinearLayout
@@ -62,7 +62,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
 
                 <TextView
                     android:id="@+id/eventAddress"
@@ -71,7 +72,6 @@
                     android:layout_weight="1"
                     android:text="Where: "
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="20dp"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -86,16 +86,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
 
                 <TextView
+
                     android:id="@+id/eventTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="When: "
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="20dp"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -110,7 +111,32 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/eventParticipants"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:text="Participants: "
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/eventParticipantsField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
 
                 <TextView
                     android:id="@+id/eventDescription"
@@ -118,7 +144,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Description: "
-                    android:layout_marginTop="20dp"
                     android:layout_marginStart="10dp"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -129,6 +154,7 @@
                 android:id="@+id/eventDescriptionField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -137,7 +163,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_weight="0.3">
+            android:layout_weight="3">
 
         </LinearLayout>
     </LinearLayout>

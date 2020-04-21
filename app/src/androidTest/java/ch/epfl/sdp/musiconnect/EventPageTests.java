@@ -26,7 +26,7 @@ public class EventPageTests {
     @Test
     public void loadPageShouldShowCorrectEvent() {
         Musician m1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
-        m1.setLocation(new MyLocation(46.52, 6.52));
+        Musician m2 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
 
         Event event = new Event(m1, 0);
         event.setAddress("Westminster, London, England");
@@ -34,6 +34,9 @@ public class EventPageTests {
         event.setDateTime(new MyDate(2020, 9, 21, 14, 30));
         event.setTitle("Event at Big Ben!");
         event.setDescription("Playing at Big Ben, come watch us play!");
+        event.register(m2);
+
+        String s = m1.getName() + System.lineSeparator() + m2.getName() + System.lineSeparator();
 
         Intent intent = new Intent();
         intent.putExtra("EID", 0);
@@ -43,6 +46,7 @@ public class EventPageTests {
         onView(withId(R.id.eventCreatorField)).check(matches(withText(event.getCreator().getName())));
         onView(withId(R.id.eventAddressField)).check(matches(withText(event.getAddress())));
         onView(withId(R.id.eventTimeField)).check(matches(withText(event.getDateTime().toString())));
+        onView(withId(R.id.eventParticipantsField)).check(matches(withText(s)));
         onView(withId(R.id.eventDescriptionField)).check(matches(withText(event.getDescription())));
     }
 
