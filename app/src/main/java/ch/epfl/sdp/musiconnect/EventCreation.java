@@ -1,7 +1,5 @@
 package ch.epfl.sdp.musiconnect;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -13,17 +11,13 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
-import ch.epfl.sdp.musiconnect.database.DbCallback;
 
-public class EventCreation extends AppCompatActivity {
+public class EventCreation extends Page {
 
     private DataBase db;
     private DbAdapter dbAdapter;
@@ -129,9 +123,16 @@ public class EventCreation extends AppCompatActivity {
         });
 
         Button doNotSave = findViewById(R.id.eventCreationBtnDoNotSaveEvent);
-        doNotSave.setOnClickListener(v -> finish());
+        doNotSave.setOnClickListener(v -> {
+            Toast.makeText(this, "Creation cancelled", Toast.LENGTH_SHORT).show();
+            finish();
+        });
+
         Button save = findViewById(R.id.eventCreationBtnSaveEvent);
-        save.setOnClickListener(v -> {});
+        save.setOnClickListener(v -> {
+            sendToDatabase();
+            Toast.makeText(this, "Event created", Toast.LENGTH_SHORT).show();
+        });
     }
 
 
@@ -152,7 +153,7 @@ public class EventCreation extends AppCompatActivity {
 
 
     private void sendToDatabase() {
-        // TODO get "this" user as creator
+        /*
         dbAdapter.read(CurrentUser.getInstance(this).email, new DbCallback() {
             @Override
             public void readCallback(User user) {
@@ -174,9 +175,27 @@ public class EventCreation extends AppCompatActivity {
 
                 event.setDateTime(d);
             }
-        });
+        });*/
 
+        //TODO to be deleted
 
+        Event event = new Event(new Musician("Test", "User", "TestUser", "testuser@gmail.com", new MyDate()), 0);
+        event.setTitle(eventTitleView.getText().toString());
+        event.setAddress(eventAddressView.getText().toString());
+        event.setDescription(eventDescriptionView.getText().toString());
+
+        String time = timeView.getText().toString();
+        String date = dateView.getText().toString();
+
+        String[] hourMin = time.split(":");
+        String[] dateMonthYear = date.split("/");
+        MyDate d = new MyDate(Integer.parseInt(dateMonthYear[2]),
+                Integer.parseInt(dateMonthYear[1]),
+                Integer.parseInt(dateMonthYear[0]),
+                Integer.parseInt(hourMin[0]),
+                Integer.parseInt(hourMin[1]));
+
+        event.setDateTime(d);
 
     }
 

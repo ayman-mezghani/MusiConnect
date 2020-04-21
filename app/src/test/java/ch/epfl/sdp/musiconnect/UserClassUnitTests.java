@@ -57,13 +57,4 @@ public class UserClassUnitTests {
         john.setLocation(nextLocation);
         assertEquals(nextLocation, john.getLocation());
     }
-
-    @Test
-    public void getNameReturnsCorrect() {
-        Musician john = new Musician("John", "Lennon", "JohnLennon", "john.lennon@gmail.com", new MyDate(1940, 10, 9));
-        assertEquals("John Lennon", john.getName());
-
-        Band band = new Band("BandName", john);
-        assertEquals(band.getBandName(), band.getName());
-    }
 }

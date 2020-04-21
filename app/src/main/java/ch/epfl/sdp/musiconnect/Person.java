@@ -42,8 +42,6 @@ public abstract class Person extends User {
         }
 
         this.firstName = firstName;
-
-        name = firstName;
     }
 
     public String getFirstName() {
@@ -58,8 +56,6 @@ public abstract class Person extends User {
         }
 
         this.lastName = lastName;
-
-        name = name + " " + lastName;
     }
 
     public String getLastName() {
@@ -133,4 +129,8 @@ public abstract class Person extends User {
         return computeAge(birthday);
     }
 
+    @Override
+    public String getName() {
+        return userName;
+    }
 }
