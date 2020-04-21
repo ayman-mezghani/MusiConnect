@@ -107,41 +107,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        spinner = findViewById(R.id.distanceThreshold);
-        String[] items = getResources().getStringArray(R.array.distance_array);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selected = parent.getItemAtPosition(position).toString()
-                        .replaceAll("m", "");
-                int meters = 1;
-
-                if (selected.contains("k")) {
-                    meters = 1000;
-                    selected = selected.replaceAll("k", "");
-                }
-
-                try {
-                    threshold = Integer.parseInt(selected) * meters;
-                } catch (NumberFormatException e) {
-                    threshold = 0;
-                }
-
-                spinner.setSelection(position);
-
-                updateProfileList();
-                loadProfilesMarker();
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
-
-        spinner.setSelection(2);
-
+        setupSpinner();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -278,6 +244,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return setLoc;
     }
 
+
+    private void setupSpinner() {
+        spinner = findViewById(R.id.distanceThreshold);
+        String[] items = getResources().getStringArray(R.array.distance_array);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selected = parent.getItemAtPosition(position).toString()
+                        .replaceAll("m", "");
+                int meters = 1;
+
+                if (selected.contains("k")) {
+                    meters = 1000;
+                    selected = selected.replaceAll("k", "");
+                }
+
+                try {
+                    threshold = Integer.parseInt(selected) * meters;
+                } catch (NumberFormatException e) {
+                    threshold = 0;
+                }
+
+                spinner.setSelection(position);
+
+                updateProfileList();
+                loadProfilesMarker();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        spinner.setSelection(2);
+    }
 
     private void setLocation(Location location) {
 

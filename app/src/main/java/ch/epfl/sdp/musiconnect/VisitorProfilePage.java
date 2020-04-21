@@ -56,7 +56,7 @@ public class VisitorProfilePage extends ProfilePage {
                 firstNameView.setText(m.getFirstName());
                 lastNameView.setText(m.getLastName());
                 usernameView.setText(m.getUserName());
-                mailView.setText(m.getEmailAddress());
+                emailView.setText(m.getEmailAddress());
                 birthdayView.setText(m.getBirthday().toString());
 
                 /*

@@ -21,6 +21,7 @@ import java.util.Map;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
+import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 public class EventCreation extends AppCompatActivity {
 
@@ -58,6 +59,12 @@ public class EventCreation extends AppCompatActivity {
         dateView = findViewById(R.id.eventCreationNewEventDate);
         participantsView = findViewById(R.id.eventCreationNewEventParticipants);
 
+
+        setupDateTimePickerDialog();
+        setupButtons();
+    }
+
+    private void setupDateTimePickerDialog() {
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH);
@@ -78,9 +85,6 @@ public class EventCreation extends AppCompatActivity {
 
             timePickerDialog.show();
         });
-
-
-        setupButtons();
     }
 
     private void setupButtons() {
@@ -147,24 +151,31 @@ public class EventCreation extends AppCompatActivity {
     }
 
 
-    private void getTextValues() {
+    private void sendToDatabase() {
         // TODO get "this" user as creator
-        // Event event = new Event()
+        dbAdapter.read(CurrentUser.getInstance(this).email, new DbCallback() {
+            @Override
+            public void readCallback(User user) {
+                Event event = new Event((Musician) user, 0);
+                event.setTitle(eventTitleView.getText().toString());
+                event.setAddress(eventAddressView.getText().toString());
+                event.setDescription(eventDescriptionView.getText().toString());
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("title", eventTitleView.getText().toString());
-        data.put("address", eventAddressView.getText().toString());
-        data.put("description",eventDescriptionView.getText().toString());
-        String time = timeView.getText().toString();
-        String date = dateView.getText().toString();
+                String time = timeView.getText().toString();
+                String date = dateView.getText().toString();
 
-        String[] hourMin = time.split(":");
-        String[] dateMonthYear = date.split("/");
-        MyDate d = new MyDate(Integer.parseInt(dateMonthYear[2]),
-                Integer.parseInt(dateMonthYear[1]),
-                Integer.parseInt(dateMonthYear[0]),
-                Integer.parseInt(hourMin[0]),
-                Integer.parseInt(hourMin[1]));
+                String[] hourMin = time.split(":");
+                String[] dateMonthYear = date.split("/");
+                MyDate d = new MyDate(Integer.parseInt(dateMonthYear[2]),
+                        Integer.parseInt(dateMonthYear[1]),
+                        Integer.parseInt(dateMonthYear[0]),
+                        Integer.parseInt(hourMin[0]),
+                        Integer.parseInt(hourMin[1]));
+
+                event.setDateTime(d);
+            }
+        });
+
 
 
     }

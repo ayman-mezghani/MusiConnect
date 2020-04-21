@@ -11,7 +11,7 @@ import ch.epfl.sdp.musiconnect.database.DbAdapter;
 public class EventPage extends Page {
     private DataBase db;
     private DbAdapter dbAdapter;
-    private TextView titleView, creatorView, locationView, timeView, participantsView, descriptionView;
+    private TextView titleView, creatorView, addressView, timeView, participantsView, descriptionView;
 
 
 
@@ -25,7 +25,7 @@ public class EventPage extends Page {
 
         titleView = findViewById(R.id.eventTitle);
         creatorView = findViewById(R.id.eventCreatorField);
-        locationView = findViewById(R.id.eventAddressField);
+        addressView = findViewById(R.id.eventAddressField);
         timeView = findViewById(R.id.eventTimeField);
         participantsView = findViewById(R.id.eventParticipantsField);
         descriptionView = findViewById(R.id.eventDescriptionField);
@@ -62,7 +62,7 @@ public class EventPage extends Page {
         } else {
             titleView.setText(event.getTitle());
             creatorView.setText(event.getCreator().getName());
-            locationView.setText(event.getAddress());
+            addressView.setText(event.getAddress());
             timeView.setText(event.getDateTime().toString());
 
             StringBuilder s = new StringBuilder();

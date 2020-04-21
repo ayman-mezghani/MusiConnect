@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Event {
-    private final int eid;
-    private final User creator;
+    private int eid;
+    private User creator;
 
     private List<User> participants;
     private List<Musician> musicians;
@@ -26,33 +26,26 @@ public class Event {
     private final String DEFAULT_MESSAGE = "Come watch and play!";
 
     public Event(Musician creator, int eid) {
-        if (creator == null || eid < 0) {
-            throw new IllegalArgumentException();
-        }
-        this.eid = eid;
-
-        this.creator = creator;
-        musicians = new ArrayList<>();
-        musicians.add(creator);
-
-        setup();
+        setup(creator, eid);
+        register(creator);
     }
 
 
     public Event(Band creator, int eid) {
-        if (creator == null || eid < 0) {
-            throw new IllegalArgumentException();
-        }
-        this.eid = eid;
-
-        this.creator = creator;
-        bands = new ArrayList<>();
-        bands.add(creator);
-
-        setup();
+        setup(creator, eid);
+        register(creator);
     }
 
-    private void setup() {
+    private void setup(User creator, int eid) {
+        if (creator == null) {
+            throw new IllegalArgumentException();
+        }
+
+        this.eid = eid;
+        this.creator = creator;
+
+        musicians = new ArrayList<>();
+        bands = new ArrayList<>();
         participants = new ArrayList<>();
         location = new LatLng(0, 0);
         dateTime = new MyDate();
@@ -60,6 +53,10 @@ public class Event {
         title = DEFAULT_TITLE;
         description = DEFAULT_MESSAGE;
         address = "";
+    }
+
+    protected void setEid(int eid) {
+        this.eid = eid;
     }
 
     public int getEid() {
