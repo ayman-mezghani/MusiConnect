@@ -12,6 +12,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,7 +78,7 @@ public class DataBase {
                                     if (data.get("videoUrl") != null)
                                         b.setVideoURL(data.get("videoUrl").toString());
 
-                                    b.setMusicianEmailAdresses((List<String>) data.get("members"));
+                                    b.setMusicianEmailAdresses((ArrayList<String>) data.get("members"));
                                     DbAdapter da = new DbAdapter(new DataBase());
 
                                     for (String me : b.getMusicianEmailsAdress()) {

@@ -5,6 +5,7 @@ import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Test;
 
+import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +53,11 @@ public class SimplifiedMusicianTest {
 
         assertEquals(loc.getLatitude(), sloc.getLatitude());
         assertEquals(loc.getLongitude(), sloc.getLongitude());
+
+        TypeOfUser t = musician.getTypeOfUser();
+        String t2 = sMusician.getTypeOfUser();
+
+        assertEquals(t, TypeOfUser.valueOf(t2));
     }
 
     @Test
@@ -64,6 +70,7 @@ public class SimplifiedMusicianTest {
         assertEquals((String) map.get(SimplifiedMusician.FIRSTNAME), sMusician.getFirstName());
         assertEquals((String) map.get(SimplifiedMusician.LASTNAME), sMusician.getLastName());
         assertEquals((String) map.get(SimplifiedMusician.EMAIL), sMusician.getEmail());
+        assertEquals((String) map.get(SimplifiedMusician.TYPEOFUSER).toString(), sMusician.getTypeOfUser().toString());
         assertEquals(((Timestamp) map.get(SimplifiedMusician.BIRTHDAY)).toDate(), sMusician.getBirthday());
         assertEquals(((Timestamp) map.get(SimplifiedMusician.JOINDATE)).toDate(), sMusician.getJoinDate());
         assertEquals((GeoPoint) map.get(SimplifiedMusician.LOCATION), sMusician.getLocation());
@@ -102,6 +109,7 @@ public class SimplifiedMusicianTest {
         assertEquals(musician.getFirstName(), musicianClone.getFirstName());
         assertEquals(musician.getLastName(), musicianClone.getLastName());
         assertEquals(musician.getEmailAddress(), musicianClone.getEmailAddress());
+        assertEquals(musician.getTypeOfUser(), musicianClone.getTypeOfUser());
         assertEquals(musician.getBirthday(), musicianClone.getBirthday());
         assertEquals(musician.getJoinDate(), musicianClone.getJoinDate());
         assertEquals(musician.getLocation(), musicianClone.getLocation());
@@ -131,7 +139,7 @@ public class SimplifiedMusicianTest {
         }
     }
 
-    private Musician testMusician() {
+    public static Musician testMusician() {
         Musician m = new Musician("firstName", "lastName", "username", "email@gmail.com", new MyDate(2000, 1, 1));
         m.setTypeOfUser(TypeOfUser.Musician);
         return m;

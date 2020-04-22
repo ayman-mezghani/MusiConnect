@@ -46,7 +46,7 @@ public class SimplifiedBand implements Serializable {
         this.leader = map.get(LEADER) == null ? "" : (String) map.get(LEADER);
         this.bandName = map.get(BANDNAME) == null ? "" : (String) map.get(BANDNAME);
         if(map.get(MEMBERS) != null) {
-            for (String emailAdress : (List<String>) map.get(MEMBERS)) {
+            for (String emailAdress : (ArrayList<String>) map.get(MEMBERS)) {
                 this.members.add(emailAdress);
             }
         } else {
