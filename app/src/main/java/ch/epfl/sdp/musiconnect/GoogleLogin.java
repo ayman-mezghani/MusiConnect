@@ -62,14 +62,7 @@ public class GoogleLogin extends AppCompatActivity {
             db.exists(account.getEmail(), new DbCallback() {
                 @Override
                 public void existsCallback(boolean exists) {
-                    if (exists) {
-                        CurrentUser.getInstance(GoogleLogin.this).setCreatedFlag();
-                        startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class));
-                        finish();
-                    }
-                    else {
-                        startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.UserCreation.class));
-                    }
+                    redirect(exists);
                     finish();
                 }
             });
@@ -108,13 +101,7 @@ public class GoogleLogin extends AppCompatActivity {
             db.exists(account.getEmail(), new DbCallback() {
                 @Override
                 public void existsCallback(boolean exists) {
-                    if (exists) {
-                        CurrentUser.getInstance(GoogleLogin.this).setCreatedFlag();
-                        startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class));
-                        finish();
-                    } else {
-                        startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.UserCreation.class));
-                    }
+                    redirect(exists);
                 }
             });
 
@@ -125,6 +112,16 @@ public class GoogleLogin extends AppCompatActivity {
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
             // updateUI(null);
+        }
+    }
+
+    private void redirect(boolean userExists) {
+        if (userExists) {
+            CurrentUser.getInstance(GoogleLogin.this).setCreatedFlag();
+            startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class));
+            finish();
+        } else {
+            startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.UserCreation.class));
         }
     }
 }
