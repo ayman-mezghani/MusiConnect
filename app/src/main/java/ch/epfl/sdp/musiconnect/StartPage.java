@@ -39,7 +39,7 @@ public class StartPage extends Page {
     private boolean isOpen = false;
     private DbAdapter dbAdapter;
     private Band b;
-    private boolean test=false;
+    public static boolean test=true;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
@@ -77,27 +77,10 @@ public class StartPage extends Page {
         fabAntiClockWise = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_anti_clockwise);
 
         fab_menu.setOnClickListener(v -> fabMenuClick());
-        fab_button_1.setOnClickListener(v -> {
-            Toast.makeText(this, CurrentUser.getInstance(this).email, Toast.LENGTH_SHORT).show();
-            ArrayList<String> ls = new ArrayList<>();
-            ls.add("aymanmezghani97@gmail.com");
-            ls.add("seboll13@gmail.com");
-            DbAdapter db = new DbAdapter(new DataBase());
-
-            for (String str: ls) {
-                db.read("newtest", str, new DbCallback() {
-                    @Override
-                    public void readCallback(User u) {
-                        b.addMember((Musician) u);
-                        (new DbAdapter(new DataBase())).add("Band", b);
-                    }
-                });
-            }
-        });
+        fab_button_1.setOnClickListener(v -> button1Click());
 
         fab_button_2.setOnClickListener(v -> {
             Toast.makeText(this, "band", Toast.LENGTH_SHORT).show();
-
         });
 
         if(!test) {
@@ -120,6 +103,28 @@ public class StartPage extends Page {
         }
     }
 
+    protected void button1Click() {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                Toast.makeText(getApplicationContext(), CurrentUser.getInstance(getApplicationContext()).email, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        ArrayList<String> ls = new ArrayList<>();
+        ls.add("aymanmezghani97@gmail.com");
+        ls.add("seboll13@gmail.com");
+        DbAdapter db = new DbAdapter(new DataBase());
+
+        for (String str: ls) {
+            db.read("newtest", str, new DbCallback() {
+                @Override
+                public void readCallback(User u) {
+                b.addMember((Musician) u);
+                (new DbAdapter(new DataBase())).add("Band", b);
+                }
+            });
+        }
+    }
     private void fabMenuClick() {
         if(isOpen){
             fab_button_2.startAnimation(fabClose);

@@ -46,7 +46,7 @@ public class UserCreationHardwareTests {
     @Test
     public void AllEmptyInputTest() {
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
-        CloudStorageTest.waitALittle(1);
+        waitALittle(1);
         onView(withText("Fill Firstname field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
@@ -60,7 +60,7 @@ public class UserCreationHardwareTests {
         closeSoftKeyboard();
 
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
-        CloudStorageTest.waitALittle(1);
+        waitALittle(1);
         onView(withText("Fill Username field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
@@ -74,7 +74,7 @@ public class UserCreationHardwareTests {
         closeSoftKeyboard();
 
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
-        CloudStorageTest.waitALittle(1);
+        waitALittle(1);
         onView(withText("Fill Email field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
@@ -84,7 +84,7 @@ public class UserCreationHardwareTests {
         closeSoftKeyboard();
 
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
-        CloudStorageTest.waitALittle(1);
+        waitALittle(1);
         onView(withText("Fill Lastname field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
@@ -100,7 +100,7 @@ public class UserCreationHardwareTests {
         closeSoftKeyboard();
 
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
-        CloudStorageTest.waitALittle(1);
+        waitALittle(1);
         onView(withText("Select a date of birth")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
@@ -152,6 +152,36 @@ public class UserCreationHardwareTests {
                 allOf(withId(R.id.btnBandCreationCreate), withText("Start using application"),childAtPosition(childAtPosition(
                                 withClassName(is("android.widget.LinearLayout")),0),1)));
         appCompatButton3.perform(scrollTo(), click());
+    }
+
+    @Test
+    public void createBandFails() {
+        ViewInteraction appCompatRadioButton = onView(allOf(withId(R.id.rbBand), withText("Band"),
+                childAtPosition(allOf(withId(R.id.rdg), childAtPosition(
+                        withClassName(is("android.widget.LinearLayout")),0)),1)));
+        appCompatRadioButton.perform(ViewActions.scrollTo(), click());
+
+        onView(withId(R.id.etFirstname)).perform(ViewActions.scrollTo(), clearText(), typeText("Bob"));
+        closeSoftKeyboard();
+        onView(withId(R.id.etLastName)).perform(ViewActions.scrollTo(), clearText(), typeText("bernard"));
+        closeSoftKeyboard();
+        onView(withId(R.id.etUsername)).perform(ViewActions.scrollTo(), clearText(), typeText("Bobbeber"));
+        closeSoftKeyboard();
+        onView(withId(R.id.etMail)).perform(ViewActions.scrollTo(), clearText(), typeText("Bob@gmail.com"));
+        closeSoftKeyboard();
+        onView(withId(R.id.etDate)).perform(ViewActions.scrollTo()).perform(click());
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2000, 1, 1));
+        onView(withText("OK")).perform(click());
+
+        onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo(), click());
+
+        ViewInteraction appCompatButton3 = onView(
+                allOf(withId(R.id.btnBandCreationCreate), withText("Start using application"),childAtPosition(childAtPosition(
+                        withClassName(is("android.widget.LinearLayout")),0),1)));
+        appCompatButton3.perform(scrollTo(), click());
+
+        onView(withText(R.string.band_name_cant_be_empty)).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+
     }
 
     @Test

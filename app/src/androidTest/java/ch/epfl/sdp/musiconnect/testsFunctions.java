@@ -12,8 +12,10 @@ import org.hamcrest.TypeSafeMatcher;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class testsFunctions {
+    public static boolean test=true;
     /**
      * Function used to get an instance of an activity
      * SOURCE : https://stackoverflow.com/questions/45829637/cannot-check-current-activity-from-drawerlayout-item
@@ -74,5 +76,13 @@ public class testsFunctions {
                         && view.equals(((ViewGroup) parent).getChildAt(position));
             }
         };
+    }
+
+    public static void waitALittle(int t) {
+        try {
+            TimeUnit.SECONDS.sleep(t);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
