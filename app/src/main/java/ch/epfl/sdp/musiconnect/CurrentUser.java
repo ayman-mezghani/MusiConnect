@@ -13,7 +13,6 @@ public class CurrentUser {
     public final String email;
 
     private boolean createdFlag = false;
-    private TypeOfUser type;
     private String bandName;
     private Musician m;
     private GoogleSignInAccount acct;
@@ -42,14 +41,10 @@ public class CurrentUser {
         return createdFlag;
     }
 
-    public TypeOfUser getTypeOfUser() { return this.type; }
-
-    public void setTypeOfUser(TypeOfUser t) { this.type = t; }
-
     public String getBandName() { return this.bandName; }
 
     public void setBandName(String bandName) {
-        if (this.type == TypeOfUser.Band)
+        if (this.m.getTypeOfUser() == TypeOfUser.Band)
             this.bandName = bandName;
         else
             throw new IllegalArgumentException("You can only set a band name if you are a band");

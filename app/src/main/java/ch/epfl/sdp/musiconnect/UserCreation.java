@@ -95,17 +95,16 @@ public class UserCreation extends Page {
 
                     CurrentUser.getInstance(this).setCreatedFlag();
                     RadioButton rdb = findViewById(rdg.getCheckedRadioButtonId());
-                    CurrentUser.getInstance(this).setTypeOfUser(TypeOfUser.valueOf(rdb.getText().toString()));
 
                     DbAdapter db = new DbAdapter(new DataBase());
                     Musician musician = new Musician(firstname, lastname, username, email, d);
                     musician.setLocation(new MyLocation(0, 0));
-                    musician.setTypeOfUser(CurrentUser.getInstance(this).getTypeOfUser());
+                    musician.setTypeOfUser(TypeOfUser.valueOf(rdb.getText().toString()));
 
                     db.add(collection, musician);
                     CurrentUser.getInstance(this).setMusician(musician);
 
-                    switch (CurrentUser.getInstance(this).getTypeOfUser()) {
+                    switch (CurrentUser.getInstance(this).getMusician().getTypeOfUser()) {
                         case Band:
                             StartActivityAndFinish(new Intent(UserCreation.this, BandCreation.class));
                             break;
