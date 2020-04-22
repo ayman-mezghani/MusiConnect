@@ -289,9 +289,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
         int status = googleApiAvailability.isGooglePlayServicesAvailable(this);
         if(status != ConnectionResult.SUCCESS) {
-            if(googleApiAvailability.isUserResolvableError(status)) {
-                googleApiAvailability.getErrorDialog(this, status, 2404).show();
-            }
             return false;
         }
         return true;
