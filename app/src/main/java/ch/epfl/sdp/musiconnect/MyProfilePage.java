@@ -5,15 +5,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
-import com.bumptech.glide.Glide;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DataBase;
@@ -24,7 +18,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
 
     private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
     private DbAdapter dbAdapter;
-    private boolean test = true;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -36,7 +29,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         setContentView(R.layout.activity_profile_page);
 
         mVideoView = findViewById(R.id.videoView);
-        getVideoUri();
 
         imgVw = findViewById(R.id.imgView);
         firstName = findViewById(R.id.myFirstname);
@@ -52,9 +44,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             // Permits sending information from child to parent activity
             startActivityForResult(profileModificationIntent, LAUNCH_PROFILE_MODIF_INTENT);
         });
-
         loadProfileContent();
-
     }
 
     private boolean checktest() {
@@ -71,7 +61,8 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
 
     private void loadProfileContent() {
         if (!checktest()) {
-            dbAdapter.read(CurrentUser.getInstance(this).email, new DbCallback() {
+            userEmail = CurrentUser.getInstance(this).email;
+            dbAdapter.read(userEmail, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
                     Musician m = (Musician) user;
@@ -93,18 +84,10 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         }
     }
 
-    public void captureVideo(View view) {
-        Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-
-        if (videoIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(videoIntent, VIDEO_REQUEST);
-        }
-    }
-
     @Override
     public void onStart() {
         super.onStart();
-        getVideoUri();
+        getVideoUri(userEmail);
     }
 
     @SuppressLint("MissingSuperCall")
@@ -120,12 +103,11 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             birthday.setText(newFields[4]);
             String videoUriString = data.getStringExtra("videoUri");
 
-            if (videoUriString != null){
+            if (videoUriString != null) {
                 videoUri = Uri.parse(videoUriString);
                 showVideo();
-            }
-            else{
-                getVideoUri();
+            } else {
+                getVideoUri(userEmail);
             }
         }
 

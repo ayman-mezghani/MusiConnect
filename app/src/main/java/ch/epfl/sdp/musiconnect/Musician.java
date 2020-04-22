@@ -1,5 +1,7 @@
 package ch.epfl.sdp.musiconnect;
 
+import androidx.room.Entity;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -7,6 +9,7 @@ import java.util.Set;
 /**
  * @author Manuel Pellegrini, EPFL
  */
+@Entity
 public class Musician extends Person implements Performer {
 
     private String videoURL;
@@ -21,6 +24,14 @@ public class Musician extends Person implements Performer {
         instruments = new HashMap<Instrument, Level>();
     }
 
+    public Map<Instrument,Level> getInstruments(){
+        return instruments;
+    }
+
+    public void setInstruments(Map<Instrument,Level> instr){
+        instruments = instr;
+    }
+
 
     public void setVideoURL(String videoURL) {
         if (videoURL.length() > MAX_VIDEO_URL_LENGTH) {
@@ -31,9 +42,6 @@ public class Musician extends Person implements Performer {
     }
 
     public String getVideoURL() {
-        if (videoURL.isEmpty()) {
-            throw new Error("No video URL is present");
-        }
 
         return videoURL;
     }

@@ -24,6 +24,8 @@ public abstract class User {
         return new MyDate(joinDate);
     }
 
+    public void setJoinDate(MyDate join){ joinDate = new MyDate(join);}
+
     public void setLocation(MyLocation location) {
         this.location.setLocation(location);
     }
