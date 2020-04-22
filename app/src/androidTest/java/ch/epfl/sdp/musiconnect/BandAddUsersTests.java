@@ -45,14 +45,8 @@ public class BandAddUsersTests {
 
     @Test
     public void bandAddUsers() {
-        waitALittle(2);
-
-        ViewInteraction floatingActionButton = onView(allOf(withId(R.id.fab_menu),
-                        childAtPosition(childAtPosition(withClassName(is("android.widget.FrameLayout")),0),0)));
-        floatingActionButton.perform(scrollTo(), click());
-
-        waitALittle(2);
-
+        ((StartPage) getCurrentActivity()).fabMenuClick();
         ((StartPage) getCurrentActivity()).button1Click();
+        ((StartPage) getCurrentActivity()).fabMenuClick();
     }
 }

@@ -44,14 +44,14 @@ public class StartPage extends Page {
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Bundle b = intent.getBundleExtra("Location");
-            Location location;
-            if (b != null) {
-                location = b.getParcelable("Location");
-                if (location != null) {
-                    userLocation = location;
-                }
+        Bundle b = intent.getBundleExtra("Location");
+        Location location;
+        if (b != null) {
+            location = b.getParcelable("Location");
+            if (location != null) {
+                userLocation = location;
             }
+        }
         }
     };
 
@@ -124,7 +124,7 @@ public class StartPage extends Page {
             });
         }
     }
-    private void fabMenuClick() {
+    protected void fabMenuClick() {
         if(isOpen){
             fab_button_2.startAnimation(fabClose);
             fabTv2.startAnimation(fabClose);
