@@ -79,4 +79,6 @@
     <string name="band_creation">Band Creation</string>
     <string name="band_name">Band name</string>
     <string name="band_name_cant_be_empty">Band name can\'t be empty</string>
+    <string name="your_nexts_events">Your nexts events</string>
+    <string name="your_bands">Your bands</string>
 </resources>
