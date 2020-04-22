@@ -45,7 +45,7 @@ public class SimplifiedMusician {
         this.firstName = musician.getFirstName();
         this.lastName = musician.getLastName();
         this.email = musician.getEmailAddress();
-        this.typeOfUser = musician.getType().toString();
+        this.typeOfUser = musician.getTypeOfUser().toString();
         this.birthday = myDateToDate(musician.getBirthday());
         this.joinDate = myDateToDate(musician.getJoinDate());
         this.location = myLocationToGeoPoint(musician.getLocation());
@@ -65,7 +65,7 @@ public class SimplifiedMusician {
     public Musician toMusician() {
         Musician musician = new Musician(firstName, lastName, username, email, dateToMyDate(birthday));
         musician.setLocation(geoPointToMyLocation(location));
-        musician.setType(TypeOfUser.valueOf(typeOfUser));
+        musician.setTypeOfUser(TypeOfUser.valueOf(typeOfUser));
         return musician;
     }
 

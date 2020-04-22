@@ -2,6 +2,8 @@ package ch.epfl.sdp.musiconnect;
 
 import android.widget.DatePicker;
 
+import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.PickerActions;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
@@ -17,6 +19,8 @@ import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
@@ -24,8 +28,11 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
+import static ch.epfl.sdp.musiconnect.testsFunctions.*;
 
 public class UserCreationHardwareTests {
     @Rule
@@ -33,7 +40,7 @@ public class UserCreationHardwareTests {
 
     @Test
     public void singleInputEmptyTest() {
-        Assert.assertTrue(((UserCreation) VideoPlayingTests.getCurrentActivity()).isEmpty(((UserCreation) VideoPlayingTests.getCurrentActivity()).etUserName));
+        Assert.assertTrue(((UserCreation) testsFunctions.getCurrentActivity()).isEmpty(((UserCreation) testsFunctions.getCurrentActivity()).etUserName));
     }
 
     @Test
@@ -116,8 +123,40 @@ public class UserCreationHardwareTests {
     }
 
     @Test
+    public void createBand() {
+        ViewInteraction appCompatRadioButton = onView(allOf(withId(R.id.rbBand), withText("Band"),
+                childAtPosition(allOf(withId(R.id.rdg), childAtPosition(
+                                withClassName(is("android.widget.LinearLayout")),0)),1)));
+        appCompatRadioButton.perform(ViewActions.scrollTo(), click());
+
+        onView(withId(R.id.etFirstname)).perform(ViewActions.scrollTo(), clearText(), typeText("Bob"));
+        closeSoftKeyboard();
+        onView(withId(R.id.etLastName)).perform(ViewActions.scrollTo(), clearText(), typeText("bernard"));
+        closeSoftKeyboard();
+        onView(withId(R.id.etUsername)).perform(ViewActions.scrollTo(), clearText(), typeText("Bobbeber"));
+        closeSoftKeyboard();
+        onView(withId(R.id.etMail)).perform(ViewActions.scrollTo(), clearText(), typeText("Bob@gmail.com"));
+        closeSoftKeyboard();
+        onView(withId(R.id.etDate)).perform(ViewActions.scrollTo()).perform(click());
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2000, 1, 1));
+        onView(withText("OK")).perform(click());
+
+        onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo(), click());
+
+        ViewInteraction appCompatEditText3 = onView(
+                allOf(withId(R.id.etBandName),childAtPosition(childAtPosition(
+                                        withClassName(is("android.widget.LinearLayout")),0),1)));
+        appCompatEditText3.perform(scrollTo(), replaceText("Test band"), ViewActions.closeSoftKeyboard());
+
+        ViewInteraction appCompatButton3 = onView(
+                allOf(withId(R.id.btnBandCreationCreate), withText("Start using application"),childAtPosition(childAtPosition(
+                                withClassName(is("android.widget.LinearLayout")),0),1)));
+        appCompatButton3.perform(scrollTo(), click());
+    }
+
+    @Test
     public void getJoinDateWorks() {
-        assertEquals(((UserCreation) VideoPlayingTests.getCurrentActivity()).getAge(1995, 10, 19), "24");
+        assertEquals(((UserCreation) testsFunctions.getCurrentActivity()).getAge(1995, 10, 19), "24");
     }
 
     @Test

@@ -1,6 +1,7 @@
 package ch.epfl.sdp.musiconnect.database;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -21,7 +22,6 @@ import ch.epfl.sdp.musiconnect.User;
 public class DataBase {
     private static final String TAG = "DataBase";
     private FirebaseFirestore db;
-
 
 
     public DataBase() {
@@ -59,48 +59,51 @@ public class DataBase {
         }
         this.updateDoc(collection, docName, updates);
     }
+
     public void readDoc(String collection, String docName, DbCallback dbCallback) {
         db.collection(collection).document(docName).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     Map<String, Object> data = documentSnapshot.getData();
-                    if(data.get("leader") != null) {
+                    if (data != null) {
+                        if (data.get("leader") != null) {
 
-                        DbAdapter da = new DbAdapter(this);
-                        da.read("newtest", (String) data.get("leader"), new DbCallback() {
-                            @Override
-                            public void readCallback(User user) {
-                                Band b = new Band((String) data.get("bandName"), (Musician) user);
+                            DbAdapter da = new DbAdapter(this);
+                            da.read("newtest", (String) data.get("leader"), new DbCallback() {
+                                @Override
+                                public void readCallback(User user) {
+                                    Band b = new Band((String) data.get("bandName"), (Musician) user);
 
-                                if(data.get("videoUrl") != null)
-                                    b.setVideoURL(data.get("videoUrl").toString());
+                                    if (data.get("videoUrl") != null)
+                                        b.setVideoURL(data.get("videoUrl").toString());
 
-                                b.setMusicianEmailAdresses((List<String>) data.get("members"));
-                                DbAdapter da = new DbAdapter(new DataBase());
+                                    b.setMusicianEmailAdresses((List<String>) data.get("members"));
+                                    DbAdapter da = new DbAdapter(new DataBase());
 
-                                for(String me: b.getMusicianEmailsAdress()){
-                                    da.read("newtest", me, new DbCallback() {
-                                        @Override
-                                        public void readCallback(User user) {
-                                            try {
-                                                b.addMember((Musician) user);
-                                            } catch (IllegalArgumentException e) {
+                                    for (String me : b.getMusicianEmailsAdress()) {
+                                        da.read("newtest", me, new DbCallback() {
+                                            @Override
+                                            public void readCallback(User user) {
+                                                try {
+                                                    b.addMember((Musician) user);
+                                                } catch (IllegalArgumentException e) {
+                                                }
                                             }
-                                        }
-                                    });
-                                }
+                                        });
+                                    }
 
-                                dbCallback.readCallback(b);
-                            }
-                        });
-                    } else {
-                        SimplifiedMusician m = new SimplifiedMusician(data);
-                        dbCallback.readCallback(m.toMusician());
-                    }
+                                    dbCallback.readCallback(b);
+                                }
+                            });
+                        } else {
+                            SimplifiedMusician m = new SimplifiedMusician(data);
+                            dbCallback.readCallback(m.toMusician());
+                        }
 /*
                     if(documentSnapshot.getDocument().getKey().getPath() .toString().split("/")[0].equals("Band")){
 
                     }
 */
+                    }
                 })
                 .addOnFailureListener(e -> Log.w(TAG, "Error reading document", e));
     }

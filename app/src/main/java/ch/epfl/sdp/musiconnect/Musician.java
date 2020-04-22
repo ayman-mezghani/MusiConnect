@@ -11,7 +11,7 @@ public class Musician extends Person implements Performer {
 
     private String videoURL;
     private Map<Instrument, Level> instruments;
-    private TypeOfUser type;
+    private TypeOfUser typeOfUser;
 
     private static final int MAX_VIDEO_URL_LENGTH = 2048;
 
@@ -92,9 +92,9 @@ public class Musician extends Person implements Performer {
         return instruments.keySet();
     }
 
-    public void setType(TypeOfUser t) { this.type = t; }
+    public void setTypeOfUser(TypeOfUser t) { this.typeOfUser = t; }
 
-    public TypeOfUser getType() { return this.type; }
+    public TypeOfUser getTypeOfUser() { return this.typeOfUser; }
 
 
     @Override

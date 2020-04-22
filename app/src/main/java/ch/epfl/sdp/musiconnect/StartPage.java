@@ -23,7 +23,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DataBase;
@@ -40,7 +39,7 @@ public class StartPage extends Page {
     private boolean isOpen = false;
     private DbAdapter dbAdapter;
     private Band b;
-    private boolean test=true;
+    private boolean test=false;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
@@ -90,6 +89,7 @@ public class StartPage extends Page {
                     @Override
                     public void readCallback(User u) {
                         b.addMember((Musician) u);
+                        (new DbAdapter(new DataBase())).add("Band", b);
                     }
                 });
             }
@@ -97,9 +97,7 @@ public class StartPage extends Page {
 
         fab_button_2.setOnClickListener(v -> {
             Toast.makeText(this, "band", Toast.LENGTH_SHORT).show();
-            DbAdapter db = new DbAdapter(new DataBase());
 
-            db.add("Band", b);
         });
 
         if(!test) {
@@ -109,7 +107,7 @@ public class StartPage extends Page {
                 public void readCallback(User u) {
                     CurrentUser.getInstance(StartPage.this).setMusician((Musician) u);
 
-                    if(((Musician) u).getType() == TypeOfUser.Band) {
+                    if(((Musician) u).getTypeOfUser() == TypeOfUser.Band) {
                         db.read("Band", CurrentUser.getInstance(StartPage.this).email, new DbCallback() {
                             @Override
                             public void readCallback(User u) {

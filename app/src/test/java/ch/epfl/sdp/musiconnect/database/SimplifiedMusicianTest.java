@@ -123,7 +123,7 @@ public class SimplifiedMusicianTest {
 
     private Musician testMusician() {
         Musician m = new Musician("firstName", "lastName", "username", "email@gmail.com", new MyDate(2000, 1, 1));
-        m.setType(TypeOfUser.Musician);
+        m.setTypeOfUser(TypeOfUser.Musician);
         return m;
     }
 

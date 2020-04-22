@@ -31,47 +31,12 @@ import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sdp.musiconnect.testsFunctions.*;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
 @LargeTest
 public class VideoPlayingTests {
-    /**
-     * Function used to get an instance of an activity
-     * SOURCE : https://stackoverflow.com/questions/45829637/cannot-check-current-activity-from-drawerlayout-item
-     * @return the current activity running
-     */
-    public static Activity getCurrentActivity() {
-        try {
-            Class activityThreadClass = Class.forName("android.app.ActivityThread");
-            Object activityThread = activityThreadClass.getMethod("currentActivityThread").invoke(null);
-            Field activitiesField = activityThreadClass.getDeclaredField("mActivities");
-            activitiesField.setAccessible(true);
-            Map activities = (Map) activitiesField.get(activityThread);
-            for (Object activityRecord : activities.values()) {
-                Class activityRecordClass = activityRecord.getClass();
-                Field pausedField = activityRecordClass.getDeclaredField("paused");
-                pausedField.setAccessible(true);
-                if (!pausedField.getBoolean(activityRecord)) {
-                    Field activityField = activityRecordClass.getDeclaredField("activity");
-                    activityField.setAccessible(true);
-                    Activity activity = (Activity) activityField.get(activityRecord);
-                    return activity;
-                }
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     @Rule
     public ActivityTestRule<StartPage> mActivityTestRule = new ActivityTestRule<>(StartPage.class);
@@ -82,7 +47,7 @@ public class VideoPlayingTests {
 
     public static void goToMyProfilePage() {
         ViewInteraction overflowMenuButton = onView(allOf(withContentDescription("More options"),
-                childAtPosition( childAtPosition(withId(R.id.action_bar),1),2), isDisplayed()));
+                childAtPosition(childAtPosition(withId(R.id.action_bar),1),2), isDisplayed()));
         overflowMenuButton.perform(click());
 
         ViewInteraction appCompatTextView = onView(allOf(withId(R.id.title), withText("My profile"),
@@ -96,7 +61,7 @@ public class VideoPlayingTests {
         MapsLocationTest.clickAllow();
         goToMyProfilePage();
 
-        ((MyProfilePage) getCurrentActivity()).videoUri = Uri.parse(videoSource);
+        ((MyProfilePage) testsFunctions.getCurrentActivity()).videoUri = Uri.parse(videoSource);
 
         ViewInteraction videoView = onView(allOf(withId(R.id.videoView),
                 childAtPosition(childAtPosition(withClassName(is("android.widget.LinearLayout")),
@@ -105,27 +70,8 @@ public class VideoPlayingTests {
 
         //onView(withId(R.id.videoView)).perform(click());
 
-        VideoView v = getCurrentActivity().findViewById(R.id.videoView);
+        VideoView v = testsFunctions.getCurrentActivity().findViewById(R.id.videoView);
         //Thread.sleep(1000*15); // waiting util the vidéo is loaded from internet
         //assertTrue(v.getDuration() > -1); // test if the video is loaded
-    }
-
-    public static Matcher<View> childAtPosition(
-            final Matcher<View> parentMatcher, final int position) {
-
-        return new TypeSafeMatcher<View>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("Child at position " + position + " in parent ");
-                parentMatcher.describeTo(description);
-            }
-
-            @Override
-            public boolean matchesSafely(View view) {
-                ViewParent parent = view.getParent();
-                return parent instanceof ViewGroup && parentMatcher.matches(parent)
-                        && view.equals(((ViewGroup) parent).getChildAt(position));
-            }
-        };
     }
 }

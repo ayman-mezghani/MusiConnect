@@ -20,7 +20,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.util.Calendar;
-import java.util.HashMap;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DataBase;
@@ -101,7 +100,7 @@ public class UserCreation extends Page {
                     DbAdapter db = new DbAdapter(new DataBase());
                     Musician musician = new Musician(firstname, lastname, username, email, d);
                     musician.setLocation(new MyLocation(0, 0));
-                    musician.setType(CurrentUser.getInstance(this).getTypeOfUser());
+                    musician.setTypeOfUser(CurrentUser.getInstance(this).getTypeOfUser());
 
                     db.add(collection, musician);
                     CurrentUser.getInstance(this).setMusician(musician);
