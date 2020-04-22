@@ -29,7 +29,7 @@ public class EventCreation extends Page {
     DatePickerDialog datePickerDialog;
     TimePickerDialog timePickerDialog;
 
-
+    Event event;
     // List<User> participants;
     List<String> participants;
 
@@ -179,7 +179,7 @@ public class EventCreation extends Page {
 
         //TODO to be deleted
 
-        Event event = new Event(new Musician("Test", "User", "TestUser", "testuser@gmail.com", new MyDate()), 0);
+        event = new Event(new Musician("Test", "User", "TestUser", "testuser@gmail.com", new MyDate()), 0);
         event.setTitle(eventTitleView.getText().toString());
         event.setAddress(eventAddressView.getText().toString());
         event.setDescription(eventDescriptionView.getText().toString());
@@ -199,4 +199,7 @@ public class EventCreation extends Page {
 
     }
 
+    protected Event getTestEvent() {
+        return event;
+    }
 }

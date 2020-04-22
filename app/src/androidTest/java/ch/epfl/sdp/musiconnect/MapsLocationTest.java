@@ -1,6 +1,7 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -212,5 +213,13 @@ public class MapsLocationTest {
         assertTrue(correctLocation(loc));
         assertTrue(loc.getLatitude() == location.getLatitude());
 
+    }
+
+    @Test
+    public void testGooglePlayServices() {
+        MapsActivity mapsActivity = mRule.getActivity();
+        boolean b = mapsActivity.isGooglePlayServicesAvailable();
+
+        assertTrue(b);
     }
 }
