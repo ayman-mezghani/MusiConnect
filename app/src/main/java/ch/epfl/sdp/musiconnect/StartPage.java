@@ -60,7 +60,6 @@ public class StartPage extends Page {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_page);
 
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         checkLocationPermission();
 

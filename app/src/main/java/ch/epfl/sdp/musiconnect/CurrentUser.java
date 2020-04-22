@@ -10,20 +10,20 @@ import java.util.IllegalFormatException;
 public class CurrentUser {
     // static variable single_instance of type Singleton
     private static CurrentUser single_instance = null;
+    public final String email;
 
-    // variable of type String
-    public String email;
     private boolean createdFlag = false;
     private TypeOfUser type;
     private String bandName;
     private Musician m;
+    private GoogleSignInAccount acct;
 
     // private constructor restricted to this class itself
     private CurrentUser(Context context) {
-        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(context);
+        acct = GoogleSignIn.getLastSignedInAccount(context);
         if (acct != null) {
             email = acct.getEmail();
-        }
+        } else email = "";
     }
 
     // static method to create instance of Singleton class
@@ -61,5 +61,9 @@ public class CurrentUser {
 
     public Musician getMusician() {
         return this.m;
+    }
+
+    public static void flush() {
+        single_instance = null;
     }
 }

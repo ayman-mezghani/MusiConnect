@@ -34,6 +34,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.musiconnect.testsFunctions.*;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertTrue;
 
 @LargeTest
 public class VideoPlayingTests {
@@ -55,10 +56,14 @@ public class VideoPlayingTests {
         appCompatTextView.perform(click());
     }
 
-    private String videoSource = "https://sites.google.com/site/androidexample9/download/RunningClock.mp4";
+//    private String packageName = "ch.epfl.sdp.musiconnect";
     @Test
     public void playVideoTest() throws InterruptedException {
         MapsLocationTest.clickAllow();
+
+        String packageName = mActivityTestRule.getActivity().getPackageName();
+        String videoSource = "android.resource://"+packageName+"/"+ R.raw.minion;
+
         goToMyProfilePage();
 
         ((MyProfilePage) testsFunctions.getCurrentActivity()).videoUri = Uri.parse(videoSource);
@@ -66,12 +71,9 @@ public class VideoPlayingTests {
         ViewInteraction videoView = onView(allOf(withId(R.id.videoView),
                 childAtPosition(childAtPosition(withClassName(is("android.widget.LinearLayout")),
                         2),0),isDisplayed()));
-        //videoView.perform(click());
 
-        //onView(withId(R.id.videoView)).perform(click());
-
-        VideoView v = testsFunctions.getCurrentActivity().findViewById(R.id.videoView);
-        //Thread.sleep(1000*15); // waiting util the vidéo is loaded from internet
-        //assertTrue(v.getDuration() > -1); // test if the video is loaded
+        VideoView v = getCurrentActivity().findViewById(R.id.videoView);
+        Thread.sleep(1000); // waiting util the vidéo is loaded from internet
+        assertTrue(v.getDuration() > -1); // test if the video is loaded
     }
 }

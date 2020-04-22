@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,13 +30,13 @@ public class DataBase {
     }
 
     public void addMusician(String collection, String docName, SimplifiedMusician m) {
-        db.collection(collection).document(docName).set(m)
+        db.collection(collection).document(docName).set(m, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
     }
 
     public void addBand(String collection, String docName, SimplifiedBand b) {
-        db.collection(collection).document(docName).set(b)
+        db.collection(collection).document(docName).set(b, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
     }
@@ -64,7 +65,7 @@ public class DataBase {
         db.collection(collection).document(docName).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     Map<String, Object> data = documentSnapshot.getData();
-                    if (data != null) {
+                    if (data != null && data.size() > 0) {
                         if (data.get("leader") != null) {
 
                             DbAdapter da = new DbAdapter(this);

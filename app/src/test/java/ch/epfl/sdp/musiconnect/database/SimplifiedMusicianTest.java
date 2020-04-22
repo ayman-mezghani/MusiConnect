@@ -15,6 +15,7 @@ import ch.epfl.sdp.musiconnect.MyLocation;
 import ch.epfl.sdp.musiconnect.TypeOfUser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class SimplifiedMusicianTest {
     @Test
@@ -119,6 +120,15 @@ public class SimplifiedMusicianTest {
         assertEquals((Timestamp) map.get(SimplifiedMusician.BIRTHDAY), new Timestamp((Date) mapClone.get(SimplifiedMusician.BIRTHDAY)));
         assertEquals((Timestamp) map.get(SimplifiedMusician.JOINDATE), new Timestamp((Date) mapClone.get(SimplifiedMusician.JOINDATE)));
         assertEquals((GeoPoint) map.get(SimplifiedMusician.LOCATION), (GeoPoint) mapClone.get(SimplifiedMusician.LOCATION));
+    }
+
+    @Test
+    public void ghostMusician() {
+        SimplifiedMusician sm = new SimplifiedMusician();
+        Map<String, Object> m = sm.toMap();
+        for (String key : m.keySet()) {
+            assertNull(m.get(key));;
+        }
     }
 
     private Musician testMusician() {

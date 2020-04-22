@@ -156,6 +156,7 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
                 data.put(keys[i], newFields[i]);
         }
         data.put("location", new GeoPoint(0, 0));
+        data.put("typeOfUser", CurrentUser.getInstance(this).getMusician().getTypeOfUser().toString());
 
         Musician me = new SimplifiedMusician(data).toMusician();
         adapter.update(collection, me);
