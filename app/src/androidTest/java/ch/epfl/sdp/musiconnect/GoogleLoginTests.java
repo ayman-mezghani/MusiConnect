@@ -6,12 +6,15 @@ package ch.epfl.sdp.musiconnect;
 
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -24,6 +27,11 @@ public class GoogleLoginTests {
     @Rule
     public IntentsTestRule<GoogleLogin> activityRule = new IntentsTestRule<>(GoogleLogin.class);
 
+    @BeforeClass
+    public static void setMockDB() {
+        DbGenerator.setDatabase(new MockDatabase());
+    }
+
     @Test
     public void signInButtonClick(){
         onView(withId(R.id.sign_in_button)).check(matches(isDisplayed()));
@@ -34,7 +42,7 @@ public class GoogleLoginTests {
     @Test
     public void onActivityResult(){
         // Simulate the on activity result call
-        ((GoogleLogin ) VideoPlayingTests.getCurrentActivity()).onActivityResult(0  ,0,null);
+        ((GoogleLogin) VideoPlayingTests.getCurrentActivity()).onActivityResult(0  ,0,null);
     }
 
     public static void waitALittle(int t) {

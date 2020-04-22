@@ -3,6 +3,7 @@ package ch.epfl.sdp.musiconnect;
 import android.widget.DatePicker;
 
 import org.hamcrest.Matchers;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +13,8 @@ import androidx.test.espresso.contrib.PickerActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
@@ -32,6 +35,12 @@ public class ProfileModificationTests {
     @Rule
     public final ActivityTestRule<MyProfilePage> profilePageRule =
             new ActivityTestRule<>(MyProfilePage.class);
+
+    @BeforeClass
+    public static void setMockDB() {
+        DbGenerator.setDatabase(new MockDatabase());
+    }
+
     /**
      * Helper method to avoid duplication
      * @param text: text to recognize on the clickable object

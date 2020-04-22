@@ -9,11 +9,15 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.rule.ServiceTestRule;
 
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.concurrent.TimeoutException;
+
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
 import static org.junit.Assert.assertTrue;
 
@@ -25,7 +29,10 @@ public class LocationServiceTest {
     public final ServiceTestRule serviceRule =
             new ServiceTestRule();
 
-
+    @BeforeClass
+    public static void setMockDB() {
+        DbGenerator.setDatabase(new MockDatabase());
+    }
 
     @Test
     public void testNullBinder() {

@@ -21,6 +21,9 @@ public class MockDatabaseForUT implements Database {
         this.expectedNewValueMap = expectedNewValueMap;
     }
 
+    public MockDatabaseForUT() {
+    }
+
     @Override
     public void addDoc(String docName, SimplifiedMusician m) {
         assertEquals(expectedDocName, docName);

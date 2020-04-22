@@ -7,11 +7,18 @@ import androidx.test.espresso.contrib.PickerActions;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 
 import org.hamcrest.Matchers;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
@@ -30,6 +37,16 @@ import static org.junit.Assert.assertEquals;
 public class UserCreationHardwareTests {
     @Rule
     public IntentsTestRule<UserCreation> activityRule = new IntentsTestRule<>(UserCreation.class);
+
+    @BeforeClass
+    public static void setMockDB() {
+        DbGenerator.setDatabase(new MockDatabase());
+    }
+
+    @After
+    public void bePatient() {
+        waitALittle(3);
+    }
 
     @Test
     public void singleInputEmptyTest() {
@@ -124,5 +141,13 @@ public class UserCreationHardwareTests {
     public void testHelpClickFromProfileShouldStartNewIntent() {
         MenuTests m = new MenuTests();
         m.testHelpClickShouldStartNewIntent();
+    }
+
+    public static void waitALittle(int t) {
+        try {
+            TimeUnit.SECONDS.sleep(t);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

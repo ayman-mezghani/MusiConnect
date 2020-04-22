@@ -1,6 +1,6 @@
 package ch.epfl.sdp.musiconnect.database;
 
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,9 +8,8 @@ import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 
 
-class MockDatabase implements Database {
-
-
+public class MockDatabase implements Database {
+    
     private final String firstName = "bob";
     private final String lastName = "minion";
     private final String username = "bobminion";
@@ -19,7 +18,10 @@ class MockDatabase implements Database {
 
     private SimplifiedMusician simplifiedMusician = new SimplifiedMusician(new Musician(firstName, lastName, username, email, birthday));
 
-    MockDatabase() {
+    private Map<String,SimplifiedMusician> content;
+
+    public MockDatabase() {
+        this.content = new HashMap<>();
     }
 
     @Override

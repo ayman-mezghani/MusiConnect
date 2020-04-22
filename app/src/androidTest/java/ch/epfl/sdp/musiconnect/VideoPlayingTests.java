@@ -15,6 +15,7 @@ import androidx.test.rule.GrantPermissionRule;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -23,6 +24,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -80,6 +83,11 @@ public class VideoPlayingTests {
 
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
+
+    @BeforeClass
+    public static void setMockDB() {
+        DbGenerator.setDatabase(new MockDatabase());
+    }
 
     public static void goToMyProfilePage() {
         ViewInteraction overflowMenuButton = onView(allOf(withContentDescription("More options"),

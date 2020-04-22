@@ -3,11 +3,14 @@ package ch.epfl.sdp.musiconnect;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
@@ -26,6 +29,11 @@ public class SettingsTests {
     @Rule
     public final ActivityTestRule<SettingsPage> settingsPageRule =
             new ActivityTestRule<>(SettingsPage.class);
+
+    @BeforeClass
+    public static void setMockDB() {
+        DbGenerator.setDatabase(new MockDatabase());
+    }
 
     /**
      * Helper method to avoid duplicate code

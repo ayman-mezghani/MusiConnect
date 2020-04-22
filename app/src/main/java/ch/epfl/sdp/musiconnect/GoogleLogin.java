@@ -67,10 +67,10 @@ public class GoogleLogin extends AppCompatActivity {
                         startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class));
                         finish();
                     }
-//                    else {
-//                        startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.UserCreation.class));
-//                    }
-//                    finish();
+                    else {
+                        startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.UserCreation.class));
+                    }
+                    finish();
                 }
             });
         }
@@ -104,8 +104,6 @@ public class GoogleLogin extends AppCompatActivity {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
             DbAdapter db = DbGenerator.getDbInstance();
-
-            Log.d("AppStatus", "here");
 
             db.exists(account.getEmail(), new DbCallback() {
                 @Override

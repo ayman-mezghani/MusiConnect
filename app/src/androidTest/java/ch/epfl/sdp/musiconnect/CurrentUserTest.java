@@ -5,8 +5,12 @@ import android.content.Context;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -15,6 +19,11 @@ public class CurrentUserTest {
     @Rule
     public final ActivityTestRule<GoogleLogin> pageRule =
             new ActivityTestRule<>(GoogleLogin.class);
+
+    @BeforeClass
+    public static void setMockDB() {
+        DbGenerator.setDatabase(new MockDatabase());
+    }
 
     @Before
     public void flushBefore() {
