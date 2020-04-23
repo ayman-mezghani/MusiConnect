@@ -13,6 +13,8 @@ import java.io.IOException;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
+import ch.epfl.sdp.musiconnect.cloud.FirebaseCloudStorage;
 
 public abstract class ProfilePage extends Page {
     protected TextView titleView, firstNameView, lastNameView, usernameView, emailView, birthdayView;
@@ -31,9 +33,9 @@ public abstract class ProfilePage extends Page {
     }
 
     protected void getVideoUri(String s) {
-        CloudStorage storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
-        String path = s + "/" + CloudStorage.FileType.video;
-        String saveName = s + "_" + CloudStorage.FileType.video;
+        CloudStorage storage = CloudStorageGenerator.getDbInstance(this);
+        String path = s + "/" + FirebaseCloudStorage.FileType.video;
+        String saveName = s + "_" + FirebaseCloudStorage.FileType.video;
         try {
             storage.download(path, saveName, new CloudCallback() {
                 @Override
@@ -41,9 +43,10 @@ public abstract class ProfilePage extends Page {
                     videoUri = fileUri;
                     showVideo();
                 }
+
                 @Override
                 public void onFailure() {
-                    videoUri = Uri.parse("android.resource://"+getPackageName()+"/"+ R.raw.minion);
+                    videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.minion);
                     showVideo();
                 }
             });

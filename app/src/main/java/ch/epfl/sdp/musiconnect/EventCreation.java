@@ -10,18 +10,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DataBase;
+
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
+import ch.epfl.sdp.musiconnect.database.DbCallback;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbUserType;
 
 public class EventCreation extends Page {
 
-    private DataBase db;
     private DbAdapter dbAdapter;
 
     EditText eventTitleView, eventAddressView, eventDescriptionView, eventParticipantView;
@@ -32,19 +33,18 @@ public class EventCreation extends Page {
     TimePickerDialog timePickerDialog;
 
     Event event;
-    // List<User> participants;
-    List<String> participants;
+    List<User> participants;
+    List<String> emails; //List to keep track of users in the list
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_creation);
 
-        db = new DataBase();
-        dbAdapter = new DbAdapter(db);
+        dbAdapter = DbGenerator.getDbInstance();
 
         participants = new ArrayList<>();
-
+        emails = new ArrayList<>();
 
         eventTitleView = findViewById(R.id.eventCreationNewEventTitle);
         eventAddressView = findViewById(R.id.eventCreationNewEventAddress);
@@ -70,14 +70,21 @@ public class EventCreation extends Page {
 
         dateView.setOnClickListener(v -> {
             datePickerDialog = new DatePickerDialog(EventCreation.this,
-                    (datePicker, year, month, day) -> dateView.setText(day + "/" + (month + 1) + "/" + year), year, month, dayOfMonth);
+                    (datePicker, year, month, day) -> {
+                            dateView.setText(day + "/" + (month + 1) + "/" + year);
+                            calendar.set(year, month, day);
+                        }
+                        , year, month, dayOfMonth);
             datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
             datePickerDialog.show();
         });
 
         timeView.setOnClickListener(v -> {
             timePickerDialog = new TimePickerDialog(EventCreation.this,
-                    (timePicker, hour, minute) -> timeView.setText(hour + ":" + minute), hour, minute,  DateFormat.is24HourFormat(this));
+                    (timePicker, hour, minute) -> {
+                        timeView.setText(hour + ":" + minute);
+                        calendar.set(year, month, dayOfMonth, hour, minute);
+                    }, hour, minute,  DateFormat.is24HourFormat(this));
 
             timePickerDialog.show();
         });
@@ -86,50 +93,63 @@ public class EventCreation extends Page {
     private void setupButtons() {
         Button addParticipant = findViewById(R.id.eventCreationAddParticipants);
         addParticipant.setOnClickListener(v -> {
-            String username = eventParticipantView.getText().toString();
+            String email = eventParticipantView.getText().toString();
 
-            if (username.equals("")) {
-                Toast.makeText(this, "Please add a username", Toast.LENGTH_SHORT).show();
+            if (email.equals("")) {
+                showToastWithText("Please add an email");
                 return;
             }
-            /*
-            dbAdapter.read(username, user -> {
-                if (user != null){
-                    participants.add(user);
-                    updateParticipants();
-                } else {
-                    Toast.makeText(this, "Please add a valid username", Toast.LENGTH_SHORT).show();
+
+            dbAdapter.read(DbUserType.Musician, email, new DbCallback() {
+                @Override
+                public void readCallback(User user) {
+                    if (user != null) {
+                        if (emails.contains(email)) {
+                            showToastWithText("This user is already in the participants list");
+                        } else {
+                            emails.add(email);
+                            participants.add(user);
+                            updateParticipants();
+                        }
+                    } else {
+                        showToastWithText("Please add a valid email");
+                    }
                 }
             });
-             */
-            if (participants.contains(username)) {
-                Toast.makeText(this, "This user is already in the participants list", Toast.LENGTH_SHORT).show();
-            } else {
-                participants.add(username);
-                updateParticipants();
-            }
+
+
         });
 
         Button removeParticipant = findViewById(R.id.eventCreationRemoveParticipants);
         removeParticipant.setOnClickListener(v -> {
-            String username = eventParticipantView.getText().toString();
+            String email = eventParticipantView.getText().toString();
 
-            if (username.equals("")) {
-                Toast.makeText(this, "Please add a username", Toast.LENGTH_SHORT).show();
+            if (email.equals("")) {
+                showToastWithText("Please add an email");
                 return;
             }
 
-            if (!participants.contains(username)) {
-                Toast.makeText(this, "This user is not in the participants list", Toast.LENGTH_SHORT).show();
-            } else {
-                participants.remove(username);
-                updateParticipants();
-            }
+            dbAdapter.read(DbUserType.Musician, email, new DbCallback() {
+                @Override
+                public void readCallback(User user) {
+                    if (user != null) {
+                        if (emails.contains(email)) {
+                            emails.remove(email);
+                            participants.remove(user);
+                            updateParticipants();
+                        } else {
+                            showToastWithText("This user is not in the participants list");
+                        }
+                    } else {
+                        showToastWithText("Please add a valid email");
+                    }
+                }
+            });
         });
 
         Button doNotSave = findViewById(R.id.eventCreationBtnDoNotSaveEvent);
         doNotSave.setOnClickListener(v -> {
-            Toast.makeText(this, R.string.creation_cancelled, Toast.LENGTH_SHORT).show();
+            showToastWithText("Creation cancelled");
             finish();
         });
 
@@ -137,10 +157,15 @@ public class EventCreation extends Page {
         save.setOnClickListener(v -> {
             if (checkEventCreationInput()) {
                 sendToDatabase();
-                Toast.makeText(this, "Event created", Toast.LENGTH_SHORT).show();
+                showToastWithText("Event created");
                 finish();
             }
         });
+    }
+
+    private void showToastWithText(String string) {
+        EventCreation.this.runOnUiThread(() -> Toast.makeText(EventCreation.this,
+                string, Toast.LENGTH_LONG).show());
     }
 
     @Override
@@ -152,19 +177,13 @@ public class EventCreation extends Page {
         }
     }
 
-
     private void updateParticipants() {
         eventParticipantView.getText().clear();
 
         StringBuilder sb = new StringBuilder();
 
-        /*
         for (User user : participants) {
             sb.append(user.getName()).append(System.lineSeparator());
-        }*/
-
-        for (String s : participants) {
-            sb.append(s).append(System.lineSeparator());
         }
 
         participantsView.setText(sb.toString());
@@ -172,8 +191,7 @@ public class EventCreation extends Page {
 
 
     private void sendToDatabase() {
-        /*
-        dbAdapter.read(CurrentUser.getInstance(this).email, new DbCallback() {
+        dbAdapter.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
             @Override
             public void readCallback(User user) {
                 Event event = new Event(user, 0);
@@ -192,29 +210,13 @@ public class EventCreation extends Page {
                         Integer.parseInt(hourMin[0]),
                         Integer.parseInt(hourMin[1]));
 
+                for (User musician: participants) {
+                    event.register(musician);
+                }
+
                 event.setDateTime(d);
             }
-        });*/
-
-        //TODO to be deleted
-
-        event = new Event(new Musician("Test", "User", "TestUser", "testuser@gmail.com", new MyDate(1990, 12, 1)), 0);
-        event.setTitle(eventTitleView.getText().toString());
-        event.setAddress(eventAddressView.getText().toString());
-        event.setDescription(eventDescriptionView.getText().toString());
-
-        String time = timeView.getText().toString();
-        String date = dateView.getText().toString();
-
-        String[] hourMin = time.split(":");
-        String[] dateMonthYear = date.split("/");
-        MyDate d = new MyDate(Integer.parseInt(dateMonthYear[2]),
-                Integer.parseInt(dateMonthYear[1]),
-                Integer.parseInt(dateMonthYear[0]),
-                Integer.parseInt(hourMin[0]),
-                Integer.parseInt(hourMin[1]));
-
-        event.setDateTime(d);
+        });
     }
 
 

@@ -16,7 +16,7 @@ import java.util.Set;
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
 
-public class SimplifiedBand implements Serializable {
+public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
     private String uid = null;
     private String leader;
     private String bandName;

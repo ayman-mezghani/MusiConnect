@@ -5,34 +5,28 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbUserType;
 
 public class MyProfilePage extends ProfilePage implements View.OnClickListener {
     private static String collection = "newtest";
 
     private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
     private DbAdapter dbAdapter;
-    private boolean test = true;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dbAdapter = new DbAdapter(new DataBase());
+        dbAdapter = DbGenerator.getDbInstance();
 
         setContentView(R.layout.activity_profile_page);
 
@@ -58,54 +52,36 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         getVideoUri(userEmail);
     }
 
-    private boolean checktest() {
-        boolean istest;
-
-        try {
-            Class.forName("androidx.test.espresso.Espresso");
-            istest = true;
-        } catch (ClassNotFoundException e) {
-            istest = false;
-        }
-        return istest;
-    }
-
     private void loadProfileContent() {
-        if (!checktest()) {
-            dbAdapter.read(collection, CurrentUser.getInstance(this).email, new DbCallback() {
-                @Override
-                public void readCallback(User user) {
-                    Musician m = (Musician) user;
-                    firstNameView.setText(m.getFirstName());
-                    lastNameView.setText(m.getLastName());
-                    usernameView.setText(m.getUserName());
-                    emailView.setText(m.getEmailAddress());
-                    MyDate date = m.getBirthday();
-                    String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
-                    birthdayView.setText(s);
-                }
-            });
-        } else {
-            firstNameView.setText("default");
-            lastNameView.setText("user");
-            usernameView.setText("defuser");
-            emailView.setText("defuser@gmail.com");
-            birthdayView.setText("01/01/2000");
-        }
+        userEmail = CurrentUser.getInstance(this).email;
+        dbAdapter.read(DbUserType.Musician, userEmail, new DbCallback() {
+            @Override
+            public void readCallback(User user) {
+                Musician m = (Musician) user;
+                firstNameView.setText(m.getFirstName());
+                lastNameView.setText(m.getLastName());
+                usernameView.setText(m.getUserName());
+                emailView.setText(m.getEmailAddress());
+                MyDate date = m.getBirthday();
+                String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
+                birthdayView.setText(s);
+            }
+        });
     }
 
+    /*
     public void captureVideo(View view) {
         Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 
         if (videoIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(videoIntent, VIDEO_REQUEST);
         }
-    }
+    }*/
 
     @Override
     public void onStart() {
         super.onStart();
-    //        getVideoUri(userEmail);
+        //        getVideoUri(userEmail);
     }
 
     @SuppressLint("MissingSuperCall")

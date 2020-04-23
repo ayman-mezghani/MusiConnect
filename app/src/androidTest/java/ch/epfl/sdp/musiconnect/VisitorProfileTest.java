@@ -11,11 +11,18 @@ import androidx.test.uiautomator.UiDevice;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.R;
+
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
+import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.database.SimplifiedMusician;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -35,6 +42,11 @@ public class VisitorProfileTest {
             GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
     private UiDevice device;
 
+    @BeforeClass
+    public static void setMocks() {
+        DbGenerator.setDatabase(new MockDatabase());
+        CloudStorageGenerator.setStorage((new MockCloudStorage()));
+    }
 
     /* @Test
     public void testClickMarker() {
@@ -69,7 +81,7 @@ public class VisitorProfileTest {
 
     @Test
     public void testNoMarkerTransitionToProfile() {
-        Musician m1 = new Musician("Alice", "Bardon", "Alyx", "alyx92@gmail.com", new MyDate(1992, 9, 20));
+        Musician m1 = new Musician("Alice", "Bardon", "Alyx", "aymanmezghani97@gmail.com", new MyDate(1992, 9, 20));
         Musician m2 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
         Musician m3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
 
@@ -82,6 +94,7 @@ public class VisitorProfileTest {
         Intent intent = new Intent();
         intent.putExtra("UserEmail", m.getEmailAddress());
         visitorActivityTestRule.launchActivity(intent);
+
 
         onView(withId(R.id.visitorProfileFirstname)).check(matches(withText(m.getFirstName())));
         onView(withId(R.id.visitorProfileLastname)).check(matches(withText(m.getLastName())));
