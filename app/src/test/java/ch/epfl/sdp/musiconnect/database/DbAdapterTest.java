@@ -30,22 +30,22 @@ public class DbAdapterTest {
 
     @Test
     public void addTest() {
-        dbAdapter.add(musician);
+        dbAdapter.add(DbUserType.Musician, musician);
     }
 
     @Test
     public void deleteTest() {
-        dbAdapter.delete(musician);
+        dbAdapter.delete(DbUserType.Musician, musician);
     }
 
     @Test
     public void updateTest() {
-        dbAdapter.update(musician);
+        dbAdapter.update(DbUserType.Musician, musician);
     }
 
     @Test
     public void readTest() {
-        dbAdapter.read(musician.getEmailAddress(), new DbCallback() {
+        dbAdapter.read(DbUserType.Musician, musician.getEmailAddress(), new DbCallback() {
             @Override
             public void readCallback(User user) {
                 assertEquals(new SimplifiedMusician((Musician) user), new SimplifiedMusician(musician));
@@ -55,7 +55,7 @@ public class DbAdapterTest {
 
     @Test
     public void existsTest() {
-        dbAdapter.exists(musician.getEmailAddress(), new DbCallback() {
+        dbAdapter.exists(DbUserType.Musician, musician.getEmailAddress(), new DbCallback() {
             @Override
             public void existsCallback(boolean exists) {
                 assertFalse(exists);

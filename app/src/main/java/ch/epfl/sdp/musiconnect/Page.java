@@ -17,11 +17,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import ch.epfl.sdp.R;
 
+import static ch.epfl.sdp.musiconnect.StartPage.test;
+
 
 public abstract class Page extends AppCompatActivity {
     protected GoogleSignInClient mGoogleSignInClient;
     protected GoogleSignInOptions gso;
-    private boolean test = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

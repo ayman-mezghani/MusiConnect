@@ -11,12 +11,13 @@ import android.view.View;
 import android.widget.Button;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
-import ch.epfl.sdp.musiconnect.database.FirebaseDatabase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbUserType;
 
 public class MyProfilePage extends ProfilePage implements View.OnClickListener {
+    private static String collection = "newtest";
 
     private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
     private DbAdapter dbAdapter;
@@ -55,7 +56,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
 
     private void loadProfileContent() {
         userEmail = CurrentUser.getInstance(this).email;
-        dbAdapter.read(userEmail, new DbCallback() {
+        dbAdapter.read(DbUserType.Musician, userEmail, new DbCallback() {
             @Override
             public void readCallback(User user) {
                 Musician m = (Musician) user;

@@ -9,7 +9,7 @@ import ch.epfl.sdp.musiconnect.User;
 
 import static org.junit.Assert.assertEquals;
 
-public class MockDatabaseForUT implements Database {
+public class MockDatabaseForUT extends Database {
 
     private String expectedDocName;
     private SimplifiedMusician expectedSimplifiedMusician;
@@ -25,35 +25,36 @@ public class MockDatabaseForUT implements Database {
     }
 
     @Override
-    public void addDoc(String docName, SimplifiedMusician m) {
+    void addDoc(String collection, String docName, SimplifiedDbEntry entry) {
         assertEquals(expectedDocName, docName);
-        assertEquals(expectedSimplifiedMusician, m);
+        assertEquals(expectedSimplifiedMusician, entry);
     }
 
     @Override
-    public void deleteDoc(String docName) {
+    void deleteDoc(String collection, String docName) {
         assertEquals(expectedDocName, docName);
+
     }
 
     @Override
-    public void updateDoc(String docName, Map<String, Object> newValueMap) {
+    void updateDoc(String collection, String docName, Map<String, Object> newValueMap) {
         assertEquals(expectedDocName, docName);
         assertEquals(expectedNewValueMap, newValueMap);
     }
 
     @Override
-    public void deleteFieldsInDoc(String docName, List<String> fields) {
+    void deleteFieldsInDoc(String collection, String docName, List<String> fields) {
         assertEquals(expectedDocName, docName);
     }
 
     @Override
-    public void readDoc(String docName, DbCallback dbCallback) {
+    void readDoc(String collection, String docName, DbCallback dbCallback) {
         assertEquals(expectedDocName, docName);
         dbCallback.readCallback(expectedSimplifiedMusician.toMusician());
     }
 
     @Override
-    public void docExists(String docName, DbCallback dbCallback) {
+    void docExists(String collection, String docName, DbCallback dbCallback) {
         assertEquals(expectedDocName, docName);
         dbCallback.existsCallback(false);
     }

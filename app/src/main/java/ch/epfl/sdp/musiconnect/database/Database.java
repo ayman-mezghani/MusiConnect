@@ -1,18 +1,22 @@
 package ch.epfl.sdp.musiconnect.database;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 import java.util.Map;
 
-public interface Database {
-    void addDoc(String docName, SimplifiedMusician m);
+abstract class Database {
 
-    void deleteDoc(String docName);
 
-    void updateDoc(String docName, Map<String, Object> newValueMap);
+    abstract void addDoc(String collection, String docName, SimplifiedDbEntry entry);
 
-    void deleteFieldsInDoc(String docName, List<String> fields);
+    abstract void deleteDoc(String collection, String docName);
 
-    void readDoc(String docName, DbCallback dbCallback);
+    abstract void updateDoc(String collection, String docName, Map<String, Object> newValueMap);
 
-    void docExists(String docName, DbCallback dbCallback);
+    abstract void deleteFieldsInDoc(String collection, String docName, List<String> fields);
+
+    abstract void readDoc(String collection, String docName, DbCallback dbCallback);
+
+    abstract void docExists(String collection, String docName, DbCallback dbCallback);
 }

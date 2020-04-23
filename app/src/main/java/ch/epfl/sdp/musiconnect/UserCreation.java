@@ -9,6 +9,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,11 +23,12 @@ import java.util.Calendar;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
-import ch.epfl.sdp.musiconnect.database.FirebaseDatabase;
+import ch.epfl.sdp.musiconnect.database.DbUserType;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 
 public class UserCreation extends Page {
     //public static Musician mainUser;
+    private static String collection = "newtest";
     private static final int GALLERY_REQUEST_CODE = 123;
     private ImageView profilePicture;
     TextView date;
@@ -33,6 +36,7 @@ public class UserCreation extends Page {
     int year, month, dayOfMonth;
     Calendar calendar;
     protected EditText etFirstName, etLastName, etUserName, etMail;
+    private RadioGroup rdg;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -42,6 +46,7 @@ public class UserCreation extends Page {
 
         date = findViewById(R.id.etDate);
         profilePicture = findViewById(R.id.userProfilePicture);
+        rdg = findViewById(R.id.rdg);
 
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
@@ -70,8 +75,6 @@ public class UserCreation extends Page {
         // signout if user choose cancel
         findViewById(R.id.btnUserCreationCancel).setOnClickListener(v -> signOut());
 
-
-
         findViewById(R.id.btnUserCreationCreate).setOnClickListener(v -> {
             if (checkUserCreationInput()) {
                 if (((TextView) findViewById(R.id.etDate)).getText().toString().trim().length() > 0) {
@@ -91,16 +94,28 @@ public class UserCreation extends Page {
                     String email = etMail.getText().toString();
                     MyDate d = new MyDate(year, month, dayOfMonth);
 
-                    Musician musician = new Musician(firstname, lastname, username, email, d);
-                    musician.setLocation(new MyLocation(0, 0));
+                    RadioButton rdb = findViewById(rdg.getCheckedRadioButtonId());
 
                     DbAdapter db = DbGenerator.getDbInstance();
-                    db.add(musician);
+
+                    Musician musician = new Musician(firstname, lastname, username, email, d);
+                    musician.setLocation(new MyLocation(0, 0));
+                    musician.setTypeOfUser(TypeOfUser.valueOf(rdb.getText().toString()));
+
+                    db.add(DbUserType.Musician, musician);
 
                     CurrentUser.getInstance(this).setCreatedFlag();
+                    CurrentUser.getInstance(this).setMusician(musician);
 
+                    switch (CurrentUser.getInstance(this).getMusician().getTypeOfUser()) {
+                        case Band:
+                            StartActivityAndFinish(new Intent(UserCreation.this, BandCreation.class));
+                            break;
+                        case Musician:
+                            StartActivityAndFinish(new Intent(UserCreation.this, StartPage.class));
+                            break;
+                    }
 
-                    StartActivityAndFinish(new Intent(UserCreation.this, StartPage.class));
                     GoogleLogin.finishActivity();
                     finish();
                 } else {
@@ -108,7 +123,6 @@ public class UserCreation extends Page {
                 }
             }
         });
-
 
         etFirstName = findViewById(R.id.etFirstname);
         etLastName = findViewById(R.id.etLastName);
@@ -196,7 +210,7 @@ public class UserCreation extends Page {
         return true;
     }
 
-    private void StartActivityAndFinish(Intent i) {
+    protected void StartActivityAndFinish(Intent i) {
         startActivity(i);
         finish();
     }

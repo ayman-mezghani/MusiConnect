@@ -7,8 +7,7 @@ import java.util.Map;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 
-
-public class MockDatabase implements Database {
+public class MockDatabase extends Database {
     
     private final String firstName = "bob";
     private final String lastName = "minion";
@@ -25,28 +24,28 @@ public class MockDatabase implements Database {
     }
 
     @Override
-    public void addDoc(String docName, SimplifiedMusician m) {
+    void addDoc(String collection, String docName, SimplifiedDbEntry entry) {
     }
 
     @Override
-    public void deleteDoc(String docName) {
+    void deleteDoc(String collection, String docName) {
     }
 
     @Override
-    public void updateDoc(String docName, Map<String, Object> newValueMap) {
+    void updateDoc(String collection, String docName, Map<String, Object> newValueMap) {
     }
 
     @Override
-    public void deleteFieldsInDoc(String docName, List<String> fields) {
+    void deleteFieldsInDoc(String collection, String docName, List<String> fields) {
     }
 
     @Override
-    public void readDoc(String docName, DbCallback dbCallback) {
+    void readDoc(String collection, String docName, DbCallback dbCallback) {
         dbCallback.readCallback(simplifiedMusician.toMusician());
     }
 
     @Override
-    public void docExists(String docName, DbCallback dbCallback) {
+    void docExists(String collection, String docName, DbCallback dbCallback) {
         dbCallback.existsCallback(false);
     }
 }

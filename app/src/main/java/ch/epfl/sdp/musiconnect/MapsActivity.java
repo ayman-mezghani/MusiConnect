@@ -37,29 +37,27 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
-import ch.epfl.sdp.musiconnect.database.FirebaseDatabase;
-import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
-import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
-import ch.epfl.sdp.musiconnect.database.Database;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
+import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
 import static ch.epfl.sdp.musiconnect.MapsActivity.Utility.generateWarning;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener, AdapterView.OnItemSelectedListener {
+    private static String collection = "newtest";
 
     private DbAdapter Adb = DbGenerator.getDbInstance();
 
@@ -158,10 +156,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mUiSettings = mMap.getUiSettings();
 
         //If there's a connection, fetch Users in the general area; else, load them from cache
-        if(checkConnection()){
+        if (checkConnection()) {
             createPlaceHolderUsers();
             clearCachedUsers();
-        }else{
+        } else {
             loadUsersFromCache();
         }
 
@@ -196,11 +194,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (!co) {
                     updatePos = false;
                     delay = 5000;
-                    generateWarning(MapsActivity.this,"Error: No internet connection. Showing the only last musicians found before losing connection", Utility.warningTypes.Toast);
-                } else if(!loc){
+                    generateWarning(MapsActivity.this, "Error: No internet connection. Showing the only last musicians found before losing connection", Utility.warningTypes.Toast);
+                } else if (!loc) {
                     updatePos = false;
                     delay = 5000;
-                    generateWarning(MapsActivity.this,"Error: couldn't update your location", Utility.warningTypes.Alert);
+                    generateWarning(MapsActivity.this, "Error: couldn't update your location", Utility.warningTypes.Alert);
                 } else {
                     updatePos = true;
                     updateUsers();
@@ -224,12 +222,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     // the first location to arrive
                     //either way, we remove all markers, stop updating the location, and send an error message to the user
                     updatePos = false;
-                    for(Marker m:markers){
+                    for (Marker m : markers) {
                         m.remove();
                     }
                     markers.clear();
                     delay = 20000;
-                    generateWarning(MapsActivity.this,"There was a problem retrieving your location; Please check you are connected to a network", Utility.warningTypes.Alert);
+                    generateWarning(MapsActivity.this, "There was a problem retrieving your location; Please check you are connected to a network", Utility.warningTypes.Alert);
                 }
 
             });
@@ -253,7 +251,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void setLocation(Location location) {
 
-        if(!updatePos){
+        if (!updatePos) {
             return;
         }
 
@@ -277,7 +275,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //Adb.update(UserCreation.mainUser);
             GeoPoint loc = new GeoPoint(setLoc.getLatitude(),setLoc.getLongitude());
             String email = CurrentUser.getInstance(this).email;
-            db.updateDoc(email,new HashMap<String, Object>(){{
+            db.updateDoc(collection, email,new HashMap<String, Object>(){{
                 put("location",loc);
             }});
         } else {
@@ -314,14 +312,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //fetches users coordinates, updates them, and save them to cache
     //(right now, only creates random nearby position and saves user to cache until database is implemented)
-    private void updateUsers(){
-        if(setLoc == null){             //Might be called before we get the first update to the location;
+    private void updateUsers() {
+        if (setLoc == null) {             //Might be called before we get the first update to the location;
             return;
         }
 
 
-        for(Musician m:allUsers){
-            Adb.read(m.getEmailAddress(), new DbCallback() {
+        for (Musician m : allUsers) {
+            Adb.read(DbUserType.Musician, m.getEmailAddress(), new DbCallback() {
                 @Override
                 public void readCallback(User user) {
                     MyLocation l = user.getLocation();
@@ -335,9 +333,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //From the users around the area, picks the ones that are within the threshold distance.
     private void updateProfileList() {
-        if(setLoc == null){             //Might be called before we get the first update to the location;
+        if (setLoc == null) {             //Might be called before we get the first update to the location;
             return;
-        } else{
+        } else {
             delay = 20000;              //sets a 20 sec long delay on updates when everything is in place
         }
 
@@ -363,7 +361,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         markers.clear();
 
-        for(Musician m:profiles){
+        for (Musician m : profiles) {
             LatLng latlng = new LatLng(m.getLocation().getLatitude(), m.getLocation().getLongitude());
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(latlng)
@@ -385,9 +383,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        if(profiles.contains(marker.getTag())) {
+        if (profiles.contains(marker.getTag())) {
             Intent profileIntent = new Intent(MapsActivity.this, VisitorProfilePage.class);
-          
+
             Musician m = (Musician) marker.getTag();
             profileIntent.putExtra("UserEmail", m.getEmailAddress());
             profileIntent.putExtra("Test", false);
@@ -407,27 +405,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    protected boolean checkLocationServices(){
-        LocationManager lm = (LocationManager)MapsActivity.this.getSystemService(Context.LOCATION_SERVICE);
+    protected boolean checkLocationServices() {
+        LocationManager lm = (LocationManager) MapsActivity.this.getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
         boolean network_enabled = false;
 
         try {
             gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch(Exception ex) {}
+        } catch (Exception ex) {
+        }
 
         try {
             network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch(Exception ex) {}
+        } catch (Exception ex) {
+        }
 
-        if(!gps_enabled && !network_enabled) {
+        if (!gps_enabled && !network_enabled) {
             return false;
-        } else{
+        } else {
             return true;
         }
 
     }
-
 
 
     private void saveUsersToCache() {
@@ -437,7 +436,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mExecutor.execute(() -> {
             musicianDao.insertAll(allUsers.toArray(new Musician[allUsers.size()]));
         });
-
 
 
     }
@@ -453,12 +451,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    private void clearCachedUsers(){
+    private void clearCachedUsers() {
         MusicianDao musicianDao = localDb.musicianDao();
         mExecutor.execute(() -> {
             musicianDao.nukeTable();
         });
     }
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String selected = parent.getItemAtPosition(position).toString()
@@ -489,12 +488,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     //Should be replaced by a function that fetch user from the database; right now it generates 3 fixed users
-    private void createPlaceHolderUsers(){
+    private void createPlaceHolderUsers() {
         Random random = new Random();
 
-        double r1 = ((double)random.nextInt(5)-2.5) /200;
-        double r2 = ((double)random.nextInt(5)-2.5) /200;
-        double r3 = ((double)random.nextInt(5)-2.5) /200;
+        double r1 = ((double) random.nextInt(5) - 2.5) / 200;
+        double r2 = ((double) random.nextInt(5) - 2.5) / 200;
+        double r3 = ((double) random.nextInt(5) - 2.5) / 200;
 
 
         Musician person1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
@@ -509,13 +508,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         allUsers.add(person2);
         allUsers.add(person3);
 
-        Adb.add(person1);
-        Adb.add(person2);
-        Adb.add(person3);
+        Adb.add(DbUserType.Musician, person1);
+        Adb.add(DbUserType.Musician, person2);
+        Adb.add(DbUserType.Musician, person3);
     }
 
-    public static class Utility{
-        public enum warningTypes{
+    public static class Utility {
+        public enum warningTypes {
             Toast,
             Alert
         }
