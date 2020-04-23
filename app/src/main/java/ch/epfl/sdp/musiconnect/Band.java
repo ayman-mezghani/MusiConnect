@@ -177,5 +177,13 @@ public class Band extends User implements Performer {
         return this.leader.getMail();
     }
 
+    public void addEvent(String eventId) { this.events.add(eventId); }
+
+    public List<String> getEvents() { return this.events; }
+
+    public void setEvents(List<String> e) {
+        this.events = new ArrayList<>();
+        this.events = e;
+    }
 
 }

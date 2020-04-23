@@ -29,6 +29,7 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
     static final String BANDNAME = "BandName";
     static final String URLVIDEO = "UrlVideo";
     static final String MEMBERS = "members";
+    static final String EVENTS = "event";
 
     public SimplifiedBand() {
     }
@@ -41,6 +42,7 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
           this.members.add(m.getEmailAddress());
         }
         this.urlVideo = band.getVideoURL();
+        this.events = band.getEvents();
     }
 
     public SimplifiedBand(Map<String, Object> map) {
@@ -54,6 +56,7 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
             this.members = null;
         }
         this.urlVideo = map.get(URLVIDEO) == null ? "" : (String) map.get(URLVIDEO);
+        this.events = map.get(EVENTS) == null ? null : (List<String>) map.get(EVENTS);
     }
 
     public Map<String, Object> toMap() {
@@ -62,6 +65,7 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
         res.put(BANDNAME, bandName);
         res.put(MEMBERS, members);
         res.put(URLVIDEO, urlVideo);
+        res.put(EVENTS, events);
         return res;
     }
 
@@ -104,4 +108,6 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
     public void setMembers(ArrayList<String> members) {
         this.members = members;
     }
+
+    public List<String> getEvents() { return this.events; }
 }

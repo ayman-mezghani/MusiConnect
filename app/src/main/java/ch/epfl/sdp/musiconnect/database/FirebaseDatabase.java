@@ -40,12 +40,17 @@ class FirebaseDatabase extends Database {
 
     @Override
     void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType) {
-     db.collection("Events").add(simplifiedEvent)
+     db.collection("events").add(simplifiedEvent)
         .addOnSuccessListener(documentReference -> {
             if(userType == DbUserType.Band) {
-                this.updateDoc("Band", simplifiedEvent.getCreatorMail(), new HashMap<String, Object>(){{
-                    put("events",documentReference.getId());
-                }});
+                DbGenerator.getDbInstance().read(DbUserType.Band, simplifiedEvent.getCreatorMail(), new DbCallback() {
+                    @Override
+                    public void readCallback(User u) {
+                        Band b = (Band) u;
+                        b.addEvent(documentReference.getId());
+                        DbGenerator.getDbInstance().add(userType, b);
+                    }
+                });
             }
             Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
         })
@@ -81,7 +86,6 @@ class FirebaseDatabase extends Database {
                     Map<String, Object> data = documentSnapshot.getData();
                     if (data != null && data.size() > 0) {
                         if (data.get("leader") != null) {
-
                             DbAdapter da = new DbAdapter(this);
                             da.read(DbUserType.Musician, (String) data.get("leader"), new DbCallback() {
                                 @Override
@@ -92,6 +96,8 @@ class FirebaseDatabase extends Database {
                                         b.setVideoURL(data.get("videoUrl").toString());
 
                                     b.setMusicianEmailAdresses((ArrayList<String>) data.get("members"));
+                                    b.setEvents((ArrayList<String>) data.get("events"));
+
                                     DbAdapter da = DbGenerator.getDbInstance();
 
                                     for (String me : b.getMusicianEmailsAdress()) {
