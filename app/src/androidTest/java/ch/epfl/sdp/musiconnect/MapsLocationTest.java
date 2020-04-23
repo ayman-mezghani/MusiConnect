@@ -95,8 +95,17 @@ public class MapsLocationTest {
         }
     }
 
+    private static void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Cannot execute Thread.sleep()");
+        }
+    }
+
     public static void clickOnDialog(UiDevice device, int pos) {
         try {
+            sleep(3000);
             UiObject allowPermissions = device.findObject(new UiSelector()
                     .clickable(true)
                     .checkable(false)
