@@ -6,8 +6,11 @@ import android.os.Bundle;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
+import ch.epfl.sdp.musiconnect.database.DbCallback;
+
 
 public class VisitorProfilePage extends ProfilePage {
+    private static String collection = "newtest";
     private DataBase db;
     private DbAdapter dbAdapter;
 
@@ -44,38 +47,25 @@ public class VisitorProfilePage extends ProfilePage {
             loadNullProfile();
         } else {
             userEmail = intent.getStringExtra("UserEmail");
-            
+
             Musician m = getUserFromEmail(userEmail);
 
             if (m == null) {
                 loadNullProfile();
             } else {
-                String sTitle = m.getUserName() + "'s profile";
-                titleView.setText(sTitle);
-
-                firstNameView.setText(m.getFirstName());
-                lastNameView.setText(m.getLastName());
-                usernameView.setText(m.getUserName());
-                emailView.setText(m.getEmailAddress());
-                birthdayView.setText(m.getBirthday().toString());
+                loadUserProfile(m);
 
                 /*
-                dbAdapter.read(userEmail, user -> {
-                    if (user == null) {
-                        loadNullProfile();
-                    } else {
-                    Musician m = (Musician) user;
-                        String sTitle = m.getUserName() + "'s profile";
-                        titleView.setText(sTitle);
-
-                        firstNameView.setText(m.getFirstName());
-                        lastNameView.setText(m.getLastName());
-                        usernameView.setText(m.getUserName());
-                        mailView.setText(m.getEmailAddress());
-                        birthdayView.setText(m.getBirthday().toString());
-                            }
-                        });*/
-
+                dbAdapter.read(collection, userEmail, new DbCallback() {
+                    @Override
+                    public void readCallback(User user) {
+                        if (user == null) {
+                            loadNullProfile();
+                        } else {
+                            loadUserProfile(user);
+                        }
+                    }
+                });*/
             }
         }
     }
@@ -83,6 +73,19 @@ public class VisitorProfilePage extends ProfilePage {
     private void loadNullProfile() {
         setContentView(R.layout.activity_visitor_profile_page_null);
     }
+
+    private void loadUserProfile(User user) {
+        Musician m = (Musician) user;
+        String sTitle = m.getUserName() + "'s profile";
+        titleView.setText(sTitle);
+
+        firstNameView.setText(m.getFirstName());
+        lastNameView.setText(m.getLastName());
+        usernameView.setText(m.getUserName());
+        emailView.setText(m.getEmailAddress());
+        birthdayView.setText(m.getBirthday().toString());
+    }
+
 
     // TODO replace by MockDatabase
     private Musician getUserFromEmail(String email) {

@@ -23,6 +23,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".musiconnect.EventCreation"></activity>
         <activity android:name=".musiconnect.EventPage" />
+        <activity android:name=".musiconnect.BandCreation"></activity>
         <activity android:name=".musiconnect.UserCreation" />
         <activity android:name=".musiconnect.GoogleLogin">
             <intent-filter>
