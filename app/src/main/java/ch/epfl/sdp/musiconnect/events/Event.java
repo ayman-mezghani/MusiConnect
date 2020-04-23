@@ -46,7 +46,7 @@ public class Event {
 
     }
 
-    protected void setEid(String eid) {
+    public void setEid(String eid) {
         this.eid = eid;
     }
 
