@@ -47,12 +47,31 @@ public class MapsLocationTest {
             new ActivityTestRule<>(MapsActivity.class);
 
 
-
+    // TODO TO BE REMOVED
     @BeforeClass
     public static void set() {
         Looper.prepare();
     }
 
+    /**
+     * Clicks on the alert boxes such that location permissions are given
+     */
+    @BeforeClass
+    public static void clickAllow() {
+        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        clickAlert(device);
+        clickOnDialog(device, 1);
+    }
+
+    /**
+     * Clicks on the alert boxes such that location permissions are rejected
+     */
+    @BeforeClass
+    public static void clickDeny() {
+        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        clickAlert(device);
+        clickOnDialog(device, 0);
+    }
 
 
     private static boolean hasNeededPermission() {
@@ -63,16 +82,11 @@ public class MapsLocationTest {
 
     public static void clickAlert(UiDevice device) {
         try {
-            if (!hasNeededPermission()) {
-
-                UiObject alert = device.findObject(new UiSelector().className("android.widget.Button")
-                        .text("OK"));
-
-                if (alert.exists()) {
-                    alert.clickAndWaitForNewWindow();
-                }
-            }
-
+             UiObject alert = device.findObject(new UiSelector().className("android.widget.Button")
+                     .text("OK"));
+             if (alert.exists()) {
+                 alert.clickAndWaitForNewWindow();
+             }
         } catch (UiObjectNotFoundException e) {
             System.out.println("There is no permissions dialog to interact with");
         }
@@ -80,17 +94,14 @@ public class MapsLocationTest {
 
     public static void clickOnDialog(UiDevice device, int pos) {
         try {
-            if (!hasNeededPermission()) {
-                UiObject allowPermissions = device.findObject(new UiSelector()
-                        .clickable(true)
-                        .checkable(false)
-                        .index(pos));
+            UiObject allowPermissions = device.findObject(new UiSelector()
+                    .clickable(true)
+                    .checkable(false)
+                    .index(pos));
 
-                if (allowPermissions.exists()) {
-                    allowPermissions.click();
-                }
+            if (allowPermissions.exists()) {
+                allowPermissions.click();
             }
-
         } catch (UiObjectNotFoundException e) {
             System.out.println("There is no permissions dialog to interact with");
         }
@@ -115,23 +126,7 @@ public class MapsLocationTest {
     }
 
 
-    /**
-     * Clicks on the alert boxes such that location permissions are given
-     */
-    public static void clickAllow() {
-        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        clickAlert(device);
-        clickOnDialog(device, 1);
-    }
 
-    /**
-     * Clicks on the alert boxes such that location permissions are rejected
-     */
-    public static void clickDeny() {
-        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        clickAlert(device);
-        clickOnDialog(device, 0);
-    }
 
     private int[] grantedPerm() {
         int[] results = new int[1];

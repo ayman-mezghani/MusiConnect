@@ -3,25 +3,20 @@ package ch.epfl.sdp.musiconnect;
 
 import android.content.Intent;
 
-import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
-import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.UiObject;
-import androidx.test.uiautomator.UiSelector;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.R;
 
-import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -47,12 +42,16 @@ public class MenuTests {
             GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
 
-    UiDevice device;
+
+    @BeforeClass
+    public static void clickAlert() {
+        MapsLocationTest.clickAllow();
+    }
+
     // Before and after methods are used in order to accept tests with intents
     @Before
     public void initIntents() {
         Intents.init();
-        MapsLocationTest.clickAlert(device);
     }
 
     @After

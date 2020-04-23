@@ -15,6 +15,7 @@ import androidx.test.rule.GrantPermissionRule;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -37,6 +38,12 @@ import static org.junit.Assert.assertTrue;
 
 @LargeTest
 public class VideoPlayingTests {
+
+    @BeforeClass
+    public static void clickAlert() {
+        MapsLocationTest.clickAllow();
+    }
+
     /**
      * Function used to get an instance of an activity
      * SOURCE : https://stackoverflow.com/questions/45829637/cannot-check-current-activity-from-drawerlayout-item
@@ -94,8 +101,6 @@ public class VideoPlayingTests {
 //    private String packageName = "ch.epfl.sdp.musiconnect";
     @Test
     public void playVideoTest() throws InterruptedException {
-        MapsLocationTest.clickAllow();
-
         String packageName = mActivityTestRule.getActivity().getPackageName();
         String videoSource = "android.resource://"+packageName+"/"+ R.raw.minion;
 

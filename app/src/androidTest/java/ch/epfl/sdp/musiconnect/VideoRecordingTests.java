@@ -5,6 +5,7 @@ import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -30,9 +31,13 @@ public class VideoRecordingTests {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
+    @BeforeClass
+    public static void clickAlert() {
+        MapsLocationTest.clickAllow();
+    }
+
     @Test
     public void videoRecordingTests() {
-        MapsLocationTest.clickAllow();
         VideoPlayingTests.goToMyProfilePage();
 
         ViewInteraction appCompatButton = onView(
