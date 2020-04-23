@@ -86,13 +86,13 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
                 @Override
                 public void readCallback(User user) {
                     Musician m = (Musician) user;
-                    firstName.setText(m.getFirstName());
-                    lastName.setText(m.getLastName());
-                    username.setText(m.getUserName());
-                    email.setText(m.getEmailAddress());
+                    firstNameView.setText(m.getFirstName());
+                    lastNameView.setText(m.getLastName());
+                    usernameView.setText(m.getUserName());
+                    emailView.setText(m.getEmailAddress());
                     MyDate date = m.getBirthday();
                     String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
-                    birthday.setText(s);
+                    birthdayView.setText(s);
                     if (currentCachedUser == null || !ProfileModification.changeStaged) {            //if user profile isn't cached,cache it
                         mExecutor.execute(() -> {
                             mdao.insertAll(m);
@@ -105,10 +105,10 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             if (currentCachedUser == null) {
                 Toast.makeText(this, "Unable to fetch profile information; please connect to internet", Toast.LENGTH_LONG).show();
             } else {                                        //set profile info based on cache
-                firstName.setText(currentCachedUser.getFirstName());
-                lastName.setText(currentCachedUser.getLastName());
-                username.setText(currentCachedUser.getUserName());
-                email.setText(currentCachedUser.getEmailAddress());
+                firstNameView.setText(currentCachedUser.getFirstName());
+                lastNameView.setText(currentCachedUser.getLastName());
+                usernameView.setText(currentCachedUser.getUserName());
+                emailView.setText(currentCachedUser.getEmailAddress());
                 MyDate date = currentCachedUser.getBirthday();
 
                 String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
