@@ -3,22 +3,19 @@ package ch.epfl.sdp.musiconnect.database;
 import java.util.List;
 import java.util.Map;
 
-import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.MyDate;
-import ch.epfl.sdp.musiconnect.User;
-
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class MockDatabaseForUT extends Database {
 
     private String expectedDocName;
-    private SimplifiedMusician expectedSimplifiedMusician;
-    private Map<String, Object> expectedNewValueMap;
+    private SimplifiedDbEntry expectedEntry;
+    private Map<String, Object> expectedMap;
 
-    MockDatabaseForUT(String expectedDocName, SimplifiedMusician expectedSimplifiedMusician, Map<String, Object> expectedNewValueMap) {
+    MockDatabaseForUT(String expectedDocName, SimplifiedDbEntry expectedEntry, Map<String, Object> expectedMap) {
         this.expectedDocName = expectedDocName;
-        this.expectedSimplifiedMusician = expectedSimplifiedMusician;
-        this.expectedNewValueMap = expectedNewValueMap;
+        this.expectedEntry = expectedEntry;
+        this.expectedMap = expectedMap;
     }
 
     public MockDatabaseForUT() {
@@ -27,7 +24,7 @@ public class MockDatabaseForUT extends Database {
     @Override
     void addDoc(String collection, String docName, SimplifiedDbEntry entry) {
         assertEquals(expectedDocName, docName);
-        assertEquals(expectedSimplifiedMusician, entry);
+        assertTrue(expectedEntry.equals(expectedEntry));
     }
 
     @Override
@@ -39,7 +36,7 @@ public class MockDatabaseForUT extends Database {
     @Override
     void updateDoc(String collection, String docName, Map<String, Object> newValueMap) {
         assertEquals(expectedDocName, docName);
-        assertEquals(expectedNewValueMap, newValueMap);
+        assertEquals(expectedMap, newValueMap);
     }
 
     @Override
@@ -50,7 +47,9 @@ public class MockDatabaseForUT extends Database {
     @Override
     void readDoc(String collection, String docName, DbCallback dbCallback) {
         assertEquals(expectedDocName, docName);
-        dbCallback.readCallback(expectedSimplifiedMusician.toMusician());
+        if(collection == DbUserType.Musician.toString()) {
+            dbCallback.readCallback(((SimplifiedMusician) expectedEntry).toMusician());
+        }
     }
 
     @Override

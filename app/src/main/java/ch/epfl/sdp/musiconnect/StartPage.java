@@ -40,7 +40,7 @@ public class StartPage extends Page {
     private boolean isOpen = false;
     private DbAdapter dbAdapter;
     private Band b;
-    public static boolean test=true;
+    public static boolean test = true;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override

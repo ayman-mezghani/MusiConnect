@@ -152,7 +152,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
         // Upload video to cloud storage
         if(videoRecorded) {
             returnIntent.putExtra("videoUri", videoUri.toString());
-            storage = CloudStorageGenerator.getDbInstance(this);
+            storage = CloudStorageGenerator.getCloudInstance(this);
             try {
                 storage.upload(videoUri, CloudStorage.FileType.video, userEmail);
             } catch (IOException e) {

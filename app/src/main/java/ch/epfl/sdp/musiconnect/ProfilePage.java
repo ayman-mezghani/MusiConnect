@@ -6,8 +6,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.google.firebase.storage.FirebaseStorage;
-
 import java.io.IOException;
 
 import ch.epfl.sdp.R;
@@ -33,7 +31,7 @@ public abstract class ProfilePage extends Page {
     }
 
     protected void getVideoUri(String s) {
-        CloudStorage storage = CloudStorageGenerator.getDbInstance(this);
+        CloudStorage storage = CloudStorageGenerator.getCloudInstance(this);
         String path = s + "/" + FirebaseCloudStorage.FileType.video;
         String saveName = s + "_" + FirebaseCloudStorage.FileType.video;
         try {

@@ -8,7 +8,7 @@ public class CloudStorageGenerator {
     private static CloudStorage storage;
 
     // static method to create instance of Singleton class
-    public static CloudStorage getDbInstance(Context context) {
+    public static CloudStorage getCloudInstance(Context context) {
         if (storage == null)
             new CloudStorageGenerator(context);
 
@@ -22,5 +22,9 @@ public class CloudStorageGenerator {
     // private constructor restricted to this class itself
     private CloudStorageGenerator(Context context) {
         if(storage == null) storage = new FirebaseCloudStorage(context);
+    }
+
+    static void flush() {
+        storage = null;
     }
 }
