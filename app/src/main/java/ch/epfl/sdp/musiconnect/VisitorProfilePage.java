@@ -4,22 +4,20 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbUserType;
 
 public class VisitorProfilePage extends ProfilePage implements DbCallback {
-    private static String collection = "newtest";
 
-    private DataBase db;
     private DbAdapter dbAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        db = new DataBase();
-        dbAdapter = new DbAdapter(db);
+        dbAdapter = DbGenerator.getDbInstance();
 
         setContentView(R.layout.activity_visitor_profile_page);
         mVideoView = findViewById(R.id.videoView);
@@ -54,7 +52,7 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         Intent intent = getIntent();
         if (intent.hasExtra("UserEmail")) {
             userEmail = intent.getStringExtra("UserEmail");
-            dbAdapter.read(collection, userEmail, this);
+            dbAdapter.read(DbUserType.Musician, userEmail, this);
         }
     }
 

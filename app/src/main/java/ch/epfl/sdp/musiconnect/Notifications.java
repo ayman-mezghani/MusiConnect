@@ -42,6 +42,7 @@ public class Notifications extends AppCompatActivity {
             manager.createNotificationChannel(eChannel);
         }
     }
+
     /**
      * Send a notification
      * @param channel: channel to send the notification on: Musician or Manager.

@@ -10,9 +10,10 @@ import android.view.View;
 import android.widget.Button;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbUserType;
 
 public class MyProfilePage extends ProfilePage implements View.OnClickListener {
     private static String collection = "newtest";
@@ -25,7 +26,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dbAdapter = new DbAdapter(new DataBase());
+        dbAdapter = DbGenerator.getDbInstance();
 
         setContentView(R.layout.activity_profile_page);
 
@@ -48,46 +49,27 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         loadProfileContent();
     }
 
-    private boolean checktest() {
-        boolean istest;
-
-        try {
-            Class.forName("androidx.test.espresso.Espresso");
-            istest = true;
-        } catch (ClassNotFoundException e) {
-            istest = false;
-        }
-        return istest;
-    }
-
     private void loadProfileContent() {
-        if (!checktest()) {
-            dbAdapter.read(collection, CurrentUser.getInstance(this).email, new DbCallback() {
-                @Override
-                public void readCallback(User user) {
-                    Musician m = (Musician) user;
-                    firstName.setText(m.getFirstName());
-                    lastName.setText(m.getLastName());
-                    username.setText(m.getUserName());
-                    email.setText(m.getEmailAddress());
-                    MyDate date = m.getBirthday();
-                    String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
-                    birthday.setText(s);
-                }
-            });
-        } else {
-            firstName.setText("default");
-            lastName.setText("user");
-            username.setText("defuser");
-            email.setText("defuser@gmail.com");
-            birthday.setText("01/01/2000");
-        }
+        userEmail = CurrentUser.getInstance(this).email;
+        dbAdapter.read(DbUserType.Musician, userEmail, new DbCallback() {
+            @Override
+            public void readCallback(User user) {
+                Musician m = (Musician) user;
+                firstName.setText(m.getFirstName());
+                lastName.setText(m.getLastName());
+                username.setText(m.getUserName());
+                email.setText(m.getEmailAddress());
+                MyDate date = m.getBirthday();
+                String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
+                birthday.setText(s);
+            }
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        getVideoUri(userEmail);
+        //        getVideoUri(userEmail);
     }
 
     @SuppressLint("MissingSuperCall")

@@ -1,7 +1,6 @@
 package ch.epfl.sdp.musiconnect.database;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -21,39 +20,34 @@ import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.User;
 
-public class DataBase {
+class FirebaseDatabase extends Database {
     private static final String TAG = "DataBase";
     private FirebaseFirestore db;
 
-
-    public DataBase() {
+    public FirebaseDatabase() {
         this.db = FirebaseFirestore.getInstance();
     }
 
-    public void addMusician(String collection, String docName, SimplifiedMusician m) {
-        db.collection(collection).document(docName).set(m, SetOptions.merge())
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
-                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
+    @Override
+    public void addDoc(String collection, String docName, SimplifiedDbEntry entry) {
+        db.collection(collection).document(docName).set(entry, SetOptions.merge());
     }
 
-    public void addBand(String collection, String docName, SimplifiedBand b) {
-        db.collection(collection).document(docName).set(b, SetOptions.merge())
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
-                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
-    }
-
+    @Override
     public void deleteDoc(String collection, String docName) {
         db.collection(collection).document(docName).delete()
                 .addOnSuccessListener(bVoid -> Log.d(TAG, "DocumentSnapshot successfully deleted!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));
     }
 
+    @Override
     public void updateDoc(String collection, String docName, Map<String, Object> newValueMap) {
         db.collection(collection).document(docName).update(newValueMap)
                 .addOnSuccessListener(cVoid -> Log.d(TAG, "DocumentSnapshot successfully updated!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
     }
 
+    @Override
     public void deleteFieldsInDoc(String collection, String docName, List<String> fields) {
         Map<String, Object> updates = new HashMap<>();
         for (String str : fields) {
@@ -62,6 +56,7 @@ public class DataBase {
         this.updateDoc(collection, docName, updates);
     }
 
+    @Override
     public void readDoc(String collection, String docName, DbCallback dbCallback) {
         db.collection(collection).document(docName).get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -70,7 +65,7 @@ public class DataBase {
                         if (data.get("leader") != null) {
 
                             DbAdapter da = new DbAdapter(this);
-                            da.read("newtest", (String) data.get("leader"), new DbCallback() {
+                            da.read(DbUserType.Musician, (String) data.get("leader"), new DbCallback() {
                                 @Override
                                 public void readCallback(User user) {
                                     Band b = new Band((String) data.get("bandName"), (Musician) user);
@@ -79,10 +74,10 @@ public class DataBase {
                                         b.setVideoURL(data.get("videoUrl").toString());
 
                                     b.setMusicianEmailAdresses((ArrayList<String>) data.get("members"));
-                                    DbAdapter da = new DbAdapter(new DataBase());
+                                    DbAdapter da = DbGenerator.getDbInstance();
 
                                     for (String me : b.getMusicianEmailsAdress()) {
-                                        da.read("newtest", me, new DbCallback() {
+                                        da.read(DbUserType.Musician, me, new DbCallback() {
                                             @Override
                                             public void readCallback(User user) {
                                                 try {
@@ -92,7 +87,6 @@ public class DataBase {
                                             }
                                         });
                                     }
-
                                     dbCallback.readCallback(b);
                                 }
                             });
@@ -100,16 +94,12 @@ public class DataBase {
                             SimplifiedMusician m = new SimplifiedMusician(data);
                             dbCallback.readCallback(m.toMusician());
                         }
-/*
-                    if(documentSnapshot.getDocument().getKey().getPath() .toString().split("/")[0].equals("Band")){
-
-                    }
-*/
                     }
                 })
                 .addOnFailureListener(e -> Log.w(TAG, "Error reading document", e));
     }
 
+    @Override
     public void docExists(String collection, String docName, DbCallback dbCallback) {
         db.collection(collection).document(docName).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

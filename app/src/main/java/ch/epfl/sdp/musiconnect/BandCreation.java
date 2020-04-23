@@ -6,8 +6,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DataBase;
-import ch.epfl.sdp.musiconnect.database.DbAdapter;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbUserType;
 
 public class BandCreation extends UserCreation {
 
@@ -22,7 +22,7 @@ public class BandCreation extends UserCreation {
         findViewById(R.id.btnBandCreationCreate).setOnClickListener(v -> {
             if (!isEmpty(etBandName)) {
                 Band band = new Band(etBandName.getText().toString(), CurrentUser.getInstance(this).getMusician());
-                (new DbAdapter(new DataBase())).add("Band", band);
+                DbGenerator.getDbInstance().add(DbUserType.Band, band);
 
                 StartActivityAndFinish(new Intent(BandCreation.this, StartPage.class));
             } else {
