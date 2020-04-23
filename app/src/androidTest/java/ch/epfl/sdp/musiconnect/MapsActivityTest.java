@@ -68,12 +68,8 @@ public class MapsActivityTest extends AndroidJUnitRunner {
     @Test
     public void toastWarningGeneratesCorrectly() {
         String msg = "this is a test";
-        startPageRule.getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                MapsActivity.Utility.generateWarning(startPageRule.getActivity().getApplicationContext(), msg, MapsActivity.Utility.warningTypes.Toast);
-            }
-        });
+        startPageRule.getActivity().runOnUiThread(() ->
+                MapsActivity.Utility.generateWarning(startPageRule.getActivity().getApplicationContext(), msg, MapsActivity.Utility.warningTypes.Toast));
 
         //onView(withText(msg)).inRoot(withDecorView(not(is(startPageRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
     }
@@ -81,11 +77,8 @@ public class MapsActivityTest extends AndroidJUnitRunner {
     @Test
     public void alertWarningGeneratesCorrectly(){
         String msg = "this is a test";
-        startPageRule.getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                //MapsActivity.Utility.generateWarning(startPageRule.getActivity().getApplicationContext(), msg, MapsActivity.Utility.warningTypes.Alert);
-            }
+        startPageRule.getActivity().runOnUiThread(() -> {
+            //MapsActivity.Utility.generateWarning(startPageRule.getActivity().getApplicationContext(), msg, MapsActivity.Utility.warningTypes.Alert);
         });
         //onView(withText(msg)).check(matches(isDisplayed()));
     }
@@ -113,6 +106,11 @@ public class MapsActivityTest extends AndroidJUnitRunner {
         device.swipe(200, 200, 200, 100, 5);
     }
 
+    /**
+     * Get string value from strings.xml file
+     * @param id: string id
+     * @return: string value
+     */
     private String getResourceString(int id) {
         Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         return targetContext.getResources().getString(id);

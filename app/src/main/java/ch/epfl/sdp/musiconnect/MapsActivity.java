@@ -247,7 +247,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void setLocation(Location location) {
-
         if (!updatePos) {
             return;
         }
@@ -313,7 +312,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (setLoc == null) {             //Might be called before we get the first update to the location;
             return;
         }
-
 
         for (Musician m : allUsers) {
             Adb.read(DbUserType.Musician, m.getEmailAddress(), new DbCallback() {

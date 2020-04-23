@@ -153,7 +153,6 @@ public class StartPage extends Page {
             fab_button_2.setFocusable(true);
             fab_button_1.setFocusable(true);
         }
-
         isOpen = !isOpen;
     }
 
