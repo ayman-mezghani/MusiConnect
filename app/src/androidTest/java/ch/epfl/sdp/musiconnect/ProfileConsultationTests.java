@@ -25,7 +25,7 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.musiconnect.WaitUtility.waitALittle;
+import static ch.epfl.sdp.musiconnect.testsFunctions.waitALittle;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)

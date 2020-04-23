@@ -9,6 +9,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.PickerActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -17,7 +18,6 @@ import androidx.test.rule.ActivityTestRule;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DataBase;
@@ -29,15 +29,18 @@ import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
-import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.musiconnect.WaitUtility.waitALittle;
+import static ch.epfl.sdp.musiconnect.testsFunctions.childAtPosition;
+import static ch.epfl.sdp.musiconnect.testsFunctions.waitALittle;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -73,7 +76,7 @@ public class ProfileModificationTests {
         });
         DataBase db = new DataBase();
         DbAdapter adapter = new DbAdapter(db);
-        adapter.update(defuser);
+        adapter.update("newtest",defuser);
     }
     /**
      * Helper method to avoid duplication
@@ -105,33 +108,49 @@ public class ProfileModificationTests {
 
     @Test
     public void testEditProfileAndSaveShouldUpdateFields() {
+        String firstName = "Espresso";
+        String lastName = "Tests";
+        String userName = "testsEspresso";
+        MyDate birthday = new MyDate(1940, 10, 9);
+
         clickButtonWithText(R.string.edit_profile_button_text);
-        onView(withId(R.id.newFirstName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob"));
-        onView(withId(R.id.newLastName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Mallet"));
-        onView(withId(R.id.newUsername)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("BobMallet"));
+        onView(withId(R.id.newFirstName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText(firstName));
+        onView(withId(R.id.newLastName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText(lastName));
+        onView(withId(R.id.newUsername)).perform(ViewActions.scrollTo()).perform(clearText(), typeText(userName));
         closeSoftKeyboard();
 
         onView(withId(R.id.newBirthday)).perform(ViewActions.scrollTo()).perform(click());
-        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2000, 1, 1));
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(birthday.getYear(),birthday.getMonth(),birthday.getDate()));
         onView(withText("OK")).perform(click());
-
-        clickButtonWithText(R.string.save_profile);
-        onView(withId(R.id.myFirstname)).check(matches(withText("Bob")));
-        onView(withId(R.id.myLastname)).check(matches(withText("Mallet")));
-        onView(withId(R.id.myUsername)).check(matches(withText("BobMallet")));
-        onView(withId(R.id.myBirthday)).check(matches(withText("01/01/2000")));
+        ViewInteraction appCompatButton4 = onView(
+                allOf(withId(R.id.btnSaveProfile), withText("Save"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.widget.LinearLayout")),
+                                        0),
+                                1)));
+        appCompatButton4.perform(scrollTo(), click());
+        onView(withId(R.id.myFirstname)).check(matches(withText(firstName)));
+        onView(withId(R.id.myLastname)).check(matches(withText(lastName)));
+        onView(withId(R.id.myUsername)).check(matches(withText(userName)));
+        onView(withId(R.id.myBirthday)).check(matches(withText("09/10/1940")));
     }
 
     @Test
     public void testEditProfileAndSaveShouldUpdateCache() {
+        String firstName = "Espresso";
+        String lastName = "Tests";
+        String userName = "testsEspresso";
+        MyDate birthday = new MyDate(1940, 10, 9);
+
         clickButtonWithText(R.string.edit_profile_button_text);
-        onView(withId(R.id.newFirstName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob"));
-        onView(withId(R.id.newLastName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Mallet"));
-        onView(withId(R.id.newUsername)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("BobMallet"));
+        onView(withId(R.id.newFirstName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText(firstName));
+        onView(withId(R.id.newLastName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText(lastName));
+        onView(withId(R.id.newUsername)).perform(ViewActions.scrollTo()).perform(clearText(), typeText(userName));
         closeSoftKeyboard();
 
         onView(withId(R.id.newBirthday)).perform(ViewActions.scrollTo()).perform(click());
-        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2000, 1, 1));
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(birthday.getYear(),birthday.getMonth(),birthday.getDate()));
         onView(withText("OK")).perform(click());
 
         clickButtonWithText(R.string.save_profile);
@@ -145,10 +164,10 @@ public class ProfileModificationTests {
         waitALittle(2);
         assertTrue(!result.isEmpty());
         Musician bob = result.get(0);
-        assertEquals("Bob",bob.getFirstName());
-        assertEquals("Mallet",bob.getLastName());
-        assertEquals("BobMallet",bob.getUserName());
-        assertEquals(new MyDate(2000,1,1),bob.getBirthday());
+        assertEquals(firstName,bob.getFirstName());
+        assertEquals(lastName,bob.getLastName());
+        assertEquals(userName,bob.getUserName());
+        assertEquals(birthday,bob.getBirthday());
 
     }
 }

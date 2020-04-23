@@ -33,7 +33,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
@@ -44,14 +43,17 @@ import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
 import static ch.epfl.sdp.musiconnect.roomdatabase.MyDateConverter.dateToMyDate;
 
-public class ProfileModification extends ProfilePage implements View.OnClickListener {
+public class ProfileModification extends AppCompatActivity implements View.OnClickListener {
+    private static String collection = "newtest";
 
     String firstName, lastName, username, mail, birthday;
     EditText[] editFields;
     final Calendar calendar = Calendar.getInstance();
 
     protected static int VIDEO_REQUEST = 101;
-
+    private String testusername = "testUser";
+    protected Uri videoUri = null;
+    private VideoView mVideoView;
     private CloudStorage storage;
     private boolean videoRecorded = false;
 
@@ -78,7 +80,20 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
         mVideoView = findViewById(R.id.videoViewEdit);
         findViewById(R.id.btnCaptureVideo).setOnClickListener(v -> captureVideo());
 
-        getVideoUri(mail);
+        storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
+        String path = testusername + "/" + CloudStorage.FileType.video;
+        String saveName = testusername + "_" + CloudStorage.FileType.video;
+        try {
+            storage.download(path, saveName, fileUri -> {
+                videoUri = fileUri;
+
+                mVideoView.setVideoURI(videoUri);
+                mVideoView.start();
+                mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
+            });
+        } catch (IOException e) {
+            Toast.makeText(this, "An error occured, please contact support.", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void onCreateGetIntentsFields() {
@@ -87,14 +102,6 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
         username = getIntent().getStringExtra("USERNAME");
         mail = getIntent().getStringExtra("MAIL");
         birthday = getIntent().getStringExtra("BIRTHDAY");
-        initCalendarDate(birthday);
-    }
-
-    private void initCalendarDate(String sDate) {
-        String[] tempArray = sDate.split("/");
-        calendar.set(Calendar.YEAR, Integer.parseInt(tempArray[2]));
-        calendar.set(Calendar.MONTH, Integer.parseInt(tempArray[1])-1);
-        calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(tempArray[0]));
     }
 
     @Override
@@ -153,7 +160,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
         }
         DataBase db = new DataBase();
         DbAdapter adapter = new DbAdapter(db);
-        adapter.update(modCurrent);
+        adapter.update(collection,modCurrent);
         if(videoRecorded) {
             storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
             try {
@@ -220,7 +227,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
             mdao.updateUsers(new Musician[]{currentCachedMusician});
             updateDatabaseFields(currentCachedMusician);
         });
-
+        CurrentUser.getInstance(ProfileModification.this).setMusician(currentCachedMusician);
 
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
@@ -273,6 +280,11 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
             videoRecorded = true;
         }
 
-        showVideo();
+        if (videoUri != null) {
+            mVideoView.setVideoURI(videoUri);
+            mVideoView.start();
+            mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
+        }
     }
+
 }

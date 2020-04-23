@@ -32,6 +32,7 @@ import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
 
 public class MyProfilePage extends ProfilePage implements View.OnClickListener {
+    private static String collection = "newtest";
 
     private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
     private DbAdapter dbAdapter;
@@ -82,7 +83,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             currentCachedUser = result.isEmpty() ? null : result.get(0);
         });
         if (checkConnection(MyProfilePage.this)) {              //gets profile info from database
-            dbAdapter.read(userEmail, new DbCallback() {
+            dbAdapter.read(collection, CurrentUser.getInstance(this).email, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
                     Musician m = (Musician) user;
@@ -93,7 +94,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
                     MyDate date = m.getBirthday();
                     String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
                     birthday.setText(s);
-                    if (currentCachedUser == null || (!currentCachedUser.equals(m) && !ProfileModification.changeStaged)) {            //if user profile isn't cached,cache it
+                    if (currentCachedUser == null || !ProfileModification.changeStaged) {            //if user profile isn't cached,cache it
                         mExecutor.execute(() -> {
                             mdao.insertAll(m);
                         });
