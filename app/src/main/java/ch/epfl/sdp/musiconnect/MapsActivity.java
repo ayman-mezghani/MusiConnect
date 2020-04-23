@@ -58,6 +58,7 @@ import static ch.epfl.sdp.musiconnect.MapsActivity.Utility.generateWarning;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener, AdapterView.OnItemSelectedListener {
+    private static String collection = "newtest";
 
     private DataBase db = new DataBase();
     private DbAdapter Adb = new DbAdapter(db);
@@ -276,7 +277,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //Adb.update(UserCreation.mainUser);
             GeoPoint loc = new GeoPoint(setLoc.getLatitude(),setLoc.getLongitude());
             String email = CurrentUser.getInstance(this).email;
-            db.updateDoc(email,new HashMap<String, Object>(){{
+            db.updateDoc(collection, email,new HashMap<String, Object>(){{
                 put("location",loc);
             }});
         } else {
@@ -320,7 +321,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         for(Musician m:allUsers){
-            Adb.read(m.getEmailAddress(), new DbCallback() {
+            Adb.read(collection, m.getEmailAddress(), new DbCallback() {
                 @Override
                 public void readCallback(User user) {
                     MyLocation l = user.getLocation();
@@ -508,9 +509,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         allUsers.add(person2);
         allUsers.add(person3);
 
-        Adb.add(person1);
-        Adb.add(person2);
-        Adb.add(person3);
+        Adb.add(collection, person1);
+        Adb.add(collection, person2);
+        Adb.add(collection, person3);
     }
 
     public static class Utility{

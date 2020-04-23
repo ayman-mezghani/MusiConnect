@@ -1,5 +1,6 @@
 package ch.epfl.sdp.musiconnect.database;
 
+import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
 
 public class DbAdapter {
@@ -10,16 +11,20 @@ public class DbAdapter {
         this.db = db;
     }
 
-    public void add(Musician musician) {
-        db.addDoc(musician.getEmailAddress(), new SimplifiedMusician(musician));
+    public void add(String collection, Musician musician) {
+        db.addMusician(collection, musician.getEmailAddress(), new SimplifiedMusician(musician));
     }
 
-    public void delete(Musician musician) {
-        db.deleteDoc(musician.getEmailAddress());
+    public void add(String collection, Band b) {
+        db.addBand(collection, b.getLeaderEmailAddress(), new SimplifiedBand(b));
     }
 
-    public void update(Musician musician) {
-        db.updateDoc(musician.getEmailAddress(), (new SimplifiedMusician(musician)).toMap());
+    public void delete(String collection, Musician musician) {
+        db.deleteDoc(collection, musician.getEmailAddress());
+    }
+
+    public void update(String collection, Musician musician) {
+        db.updateDoc(collection, musician.getEmailAddress(), (new SimplifiedMusician(musician)).toMap());
     }
 
 //    public void deleteFieldsInDoc(String docName, List<String> fields) {
@@ -30,11 +35,11 @@ public class DbAdapter {
 //        this.updateDoc(docName, updates);
 //    }
 
-    public void read(String index, DbCallback dbCallback) {
-        db.readDoc(index, dbCallback);
+    public void read(String collection, String index, DbCallback dbCallback) {
+        db.readDoc(collection, index, dbCallback);
     }
 
-    public void exists(String index, DbCallback dbCallback) {
-        db.docExists(index, dbCallback);
+    public void exists(String collection, String index, DbCallback dbCallback) {
+        db.docExists(collection, index, dbCallback);
     }
 }

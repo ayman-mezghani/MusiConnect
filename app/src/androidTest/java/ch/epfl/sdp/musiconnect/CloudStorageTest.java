@@ -23,13 +23,7 @@ import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 
 public class CloudStorageTest {
-    public static void waitALittle(int t) {
-        try {
-            TimeUnit.SECONDS.sleep(t);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+
     /*
     @Rule
     public final ActivityTestRule<StartPage> startPageRule =
