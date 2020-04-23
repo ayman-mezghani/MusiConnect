@@ -9,12 +9,11 @@ import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.Page;
 import ch.epfl.sdp.musiconnect.User;
-import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.*;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 
 
 public class EventPage extends Page {
-    private DataBase db;
     private DbAdapter dbAdapter;
     private TextView titleView, creatorView, addressView, timeView, participantsView, descriptionView;
 
@@ -25,8 +24,7 @@ public class EventPage extends Page {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_page);
 
-        db = new DataBase();
-        dbAdapter = new DbAdapter(db);
+        dbAdapter = DbGenerator.getDbInstance();
 
         titleView = findViewById(R.id.eventTitle);
         creatorView = findViewById(R.id.eventCreatorField);

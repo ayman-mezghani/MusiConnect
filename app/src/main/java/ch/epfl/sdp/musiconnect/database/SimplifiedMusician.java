@@ -1,5 +1,7 @@
 package ch.epfl.sdp.musiconnect.database;
 
+import androidx.annotation.Nullable;
+
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -12,7 +14,7 @@ import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.MyLocation;
 import ch.epfl.sdp.musiconnect.TypeOfUser;
 
-public class SimplifiedMusician {
+public class SimplifiedMusician extends SimplifiedDbEntry {
     private String uid = null;
     private String username;
     private String firstName;
@@ -128,6 +130,17 @@ public class SimplifiedMusician {
 
     public GeoPoint getLocation() {
         return location;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        SimplifiedMusician that = (SimplifiedMusician) obj;
+        return this.username == that.getUsername()
+                && this.firstName == that.getFirstName()
+                && this.lastName == that.getLastName()
+                && this.email == that.getEmail()
+                && this.birthday.toString().equals(that.getBirthday().toString())
+                && this.typeOfUser == that.typeOfUser;
     }
 
     public String getTypeOfUser() {

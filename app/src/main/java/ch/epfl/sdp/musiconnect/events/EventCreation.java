@@ -24,13 +24,13 @@ import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.Page;
 import ch.epfl.sdp.musiconnect.TypeOfUser;
 import ch.epfl.sdp.musiconnect.User;
-import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbUserType;
 
 public class EventCreation extends Page {
 
-    private DataBase db;
     private DbAdapter dbAdapter;
 
     EditText eventTitleView, eventAddressView, eventDescriptionView, eventParticipantView;
@@ -49,8 +49,7 @@ public class EventCreation extends Page {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_creation);
 
-        db = new DataBase();
-        dbAdapter = new DbAdapter(db);
+        dbAdapter = DbGenerator.getDbInstance();
 
         participants = new ArrayList<>();
 
@@ -225,9 +224,9 @@ public class EventCreation extends Page {
 
         event.setDateTime(d);
 
-        DbAdapter db = new DbAdapter(new DataBase());
+        DbAdapter db = DbGenerator.getDbInstance();
 
-        db.add("Events", event, TypeOfUser.Band);
+        db.add(event, DbUserType.Band);
 
     }
 
