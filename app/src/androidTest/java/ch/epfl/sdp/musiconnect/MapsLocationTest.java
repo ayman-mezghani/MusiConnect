@@ -63,7 +63,7 @@ public class MapsLocationTest {
     public static void clickAllow() {
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         // clickAlert(device);
-        clickOnDialog(device, 1);
+        // clickOnDialog(device, 1);
     }
 
     /**
@@ -73,7 +73,7 @@ public class MapsLocationTest {
     public static void clickDeny() {
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         // clickAlert(device);
-        clickOnDialog(device, 0);
+        // clickOnDialog(device, 0);
     }
 
 
