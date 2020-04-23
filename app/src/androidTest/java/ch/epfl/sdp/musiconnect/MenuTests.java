@@ -5,8 +5,10 @@ import android.content.Intent;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
+import androidx.test.uiautomator.UiDevice;
 
 import org.junit.After;
 import org.junit.Before;
@@ -45,7 +47,8 @@ public class MenuTests {
 
     @BeforeClass
     public static void clickAlert() {
-        MapsLocationTest.clickAllow();
+        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        MapsLocationTest.clickOnDialog(device, MapsLocationTest.ALLOW);
     }
 
     // Before and after methods are used in order to accept tests with intents

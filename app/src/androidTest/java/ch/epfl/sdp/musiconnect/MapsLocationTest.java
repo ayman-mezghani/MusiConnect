@@ -41,6 +41,7 @@ import static org.junit.Assert.assertTrue;
 @SdkSuppress(minSdkVersion = 18)
 public class MapsLocationTest {
 
+    public static int ALLOW = 1;
 
     @Rule
     public final ActivityTestRule<MapsActivity> mRule =
