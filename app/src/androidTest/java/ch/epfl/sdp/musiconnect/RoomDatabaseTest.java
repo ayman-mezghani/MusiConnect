@@ -47,6 +47,7 @@ public class RoomDatabaseTest {
         mExecutor.execute(() -> {
             musicianDao.nukeTable();
         });
+        waitALittle(1);
     }
 
 
@@ -55,6 +56,7 @@ public class RoomDatabaseTest {
         mExecutor.execute(() -> {
             musicianDao.nukeTable();
         });
+        waitALittle(1);
     }
 
 
