@@ -30,6 +30,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertTrue;
 
@@ -60,12 +61,16 @@ public class MapsLocationTest {
 
     public static void clickAlert(UiDevice device) {
         try {
-            UiObject alert = device.findObject(new UiSelector().className("android.widget.Button")
-                    .text("OK"));
+            if (!hasNeededPermission()) {
 
-            if (alert.exists()) {
-                alert.clickAndWaitForNewWindow();
+                UiObject alert = device.findObject(new UiSelector().className("android.widget.Button")
+                        .text("OK"));
+
+                if (alert.exists()) {
+                    alert.clickAndWaitForNewWindow();
+                }
             }
+
         } catch (UiObjectNotFoundException e) {
             System.out.println("There is no permissions dialog to interact with");
         }
@@ -73,13 +78,15 @@ public class MapsLocationTest {
 
     public static void clickOnDialog(UiDevice device, int pos) {
         try {
-            UiObject allowPermissions = device.findObject(new UiSelector()
-                    .clickable(true)
-                    .checkable(false)
-                    .index(pos));
+            if (!hasNeededPermission()) {
+                UiObject allowPermissions = device.findObject(new UiSelector()
+                        .clickable(true)
+                        .checkable(false)
+                        .index(pos));
 
-            if (allowPermissions.exists()) {
-                allowPermissions.click();
+                if (allowPermissions.exists()) {
+                    allowPermissions.click();
+                }
             }
 
         } catch (UiObjectNotFoundException e) {

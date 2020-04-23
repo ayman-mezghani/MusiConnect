@@ -25,17 +25,16 @@ public class EventTest {
         Event e = new Event(m, 0);
 
         assertEquals(m.getFirstName(), ((Musician)e.getCreator()).getFirstName());
-        assertEquals(m.getFirstName(), e.getMusicians().get(0).getFirstName());
 
         assertEquals(0, e.getEid());
         e.setEid(1);
         assertEquals(1, e.getEid());
 
         e.register(n);
-        assertTrue(e.getMusicians().contains(n));
+        assertTrue(e.getParticipants().contains(n));
 
         e.unregister(n);
-        assertFalse(e.getMusicians().contains(n));
+        assertFalse(e.getParticipants().contains(n));
 
         e.setLocation(0, 0);
         assertEquals(0.0, e.getGeoPoint().getLatitude());
@@ -68,14 +67,13 @@ public class EventTest {
         Event e = new Event(b, 0);
 
         assertEquals(b.getName(), e.getCreator().getName());
-        assertEquals(b.getName(), e.getBands().get(0).getName());
         assertEquals(b.getName(), e.getParticipants().get(0).getName());
 
         e.register(b1);
-        assertTrue(e.getBands().contains(b1));
+        assertTrue(e.getParticipants().contains(b1));
 
         e.unregister(b1);
-        assertFalse(e.getBands().contains(b1));
+        assertFalse(e.getParticipants().contains(b1));
 
     }
 
@@ -84,14 +82,11 @@ public class EventTest {
         Musician m = new Musician("firstName", "lastName", "username", "email@gmail.com", new MyDate(2000, 1, 1));
         Event e = new Event(m, 0);
 
-        assertThrows(IllegalArgumentException.class, () -> new Event((Musician)null, 0));
-        assertThrows(IllegalArgumentException.class, () -> new Event((Band)null, 0));
+        assertThrows(IllegalArgumentException.class, () -> new Event(null, 0));
+        assertThrows(IllegalArgumentException.class, () -> new Event(null, 0));
 
-        assertThrows(IllegalArgumentException.class, () -> e.register((Musician)null));
-        assertThrows(IllegalArgumentException.class, () -> e.unregister((Musician)null));
-
-        assertThrows(IllegalArgumentException.class, () -> e.register((Band)null));
-        assertThrows(IllegalArgumentException.class, () -> e.unregister((Band)null));
+        assertThrows(IllegalArgumentException.class, () -> e.register(null));
+        assertThrows(IllegalArgumentException.class, () -> e.unregister(null));
 
         assertThrows(IllegalArgumentException.class, () -> e.setAddress(null));
         assertThrows(IllegalArgumentException.class, () -> e.setLocation(300, 0));

@@ -4,10 +4,12 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -69,7 +71,7 @@ public class EventCreation extends Page {
         dateView.setOnClickListener(v -> {
             datePickerDialog = new DatePickerDialog(EventCreation.this,
                     (datePicker, year, month, day) -> dateView.setText(day + "/" + (month + 1) + "/" + year), year, month, dayOfMonth);
-            datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
             datePickerDialog.show();
         });
 
@@ -100,9 +102,12 @@ public class EventCreation extends Page {
                 }
             });
              */
-
-            participants.add(username);
-            updateParticipants();
+            if (participants.contains(username)) {
+                Toast.makeText(this, "This user is already in the participants list", Toast.LENGTH_SHORT).show();
+            } else {
+                participants.add(username);
+                updateParticipants();
+            }
         });
 
         Button removeParticipant = findViewById(R.id.eventCreationRemoveParticipants);
@@ -124,19 +129,33 @@ public class EventCreation extends Page {
 
         Button doNotSave = findViewById(R.id.eventCreationBtnDoNotSaveEvent);
         doNotSave.setOnClickListener(v -> {
-            Toast.makeText(this, "Creation cancelled", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.creation_cancelled, Toast.LENGTH_SHORT).show();
             finish();
         });
 
         Button save = findViewById(R.id.eventCreationBtnSaveEvent);
         save.setOnClickListener(v -> {
-            sendToDatabase();
-            Toast.makeText(this, "Event created", Toast.LENGTH_SHORT).show();
+            if (checkEventCreationInput()) {
+                sendToDatabase();
+                Toast.makeText(this, "Event created", Toast.LENGTH_SHORT).show();
+                finish();
+            }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == R.id.create_event) {
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
 
     private void updateParticipants() {
+        eventParticipantView.getText().clear();
+
         StringBuilder sb = new StringBuilder();
 
         /*
@@ -148,7 +167,7 @@ public class EventCreation extends Page {
             sb.append(s).append(System.lineSeparator());
         }
 
-        eventParticipantView.setText(sb.toString());
+        participantsView.setText(sb.toString());
     }
 
 
@@ -157,7 +176,7 @@ public class EventCreation extends Page {
         dbAdapter.read(CurrentUser.getInstance(this).email, new DbCallback() {
             @Override
             public void readCallback(User user) {
-                Event event = new Event((Musician) user, 0);
+                Event event = new Event(user, 0);
                 event.setTitle(eventTitleView.getText().toString());
                 event.setAddress(eventAddressView.getText().toString());
                 event.setDescription(eventDescriptionView.getText().toString());
@@ -179,7 +198,7 @@ public class EventCreation extends Page {
 
         //TODO to be deleted
 
-        event = new Event(new Musician("Test", "User", "TestUser", "testuser@gmail.com", new MyDate()), 0);
+        event = new Event(new Musician("Test", "User", "TestUser", "testuser@gmail.com", new MyDate(1990, 12, 1)), 0);
         event.setTitle(eventTitleView.getText().toString());
         event.setAddress(eventAddressView.getText().toString());
         event.setDescription(eventDescriptionView.getText().toString());
@@ -196,10 +215,41 @@ public class EventCreation extends Page {
                 Integer.parseInt(hourMin[1]));
 
         event.setDateTime(d);
-
     }
 
-    protected Event getTestEvent() {
-        return event;
+
+    public boolean isEmpty(EditText editText) {
+        return editText.getText().toString().trim().length() == 0;
+    }
+
+    public boolean isEmpty(TextView textView) {
+        return textView.getText().toString().trim().length() == 0;
+    }
+
+    public boolean checkEventCreationInput() {
+        if (isEmpty(eventTitleView)) {
+            Toast.makeText(this, "Please give the event a title", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (isEmpty(eventAddressView)) {
+            Toast.makeText(this, "Please give the event an address", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (isEmpty(eventDescriptionView)) {
+            Toast.makeText(this, "Please give the event a description", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if (isEmpty(timeView)) {
+            Toast.makeText(this, "Please give the event a time", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if (isEmpty(dateView)) {
+            Toast.makeText(this, "Please give the event a date", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
     }
 }

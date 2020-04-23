@@ -80,5 +80,9 @@
     <string name="event_not_found">Event not found...</string>
     <string name="profile_not_found">Profile not found...</string>
     <string name="create_an_event">Create an event</string>
+    <string name="my_events">My events</string>
+    <string name="creation_cancelled">Creation cancelled</string>
+    <string name="add_participant">Add Participant</string>
+    <string name="remove_participant">Remove Participant</string>
 
 </resources>

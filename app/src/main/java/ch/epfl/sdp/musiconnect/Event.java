@@ -13,8 +13,6 @@ public class Event {
     private User creator;
 
     private List<User> participants;
-    private List<Musician> musicians;
-    private List<Band> bands;
 
     private LatLng location;
     private String address;
@@ -25,18 +23,7 @@ public class Event {
     private final String DEFAULT_TITLE = "Event";
     private final String DEFAULT_MESSAGE = "Come watch and play!";
 
-    public Event(Musician creator, int eid) {
-        setup(creator, eid);
-        register(creator);
-    }
-
-
-    public Event(Band creator, int eid) {
-        setup(creator, eid);
-        register(creator);
-    }
-
-    private void setup(User creator, int eid) {
+    public Event(User creator, int eid) {
         if (creator == null) {
             throw new IllegalArgumentException();
         }
@@ -44,15 +31,16 @@ public class Event {
         this.eid = eid;
         this.creator = creator;
 
-        musicians = new ArrayList<>();
-        bands = new ArrayList<>();
         participants = new ArrayList<>();
+        participants.add(creator);
+
         location = new LatLng(0, 0);
         dateTime = new MyDate();
         visible = false;
         title = DEFAULT_TITLE;
         description = DEFAULT_MESSAGE;
         address = "";
+
     }
 
     protected void setEid(int eid) {
@@ -67,49 +55,20 @@ public class Event {
         return creator;
     }
 
-    public void register(Musician musician) {
-        if (musician == null) {
+    public void register(User user) {
+        if (user == null) {
             throw new IllegalArgumentException();
         }
 
-        musicians.add(musician);
-        participants.add(musician);
+        participants.add(user);
     }
 
-    public void unregister(Musician musician) {
-        if (musician == null) {
+    public void unregister(User user) {
+        if (user == null) {
             throw new IllegalArgumentException();
         }
 
-        musicians.remove(musician);
-        participants.remove(musician);
-    }
-
-
-    public void register(Band band) {
-        if (band == null) {
-            throw new IllegalArgumentException();
-        }
-
-        bands.add(band);
-        participants.add(band);
-    }
-
-    public void unregister(Band band) {
-        if (band == null) {
-            throw new IllegalArgumentException();
-        }
-
-        bands.remove(band);
-        participants.remove(band);
-    }
-
-    public List<Musician> getMusicians() {
-        return musicians;
-    }
-
-    public List<Band> getBands() {
-        return bands;
+        participants.remove(user);
     }
 
     public List<User> getParticipants() {

@@ -288,10 +288,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected boolean isGooglePlayServicesAvailable() {
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
         int status = googleApiAvailability.isGooglePlayServicesAvailable(this);
-        if(status != ConnectionResult.SUCCESS) {
-            return false;
-        }
-        return true;
+        return status == ConnectionResult.SUCCESS;
     }
 
     private void setLocation(Location location) {
