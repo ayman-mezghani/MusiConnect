@@ -115,12 +115,12 @@ public class RoomDatabaseTest {
             users = musicianDao.getAll();
         });
         waitALittle(2);
-//        assertEquals(1,users.size());
+        assertEquals(1,users.size());
         Musician user1 = users.get(0);
-//        assertEquals(person1.getFirstName()+person1.getLastName()+person1.getEmailAddress()+person1.getUserName()+person1.getAge()+person1.getVideoURL(),
-//                user1.getFirstName()+user1.getLastName()+user1.getEmailAddress()+user1.getUserName()+user1.getAge()+user1.getVideoURL());
-//        assertEquals(person1.getJoinDate(),user1.getJoinDate());
-//        assertEquals(person1.getInstruments(),(user1.getInstruments()));
+        assertEquals(person1.getFirstName()+person1.getLastName()+person1.getEmailAddress()+person1.getUserName()+person1.getAge()+person1.getVideoURL(),
+                user1.getFirstName()+user1.getLastName()+user1.getEmailAddress()+user1.getUserName()+user1.getAge()+user1.getVideoURL());
+        assertEquals(person1.getJoinDate(),user1.getJoinDate());
+        assertEquals(person1.getInstruments(),(user1.getInstruments()));
     }
 
 
