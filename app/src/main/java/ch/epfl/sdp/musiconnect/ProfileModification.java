@@ -139,7 +139,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
         DbAdapter adapter = DbGenerator.getDbInstance();
         adapter.update(DbUserType.Musician, modCurrent);
         if(videoRecorded) {
-            storage = CloudStorageGenerator.getDbInstance(this);
+            storage = CloudStorageGenerator.getCloudInstance(this);
             try {
                 storage.upload(videoUri, CloudStorage.FileType.video, userEmail);
             } catch (IOException e) {
@@ -197,6 +197,13 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
         // Upload video to cloud storage
         if(videoRecorded) {
             returnIntent.putExtra("videoUri", videoUri.toString());
+
+            storage = CloudStorageGenerator.getCloudInstance(this);
+            try {
+                storage.upload(videoUri, CloudStorage.FileType.video, userEmail);
+            } catch (IOException e) {
+                Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
+            }
         }
 
         //launches the update to the database on another thread, so that it doesn't hang up the app if not connected to internet
@@ -263,5 +270,4 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
             mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
         }
     }
-
 }

@@ -25,4 +25,9 @@ public class DbGenerator {
         if(database == null) database = new FirebaseDatabase();
         single_instance = new DbAdapter(database);
     }
+
+    static void flush() {
+        database = null;
+        single_instance = null;
+    }
 }
