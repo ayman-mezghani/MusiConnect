@@ -4,6 +4,7 @@ import androidx.test.rule.ActivityTestRule;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -14,6 +15,10 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
+import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.InstrumentConverter;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
@@ -33,11 +38,15 @@ public class RoomDatabaseTest {
     private List<Musician> allUsers = new ArrayList<>();
     private List<Musician> users = new ArrayList<>();
 
-
-
     @Rule
     public final ActivityTestRule<StartPage> startPageRule =
             new ActivityTestRule<>(StartPage.class);
+
+    @BeforeClass
+    public static void setMocks() {
+        DbGenerator.setDatabase(new MockDatabase());
+        CloudStorageGenerator.setStorage((new MockCloudStorage()));
+    }
 
     @Before
     public void saveDatabaseContentsBeforeTesting() {
@@ -62,7 +71,7 @@ public class RoomDatabaseTest {
         mExecutor.execute(() -> {
             users = musicianDao.getAll();
         });
-        waitALittle(2);
+        waitALittle(5);
         assertTrue(users.isEmpty());
     }
 
@@ -79,7 +88,7 @@ public class RoomDatabaseTest {
         mExecutor.execute(() -> {
             users = musicianDao.getAll();
         });
-        waitALittle(2);
+        waitALittle(5);
         assertEquals(1,users.size());
         Musician user1 = users.get(0);
         //assertEquals(person1.toString(),user1.toString());
@@ -105,7 +114,7 @@ public class RoomDatabaseTest {
         mExecutor.execute(() -> {
             users = musicianDao.getAll();
         });
-        waitALittle(2);
+        waitALittle(5);
         assertEquals(2,users.size());
 
         mExecutor.execute(() -> {
@@ -114,7 +123,7 @@ public class RoomDatabaseTest {
         mExecutor.execute(() -> {
             users = musicianDao.getAll();
         });
-        waitALittle(2);
+        waitALittle(5);
         assertEquals(1,users.size());
         Musician user1 = users.get(0);
         assertEquals(person1.getFirstName()+person1.getLastName()+person1.getEmailAddress()+person1.getUserName()+person1.getAge()+person1.getVideoURL(),
@@ -132,11 +141,11 @@ public class RoomDatabaseTest {
             musicianDao.insertAll(person1);
             musicianDao.insertAll(person2);
         });
-        waitALittle(2);
+        waitALittle(5);
         mExecutor.execute(() -> {
             users = musicianDao.loadAllByIds(new String[]{"sauce@gmail.com"});
         });
-        waitALittle(2);
+        waitALittle(5);
         assertEquals(1,users.size());
         Musician user1 = users.get(0);
         assertEquals(person1.getFirstName()+person1.getLastName()+person1.getEmailAddress()+person1.getUserName()+person1.getAge()+person1.getVideoURL(),

@@ -5,7 +5,9 @@ import android.content.Context;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
-import java.util.IllegalFormatException;
+import ch.epfl.sdp.musiconnect.database.DbCallback;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbUserType;
 
 public class CurrentUser {
     // static variable single_instance of type Singleton
@@ -14,7 +16,7 @@ public class CurrentUser {
 
     private boolean createdFlag = false;
     private String bandName;
-    private Musician m;
+    private Musician musician;
     private GoogleSignInAccount acct;
 
     // private constructor restricted to this class itself
@@ -35,6 +37,12 @@ public class CurrentUser {
 
     public void setCreatedFlag() {
         this.createdFlag = true;
+        DbGenerator.getDbInstance().read(DbUserType.Musician, email, new DbCallback() {
+            @Override
+            public void readCallback(User user) {
+                musician = (Musician) user;
+            }
+        });
     }
 
     public boolean getCreatedFlag() {
@@ -44,18 +52,18 @@ public class CurrentUser {
     public String getBandName() { return this.bandName; }
 
     public void setBandName(String bandName) {
-        if (this.m.getTypeOfUser() == TypeOfUser.Band)
+        if (this.musician.getTypeOfUser() == TypeOfUser.Band)
             this.bandName = bandName;
         else
             throw new IllegalArgumentException("You can only set a band name if you are a band");
     }
 
     public void setMusician(Musician m) {
-        this.m = m;
+        this.musician = m;
     }
 
     public Musician getMusician() {
-        return this.m;
+        return this.musician;
     }
 
     public static void flush() {
