@@ -44,14 +44,11 @@ public class MenuTests {
             GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
 
-    private static boolean setUpIsDone = false;
+    // private static boolean setUpIsDone = false;
 
     public void clickAlerts() {
-        if (setUpIsDone) {
-            return;
-        }
         MapsLocationTest.clickAllow();
-        setUpIsDone = true;
+
     }
 
     // Before and after methods are used in order to accept tests with intents
