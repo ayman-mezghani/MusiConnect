@@ -19,12 +19,17 @@ public class CurrentUser {
     private Musician musician;
     private GoogleSignInAccount acct;
 
+
     // private constructor restricted to this class itself
     private CurrentUser(Context context) {
-        acct = GoogleSignIn.getLastSignedInAccount(context);
-        if (acct != null) {
-            email = acct.getEmail();
-        } else email = "";
+        if(!checktest()) {
+            acct = GoogleSignIn.getLastSignedInAccount(context);
+            if (acct != null) {
+                email = acct.getEmail();
+            } else email = "";
+        }else{
+            email = "bobminion@gmail.com";
+        }
     }
 
     // static method to create instance of Singleton class
@@ -58,6 +63,17 @@ public class CurrentUser {
             throw new IllegalArgumentException("You can only set a band name if you are a band");
     }
 
+    private boolean checktest() {
+        boolean istest;
+
+        try {
+            Class.forName("androidx.test.espresso.Espresso");
+            istest = true;
+        } catch (ClassNotFoundException e) {
+            istest = false;
+        }
+        return istest;
+    }
     public void setMusician(Musician m) {
         this.musician = m;
     }
