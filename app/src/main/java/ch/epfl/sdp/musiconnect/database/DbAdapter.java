@@ -2,6 +2,8 @@ package ch.epfl.sdp.musiconnect.database;
 
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.TypeOfUser;
+import ch.epfl.sdp.musiconnect.events.Event;
 
 public class DbAdapter {
 
@@ -17,6 +19,10 @@ public class DbAdapter {
 
     public void add(String collection, Band b) {
         db.addBand(collection, b.getLeaderEmailAddress(), new SimplifiedBand(b));
+    }
+
+    public void add(String collection, Event e, TypeOfUser t) {
+        db.addEvent(collection, new SimplifiedEvent(e), t);
     }
 
     public void delete(String collection, Musician musician) {

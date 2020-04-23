@@ -134,4 +134,9 @@ public abstract class Person extends User {
         return userName;
     }
 
+    @Override
+    public String getMail() {
+        return emailAddress;
+    }
+
 }

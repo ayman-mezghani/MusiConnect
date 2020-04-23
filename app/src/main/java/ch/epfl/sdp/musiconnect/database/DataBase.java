@@ -6,7 +6,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -18,7 +21,9 @@ import java.util.List;
 import java.util.Map;
 
 import ch.epfl.sdp.musiconnect.Band;
+import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.TypeOfUser;
 import ch.epfl.sdp.musiconnect.User;
 
 public class DataBase {
@@ -40,6 +45,19 @@ public class DataBase {
         db.collection(collection).document(docName).set(b, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
+    }
+
+    public void addEvent(String collection, SimplifiedEvent ev, TypeOfUser t) {
+        db.collection(collection).add(ev)
+                .addOnSuccessListener(documentReference -> {
+                    if(t == TypeOfUser.Band) {
+                        this.updateDoc("Band", ev.getCreatorMail(), new HashMap<String, Object>(){{
+                            put("events",documentReference.getId());
+                        }});
+                    }
+                    Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                })
+                .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
     }
 
     public void deleteDoc(String collection, String docName) {
