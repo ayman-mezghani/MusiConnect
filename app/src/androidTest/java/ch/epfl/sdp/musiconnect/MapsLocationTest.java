@@ -1,7 +1,6 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -30,10 +29,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
@@ -41,41 +37,18 @@ import static org.junit.Assert.assertTrue;
 @SdkSuppress(minSdkVersion = 18)
 public class MapsLocationTest {
 
-    public static int ALLOW = 1;
 
     @Rule
     public final ActivityTestRule<MapsActivity> mRule =
             new ActivityTestRule<>(MapsActivity.class);
 
 
-    // TODO TO BE REMOVED
+
     @BeforeClass
     public static void set() {
         Looper.prepare();
     }
 
-    /**
-     * Clicks on the alert boxes such that location permissions are given
-     * This method is needed since there is still a box asking for location permission
-     * for the first time the app is launched even if the permission is granted
-     * (Android convention)
-     */
-    @BeforeClass
-    public static void clickAllow() {
-        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        // clickAlert(device);
-        // clickOnDialog(device, 1);
-    }
-
-    /**
-     * Clicks on the alert boxes such that location permissions are rejected
-     */
-    @BeforeClass
-    public static void clickDeny() {
-        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        // clickAlert(device);
-        // clickOnDialog(device, 0);
-    }
 
 
     private static boolean hasNeededPermission() {
@@ -86,27 +59,19 @@ public class MapsLocationTest {
 
     public static void clickAlert(UiDevice device) {
         try {
-             UiObject alert = device.findObject(new UiSelector().className("android.widget.Button")
-                     .text("OK"));
-             if (alert.exists()) {
-                 alert.clickAndWaitForNewWindow();
-             }
+            UiObject alert = device.findObject(new UiSelector().className("android.widget.Button")
+                    .text("OK"));
+
+            if (alert.exists()) {
+                alert.clickAndWaitForNewWindow();
+            }
         } catch (UiObjectNotFoundException e) {
             System.out.println("There is no permissions dialog to interact with");
         }
     }
 
-    private static void sleep(long millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            throw new RuntimeException("Cannot execute Thread.sleep()");
-        }
-    }
-
     public static void clickOnDialog(UiDevice device, int pos) {
         try {
-            sleep(3000);
             UiObject allowPermissions = device.findObject(new UiSelector()
                     .clickable(true)
                     .checkable(false)
@@ -115,6 +80,7 @@ public class MapsLocationTest {
             if (allowPermissions.exists()) {
                 allowPermissions.click();
             }
+
         } catch (UiObjectNotFoundException e) {
             System.out.println("There is no permissions dialog to interact with");
         }
@@ -139,7 +105,23 @@ public class MapsLocationTest {
     }
 
 
+    /**
+     * Clicks on the alert boxes such that location permissions are given
+     */
+    public static void clickAllow() {
+        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        clickAlert(device);
+        clickOnDialog(device, 1);
+    }
 
+    /**
+     * Clicks on the alert boxes such that location permissions are rejected
+     */
+    public static void clickDeny() {
+        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        clickAlert(device);
+        clickOnDialog(device, 0);
+    }
 
     private int[] grantedPerm() {
         int[] results = new int[1];
@@ -205,11 +187,11 @@ public class MapsLocationTest {
         int[] results = deniedPerm();
         mRule.getActivity().onRequestPermissionsResult(LocationService.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
         boolean b = mRule.getActivity().isLocationPermissionGranted();
-        assertFalse(b);
+        assertTrue(!b);
 
         mRule.getActivity().onRequestPermissionsResult(0, null, results);
         b = mRule.getActivity().isLocationPermissionGranted();
-        assertFalse(b);
+        assertTrue(!b);
     }
 
 
@@ -228,7 +210,7 @@ public class MapsLocationTest {
 
         Location loc = mRule.getActivity().getSetLocation();
         assertTrue(correctLocation(loc));
-        assertEquals(loc.getLatitude(), location.getLatitude(), 0.0);
+        assertTrue(loc.getLatitude() == location.getLatitude());
 
     }
 }

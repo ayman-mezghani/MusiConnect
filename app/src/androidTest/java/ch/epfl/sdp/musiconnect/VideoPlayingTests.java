@@ -15,7 +15,7 @@ import androidx.test.rule.GrantPermissionRule;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -39,9 +39,19 @@ import static org.junit.Assert.assertTrue;
 @LargeTest
 public class VideoPlayingTests {
 
-    @BeforeClass
-    public static void clickAlert() {
+    private static boolean setUpIsDone = false;
+
+    public void clickAlerts() {
+        if (setUpIsDone) {
+            return;
+        }
         MapsLocationTest.clickAllow();
+        setUpIsDone = true;
+    }
+
+    @Before
+    public void setUp() {
+        clickAlerts();
     }
 
     /**

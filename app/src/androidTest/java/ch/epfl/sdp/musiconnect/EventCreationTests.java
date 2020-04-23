@@ -53,7 +53,6 @@ public class EventCreationTests {
     @Before
     public void initIntents() {
         Intents.init();
-        MapsLocationTest.clickAllow();
     }
 
     @After

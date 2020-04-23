@@ -5,6 +5,7 @@ import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,9 +32,20 @@ public class VideoRecordingTests {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
-    @BeforeClass
-    public static void clickAlert() {
+
+    private static boolean setUpIsDone = false;
+
+    public void clickAlerts() {
+        if (setUpIsDone) {
+            return;
+        }
         MapsLocationTest.clickAllow();
+        setUpIsDone = true;
+    }
+
+    @Before
+    public void setUp() {
+        clickAlerts();
     }
 
     @Test

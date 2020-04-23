@@ -285,12 +285,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         spinner.setSelection(2);
     }
 
-    protected boolean isGooglePlayServicesAvailable() {
-        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
-        int status = googleApiAvailability.isGooglePlayServicesAvailable(this);
-        return status == ConnectionResult.SUCCESS;
-    }
-
     private void setLocation(Location location) {
 
         if(!updatePos){

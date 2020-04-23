@@ -44,21 +44,26 @@ public class MenuTests {
             GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
 
+    private static boolean setUpIsDone = false;
 
-    @BeforeClass
-    public static void clickAlert() {
-        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        MapsLocationTest.clickOnDialog(device, MapsLocationTest.ALLOW);
+    public void clickAlerts() {
+        if (setUpIsDone) {
+            return;
+        }
+        MapsLocationTest.clickAllow();
+        setUpIsDone = true;
     }
 
     // Before and after methods are used in order to accept tests with intents
     @Before
     public void initIntents() {
+        clickAlerts();
         Intents.init();
     }
 
     @After
     public void releaseIntents() { Intents.release(); }
+
 
     @Test
     public void testSearchClickShouldDisplayMessage() {
