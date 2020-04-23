@@ -50,6 +50,10 @@ public class MapsLocationTest {
     }
 
 
+    /**
+     * Code to click on the alerts has been found here:
+     * https://gist.github.com/rocboronat/65b1187a9fca9eabfebb5121d818a3c4
+     */
 
     private static boolean hasNeededPermission() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();

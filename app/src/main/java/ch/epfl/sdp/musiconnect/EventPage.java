@@ -107,4 +107,24 @@ public class EventPage extends Page {
         }
         return null;
     }
+
+    private void retrieveEvent() {
+        /*
+            CurrentUser current = CurrentUser.getInstance(this);
+            dbAdapter.read(current.email, new DbCallback() {
+                @Override
+                public void readCallback(User user) {
+                    Musician m2 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
+                    Event e1 = new Event(user, eid);
+                    e1.setAddress("Westminster, London, England");
+                    e1.setLocation(51.5007, 0.1245);
+                    e1.setDateTime(new MyDate(2020, 9, 21, 14, 30));
+                    e1.setTitle("Event at Big Ben!");
+                    e1.register(m2);
+                    e1.setDescription("Playing at Big Ben, come watch us play!");
+
+                    loadEventInfo(e1);
+                }
+            });*/
+    }
 }
