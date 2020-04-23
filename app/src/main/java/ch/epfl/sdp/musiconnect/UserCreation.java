@@ -78,15 +78,6 @@ public class UserCreation extends Page {
         findViewById(R.id.btnUserCreationCreate).setOnClickListener(v -> {
             if (checkUserCreationInput()) {
                 if (((TextView) findViewById(R.id.etDate)).getText().toString().trim().length() > 0) {
-/*<<<<<<< HEAD
-                    // TODO: Insert Data in database properly (MyDate specifically)
-                    mainUser = new Musician(etFirstName.getText().toString(),etLastName.getText().toString(),
-                            etUserName.getText().toString(),etMail.getText().toString(), new MyDate(1990,1,1));
-                    DataBase db = new DataBase();
-                    DbAdapter Adb = new DbAdapter(db);
-                    Adb.add(mainUser);
-=======*/
-                    // TODO: Insert Data in database
 
                     String username = etUserName.getText().toString();
                     String firstname = etFirstName.getText().toString();

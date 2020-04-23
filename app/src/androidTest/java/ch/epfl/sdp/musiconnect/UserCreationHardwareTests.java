@@ -7,6 +7,9 @@ import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.PickerActions;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Assert;
@@ -65,7 +68,12 @@ public class UserCreationHardwareTests {
     public void AllEmptyInputTest() {
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
         waitALittle(1);
-        onView(withText("Fill Firstname field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(activityRule.getActivity().getApplicationContext());
+        if (account != null) {
+            onView(withText("Fill Username field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+        } else {
+            onView(withText("Fill Firstname field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+        }
     }
 
     @Test
@@ -93,7 +101,12 @@ public class UserCreationHardwareTests {
 
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
         waitALittle(1);
-        onView(withText("Fill Email field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(activityRule.getActivity().getApplicationContext());
+        if (account != null) {
+            onView(withText("Select a date of birth")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+        } else {
+            onView(withText("Fill Email field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+        }
     }
 
     @Test
@@ -103,7 +116,12 @@ public class UserCreationHardwareTests {
 
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
         waitALittle(1);
-        onView(withText("Fill Lastname field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(activityRule.getActivity().getApplicationContext());
+        if (account != null) {
+            onView(withText("Fill Username field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+        } else {
+            onView(withText("Fill Lastname field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+        }
     }
 
     @Test
