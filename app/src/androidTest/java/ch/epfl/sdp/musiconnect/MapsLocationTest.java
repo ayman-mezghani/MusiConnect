@@ -55,11 +55,14 @@ public class MapsLocationTest {
 
     /**
      * Clicks on the alert boxes such that location permissions are given
+     * This method is needed since there is still a box asking for location permission
+     * for the first time the app is launched even if the permission is granted
+     * (Android convention)
      */
     @BeforeClass
     public static void clickAllow() {
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        clickAlert(device);
+        // clickAlert(device);
         clickOnDialog(device, 1);
     }
 
@@ -69,7 +72,7 @@ public class MapsLocationTest {
     @BeforeClass
     public static void clickDeny() {
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        clickAlert(device);
+        // clickAlert(device);
         clickOnDialog(device, 0);
     }
 
