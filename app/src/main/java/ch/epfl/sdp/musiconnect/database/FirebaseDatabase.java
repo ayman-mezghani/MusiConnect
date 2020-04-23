@@ -117,7 +117,7 @@ class FirebaseDatabase extends Database {
                                     dbCallback.readCallback(b);
                                 }
                             });
-                        } else if(collection.equals(DbUserType.Events)) {
+                        } else if(collection.equals(DbUserType.Events.toString())) {
                             DbAdapter da = new DbAdapter(this);
                             da.read(DbUserType.Musician, (String) data.get("creatorMail"), new DbCallback() {
                                 @Override

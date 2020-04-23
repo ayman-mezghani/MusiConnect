@@ -83,7 +83,7 @@ public class StartPage extends Page {
         fab_button_2.setOnClickListener(v -> {
             Context ctx = this;
             ListView lv = findViewById(R.id.LvEvent);
-            ArrayList<String> events = (ArrayList<String>) CurrentUser.getInstance(this).getBand().getEvents();
+            ArrayList<String> events = new ArrayList<>();
 
 
             final ArrayAdapter<String> adapter = new ArrayAdapter<String>
@@ -91,7 +91,7 @@ public class StartPage extends Page {
             lv.setAdapter(adapter);
 
 
-            for(String e : events){
+            for(String e : (ArrayList<String>) CurrentUser.getInstance(this).getBand().getEvents()){
                 DbGenerator.getDbInstance().read(DbUserType.Events, e.trim(), new DbCallback() {
                     @Override
                     public void readCallback(Event u) {
