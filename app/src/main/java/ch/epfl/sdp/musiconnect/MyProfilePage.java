@@ -6,16 +6,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -25,20 +19,17 @@ import java.util.concurrent.TimeUnit;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbUserType;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
 import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
-import ch.epfl.sdp.musiconnect.database.DbUserType;
 
 public class MyProfilePage extends ProfilePage implements View.OnClickListener {
-    private static String collection = "newtest";
-
     private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
     private DbAdapter dbAdapter;
 
-    private boolean test = true;
     private Musician currentCachedUser;
 
 
@@ -84,6 +75,11 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             List<Musician> result = mdao.loadAllByIds(new String[]{userEmail});
             currentCachedUser = result.isEmpty() ? null : result.get(0);
         });
+        try {                                           //wait for async thread to fetch cached profile
+            TimeUnit.MILLISECONDS.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         if (checkConnection(MyProfilePage.this)) {              //gets profile info from database
             dbAdapter.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
                 @Override
@@ -105,11 +101,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             });
 
         } else {
-            try {                                           //wait for async thread to fetch cached profile
-                TimeUnit.MILLISECONDS.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             if (currentCachedUser == null) {
                 Toast.makeText(this, "Unable to fetch profile information; please connect to internet", Toast.LENGTH_LONG).show();
             } else {                                        //set profile info based on cache
