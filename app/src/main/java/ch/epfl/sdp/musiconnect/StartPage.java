@@ -125,6 +125,7 @@ public class StartPage extends Page {
             });
         }
     }
+
     protected void fabMenuClick() {
         if(isOpen){
             fab_button_2.startAnimation(fabClose);
@@ -155,6 +156,7 @@ public class StartPage extends Page {
 
         isOpen = !isOpen;
     }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -172,7 +174,6 @@ public class StartPage extends Page {
     private void startLocationService() {
         LocationPermission.startLocationService(this);
     }
-
 
     private void getLastLocation() {
         Log.d(TAG, "getLastKnownLocation: called.");

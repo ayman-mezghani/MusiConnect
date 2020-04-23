@@ -10,13 +10,9 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.widget.VideoView;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.storage.FirebaseStorage;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -29,22 +25,21 @@ import java.util.Map;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
 import ch.epfl.sdp.musiconnect.database.SimplifiedMusician;
 
-public class ProfileModification extends AppCompatActivity implements View.OnClickListener {
-    private static String collection = "newtest";
+public class ProfileModification extends ProfilePage implements View.OnClickListener {
 
     String firstName, lastName, username, mail, birthday;
     EditText[] editFields;
     final Calendar calendar = Calendar.getInstance();
 
     protected static int VIDEO_REQUEST = 101;
-    private String testusername = "testUser";
+
     protected Uri videoUri = null;
-    private VideoView mVideoView;
     private CloudStorage storage;
     private boolean videoRecorded = false;
 
@@ -68,20 +63,7 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         mVideoView = findViewById(R.id.videoViewEdit);
         findViewById(R.id.btnCaptureVideo).setOnClickListener(v -> captureVideo());
 
-        storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
-        String path = testusername + "/" + CloudStorage.FileType.video;
-        String saveName = testusername + "_" + CloudStorage.FileType.video;
-        try {
-            storage.download(path, saveName, fileUri -> {
-                videoUri = fileUri;
-
-                mVideoView.setVideoURI(videoUri);
-                mVideoView.start();
-                mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
-            });
-        } catch (IOException e) {
-            Toast.makeText(this, "An error occured, please contact support.", Toast.LENGTH_LONG).show();
-        }
+        getVideoUri(userEmail);
     }
 
     private void onCreateGetIntentsFields() {
@@ -169,9 +151,9 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         // Upload video to cloud storage
         if(videoRecorded) {
             returnIntent.putExtra("videoUri", videoUri.toString());
-            storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
+            storage = CloudStorageGenerator.getDbInstance(this);
             try {
-                storage.upload(videoUri, CloudStorage.FileType.video, testusername);
+                storage.upload(videoUri, CloudStorage.FileType.video, userEmail);
             } catch (IOException e) {
                 Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
             }

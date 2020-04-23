@@ -14,6 +14,8 @@ import androidx.test.espresso.contrib.PickerActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
+import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
@@ -42,10 +44,10 @@ public class ProfileModificationTests {
             new ActivityTestRule<>(MyProfilePage.class);
 
     @BeforeClass
-    public static void setMockDB() {
+    public static void setMocks() {
         DbGenerator.setDatabase(new MockDatabase());
+        CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
-
     /**
      * Helper method to avoid duplication
      * @param text: text to recognize on the clickable object

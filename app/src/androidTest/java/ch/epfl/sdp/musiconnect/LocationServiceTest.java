@@ -16,6 +16,8 @@ import org.junit.runner.RunWith;
 
 import java.util.concurrent.TimeoutException;
 
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
+import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
@@ -30,8 +32,9 @@ public class LocationServiceTest {
             new ServiceTestRule();
 
     @BeforeClass
-    public static void setMockDB() {
+    public static void setMocks() {
         DbGenerator.setDatabase(new MockDatabase());
+        CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
 
     @Test

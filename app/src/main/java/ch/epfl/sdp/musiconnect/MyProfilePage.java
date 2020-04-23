@@ -21,7 +21,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
 
     private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
     private DbAdapter dbAdapter;
-    private boolean test = true;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
