@@ -24,7 +24,7 @@ public class CloudStorageGenerator {
         if(storage == null) storage = new FirebaseCloudStorage(context);
     }
 
-    static void flush() {
+    public static void flush() {
         storage = null;
     }
 }
