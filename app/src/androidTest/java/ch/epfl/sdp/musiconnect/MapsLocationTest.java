@@ -32,6 +32,8 @@ import org.junit.runner.RunWith;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
@@ -195,11 +197,11 @@ public class MapsLocationTest {
         int[] results = deniedPerm();
         mRule.getActivity().onRequestPermissionsResult(LocationService.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
         boolean b = mRule.getActivity().isLocationPermissionGranted();
-        assertTrue(!b);
+        assertFalse(b);
 
         mRule.getActivity().onRequestPermissionsResult(0, null, results);
         b = mRule.getActivity().isLocationPermissionGranted();
-        assertTrue(!b);
+        assertFalse(b);
     }
 
 
@@ -218,15 +220,7 @@ public class MapsLocationTest {
 
         Location loc = mRule.getActivity().getSetLocation();
         assertTrue(correctLocation(loc));
-        assertTrue(loc.getLatitude() == location.getLatitude());
+        assertEquals(loc.getLatitude(), location.getLatitude(), 0.0);
 
-    }
-
-    @Test
-    public void testGooglePlayServices() {
-        MapsActivity mapsActivity = mRule.getActivity();
-        boolean b = mapsActivity.isGooglePlayServicesAvailable();
-
-        assertTrue(b);
     }
 }
