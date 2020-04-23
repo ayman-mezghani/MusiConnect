@@ -45,7 +45,6 @@ public class MenuTests {
 
     private UiDevice device;
 
-
     // Before and after methods are used in order to accept tests with intents
     @Before
     public void initIntents() {

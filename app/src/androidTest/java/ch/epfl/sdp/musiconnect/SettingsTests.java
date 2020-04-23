@@ -2,9 +2,14 @@ package ch.epfl.sdp.musiconnect;
 
 import android.content.Intent;
 
+import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.uiautomator.UiDevice;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +36,19 @@ public class SettingsTests {
     @Rule
     public final ActivityTestRule<SettingsPage> settingsPageRule =
             new ActivityTestRule<>(SettingsPage.class);
+
+    private UiDevice device;
+
+    // Before and after methods are used in order to accept tests with intents
+    @Before
+    public void initIntents() {
+        Intents.init();
+        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        MapsLocationTest.clickAlert(device);
+    }
+
+    @After
+    public void releaseIntents() { Intents.release(); }
 
     /**
      * Helper method to avoid duplicate code
