@@ -108,8 +108,8 @@ public class EventPage extends Page {
         return null;
     }
 
+    /*
     private void retrieveEvent() {
-        /*
             CurrentUser current = CurrentUser.getInstance(this);
             dbAdapter.read(current.email, new DbCallback() {
                 @Override
@@ -125,6 +125,6 @@ public class EventPage extends Page {
 
                     loadEventInfo(e1);
                 }
-            });*/
-    }
+            });
+    }*/
 }

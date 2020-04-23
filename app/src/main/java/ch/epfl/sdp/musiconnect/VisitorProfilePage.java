@@ -6,7 +6,6 @@ import android.os.Bundle;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
-import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 
 public class VisitorProfilePage extends ProfilePage {
