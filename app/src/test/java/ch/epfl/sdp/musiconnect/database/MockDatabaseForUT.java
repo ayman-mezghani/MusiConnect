@@ -13,12 +13,16 @@ public class MockDatabaseForUT extends Database {
 
     private String expectedDocName;
     private SimplifiedMusician expectedSimplifiedMusician;
+    private SimplifiedEvent expectedSimplifiedEvent;
+    private DbUserType expectedDbType;
     private Map<String, Object> expectedNewValueMap;
 
-    MockDatabaseForUT(String expectedDocName, SimplifiedMusician expectedSimplifiedMusician, Map<String, Object> expectedNewValueMap) {
+    MockDatabaseForUT(String expectedDocName, SimplifiedMusician expectedSimplifiedMusician, Map<String, Object> expectedNewValueMap, SimplifiedEvent expectedSimplifiedEvent, DbUserType expectedDbType) {
         this.expectedDocName = expectedDocName;
         this.expectedSimplifiedMusician = expectedSimplifiedMusician;
         this.expectedNewValueMap = expectedNewValueMap;
+        this.expectedSimplifiedEvent = expectedSimplifiedEvent;
+        this.expectedDbType = expectedDbType;
     }
 
     public MockDatabaseForUT() {
@@ -28,6 +32,12 @@ public class MockDatabaseForUT extends Database {
     void addDoc(String collection, String docName, SimplifiedDbEntry entry) {
         assertEquals(expectedDocName, docName);
         assertEquals(expectedSimplifiedMusician, entry);
+    }
+
+    @Override
+    void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType) {
+        assertEquals(expectedDbType, userType);
+        assertEquals(expectedSimplifiedEvent, simplifiedEvent);
     }
 
     @Override

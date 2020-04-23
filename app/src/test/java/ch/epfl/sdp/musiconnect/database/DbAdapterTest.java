@@ -6,6 +6,7 @@ import org.junit.Test;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.User;
+import ch.epfl.sdp.musiconnect.events.Event;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -13,6 +14,7 @@ import static org.junit.Assert.assertFalse;
 public class DbAdapterTest {
     private DbAdapter dbAdapter;
     private Musician musician;
+    private Event event;
 
     private String firstName = "test";
     private String lastName = "user";
@@ -23,8 +25,9 @@ public class DbAdapterTest {
     @Before
     public void init() {
         musician = new Musician(firstName, lastName, username, emailAddress, birthDate);
+        event = new Event(musician, "1");
         SimplifiedMusician sm = new SimplifiedMusician(musician);
-        DbGenerator.setDatabase(new MockDatabaseForUT(emailAddress, sm, sm.toMap()));
+        DbGenerator.setDatabase(new MockDatabaseForUT(emailAddress, sm, sm.toMap(), new SimplifiedEvent(event), DbUserType.Events));
         dbAdapter = DbGenerator.getDbInstance();
     }
 

@@ -160,8 +160,8 @@ public class EventCreationTests {
         onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(not(withText("TestUser"))));
 
         closeSoftKeyboard();
-        clickButtonWithText(R.string.save);
-        assertTrue(eventCreationRule.getActivity().isFinishing());
+        //clickButtonWithText(R.string.save);
+        //assertTrue(eventCreationRule.getActivity().isFinishing());
     }
 
 }
