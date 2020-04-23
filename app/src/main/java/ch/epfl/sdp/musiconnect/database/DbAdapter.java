@@ -10,12 +10,12 @@ public class DbAdapter {
 
     private Database db;
 
-    public DbAdapter(Database db) {
+    DbAdapter(Database db) {
         this.db = db;
     }
 
     public void add(DbUserType userType, User user) {
-        if(userType == DbUserType.Musician) {
+        if(userType.equals(DbUserType.Musician)) {
             Musician musician = (Musician) user;
             db.addDoc(userType.toString(), musician.getEmailAddress(), new SimplifiedMusician(musician));
         }
@@ -28,7 +28,7 @@ public class DbAdapter {
         db.addDoc(new SimplifiedEvent(e), userType);
     }
     public void delete(DbUserType userType, User user) {
-        if(userType == DbUserType.Musician) {
+        if(userType.equals(DbUserType.Musician)) {
             Musician musician = (Musician) user;
             db.deleteDoc(userType.toString(), musician.getEmailAddress());
         }
@@ -39,7 +39,7 @@ public class DbAdapter {
     }
 
     public void update(DbUserType userType, User user) {
-        if(userType == DbUserType.Musician) {
+        if(userType.equals(DbUserType.Musician)) {
             Musician musician = (Musician) user;
             db.updateDoc(userType.toString(), musician.getEmailAddress(), (new SimplifiedMusician(musician)).toMap());
         }

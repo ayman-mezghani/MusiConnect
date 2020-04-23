@@ -15,7 +15,6 @@ import ch.epfl.sdp.musiconnect.MyLocation;
 import ch.epfl.sdp.musiconnect.TypeOfUser;
 
 public class SimplifiedMusician extends SimplifiedDbEntry {
-    private String uid = null;
     private String username;
     private String firstName;
     private String lastName;
@@ -25,7 +24,6 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
     private Date joinDate;
     private GeoPoint location;
 
-    static final String UID = "uid";
     static final String USERNAME = "username";
     static final String FIRSTNAME = "firstName";
     static final String LASTNAME = "lastName";
@@ -98,10 +96,6 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
 
     private MyLocation geoPointToMyLocation(GeoPoint loc) {
         return new MyLocation(loc.getLatitude(), loc.getLongitude());
-    }
-
-    public String getUid() {
-        return uid;
     }
 
     public String getUsername() {

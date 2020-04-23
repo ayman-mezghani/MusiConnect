@@ -1,6 +1,7 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -22,6 +23,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -55,7 +58,8 @@ import static ch.epfl.sdp.musiconnect.MapsActivity.Utility.generateWarning;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
-        GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener, AdapterView.OnItemSelectedListener {
+        GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+
 
     private DbAdapter Adb = DbGenerator.getDbInstance();
 
@@ -103,13 +107,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        spinner = findViewById(R.id.distanceThreshold);
-        String[] items = getResources().getStringArray(R.array.distance_array);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
-        spinner.setSelection(2);
-
+        setupSpinner();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -139,6 +137,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 messageReceiver, new IntentFilter("GPSLocationUpdates"));
     }
 
+
+    private void setupSpinner() {
+        spinner = findViewById(R.id.distanceThreshold);
+        String[] items = getResources().getStringArray(R.array.distance_array);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selected = parent.getItemAtPosition(position).toString()
+                        .replaceAll("m", "");
+                int meters = 1;
+
+                if (selected.contains("k")) {
+                    meters = 1000;
+                    selected = selected.replaceAll("k", "");
+                }
+
+                try {
+                    threshold = Integer.parseInt(selected) * meters;
+                } catch (NumberFormatException e) {
+                    threshold = 0;
+                }
+
+                spinner.setSelection(position);
+
+                updateProfileList();
+                loadProfilesMarker();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        spinner.setSelection(2);
+    }
 
     /**
      * Manipulates the map once available.
@@ -209,6 +244,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
+    //========================================================================
+
+
     private void getLastLocation() {
         if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
@@ -245,6 +283,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected Location getSetLocation() {
         return setLoc;
     }
+
+
 
 
     private void setLocation(Location location) {
@@ -304,6 +344,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             locationPermissionGranted = false;
         }
     }
+
+    //========================================================================
+
 
     //fetches users coordinates, updates them, and save them to cache
     //(right now, only creates random nearby position and saves user to cache until database is implemented)
@@ -383,7 +426,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             Musician m = (Musician) marker.getTag();
             profileIntent.putExtra("UserEmail", m.getEmailAddress());
-            profileIntent.putExtra("Test", false);
 
             this.startActivity(profileIntent);
         }
@@ -444,34 +486,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String selected = parent.getItemAtPosition(position).toString()
-                .replaceAll("m", "");
-        int meters = 1;
-
-        if (selected.contains("k")) {
-            meters = 1000;
-            selected = selected.replaceAll("k", "");
-        }
-
-        try {
-            threshold = Integer.parseInt(selected) * meters;
-        } catch (NumberFormatException e) {
-            threshold = 0;
-        }
-
-        spinner.setSelection(position);
-
-        updateProfileList();
-        loadProfilesMarker();
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
 
     //Should be replaced by a function that fetch user from the database; right now it generates 3 fixed users
     private void createPlaceHolderUsers() {

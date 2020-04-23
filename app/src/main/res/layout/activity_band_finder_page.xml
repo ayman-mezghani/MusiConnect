@@ -33,7 +33,7 @@
                     android:layout_marginStart="0dp"
                     android:text="@string/bandFinderTitle"
                     android:textAlignment="center"
-                    android:textSize="50sp"
+                    android:textSize="30sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -67,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.2"
                     android:text="@string/bandFinderBandName"
-                    android:textSize="30sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <EditText
@@ -76,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/myBandFinderBandName"
-                    android:textSize="30sp" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -91,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.2"
                     android:text="@string/bandFinderInstruments"
-                    android:textSize="30sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <Spinner
@@ -100,7 +100,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/myBandFinderInstruments"
-                    android:textSize="30sp" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -115,7 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.2"
                     android:text="@string/bandFinderLevels"
-                    android:textSize="30sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <Spinner
@@ -124,7 +124,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/myBandFinderLevels"
-                    android:textSize="30sp" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -154,7 +154,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/bandFinderButton"
-                    android:textSize="35sp" />
+                    android:textSize="24sp" />
             </LinearLayout>
 
         </LinearLayout>

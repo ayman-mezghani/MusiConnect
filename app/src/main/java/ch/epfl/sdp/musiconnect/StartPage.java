@@ -179,8 +179,8 @@ public class StartPage extends Page {
                     // simply store value right now, may need to
                     // store in user information
                     userLocation = location;
+                    startLocationService();
                 }
-                startLocationService();
             });
         }
     }

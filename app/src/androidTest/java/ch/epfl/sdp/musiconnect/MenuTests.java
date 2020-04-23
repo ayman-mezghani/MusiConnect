@@ -9,8 +9,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.UiObject;
-import androidx.test.uiautomator.UiSelector;
 
 import org.junit.After;
 import org.junit.Before;
@@ -36,6 +34,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 
 @RunWith(AndroidJUnit4.class)
@@ -48,7 +47,11 @@ public class MenuTests {
     public GrantPermissionRule mRuntimePermissionRule =
             GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
-    private UiDevice device;
+    // private static boolean setUpIsDone = false;
+
+    public void clickAlerts() {
+        MapsLocationTest.clickAllow();
+    }
 
     @BeforeClass
     public static void setMocks() {
@@ -59,13 +62,13 @@ public class MenuTests {
     // Before and after methods are used in order to accept tests with intents
     @Before
     public void initIntents() {
+        clickAlerts();
         Intents.init();
-        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        MapsLocationTest.clickAlert(device);
     }
 
     @After
     public void releaseIntents() { Intents.release(); }
+
 
     @Test
     public void testSearchClickShouldDisplayMessage() {
@@ -120,6 +123,25 @@ public class MenuTests {
         startPageRule.launchActivity(mapIntent);
         intended(hasComponent(MapsActivity.class.getName()));
     }
+
+    @Test
+    public void testMyEventsClickShouldStartNewIntent() {
+        openActionsMenu(R.string.my_events);
+
+        Intent eventIntent = new Intent();
+        startPageRule.launchActivity(eventIntent);
+        intended(hasComponent(EventPage.class.getName()));
+    }
+
+    @Test
+    public void testCreateEventClickShouldStartNewIntent() {
+        openActionsMenu(R.string.create_an_event);
+
+        Intent eventIntent = new Intent();
+        startPageRule.launchActivity(eventIntent);
+        intended(hasComponent(EventCreation.class.getName()));
+    }
+
 
     @Test
     public void testLogOut() {

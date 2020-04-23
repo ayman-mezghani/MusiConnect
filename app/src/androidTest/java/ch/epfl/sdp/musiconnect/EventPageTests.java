@@ -5,17 +5,22 @@ import android.content.Intent;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.uiautomator.UiDevice;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.events.Event;
-import ch.epfl.sdp.musiconnect.events.EventPage;
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
+import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
@@ -32,6 +37,15 @@ public class EventPageTests {
     @Rule
     public final ActivityTestRule<EventPage> eventPageRule =
             new ActivityTestRule<>(EventPage.class, true, false);
+
+    private static MockDatabase md;
+
+    @BeforeClass
+    public static void setMocks() {
+        md = new MockDatabase();
+        DbGenerator.setDatabase(md);
+        CloudStorageGenerator.setStorage((new MockCloudStorage()));
+    }
 
 
     // Before and after methods are used in order to accept tests with intents
@@ -62,8 +76,8 @@ public class EventPageTests {
 
     @Test
     public void loadPageShouldShowCorrectEvent() {
-        Musician m1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
-        Musician m2 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
+        Musician m1 = md.getDummyMusician(0);
+        Musician m2 = md.getDummyMusician(3);
 
         Event event = new Event(m1, "1");
         event.setAddress("Westminster, London, England");

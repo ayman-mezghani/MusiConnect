@@ -17,7 +17,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/profileTitle"
+                android:id="@+id/visitorProfileTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -55,7 +55,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/firstname"
+                    android:id="@+id/visitorProfileFirstname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -64,6 +64,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -76,7 +77,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/lastname"
+                    android:id="@+id/visitorProfileLastname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -85,6 +86,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -97,7 +99,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/username"
+                    android:id="@+id/visitorProfileUsername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -106,6 +108,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -118,7 +121,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/mail"
+                    android:id="@+id/visitorProfileEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -127,6 +130,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -139,7 +143,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/birthday"
+                    android:id="@+id/visitorProfileBirthday"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -159,7 +163,5 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"/>
         </LinearLayout>
-
-
     </LinearLayout>
 </ScrollView>

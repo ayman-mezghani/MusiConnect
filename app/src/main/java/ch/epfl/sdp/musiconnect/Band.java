@@ -136,6 +136,10 @@ public class Band extends User implements Performer {
         return videoURL;
     }
 
+    @Override
+    public String getName() {
+        return bandName;
+    }
 
     @Override
     public String toString() {
@@ -165,11 +169,6 @@ public class Band extends User implements Performer {
         }
 
         return this.musicianEmails;
-    }
-
-    @Override
-    public String getName() {
-        return bandName;
     }
 
     @Override
