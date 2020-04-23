@@ -49,7 +49,7 @@ public class ProfileModificationTests {
     public void testEditProfileAndDoNotSaveShouldDoNothing() {
         clickButtonWithText(R.string.edit_profile_button_text);
         onView(withId(R.id.newFirstName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob"));
-        clickButtonWithText(R.string.do_not_save_profile);
+        clickButtonWithText(R.string.do_not_save);
         onView(withId(R.id.myFirstname)).check(matches(not(withText("Bob"))));
     }
 
@@ -59,7 +59,7 @@ public class ProfileModificationTests {
         onView(withId(R.id.newBirthday)).perform(ViewActions.scrollTo()).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2015, 1, 1));
         onView(withText("OK")).perform(click());
-        clickButtonWithText(R.string.save_profile);
+        clickButtonWithText(R.string.save);
         onView(withText(R.string.age_too_low)).inRoot(withDecorView(not(profilePageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 

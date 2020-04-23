@@ -165,4 +165,9 @@ public class Band extends User implements Performer {
         return this.musicianEmails;
     }
 
+    @Override
+    public String getName() {
+        return bandName;
+    }
+
 }
