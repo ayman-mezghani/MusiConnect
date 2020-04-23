@@ -47,12 +47,12 @@ public class MenuTests {
             GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
 
-
+    UiDevice device;
     // Before and after methods are used in order to accept tests with intents
     @Before
     public void initIntents() {
         Intents.init();
-        MapsLocationTest.clickAllow();
+        MapsLocationTest.clickAlert(device);
     }
 
     @After

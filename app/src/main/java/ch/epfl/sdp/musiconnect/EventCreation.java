@@ -227,29 +227,30 @@ public class EventCreation extends Page {
     }
 
     public boolean checkEventCreationInput() {
+        boolean empty = true;
         if (isEmpty(eventTitleView)) {
             Toast.makeText(this, "Please give the event a title", Toast.LENGTH_LONG).show();
-            return false;
+            empty = false;
         }
         if (isEmpty(eventAddressView)) {
             Toast.makeText(this, "Please give the event an address", Toast.LENGTH_LONG).show();
-            return false;
+            empty = false;
         }
         if (isEmpty(eventDescriptionView)) {
             Toast.makeText(this, "Please give the event a description", Toast.LENGTH_LONG).show();
-            return false;
+            empty = false;
         }
 
         if (isEmpty(timeView)) {
             Toast.makeText(this, "Please give the event a time", Toast.LENGTH_LONG).show();
-            return false;
+            empty = false;
         }
 
         if (isEmpty(dateView)) {
             Toast.makeText(this, "Please give the event a date", Toast.LENGTH_LONG).show();
-            return false;
+            empty = false;
         }
 
-        return true;
+        return empty;
     }
 }
