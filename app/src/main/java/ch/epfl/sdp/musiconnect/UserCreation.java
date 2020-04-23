@@ -22,7 +22,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import java.util.Calendar;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbUserType;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 
 public class UserCreation extends Page {
@@ -84,15 +85,17 @@ public class UserCreation extends Page {
                     String email = etMail.getText().toString();
                     MyDate d = new MyDate(year, month, dayOfMonth);
 
-                    CurrentUser.getInstance(this).setCreatedFlag();
                     RadioButton rdb = findViewById(rdg.getCheckedRadioButtonId());
 
-                    DbAdapter db = new DbAdapter(new DataBase());
+                    DbAdapter db = DbGenerator.getDbInstance();
+
                     Musician musician = new Musician(firstname, lastname, username, email, d);
                     musician.setLocation(new MyLocation(0, 0));
                     musician.setTypeOfUser(TypeOfUser.valueOf(rdb.getText().toString()));
 
-                    db.add(collection, musician);
+                    db.add(DbUserType.Musician, musician);
+
+                    CurrentUser.getInstance(this).setCreatedFlag();
                     CurrentUser.getInstance(this).setMusician(musician);
 
                     switch (CurrentUser.getInstance(this).getMusician().getTypeOfUser()) {

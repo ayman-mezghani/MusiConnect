@@ -25,9 +25,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbUserType;
 
 public class StartPage extends Page {
     private static final String TAG = "MainActivity";
@@ -79,18 +80,18 @@ public class StartPage extends Page {
         fab_button_1.setOnClickListener(v -> button1Click());
 
         fab_button_2.setOnClickListener(v -> {
-            Toast.makeText(this, "band", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Band", Toast.LENGTH_SHORT).show();
         });
 
         if(!test) {
-            DbAdapter db = new DbAdapter(new DataBase());
-            db.read("newtest", CurrentUser.getInstance(this).email, new DbCallback() {
+            DbAdapter db = DbGenerator.getDbInstance();
+            db.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
                 @Override
                 public void readCallback(User u) {
                     CurrentUser.getInstance(StartPage.this).setMusician((Musician) u);
 
                     if(((Musician) u).getTypeOfUser() == TypeOfUser.Band) {
-                        db.read("Band", CurrentUser.getInstance(StartPage.this).email, new DbCallback() {
+                        db.read(DbUserType.Band, CurrentUser.getInstance(StartPage.this).email, new DbCallback() {
                             @Override
                             public void readCallback(User u) {
                             b = (Band) u;
@@ -110,20 +111,21 @@ public class StartPage extends Page {
         });
 
         ArrayList<String> ls = new ArrayList<>();
-        ls.add("aymanmezghani97@gmail.com");
+//        ls.add("aymanmezghani97@gmail.com");
         ls.add("seboll13@gmail.com");
-        DbAdapter db = new DbAdapter(new DataBase());
+        DbAdapter db = DbGenerator.getDbInstance();
 
         for (String str: ls) {
-            db.read("newtest", str, new DbCallback() {
+            db.read(DbUserType.Musician, str, new DbCallback() {
                 @Override
                 public void readCallback(User u) {
                 b.addMember((Musician) u);
-                (new DbAdapter(new DataBase())).add("Band", b);
+                (DbGenerator.getDbInstance()).add(DbUserType.Band, b);
                 }
             });
         }
     }
+
     protected void fabMenuClick() {
         if(isOpen){
             fab_button_2.startAnimation(fabClose);
@@ -154,6 +156,7 @@ public class StartPage extends Page {
 
         isOpen = !isOpen;
     }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -171,7 +174,6 @@ public class StartPage extends Page {
     private void startLocationService() {
         LocationPermission.startLocationService(this);
     }
-
 
     private void getLastLocation() {
         Log.d(TAG, "getLastKnownLocation: called.");

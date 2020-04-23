@@ -6,6 +6,7 @@ import androidx.test.rule.ActivityTestRule;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,10 @@ import java.util.concurrent.Executors;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
+import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -36,6 +41,12 @@ public class ProfileConsultationTests {
     public final ActivityTestRule<MyProfilePage> profilePageRule =
             new ActivityTestRule<>(MyProfilePage.class);
 
+    @BeforeClass
+    public static void setMocks() {
+        DbGenerator.setDatabase(new MockDatabase());
+        CloudStorageGenerator.setStorage((new MockCloudStorage()));
+    }
+
     // Before and after methods are used in order to accept tests with intents
     @Before
     public void initIntents() { Intents.init(); }
@@ -52,10 +63,10 @@ public class ProfileConsultationTests {
     @Test
     public void profileShowsDefaultUser(){
         waitALittle(2);
-        onView(withId(R.id.myFirstname)).check(matches(withText("default")));
-        onView(withId(R.id.myLastname)).check(matches(withText("user")));
-        onView(withId(R.id.myUsername)).check(matches(withText("defuser")));
-        onView(withId(R.id.myMail)).check(matches(withText("defuser@gmail.com")));
+        onView(withId(R.id.myFirstname)).check(matches(withText("bob")));
+        onView(withId(R.id.myLastname)).check(matches(withText("minion")));
+        onView(withId(R.id.myUsername)).check(matches(withText("bobminion")));
+        onView(withId(R.id.myMail)).check(matches(withText("bobminion@gmail.com")));
         onView(withId(R.id.myBirthday)).check(matches(withText("1/1/2000")));
     }
 
@@ -66,11 +77,11 @@ public class ProfileConsultationTests {
         AppDatabase localDb = AppDatabase.getInstance(profilePageRule.getActivity().getApplicationContext());
         MusicianDao mdao = localDb.musicianDao();
         mExecutor.execute(() -> {
-            result = mdao.loadAllByIds(new String[]{"defuser@gmail.com"});
+            result = mdao.loadAllByIds(new String[]{"bobminion@gmail.com"});
         });
         waitALittle(2);
         assertEquals(1,result.size());
-        assertEquals("defuser",result.get(0).getUserName());
+        assertEquals("bobminion",result.get(0).getUserName());
     }
 
 }

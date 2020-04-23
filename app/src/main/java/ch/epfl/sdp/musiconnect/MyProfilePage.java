@@ -23,19 +23,21 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
 import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbUserType;
 
 public class MyProfilePage extends ProfilePage implements View.OnClickListener {
     private static String collection = "newtest";
 
     private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
     private DbAdapter dbAdapter;
+
     private boolean test = true;
     private Musician currentCachedUser;
 
@@ -45,7 +47,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dbAdapter = new DbAdapter(new DataBase());
+        dbAdapter = DbGenerator.getDbInstance();
 
         setContentView(R.layout.activity_profile_page);
 
@@ -83,7 +85,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             currentCachedUser = result.isEmpty() ? null : result.get(0);
         });
         if (checkConnection(MyProfilePage.this)) {              //gets profile info from database
-            dbAdapter.read(collection, CurrentUser.getInstance(this).email, new DbCallback() {
+            dbAdapter.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
                     Musician m = (Musician) user;

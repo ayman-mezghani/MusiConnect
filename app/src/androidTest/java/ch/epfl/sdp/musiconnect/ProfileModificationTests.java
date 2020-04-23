@@ -5,6 +5,7 @@ import android.widget.DatePicker;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,10 +21,12 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DataBase;
-import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
+import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
@@ -51,7 +54,7 @@ public class ProfileModificationTests {
     private AppDatabase roomDb;
     private MusicianDao musicianDao;
     private Executor mExecutor = Executors.newSingleThreadExecutor();
-    private Musician defuser = new Musician("default","user","defuser","defuser@gmail.com",new MyDate(2000,1,1));
+    private Musician defuser = new Musician("bob","minion","bobminion","bobminion@gmail.com",new MyDate(2000,1,1));
     private List<Musician> result;          //to fetch from database
 
     @Rule
@@ -74,9 +77,12 @@ public class ProfileModificationTests {
         mExecutor.execute(() -> {
             musicianDao.nukeTable();
         });
-        DataBase db = new DataBase();
-        DbAdapter adapter = new DbAdapter(db);
-        adapter.update("newtest",defuser);
+    }
+
+    @BeforeClass
+    public static void setMocks() {
+        DbGenerator.setDatabase(new MockDatabase());
+        CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
     /**
      * Helper method to avoid duplication
@@ -90,9 +96,9 @@ public class ProfileModificationTests {
     public void testEditProfileAndDoNotSaveShouldDoNothing() {
         assertTrue(!ProfileModification.changeStaged);
         clickButtonWithText(R.string.edit_profile_button_text);
-        onView(withId(R.id.newFirstName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob"));
+        onView(withId(R.id.newFirstName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Damien"));
         clickButtonWithText(R.string.do_not_save_profile);
-        onView(withId(R.id.myFirstname)).check(matches(not(withText("Bob"))));
+        onView(withId(R.id.myFirstname)).check(matches(not(withText("Damien"))));
         assertTrue(!ProfileModification.changeStaged);
     }
 
@@ -158,7 +164,7 @@ public class ProfileModificationTests {
         waitALittle(2);
 
         mExecutor.execute(() -> {
-            result = musicianDao.loadAllByIds(new String[]{"defuser@gmail.com"});
+            result = musicianDao.loadAllByIds(new String[]{"bobminion@gmail.com"});
         });
 
         waitALittle(2);
