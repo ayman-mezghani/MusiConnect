@@ -16,6 +16,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static ch.epfl.sdp.musiconnect.testsFunctions.*;
 
 public class GoogleLoginTests {
 
@@ -31,6 +32,6 @@ public class GoogleLoginTests {
     @Test
     public void onActivityResult(){
         // Simulate the on activity result call
-        ((GoogleLogin ) VideoPlayingTests.getCurrentActivity()).onActivityResult(0  ,0,null);
+        ((GoogleLogin ) getCurrentActivity()).onActivityResult(0  ,0,null);
     }
 }

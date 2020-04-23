@@ -50,6 +50,7 @@
             android:orientation="horizontal">
 
             <RadioGroup
+                android:id="@+id/rdg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <TextView
@@ -58,17 +59,17 @@
                     android:layout_height="wrap_content"
                     android:text="Choose one of three types:" />
                 <RadioButton
+                    android:id="@+id/rbBand"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/band" />
+
+                <RadioButton
                     android:id="@+id/rbMusician"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:checked="true"
                     android:text="@string/musician" />
-
-                <RadioButton
-                    android:id="@+id/rbBand"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/band" />
 
                 <RadioButton
                     android:id="@+id/rbEventManager"
@@ -104,6 +105,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:maxLength="16"
                     android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout
@@ -126,6 +128,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:maxLength="16"
                     android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout
@@ -148,6 +151,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:maxLength="16"
                     android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout
@@ -170,6 +174,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:maxLength="64"
                     android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout
