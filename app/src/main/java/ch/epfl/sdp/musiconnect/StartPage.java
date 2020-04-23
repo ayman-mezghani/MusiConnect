@@ -38,7 +38,6 @@ public class StartPage extends Page {
     private Animation fabOpen, fabClose, fabClockWise, fabAntiClockWise;
     private TextView fabTv1, fabTv2;
     private boolean isOpen = false;
-    private DbAdapter dbAdapter;
     private Band b;
     public static boolean test = true;
 
@@ -94,7 +93,7 @@ public class StartPage extends Page {
                         db.read(DbUserType.Band, CurrentUser.getInstance(StartPage.this).email, new DbCallback() {
                             @Override
                             public void readCallback(User u) {
-                            b = (Band) u;
+                                b = (Band) u;
                             }
                         });
                     }
@@ -186,8 +185,8 @@ public class StartPage extends Page {
                     // simply store value right now, may need to
                     // store in user information
                     userLocation = location;
+                    startLocationService();
                 }
-                startLocationService();
             });
         }
     }

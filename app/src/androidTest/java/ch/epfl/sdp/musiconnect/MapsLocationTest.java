@@ -60,6 +60,10 @@ public class MapsLocationTest {
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
 
+    /**
+     * Code to click on the alerts has been found here:
+     * https://gist.github.com/rocboronat/65b1187a9fca9eabfebb5121d818a3c4
+     */
 
     private static boolean hasNeededPermission() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
@@ -121,7 +125,7 @@ public class MapsLocationTest {
     public static void clickAllow() {
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         clickAlert(device);
-        clickOnDialog(device, 1);
+        // clickOnDialog(device, 1);
     }
 
     /**

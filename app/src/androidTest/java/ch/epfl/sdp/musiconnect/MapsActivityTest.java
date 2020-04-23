@@ -21,8 +21,6 @@ import ch.epfl.sdp.musiconnect.database.MockDatabase;
 @RunWith(AndroidJUnit4.class)
 @SdkSuppress(minSdkVersion = 18)
 public class MapsActivityTest {
-    private UiDevice device;
-
     @Rule
     public final ActivityTestRule<StartPage> startPageRule =
             new ActivityTestRule<>(StartPage.class);
@@ -35,11 +33,6 @@ public class MapsActivityTest {
     public static void setMocks() {
         DbGenerator.setDatabase(new MockDatabase());
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
-    }
-
-    @Before
-    public void setUp() {
-        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
     }
 
     @Test

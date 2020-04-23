@@ -57,5 +57,4 @@ public class UserClassUnitTests {
         john.setLocation(nextLocation);
         assertEquals(nextLocation, john.getLocation());
     }
-
 }

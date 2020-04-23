@@ -1,7 +1,5 @@
 package ch.epfl.sdp.musiconnect;
 
-import android.location.Location;
-
 /**
  * @author Manuel Pellegrini, EPFL
  */
@@ -30,8 +28,9 @@ public abstract class User {
         this.location.setLocation(location);
     }
 
-
     public MyLocation getLocation() {
         return location.getLocation();
     }
+
+    public abstract String getName();
 }

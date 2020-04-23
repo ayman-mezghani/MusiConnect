@@ -134,6 +134,10 @@ public class Band extends User implements Performer {
         return videoURL;
     }
 
+    @Override
+    public String getName() {
+        return bandName;
+    }
 
     @Override
     public String toString() {
