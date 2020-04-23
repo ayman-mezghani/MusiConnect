@@ -1,6 +1,5 @@
 package ch.epfl.sdp.musiconnect;
 
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -9,17 +8,15 @@ import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.UiDevice;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNot.not;
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
+import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
 @RunWith(AndroidJUnit4.class)
 @SdkSuppress(minSdkVersion = 18)
@@ -34,6 +31,11 @@ public class MapsActivityTest {
     public GrantPermissionRule mRuntimePermissionRule =
             GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
+    @BeforeClass
+    public static void setMocks() {
+        DbGenerator.setDatabase(new MockDatabase());
+        CloudStorageGenerator.setStorage((new MockCloudStorage()));
+    }
 
     @Before
     public void setUp() {

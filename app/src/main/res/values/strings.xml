@@ -1,5 +1,4 @@
 <resources>
-
     <string name="app_name">MusiConnect</string>
     <string name="title_activity_main_page">MainPage</string>
     <string name="login">Login</string>
@@ -40,6 +39,8 @@
     <string name="perm_denied">Permission denied</string>
     <string name="show_users">Show users within :</string>
 
+    <string name="max_threshold">10km</string>
+
     <string-array name="distance_array">
         <item>10m</item>
         <item>20m</item>
@@ -50,7 +51,7 @@
         <item>1km</item>
         <item>2km</item>
         <item>5km</item>
-        <item>10km</item>
+        <item>@string/max_threshold</item>
     </string-array>
 
     <string name="cloud_upload_successful">File uploaded successfully</string>
@@ -62,6 +63,7 @@
     <string name="cloud_upload_invalid_file_path">Invalid file path</string>
     <string name="cloud_delete_successful">File deleted successfully</string>
     <string name="cloud_delete_failed">File delete failed</string>
+    <string name="age_too_low">Age is too low, please change your birth date.</string>
     <string name="signout">Sign Out</string>
     <string name="UserCreation">User Creation</string>
     <string name="btn_cancel">Cancel</string>
@@ -133,4 +135,12 @@
         <item>Professional</item>
     </string-array>
 
+    <string name="add_change_video">add/Change Video</string>
+    <string name="add_users">Add Users</string>
+    <string name="add_event">Add event</string>
+    <string name="band_creation">Band Creation</string>
+    <string name="band_name">Band name</string>
+    <string name="band_name_cant_be_empty">Band name can\'t be empty</string>
+    <string name="your_nexts_events">Your nexts events</string>
+    <string name="your_bands">Your bands</string>
 </resources>

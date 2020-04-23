@@ -1,5 +1,7 @@
 package ch.epfl.sdp.musiconnect.database;
 
+import androidx.annotation.Nullable;
+
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -10,13 +12,15 @@ import java.util.Map;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.MyLocation;
+import ch.epfl.sdp.musiconnect.TypeOfUser;
 
-public class SimplifiedMusician {
+public class SimplifiedMusician extends SimplifiedDbEntry {
     private String uid = null;
     private String username;
     private String firstName;
     private String lastName;
     private String email;
+    private String typeOfUser;
     private Date birthday;
     private Date joinDate;
     private GeoPoint location;
@@ -26,6 +30,7 @@ public class SimplifiedMusician {
     static final String FIRSTNAME = "firstName";
     static final String LASTNAME = "lastName";
     static final String EMAIL = "email";
+    static final String TYPEOFUSER = "typeOfUser";
     static final String BIRTHDAY = "birthday";
     static final String JOINDATE = "joinDate";
     static final String LOCATION = "location";
@@ -42,6 +47,7 @@ public class SimplifiedMusician {
         this.firstName = musician.getFirstName();
         this.lastName = musician.getLastName();
         this.email = musician.getEmailAddress();
+        this.typeOfUser = musician.getTypeOfUser().toString();
         this.birthday = myDateToDate(musician.getBirthday());
         this.joinDate = myDateToDate(musician.getJoinDate());
         this.location = myLocationToGeoPoint(musician.getLocation());
@@ -52,6 +58,7 @@ public class SimplifiedMusician {
         this.firstName = map.get(FIRSTNAME) == null ? "" : (String) map.get(FIRSTNAME);
         this.lastName = map.get(LASTNAME) == null ? "" : (String) map.get(LASTNAME);
         this.email = map.get(EMAIL) == null ? "" : (String) map.get(EMAIL);
+        this.typeOfUser = map.get(TYPEOFUSER) == null ? "" : (String) map.get(TYPEOFUSER);
         this.birthday = map.get(BIRTHDAY) == null ? null : ((Timestamp) map.get(BIRTHDAY)).toDate();
         this.joinDate = map.get(JOINDATE) == null ? null : ((Timestamp) map.get(JOINDATE)).toDate();
         this.location = map.get(LOCATION) == null ? null : (GeoPoint) map.get(LOCATION);
@@ -60,6 +67,7 @@ public class SimplifiedMusician {
     public Musician toMusician() {
         Musician musician = new Musician(firstName, lastName, username, email, dateToMyDate(birthday));
         musician.setLocation(geoPointToMyLocation(location));
+        musician.setTypeOfUser(TypeOfUser.valueOf(typeOfUser));
         return musician;
     }
 
@@ -69,6 +77,7 @@ public class SimplifiedMusician {
         res.put(FIRSTNAME, firstName);
         res.put(LASTNAME, lastName);
         res.put(EMAIL, email);
+        res.put(TYPEOFUSER, typeOfUser);
         res.put(BIRTHDAY, birthday);
         res.put(JOINDATE, joinDate);
         res.put(LOCATION, location);
@@ -121,5 +130,20 @@ public class SimplifiedMusician {
 
     public GeoPoint getLocation() {
         return location;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        SimplifiedMusician that = (SimplifiedMusician) obj;
+        return this.username == that.getUsername()
+                && this.firstName == that.getFirstName()
+                && this.lastName == that.getLastName()
+                && this.email == that.getEmail()
+                && this.birthday.toString().equals(that.getBirthday().toString())
+                && this.typeOfUser == that.typeOfUser;
+    }
+
+    public String getTypeOfUser() {
+        return typeOfUser;
     }
 }
