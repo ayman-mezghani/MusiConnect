@@ -63,6 +63,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
         mVideoView = findViewById(R.id.videoViewEdit);
         findViewById(R.id.btnCaptureVideo).setOnClickListener(v -> captureVideo());
 
+        userEmail = CurrentUser.getInstance(this).email;
         getVideoUri(userEmail);
     }
 

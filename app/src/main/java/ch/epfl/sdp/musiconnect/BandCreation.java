@@ -22,7 +22,7 @@ public class BandCreation extends UserCreation {
         findViewById(R.id.btnBandCreationCreate).setOnClickListener(v -> {
             if (!isEmpty(etBandName)) {
                 Band band = new Band(etBandName.getText().toString(), CurrentUser.getInstance(this).getMusician());
-                DbGenerator.getDbInstance().add(DbUserType.Musician, band);
+                DbGenerator.getDbInstance().add(DbUserType.Band, band);
 
                 StartActivityAndFinish(new Intent(BandCreation.this, StartPage.class));
             } else {

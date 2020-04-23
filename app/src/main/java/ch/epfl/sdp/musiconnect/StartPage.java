@@ -111,7 +111,7 @@ public class StartPage extends Page {
         });
 
         ArrayList<String> ls = new ArrayList<>();
-        ls.add("aymanmezghani97@gmail.com");
+//        ls.add("aymanmezghani97@gmail.com");
         ls.add("seboll13@gmail.com");
         DbAdapter db = DbGenerator.getDbInstance();
 
