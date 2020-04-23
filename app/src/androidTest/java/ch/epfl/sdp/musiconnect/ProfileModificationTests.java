@@ -97,7 +97,7 @@ public class ProfileModificationTests {
         assertTrue(!ProfileModification.changeStaged);
         clickButtonWithText(R.string.edit_profile_button_text);
         onView(withId(R.id.newFirstName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Damien"));
-        clickButtonWithText(R.string.do_not_save_profile);
+        clickButtonWithText(R.string.do_not_save);
         onView(withId(R.id.myFirstname)).check(matches(not(withText("Damien"))));
         assertTrue(!ProfileModification.changeStaged);
     }
@@ -159,7 +159,7 @@ public class ProfileModificationTests {
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(birthday.getYear(),birthday.getMonth(),birthday.getDate()));
         onView(withText("OK")).perform(click());
 
-        clickButtonWithText(R.string.save_profile);
+        clickButtonWithText(R.string.save);
 
         waitALittle(2);
 
