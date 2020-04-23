@@ -1,8 +1,15 @@
 package ch.epfl.sdp.musiconnect;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
+import android.content.Intent;
 
+import androidx.test.espresso.intent.Intents;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.uiautomator.UiDevice;
+
+import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,12 +32,28 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.core.IsNot.not;
 
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+
 @RunWith(AndroidJUnit4.class)
 public class SettingsTests {
 
     @Rule
     public final ActivityTestRule<SettingsPage> settingsPageRule =
             new ActivityTestRule<>(SettingsPage.class);
+
+    private UiDevice device;
+
+    // Before and after methods are used in order to accept tests with intents
+    @Before
+    public void initIntents() {
+        Intents.init();
+        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        MapsLocationTest.clickAlert(device);
+    }
+
+    @After
+    public void releaseIntents() { Intents.release(); }
 
     @BeforeClass
     public static void setMocks() {
@@ -56,6 +79,9 @@ public class SettingsTests {
     @Test
     public void testSearchClickFromSettingsShouldDisplayMessage() {
         onView(withId(R.id.search)).perform(click());
-        onView(withText(R.string.not_yet_done)).inRoot(withDecorView(not(settingsPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+
+        Intent searchIntent = new Intent();
+        settingsPageRule.launchActivity(searchIntent);
+        intended(hasComponent(FinderPage.class.getName()));
     }
 }
