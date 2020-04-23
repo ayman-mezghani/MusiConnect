@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.events.Event;
 
 public class StartPage extends Page {
     private static final String TAG = "MainActivity";
@@ -38,8 +41,6 @@ public class StartPage extends Page {
     private Animation fabOpen, fabClose, fabClockWise, fabAntiClockWise;
     private TextView fabTv1, fabTv2;
     private boolean isOpen = false;
-    private DbAdapter dbAdapter;
-    private Band b;
     public static boolean test=false;
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
@@ -80,27 +81,26 @@ public class StartPage extends Page {
         fab_button_1.setOnClickListener(v -> button1Click());
 
         fab_button_2.setOnClickListener(v -> {
-            Toast.makeText(this, "Band", Toast.LENGTH_SHORT).show();
-        });
+            Context ctx = this;
+            ListView lv = findViewById(R.id.LvEvent);
+            ArrayList<String> events = (ArrayList<String>) CurrentUser.getInstance(this).getBand().getEvents();
 
-        if(!test) {
-            DbAdapter db = DbGenerator.getDbInstance();
-            db.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
-                @Override
-                public void readCallback(User u) {
-                    CurrentUser.getInstance(StartPage.this).setMusician((Musician) u);
 
-                    if(((Musician) u).getTypeOfUser() == TypeOfUser.Band) {
-                        db.read(DbUserType.Band, CurrentUser.getInstance(StartPage.this).email, new DbCallback() {
-                            @Override
-                            public void readCallback(User u) {
-                            b = (Band) u;
-                            }
-                        });
+            final ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                    (StartPage.this, android.R.layout.simple_list_item_1, events);
+            lv.setAdapter(adapter);
+
+
+            for(String e : events){
+                DbGenerator.getDbInstance().read(DbUserType.Events, e.trim(), new DbCallback() {
+                    @Override
+                    public void readCallback(Event u) {
+                        events.add(u.getTitle());
+                        adapter.notifyDataSetChanged();
                     }
-                }
-            });
-        }
+                });
+            }
+        });
     }
 
     protected void button1Click() {
@@ -114,13 +114,13 @@ public class StartPage extends Page {
 //        ls.add("aymanmezghani97@gmail.com");
         ls.add("seboll13@gmail.com");
         DbAdapter db = DbGenerator.getDbInstance();
-
+        Context ctx = this;
         for (String str: ls) {
             db.read(DbUserType.Musician, str, new DbCallback() {
                 @Override
                 public void readCallback(User u) {
-                b.addMember((Musician) u);
-                (DbGenerator.getDbInstance()).add(DbUserType.Band, b);
+                CurrentUser.getInstance(ctx).getBand().addMember((Musician) u);
+                (DbGenerator.getDbInstance()).add(DbUserType.Band, CurrentUser.getInstance(ctx).getBand());
                 }
             });
         }
@@ -133,26 +133,19 @@ public class StartPage extends Page {
             fab_button_1.startAnimation(fabClose);
             fabTv1.startAnimation(fabClose);
             fab_menu.startAnimation(fabAntiClockWise);
-
-            fab_button_2.setClickable(false);
-            fab_button_1.setClickable(false);
-
-            fab_button_2.setFocusable(false);
-            fab_button_1.setFocusable(false);
-
         } else {
             fab_button_2.startAnimation(fabOpen);
             fabTv2.startAnimation(fabOpen);
             fab_button_1.startAnimation(fabOpen);
             fabTv1.startAnimation(fabOpen);
             fab_menu.startAnimation(fabClockWise);
-
-            fab_button_2.setClickable(true);
-            fab_button_1.setClickable(true);
-
-            fab_button_2.setFocusable(true);
-            fab_button_1.setFocusable(true);
         }
+
+        fab_button_2.setClickable(!isOpen);
+        fab_button_1.setClickable(!isOpen);
+
+        fab_button_2.setFocusable(!isOpen);
+        fab_button_1.setFocusable(!isOpen);
 
         isOpen = !isOpen;
     }
@@ -208,4 +201,6 @@ public class StartPage extends Page {
             getLastLocation();
         }
     }
+
+
 }

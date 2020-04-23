@@ -3,7 +3,7 @@ package ch.epfl.sdp.musiconnect.database;
 import androidx.annotation.NonNull;
 
 public enum DbUserType {
-    Musician, Band;
+    Musician, Band, Events;
 
     @NonNull
     @Override

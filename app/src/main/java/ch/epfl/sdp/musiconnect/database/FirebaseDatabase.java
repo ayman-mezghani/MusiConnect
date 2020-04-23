@@ -8,6 +8,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -22,8 +23,10 @@ import java.util.Map;
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.TypeOfUser;
 import ch.epfl.sdp.musiconnect.User;
+import ch.epfl.sdp.musiconnect.events.Event;
 
 class FirebaseDatabase extends Database {
     private static final String TAG = "DataBase";
@@ -104,17 +107,43 @@ class FirebaseDatabase extends Database {
                                         da.read(DbUserType.Musician, me, new DbCallback() {
                                             @Override
                                             public void readCallback(User user) {
-                                                try {
-                                                    b.addMember((Musician) user);
-                                                } catch (IllegalArgumentException e) {
-                                                }
+                                            try {
+                                                b.addMember((Musician) user);
+                                            } catch (IllegalArgumentException e) {
+                                            }
                                             }
                                         });
                                     }
                                     dbCallback.readCallback(b);
                                 }
                             });
-                        } else {
+                        } else if(collection.equals(DbUserType.Events)) {
+                            DbAdapter da = new DbAdapter(this);
+                            da.read(DbUserType.Musician, (String) data.get("creatorMail"), new DbCallback() {
+                                @Override
+                                public void readCallback(User user) {
+                                Event e = new Event((Musician) user, docName);
+                                e.setAddress((String) data.get("adress"));
+                                e.setDateTime(new MyDate(((Timestamp) data.get("dateTime")).toDate()));
+                                e.setDescription((String) data.get("description"));
+                                e.setTitle((String) data.get("title"));
+
+                                for (String me : (List<String>) data.get("participants")) {
+                                    da.read(DbUserType.Musician, me, new DbCallback() {
+                                        @Override
+                                        public void readCallback(User user) {
+                                        try {
+                                            e.register((Musician) user);
+                                        } catch (IllegalArgumentException e) {
+                                        }
+                                        }
+                                    });
+                                }
+                                dbCallback.readCallback(e);
+                                }
+                            });
+                        }
+                        else {
                             SimplifiedMusician m = new SimplifiedMusician(data);
                             dbCallback.readCallback(m.toMusician());
                         }

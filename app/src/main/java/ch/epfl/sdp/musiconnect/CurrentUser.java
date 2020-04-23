@@ -5,6 +5,7 @@ import android.content.Context;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
+import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
@@ -17,6 +18,7 @@ public class CurrentUser {
     private boolean createdFlag = false;
     private String bandName;
     private Musician musician;
+    private Band band;
     private GoogleSignInAccount acct;
 
 
@@ -46,6 +48,14 @@ public class CurrentUser {
             @Override
             public void readCallback(User user) {
                 musician = (Musician) user;
+                if(musician.getTypeOfUser() == TypeOfUser.Band){
+                    DbGenerator.getDbInstance().read(DbUserType.Band, email, new DbCallback() {
+                        @Override
+                        public void readCallback(User u) {
+                            band = (Band) u;
+                        }
+                    });
+                }
             }
         });
     }
@@ -80,6 +90,14 @@ public class CurrentUser {
 
     public Musician getMusician() {
         return this.musician;
+    }
+
+    public Band getBand() {
+        return this.band;
+    }
+
+    public void setBand(Band band) {
+        this.band = band;
     }
 
     public static void flush() {
