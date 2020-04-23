@@ -6,8 +6,10 @@ import androidx.test.filters.SdkSuppress;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
+import androidx.test.runner.AndroidJUnitRunner;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.Until;
 import ch.epfl.sdp.R;
 
@@ -26,7 +28,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 @SdkSuppress(minSdkVersion = 18)
-public class MapsActivityTest {
+public class MapsActivityTest extends AndroidJUnitRunner {
     private UiDevice device;
 
     @Rule
@@ -78,16 +80,26 @@ public class MapsActivityTest {
      * @param stringId
      */
     private void openActionsMenu(int stringId) {
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
         onView(withText(stringId)).perform(click());
     }
 
+    @SuppressWarnings("unused")
+    private void clearAllNotifications() {
+        device.openNotification();
+        device.wait(Until.hasObject(By.textStartsWith("MusiConnect")), 600);
+        UiObject2 clearAll = device.findObject(By.textStartsWith("CLEAR ALL"));
+        if (clearAll != null)
+            clearAll.click();
+    }
+/*
     @Test
-    public void testChangeRadiusShouldMakeReceiveNotifications() throws InterruptedException {
+    public void testChangeRadiusShouldMakeReceiveNotifications() {
         openActionsMenu(R.string.map);
-        Thread.sleep(1000);
         onView(withId(R.id.distanceThreshold)).perform(click());
         onView(withText("10km")).perform(click());
-        assert(true); // temporary waiting for notification tests
+        clearAllNotifications();
+        assert(true);
     }
+ */
 }

@@ -4,11 +4,15 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.VideoView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
@@ -43,6 +47,7 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
     private CloudStorage storage;
     private boolean videoRecorded = false;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,15 +60,15 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
                 findViewById(R.id.newEmailAddress),
                 findViewById(R.id.newBirthday)
         };
-
         manageDatePickerDialog(editFields[4]);
+
         onCreateGetIntentsFields();
         setEditTextFields(editFields, new String[]{firstName, lastName, username, mail, birthday});
 
+        mVideoView = findViewById(R.id.videoViewEdit);
+
         findViewById(R.id.btnSaveProfile).setOnClickListener(this);
         findViewById(R.id.btnDoNotSaveProfile).setOnClickListener(this);
-
-        mVideoView = findViewById(R.id.videoViewEdit);
         findViewById(R.id.btnCaptureVideo).setOnClickListener(v -> captureVideo());
 
         storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
@@ -110,27 +115,17 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK) {
             videoUri = data.getData();
             videoRecorded = true;
         }
-        showVideo();
-    }
 
-    private void onCreateGetIntentsFields() {
-        firstName = getIntent().getStringExtra("FIRST_NAME");
-        lastName = getIntent().getStringExtra("LAST_NAME");
-        username = getIntent().getStringExtra("USERNAME");
-        mail = getIntent().getStringExtra("MAIL");
-        birthday = getIntent().getStringExtra("BIRTHDAY");
-        initCalendarDate(birthday);
-    }
-
-    private void initCalendarDate(String sDate) {
-        String[] tempArray = sDate.split("/");
-        calendar.set(Calendar.YEAR, Integer.parseInt(tempArray[2]));
-        calendar.set(Calendar.MONTH, Integer.parseInt(tempArray[1])-1);
-        calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(tempArray[0]));
+        if (videoUri != null) {
+            mVideoView.setVideoURI(videoUri);
+            mVideoView.start();
+            mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
+        }
     }
 
     /**
@@ -145,29 +140,12 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         return Integer.parseInt(uc.getAge(year, month, day)) >= 13;
     }
 
-    /**
-     * At start, change default values of EditText fields to profile value
-     * @param fields: array of fields to change
-     * @param params: value to change to
-     */
     private void setEditTextFields(EditText[] fields, String[] params) {
         int idx = 0;
         for (EditText f: fields) {
             f.setText(params[idx]);
             ++idx;
         }
-    }
-
-    /**
-     * At stop, get the values of EditText fields
-     * @return: the new values
-     */
-    private String[] getNewTextFields() {
-        int l = editFields.length;
-        String[] newFields = new String[l];
-        for (int i = 0; i < editFields.length; i++)
-            newFields[i] = editFields[i].getText().toString();
-        return newFields;
     }
 
     /**
@@ -199,10 +177,6 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         adapter.update(collection, me);
     }
 
-    /**
-     * Save the changes to profile page on save button click
-     * @param newFields: fields to update database content with
-     */
     private void btnSave(String[] newFields) {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("newFields", newFields);
@@ -221,6 +195,14 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         updateDatabaseFields(newFields);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
+    }
+
+    private String[] getNewTextFields() {
+        int l = editFields.length;
+        String[] newFields = new String[l];
+        for (int i = 0; i < editFields.length; i++)
+            newFields[i] = editFields[i].getText().toString();
+        return newFields;
     }
 
     /**
@@ -252,21 +234,4 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
             startActivityForResult(videoIntent, VIDEO_REQUEST);
         }
     }
-
-    @SuppressLint("MissingSuperCall")
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK) {
-            videoUri = data.getData();
-            videoRecorded = true;
-        }
-
-        if (videoUri != null) {
-            mVideoView.setVideoURI(videoUri);
-            mVideoView.start();
-            mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
-        }
-    }
-
 }
