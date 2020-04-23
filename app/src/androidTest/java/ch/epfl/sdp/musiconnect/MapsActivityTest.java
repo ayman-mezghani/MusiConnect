@@ -1,5 +1,7 @@
 package ch.epfl.sdp.musiconnect;
 
+import android.content.Context;
+
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
@@ -19,12 +21,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 @SdkSuppress(minSdkVersion = 18)
@@ -92,14 +96,41 @@ public class MapsActivityTest extends AndroidJUnitRunner {
         if (clearAll != null)
             clearAll.click();
     }
-/*
+
+    @SuppressWarnings("unused")
+    private void hideNotifications() {
+        device.swipe(200, 200, 200, 100, 5);
+    }
+
+    private String getResourceString(int id) {
+        Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        return targetContext.getResources().getString(id);
+    }
+
     @Test
-    public void testChangeRadiusShouldMakeReceiveNotifications() {
+    public void testChangeRadius() {
+        openActionsMenu(R.string.map);
+        onView(withId(R.id.distanceThreshold)).perform(click());
+        onView(withText("100m")).perform(click());
+        onView(withText("100m")).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testUseLargeRadiusShouldMakeReceiveNotifications() {
+        String expectedTitle = getResourceString(R.string.musiconnect_notification);
+        String expectedMessage = "A musician is nearby !";
+
         openActionsMenu(R.string.map);
         onView(withId(R.id.distanceThreshold)).perform(click());
         onView(withText("10km")).perform(click());
+
+        device.openNotification();
+        device.wait(Until.hasObject(By.textStartsWith("MusiConnect")), 600);
+        UiObject2 title = device.findObject(By.textStartsWith(expectedTitle));
+        UiObject2 message = device.findObject(By.textStartsWith(expectedMessage));
+
+        assertEquals(expectedTitle, title.getText());
+        assertEquals(expectedMessage, message.getText());
         clearAllNotifications();
-        assert(true);
     }
- */
 }

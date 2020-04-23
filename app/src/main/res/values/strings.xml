@@ -81,4 +81,5 @@
     <string name="band_name_cant_be_empty">Band name can\'t be empty</string>
     <string name="your_nexts_events">Your nexts events</string>
     <string name="your_bands">Your bands</string>
+    <string name="musiconnect_notification">MusiConnect Notification</string>
 </resources>

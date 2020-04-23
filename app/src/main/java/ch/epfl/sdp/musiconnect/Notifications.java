@@ -53,7 +53,7 @@ public class Notifications extends AppCompatActivity {
         createNotificationChannels();
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channel)
                 .setSmallIcon(R.drawable.ic_notification_icon)
-                .setContentTitle("MusiConnect notification")
+                .setContentTitle("MusiConnect Notification")
                 .setContentText("A musician is nearby !")
                 .setPriority(priority);
 

@@ -28,7 +28,7 @@ public class HelpTests {
     @Test
     public void testHelpClickShouldDoNothing() {
         onView(withId(R.id.help)).perform(click());
-        assert(true);
+        onView(withText(R.string.help_message)).check(matches(isDisplayed()));
     }
 
     @Test

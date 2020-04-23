@@ -1,12 +1,12 @@
 connected_check_task:
   name: Run Android instrumented tests
   env:
-    API_LEVEL: 28
+    API_LEVEL: 29
     TARGET: default
     ARCH: x86
     CC_TEST_REPORTER_ID: ENCRYPTED[f41fe48ca80df013a22ef0a849d00de102c820a58a88dc2b073c0d85ef5af6a72943109f7d36a17d94a80d47f8233e99]
   container:
-    image: reactivecircus/android-emulator-28:latest
+    image: reactivecircus/android-emulator-29:latest
     kvm: true
     cpu: 8
     memory: 24G
