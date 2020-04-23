@@ -17,7 +17,7 @@ public class Musician extends Person implements Performer {
     private String videoURL;
     private Map<Instrument, Level> instruments;
     @Ignore
-    private TypeOfUser typeOfUser;
+    private TypeOfUser typeOfUser = TypeOfUser.Musician;
 
     private static final int MAX_VIDEO_URL_LENGTH = 2048;
 
