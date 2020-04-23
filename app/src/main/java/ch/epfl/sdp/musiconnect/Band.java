@@ -20,7 +20,8 @@ public class Band extends User implements Performer {
     private Musician leader;
     private Set<Musician> members;
     private String videoURL;
-    private ArrayList<String> musicianEmails;
+    private List<String> musicianEmails;
+    private List<String> events;
 
     private static final int MAX_BAND_NAME_LENGTH = 16;
     private static final int MAX_VIDEO_URL_LENGTH = 2048;
@@ -33,6 +34,7 @@ public class Band extends User implements Performer {
         addMember(leader);
         setLeader(leader);
         videoURL = "";
+        events = new ArrayList<>();
     }
 
 
@@ -154,7 +156,7 @@ public class Band extends User implements Performer {
 //            this.musicianEmails.add(emailAdress);
     }
 
-    public ArrayList<String> getMusicianEmailsAdress() {
+    public List<String> getMusicianEmailsAdress() {
         if(!members.isEmpty() && members.size() > 1){
             musicianEmails = new ArrayList<>();
             for(Musician m: members) {
@@ -169,5 +171,11 @@ public class Band extends User implements Performer {
     public String getName() {
         return bandName;
     }
+
+    @Override
+    public String getMail() {
+        return this.leader.getMail();
+    }
+
 
 }

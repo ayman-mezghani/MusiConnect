@@ -21,7 +21,8 @@ public class SimplifiedBand implements Serializable {
     private String leader;
     private String bandName;
     private String urlVideo;
-    private ArrayList<String> members = new ArrayList<>();
+    private List<String> members = new ArrayList<>();
+    private List<String> events = new ArrayList<>();
 
     static final String UID = "uid";
     static final String LEADER = "Leader";
@@ -96,7 +97,7 @@ public class SimplifiedBand implements Serializable {
         this.urlVideo = urlVideo;
     }
 
-    public ArrayList<String> getMembers() {
+    public List<String> getMembers() {
         return members;
     }
 

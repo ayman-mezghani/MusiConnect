@@ -15,6 +15,7 @@ public class CurrentUser {
     private boolean createdFlag = false;
     private String bandName;
     private Musician m;
+    private Band b = null;
     private GoogleSignInAccount acct;
 
     // private constructor restricted to this class itself

@@ -2,6 +2,7 @@ package ch.epfl.sdp.musiconnect.events;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
@@ -16,11 +17,16 @@ import java.util.Calendar;
 import java.util.List;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.GoogleLogin;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.Page;
+import ch.epfl.sdp.musiconnect.TypeOfUser;
+import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
+import ch.epfl.sdp.musiconnect.database.DbCallback;
 
 public class EventCreation extends Page {
 
@@ -201,7 +207,7 @@ public class EventCreation extends Page {
 
         //TODO to be deleted
 
-        event = new Event(new Musician("Test", "User", "TestUser", "testuser@gmail.com", new MyDate(1990, 12, 1)), "0");
+        event = new Event(CurrentUser.getInstance(this).getMusician(), "0");
         event.setTitle(eventTitleView.getText().toString());
         event.setAddress(eventAddressView.getText().toString());
         event.setDescription(eventDescriptionView.getText().toString());
@@ -218,6 +224,11 @@ public class EventCreation extends Page {
                 Integer.parseInt(hourMin[1]));
 
         event.setDateTime(d);
+
+        DbAdapter db = new DbAdapter(new DataBase());
+
+        db.add("Events", event, TypeOfUser.Band);
+
     }
 
 

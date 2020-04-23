@@ -45,9 +45,9 @@ public class BandAddUsersTests {
 
     @Test
     public void bandAddUsers() {
-        ((StartPage) getCurrentActivity()).fabMenuClick();
+        //((StartPage) getCurrentActivity()).fabMenuClick();
         // TODO: use mockDb
         //((StartPage) getCurrentActivity()).button1Click();
-        ((StartPage) getCurrentActivity()).fabMenuClick();
+        //((StartPage) getCurrentActivity()).fabMenuClick();
     }
 }
