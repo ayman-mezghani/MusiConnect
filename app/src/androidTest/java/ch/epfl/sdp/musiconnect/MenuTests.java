@@ -73,7 +73,10 @@ public class MenuTests {
     @Test
     public void testSearchClickShouldDisplayMessage() {
         onView(withId(R.id.search)).perform(click());
-        onView(withText(R.string.not_yet_done)).inRoot(withDecorView(not(startPageRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+
+        Intent searchIntent = new Intent();
+        startPageRule.launchActivity(searchIntent);
+        intended(hasComponent(FinderPage.class.getName()));
     }
 
     @Test

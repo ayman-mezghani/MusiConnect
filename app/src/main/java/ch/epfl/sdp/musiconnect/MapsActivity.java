@@ -10,8 +10,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -55,13 +53,13 @@ import ch.epfl.sdp.musiconnect.database.DbUserType;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
+import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
 import static ch.epfl.sdp.musiconnect.MapsActivity.Utility.generateWarning;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
 
-    private static String collection = "newtest";
 
     private DbAdapter Adb = DbGenerator.getDbInstance();
 
@@ -191,7 +189,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mUiSettings = mMap.getUiSettings();
 
         //If there's a connection, fetch Users in the general area; else, load them from cache
-        if (checkConnection()) {
+        if(checkConnection(MapsActivity.this)){
             createPlaceHolderUsers();
             clearCachedUsers();
         } else {
@@ -223,7 +221,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         handler.postDelayed(new Runnable() {
             public void run() {
-                boolean co = checkConnection();
+                boolean co = checkConnection(MapsActivity.this);
                 boolean loc = checkLocationServices();
 
                 if (!co) {
@@ -310,17 +308,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
 
-       /* if(CurrentUser.getInstance(this).getCreatedFlag()) {
-            //UserCreation.mainUser.setLocation(new MyLocation(setLoc.getLatitude(),setLoc.getLongitude()));
-            //Adb.update(UserCreation.mainUser);
-            GeoPoint loc = new GeoPoint(setLoc.getLatitude(),setLoc.getLongitude());
-            String email = CurrentUser.getInstance(this).email;
-            db.updateDoc(collection, email,new HashMap<String, Object>(){{
-                put("location",loc);
-            }});
+       if(CurrentUser.getInstance(this).getCreatedFlag()) {
+            Musician current = CurrentUser.getInstance(this).getMusician();
+            current.setLocation(new MyLocation(setLoc.getLatitude(),setLoc.getLongitude()));
+            DbAdapter adapter = DbGenerator.getDbInstance();
+            adapter.update(DbUserType.Musician, current);
         } else {
-//            generateWarning(MapsActivity.this,"Error: couldn't update your location to the cloud", Utility.warningTypes.Toast);
-        }*/
+            generateWarning(MapsActivity.this,"Error: couldn't update your location to the cloud", Utility.warningTypes.Toast);
+        }
     }
 
 
@@ -436,19 +431,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    protected boolean checkConnection() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            //we are connected to a network
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    protected boolean checkLocationServices() {
-        LocationManager lm = (LocationManager) MapsActivity.this.getSystemService(Context.LOCATION_SERVICE);
+    protected boolean checkLocationServices(){
+        LocationManager lm = (LocationManager)MapsActivity.this.getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
         boolean network_enabled = false;
 
@@ -488,6 +472,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mExecutor.execute(() -> {
             allUsers = musicianDao.getAll();
+            List<Musician> currentUser = musicianDao.loadAllByIds(new String[]{CurrentUser.getInstance(MapsActivity.this).email});
+            allUsers.removeAll(currentUser);
         });
 
 

@@ -1,5 +1,6 @@
 package ch.epfl.sdp.musiconnect;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.After;
@@ -7,13 +8,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
@@ -25,17 +26,17 @@ import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 import ch.epfl.sdp.musiconnect.roomdatabase.MyDateConverter;
 import ch.epfl.sdp.musiconnect.roomdatabase.MyLocationConverter;
 
+import static ch.epfl.sdp.musiconnect.testsFunctions.waitALittle;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
-//@RunWith(AndroidJUnit4.class)
+@RunWith(AndroidJUnit4.class)
 public class RoomDatabaseTest {
 
     private AppDatabase roomDb;
     private MusicianDao musicianDao;
     private Executor mExecutor = Executors.newSingleThreadExecutor();
-    private List<Musician> allUsers = new ArrayList<>();
     private List<Musician> users = new ArrayList<>();
 
     @Rule
@@ -49,20 +50,22 @@ public class RoomDatabaseTest {
     }
 
     @Before
-    public void saveDatabaseContentsBeforeTesting() {
+    public void instantiateTestRoomDatabase() {
         roomDb = AppDatabase.getInstance(startPageRule.getActivity().getApplicationContext());
         musicianDao = roomDb.musicianDao();
         mExecutor.execute(() -> {
-            allUsers = musicianDao.getAll();
             musicianDao.nukeTable();
         });
+        waitALittle(1);
     }
 
+
     @After
-    public void putBackDatabaseContents() {
+    public void cleanDatabaseAfterTest() {
         mExecutor.execute(() -> {
-            musicianDao.insertAll(allUsers.toArray(new Musician[allUsers.size()]));
+            musicianDao.nukeTable();
         });
+        waitALittle(1);
     }
 
 
@@ -155,6 +158,20 @@ public class RoomDatabaseTest {
     }
 
     @Test
+    public void fetchingUnknowEmailReturnsEmpty(){
+        Musician person1 = new Musician("Sauce", "deSaucisse", "test", "sauce@gmail.com", new MyDate(1990, 10, 25));
+        mExecutor.execute(() -> {
+            musicianDao.insertAll(person1);
+        });
+        waitALittle(2);
+        mExecutor.execute(() -> {
+            users = musicianDao.loadAllByIds(new String[]{"callmecarson41@gmail.com"});
+        });
+        waitALittle(2);
+        assertTrue(users.isEmpty());
+    }
+
+    @Test
     public void instrumentConverterTest(){
         HashMap<Instrument,Level> map = new HashMap<>();
         for(Instrument i:Instrument.values()){
@@ -189,12 +206,5 @@ public class RoomDatabaseTest {
 
     }
 
-    public static void waitALittle(int t) {
-        try {
-            TimeUnit.SECONDS.sleep(t);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 
 }
