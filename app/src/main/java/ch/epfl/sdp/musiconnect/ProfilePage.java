@@ -6,8 +6,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.google.firebase.storage.FirebaseStorage;
-
 import java.io.IOException;
 
 import ch.epfl.sdp.R;
@@ -17,7 +15,8 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.FirebaseCloudStorage;
 
 public abstract class ProfilePage extends Page {
-    protected TextView title, firstName, lastName, username, email, birthday;
+    protected TextView titleView, firstNameView, lastNameView, usernameView, emailView, birthdayView;
+    protected static int VIDEO_REQUEST = 101;
     protected Uri videoUri = null;
     protected VideoView mVideoView;
     protected ImageView imgVw;
@@ -32,7 +31,7 @@ public abstract class ProfilePage extends Page {
     }
 
     protected void getVideoUri(String s) {
-        CloudStorage storage = CloudStorageGenerator.getDbInstance(this);
+        CloudStorage storage = CloudStorageGenerator.getCloudInstance(this);
         String path = s + "/" + FirebaseCloudStorage.FileType.video;
         String saveName = s + "_" + FirebaseCloudStorage.FileType.video;
         try {

@@ -129,4 +129,8 @@ public abstract class Person extends User {
         return computeAge(birthday);
     }
 
+    @Override
+    public String getName() {
+        return userName;
+    }
 }

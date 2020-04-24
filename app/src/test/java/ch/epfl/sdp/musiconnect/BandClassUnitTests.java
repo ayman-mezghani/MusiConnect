@@ -437,4 +437,10 @@ public class BandClassUnitTests {
         assertEquals(expectedString, beatles.toString());
     }
 
+    @Test
+    public void getNameReturnsCorrect() {
+        Musician john = new Musician("John", "Lennon", "JohnLennon", "john.lennon@gmail.com", new MyDate(1940, 10, 9));
+        Band band = new Band("BandName", john);
+        assertEquals(band.getBandName(), band.getName());
+    }
 }

@@ -16,12 +16,14 @@ import ch.epfl.sdp.musiconnect.MyLocation;
 import ch.epfl.sdp.musiconnect.TypeOfUser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SimplifiedMusicianTest {
     @Test
     public void CreationFromMusicianTest() {
-        Musician musician = testMusician();
+        Musician musician = testMusician1();
 
         SimplifiedMusician sMusician = new SimplifiedMusician(musician);
 
@@ -102,7 +104,7 @@ public class SimplifiedMusicianTest {
 
     @Test
     public void musicianToMusicianIsTheSame() {
-        Musician musician = testMusician();
+        Musician musician = testMusician1();
         Musician musicianClone = (new SimplifiedMusician(musician)).toMusician();
 
         assertEquals(musician.getUserName(), musicianClone.getUserName());
@@ -139,8 +141,24 @@ public class SimplifiedMusicianTest {
         }
     }
 
-    public static Musician testMusician() {
+    @Test
+    public void equalsTest() {
+        Musician m1 = testMusician1();
+        Musician m2 = testMusician2();
+
+        assertFalse(m1.equals(m2));
+
+        assertTrue(m1.equals(m1));
+    }
+
+    static Musician testMusician1() {
         Musician m = new Musician("firstName", "lastName", "username", "email@gmail.com", new MyDate(2000, 1, 1));
+        m.setTypeOfUser(TypeOfUser.Musician);
+        return m;
+    }
+
+    static Musician testMusician2() {
+        Musician m = new Musician("first", "last", "user", "mail@gmail.com", new MyDate(2001, 1, 1));
         m.setTypeOfUser(TypeOfUser.Musician);
         return m;
     }
