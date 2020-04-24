@@ -13,18 +13,33 @@ import ch.epfl.sdp.musiconnect.Musician;
 @TypeConverters({InstrumentConverter.class,MyDateConverter.class,MyLocationConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase sInstance;
-
     public abstract MusicianDao musicianDao();
 
     public static AppDatabase getInstance(final Context context){
         if(sInstance == null){
             synchronized (AppDatabase.class){
                 if (sInstance == null){
-                    sInstance = Room.databaseBuilder(context.getApplicationContext(),
-                            AppDatabase.class, "database-name").build();
+                    if(checkTest()) {
+                        sInstance = Room.databaseBuilder(context.getApplicationContext(),
+                                AppDatabase.class, "test-database-name").build();
+                    } else {
+                        sInstance = Room.databaseBuilder(context.getApplicationContext(),
+                                AppDatabase.class, "database-name").build();
+                    }
                 }
             }
         }
         return sInstance;
+    }
+
+    private static boolean checkTest(){
+        boolean isTest;
+        try{
+            Class.forName("androidx.test.espresso.Espresso");
+            isTest =  true;
+        } catch(ClassNotFoundException e){
+            isTest = false;
+        }
+        return isTest;
     }
 }

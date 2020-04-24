@@ -1,6 +1,5 @@
 package ch.epfl.sdp.musiconnect;
 
-import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 

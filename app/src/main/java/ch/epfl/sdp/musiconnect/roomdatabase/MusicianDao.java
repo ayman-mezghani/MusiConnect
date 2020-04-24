@@ -5,6 +5,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -17,6 +18,9 @@ public interface MusicianDao {
 
     @Query("SELECT * FROM musician WHERE emailAddress IN (:musicianEmail)")
     List<Musician> loadAllByIds(String[] musicianEmail);
+
+    @Update
+    void updateUsers(Musician... users);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Musician... users);
