@@ -21,11 +21,9 @@ import ch.epfl.sdp.R;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class NotificationTests {
@@ -76,6 +74,12 @@ public class NotificationTests {
     private String getResourceString(int id) {
         Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         return targetContext.getResources().getString(id);
+    }
+
+    @Test
+    public void testOpenMaps() {
+        openActionsMenu(R.string.map);
+        intended(hasComponent(MapsActivity.class.getName()));
     }
 
     /*@Test
