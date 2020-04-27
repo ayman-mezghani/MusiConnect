@@ -7,8 +7,6 @@ import ch.epfl.sdp.R;
 
 
 public class HelpPage extends Page {
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

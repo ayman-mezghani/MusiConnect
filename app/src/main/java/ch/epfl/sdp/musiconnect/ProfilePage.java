@@ -15,12 +15,9 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.FirebaseCloudStorage;
 
 public abstract class ProfilePage extends Page {
-<<<<<<< HEAD
-    protected TextView title, firstName, lastName, username, email, birthday;
-=======
+
     protected TextView titleView, firstNameView, lastNameView, usernameView, emailView, birthdayView;
-    protected static int VIDEO_REQUEST = 101;
->>>>>>> 3e13f1131e045c2a9f523ad85bd7651dee0619ed
+
     protected Uri videoUri = null;
     protected VideoView mVideoView;
     protected ImageView imgVw;

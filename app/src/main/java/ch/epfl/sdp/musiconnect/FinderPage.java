@@ -1,6 +1,7 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.content.Intent;
 import android.widget.TextView;
@@ -13,7 +14,6 @@ import ch.epfl.sdp.R;
  */
 public class FinderPage extends Page {
 
-    private TextView title;
     private Button findMusician;
     private Button findBand;
 
@@ -22,7 +22,7 @@ public class FinderPage extends Page {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finder_page);
 
-        title = findViewById(R.id.finderTitleID);
+        findViewById(R.id.finderTitleID);
 
         // If the button findMusician is pressed, then the method openMusicianFinderPage() is executed
         findMusician = findViewById(R.id.findMusicianButtonID);
@@ -33,19 +33,22 @@ public class FinderPage extends Page {
         findBand.setOnClickListener(view -> openBandFinderPage());
     }
 
-    /**
-     *  This method opens the musician finder page
-     */
     private void openMusicianFinderPage() {
         Intent findMusicianIntent = new Intent(this, MusicianFinderPage.class);
         startActivity(findMusicianIntent);
     }
 
-    /**
-     *  This method opens the band finder page
-     */
     private void openBandFinderPage() {
         Intent findBandIntent = new Intent(this, BandFinderPage.class);
         startActivity(findBandIntent);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == R.id.search)
+            return true;
+        else
+            super.onOptionsItemSelected(item);
+        return true;
     }
 }
