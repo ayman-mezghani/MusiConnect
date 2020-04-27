@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -384,6 +385,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             l.setLongitude(m.getLocation().getLongitude());
             if (setLoc.distanceTo(l) <= threshold) {
                 profiles.add(m);
+                Notifications notif = new Notifications();
+                notif.sendNotification(
+                        notif.MUSICIAN_CHANNEL,
+                        0,
+                        this,
+                        NotificationCompat.PRIORITY_DEFAULT
+                );
             }
         }
 
