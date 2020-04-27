@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -45,11 +44,11 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         mVideoView = findViewById(R.id.videoView);
 
         imgVw = findViewById(R.id.imgView);
-        firstName = findViewById(R.id.myFirstname);
-        lastName = findViewById(R.id.myLastname);
-        username = findViewById(R.id.myUsername);
-        email = findViewById(R.id.myMail);
-        birthday = findViewById(R.id.myBirthday);
+        firstNameView = findViewById(R.id.myFirstname);
+        lastNameView = findViewById(R.id.myLastname);
+        usernameView = findViewById(R.id.myUsername);
+        emailView = findViewById(R.id.myMail);
+        birthdayView = findViewById(R.id.myBirthday);
 
         Button editProfile = findViewById(R.id.btnEditProfile);
         editProfile.setOnClickListener(v -> {
@@ -67,6 +66,8 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         AppDatabase localDb = AppDatabase.getInstance(this);
         MusicianDao mdao = localDb.musicianDao();
         userEmail = CurrentUser.getInstance(this).email;
+
+      
         //fetches the current user's profile
         mExecutor.execute(() -> {
             List<Musician> result = mdao.loadAllByIds(new String[]{userEmail});
@@ -82,13 +83,13 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
                 @Override
                 public void readCallback(User user) {
                     Musician m = (Musician) user;
-                    firstName.setText(m.getFirstName());
-                    lastName.setText(m.getLastName());
-                    username.setText(m.getUserName());
-                    email.setText(m.getEmailAddress());
+                    firstNameView.setText(m.getFirstName());
+                    lastNameView.setText(m.getLastName());
+                    usernameView.setText(m.getUserName());
+                    emailView.setText(m.getEmailAddress());
                     MyDate date = m.getBirthday();
                     String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
-                    birthday.setText(s);
+                    birthdayView.setText(s);
                     if (currentCachedUser == null || !ProfileModification.changeStaged) {            //if user profile isn't cached,cache it
                         mExecutor.execute(() -> {
                             mdao.insertAll(m);
@@ -101,13 +102,14 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             if (currentCachedUser == null) {
                 Toast.makeText(this, "Unable to fetch profile information; please connect to internet", Toast.LENGTH_LONG).show();
             } else {                                        //set profile info based on cache
-                firstName.setText(currentCachedUser.getFirstName());
-                lastName.setText(currentCachedUser.getLastName());
-                username.setText(currentCachedUser.getUserName());
-                email.setText(currentCachedUser.getEmailAddress());
+                firstNameView.setText(currentCachedUser.getFirstName());
+                lastNameView.setText(currentCachedUser.getLastName());
+                usernameView.setText(currentCachedUser.getUserName());
+                emailView.setText(currentCachedUser.getEmailAddress());
                 MyDate date = currentCachedUser.getBirthday();
+
                 String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
-                birthday.setText(s);
+                birthdayView.setText(s);
             }
         }
 
@@ -119,11 +121,12 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         if (requestCode == LAUNCH_PROFILE_MODIF_INTENT && resultCode == Activity.RESULT_OK) {
             String[] newFields = data.getStringArrayExtra("newFields");
             assert newFields != null;
-            firstName.setText(newFields[0]);
-            lastName.setText(newFields[1]);
-            username.setText(newFields[2]);
-            email.setText(newFields[3]);
-            birthday.setText(newFields[4]);
+            firstNameView.setText(newFields[0]);
+            lastNameView.setText(newFields[1]);
+            usernameView.setText(newFields[2]);
+            emailView.setText(newFields[3]);
+            birthdayView.setText(newFields[4]);
+
             String videoUriString = data.getStringExtra("videoUri");
 
             if (videoUriString != null) {
@@ -133,12 +136,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
                 getVideoUri(userEmail);
             }
         }
-
-//        TODO: refresh the intent, may be useful after video change
-//        finish();
-//        overridePendingTransition( 0, 0);
-//        startActivity(getIntent());
-//        overridePendingTransition( 0, 0);
     }
 
     @Override
@@ -161,10 +158,10 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
      * @param intent
      */
     private void sendInformation(Intent intent) {
-        intent.putExtra("FIRST_NAME", firstName.getText().toString());
-        intent.putExtra("LAST_NAME", lastName.getText().toString());
-        intent.putExtra("USERNAME", username.getText().toString());
-        intent.putExtra("MAIL", email.getText().toString());
-        intent.putExtra("BIRTHDAY", birthday.getText().toString());
+        intent.putExtra("FIRST_NAME", firstNameView.getText().toString());
+        intent.putExtra("LAST_NAME", lastNameView.getText().toString());
+        intent.putExtra("USERNAME", usernameView.getText().toString());
+        intent.putExtra("MAIL", emailView.getText().toString());
+        intent.putExtra("BIRTHDAY", birthdayView.getText().toString());
     }
 }

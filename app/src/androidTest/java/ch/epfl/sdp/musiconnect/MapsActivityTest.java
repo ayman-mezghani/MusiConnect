@@ -38,9 +38,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 @SdkSuppress(minSdkVersion = 18)
-public class MapsActivityTest extends AndroidJUnitRunner {
-    private UiDevice device;
-
+public class MapsActivityTest {
     @Rule
     public final ActivityTestRule<StartPage> startPageRule =
             new ActivityTestRule<>(StartPage.class);
@@ -54,16 +52,6 @@ public class MapsActivityTest extends AndroidJUnitRunner {
         DbGenerator.setDatabase(new MockDatabase());
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
-
-    @Before
-    public void initIntents() {
-        Intents.init();
-        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        MapsLocationTest.clickAlert(device);
-    }
-
-    @After
-    public void releaseIntents() { Intents.release(); }
 
     @Test
     public void toastWarningGeneratesCorrectly() {

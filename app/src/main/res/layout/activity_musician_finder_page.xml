@@ -33,7 +33,7 @@
                     android:layout_marginStart="0dp"
                     android:text="@string/musicianFinderTitle"
                     android:textAlignment="center"
-                    android:textSize="50sp"
+                    android:textSize="30sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.2"
                     android:text="@string/musicianFinderFirstName"
-                    android:textSize="30sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <EditText
@@ -68,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/myMusicianFinderFirstName"
-                    android:textSize="30sp" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -83,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.2"
                     android:text="@string/musicianFinderLastName"
-                    android:textSize="30sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <EditText
@@ -92,7 +92,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/myMusicianFinderLastName"
-                    android:textSize="30sp" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -107,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.2"
                     android:text="@string/musicianFinderUserName"
-                    android:textSize="30sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <EditText
@@ -116,7 +116,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/myMusicianFinderUserName"
-                    android:textSize="30sp" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -131,7 +131,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.2"
                     android:text="@string/musicianFinderInstruments"
-                    android:textSize="30sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <Spinner
@@ -140,7 +140,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/myMusicianFinderInstruments"
-                    android:textSize="30sp" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -155,7 +155,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.2"
                     android:text="@string/musicianFinderLevels"
-                    android:textSize="30sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <Spinner
@@ -164,7 +164,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/myMusicianFinderLevels"
-                    android:textSize="30sp" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -186,7 +186,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/musicianFinderButton"
-                    android:textSize="35sp" />
+                    android:textSize="24sp" />
             </LinearLayout>
 
         </LinearLayout>

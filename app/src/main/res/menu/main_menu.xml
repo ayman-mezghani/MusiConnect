@@ -17,6 +17,14 @@
         android:title="@string/my_profile"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/my_events"
+        android:title="@string/my_events"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/create_event"
+        android:title="@string/create_an_event"
+        app:showAsAction="never"/>
+
     <item android:id="@+id/map"
         android:title="@string/map"
         app:showAsAction="never" />

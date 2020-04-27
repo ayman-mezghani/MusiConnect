@@ -1,5 +1,7 @@
 package ch.epfl.sdp.musiconnect.database;
 
+import androidx.annotation.Nullable;
+
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -17,13 +19,11 @@ import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
 
 public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
-    private String uid = null;
     private String leader;
     private String bandName;
     private String urlVideo;
-    private ArrayList<String> members = new ArrayList<>();
+    private List<String> members;
 
-    static final String UID = "uid";
     static final String LEADER = "Leader";
     static final String BANDNAME = "BandName";
     static final String URLVIDEO = "UrlVideo";
@@ -33,9 +33,9 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
     }
 
     public SimplifiedBand(Band band) {
-//        this.uid = uid;
         this.leader = band.getLeaderEmailAddress();
         this.bandName = band.getBandName();
+        this.members = new ArrayList<>();
         for (Musician m : band.setOfMembers()) {
           this.members.add(m.getEmailAddress());
         }
@@ -45,9 +45,10 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
     public SimplifiedBand(Map<String, Object> map) {
         this.leader = map.get(LEADER) == null ? "" : (String) map.get(LEADER);
         this.bandName = map.get(BANDNAME) == null ? "" : (String) map.get(BANDNAME);
+        this.members = new ArrayList<>();
         if(map.get(MEMBERS) != null) {
-            for (String emailAdress : (ArrayList<String>) map.get(MEMBERS)) {
-                this.members.add(emailAdress);
+            for (String emailAddress : (ArrayList<String>) map.get(MEMBERS)) {
+                this.members.add(emailAddress);
             }
         } else {
             this.members = null;
@@ -62,14 +63,6 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
         res.put(MEMBERS, members);
         res.put(URLVIDEO, urlVideo);
         return res;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
     }
 
     public String getLeader() {
@@ -96,11 +89,20 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
         this.urlVideo = urlVideo;
     }
 
-    public ArrayList<String> getMembers() {
+    public List<String> getMembers() {
         return members;
     }
 
     public void setMembers(ArrayList<String> members) {
         this.members = members;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        SimplifiedBand that = (SimplifiedBand) obj;
+        return this.leader == that.getLeader()
+                && this.bandName == that.getBandName()
+                && this.urlVideo == that.getUrlVideo()
+                && this.members == that.getMembers();
     }
 }
