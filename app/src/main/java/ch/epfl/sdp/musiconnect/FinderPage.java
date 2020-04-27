@@ -11,7 +11,7 @@ import ch.epfl.sdp.R;
 /**
  * @author Manuel Pellegrini, EPFL
  */
-public class FinderPage extends Page implements View.OnClickListener {
+public class FinderPage extends Page {
 
     private TextView title;
     private Button findMusician;
@@ -48,10 +48,4 @@ public class FinderPage extends Page implements View.OnClickListener {
         Intent findBandIntent = new Intent(this, BandFinderPage.class);
         startActivity(findBandIntent);
     }
-
-    @Override
-    public void onClick(View view) {
-        // This method does nothing
-    }
-
 }

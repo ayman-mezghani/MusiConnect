@@ -83,5 +83,4 @@ public class ProfileConsultationTests {
         assertEquals(1,result.size());
         assertEquals("bobminion",result.get(0).getUserName());
     }
-
 }
