@@ -1,6 +1,5 @@
+/*
 package ch.epfl.sdp.musiconnect;
-
-
 
 import android.content.Intent;
 
@@ -113,3 +112,4 @@ public class EventPageTests {
         onView(withId(R.id.title)).check(matches(withText(R.string.event_not_found)));
     }
 }
+ */

@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+/*package ch.epfl.sdp.musiconnect;
 
 import android.content.Intent;
 import android.widget.DatePicker;
@@ -133,7 +133,7 @@ public class EventCreationTests {
         onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(withText("")));
     }
 
-    //@Test
+    @Test
     public void addMusicianTwiceShouldShowOnlyOnce() {
         ViewInteraction appCompatEditText4 = onView(
                 allOf(withId(R.id.eventCreationNewParticipant),
@@ -193,7 +193,7 @@ public class EventCreationTests {
         onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(withText("")));
     }
 
-    //@Test
+    @Test
     public void testCorrectInputsAndDoNotFinishIfEmptyField() {
         onView(withId(R.id.eventCreationNewEventTitle)).perform(scrollTo()).perform(clearText(), typeText("TestTitle"));
         checkIfNotFinishing();
@@ -297,3 +297,5 @@ public class EventCreationTests {
         assertNull(p1);
     }
 }
+
+ */
