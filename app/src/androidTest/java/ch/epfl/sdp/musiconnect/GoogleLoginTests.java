@@ -23,7 +23,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static ch.epfl.sdp.musiconnect.testsFunctions.*;
+import static ch.epfl.sdp.musiconnect.testsFunctions.getCurrentActivity;
 
 public class GoogleLoginTests {
 
