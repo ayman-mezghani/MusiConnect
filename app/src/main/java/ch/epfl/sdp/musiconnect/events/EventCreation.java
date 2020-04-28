@@ -3,7 +3,11 @@ package ch.epfl.sdp.musiconnect.events;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -12,6 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.firebase.firestore.GeoPoint;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -63,6 +70,21 @@ public class EventCreation extends Page {
         dateView = findViewById(R.id.eventCreationNewEventDate);
         participantsView = findViewById(R.id.eventCreationNewEventParticipants);
 
+        /*eventAddressView.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                getLocationFromAddress(s.toString());
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,int before, int count) {
+            }
+        });*/
 
         setupDateTimePickerDialog();
         setupButtons();
@@ -111,7 +133,7 @@ public class EventCreation extends Page {
             });
              */
             if (participants.contains(username)) {
-                Toast.makeText(this, "This user is already in the participants list", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.user_already_in_participation_list, Toast.LENGTH_SHORT).show();
             } else {
                 participants.add(username);
                 updateParticipants();
@@ -179,33 +201,7 @@ public class EventCreation extends Page {
     }
 
 
-    private void sendToDatabase() {
-        /*
-        dbAdapter.read(CurrentUser.getInstance(this).email, new DbCallback() {
-            @Override
-            public void readCallback(User user) {
-                Event event = new Event(user, 0);
-                event.setTitle(eventTitleView.getText().toString());
-                event.setAddress(eventAddressView.getText().toString());
-                event.setDescription(eventDescriptionView.getText().toString());
-
-                String time = timeView.getText().toString();
-                String date = dateView.getText().toString();
-
-                String[] hourMin = time.split(":");
-                String[] dateMonthYear = date.split("/");
-                MyDate d = new MyDate(Integer.parseInt(dateMonthYear[2]),
-                        Integer.parseInt(dateMonthYear[1]),
-                        Integer.parseInt(dateMonthYear[0]),
-                        Integer.parseInt(hourMin[0]),
-                        Integer.parseInt(hourMin[1]));
-
-                event.setDateTime(d);
-            }
-        });*/
-
-        //TODO to be deleted
-
+    public void sendToDatabase() {
         event = new Event(CurrentUser.getInstance(this).getMusician(), "0");
         event.setTitle(eventTitleView.getText().toString());
         event.setAddress(eventAddressView.getText().toString());
@@ -222,12 +218,13 @@ public class EventCreation extends Page {
                 Integer.parseInt(hourMin[0]),
                 Integer.parseInt(hourMin[1]));
 
+        GeoPoint gp = getLocationFromAddress(event.getAddress());
+        event.setLocation(gp.getLatitude(), gp.getLongitude());
         event.setDateTime(d);
 
         DbAdapter db = DbGenerator.getDbInstance();
 
         db.add(event, DbUserType.Band);
-
     }
 
 
@@ -240,30 +237,55 @@ public class EventCreation extends Page {
     }
 
     public boolean checkEventCreationInput() {
-        boolean empty = true;
         if (isEmpty(eventTitleView)) {
             Toast.makeText(this, "Please give the event a title", Toast.LENGTH_LONG).show();
-            empty = false;
+            return false;
         }
-        if (isEmpty(eventAddressView)) {
+        else if (isEmpty(eventAddressView)) {
             Toast.makeText(this, "Please give the event an address", Toast.LENGTH_LONG).show();
-            empty = false;
+            return false;
         }
-        if (isEmpty(eventDescriptionView)) {
+        else if (isEmpty(eventDescriptionView)) {
             Toast.makeText(this, "Please give the event a description", Toast.LENGTH_LONG).show();
-            empty = false;
+            return false;
         }
-
-        if (isEmpty(timeView)) {
+        else if (isEmpty(timeView)) {
             Toast.makeText(this, "Please give the event a time", Toast.LENGTH_LONG).show();
-            empty = false;
+            return false;
         }
-
-        if (isEmpty(dateView)) {
+        else if (isEmpty(dateView)) {
             Toast.makeText(this, "Please give the event a date", Toast.LENGTH_LONG).show();
-            empty = false;
+            return false;
         }
 
-        return empty;
+        return true;
+    }
+
+    public GeoPoint getLocationFromAddress(String strAddress){
+        Geocoder coder = new Geocoder(this);
+        List<Address> address = null;
+        GeoPoint p1 = null;
+
+        try {
+            try {
+                address = coder.getFromLocationName(strAddress,5);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (address==null) {
+                return null;
+            }
+            Address location=address.get(0);
+            location.getLatitude();
+            location.getLongitude();
+
+            p1 = new GeoPoint((double) (location.getLatitude()),
+                    (double) (location.getLongitude()));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return p1;
     }
 }

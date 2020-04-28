@@ -20,6 +20,8 @@ import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
 
+import static ch.epfl.sdp.musiconnect.StartPage.test;
+
 public class GoogleLogin extends AppCompatActivity {
     private static String collection = "newtest";
 
@@ -48,6 +50,11 @@ public class GoogleLogin extends AppCompatActivity {
                 .build();
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        if(test) {
+            mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, task -> {});
+        }
     }
 
     @Override

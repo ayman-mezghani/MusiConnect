@@ -21,6 +21,7 @@ import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
 import ch.epfl.sdp.musiconnect.events.*;
+import ch.epfl.sdp.musiconnect.events.EventCreation;
 
 import static ch.epfl.sdp.musiconnect.StartPage.test;
 
@@ -100,17 +101,18 @@ public abstract class Page extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Context ctx = this;
-        DbGenerator.getDbInstance().read(DbUserType.Band, CurrentUser.getInstance(ctx).email, new DbCallback() {
-            @Override
-            public void readCallback(User u) {
-                CurrentUser.getInstance(ctx).setBand((Band) u);
-            }
-        });
+
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
         if (!test) {
+            DbGenerator.getDbInstance().read(DbUserType.Band, CurrentUser.getInstance(ctx).email, new DbCallback() {
+                @Override
+                public void readCallback(User u) {
+                    CurrentUser.getInstance(ctx).setBand((Band) u);
+                }
+            });
             if (!CurrentUser.getInstance(this).getCreatedFlag() && this.getClass() != UserCreation.class) {
                 startActivity(new Intent(this, GoogleLogin.class));
             }

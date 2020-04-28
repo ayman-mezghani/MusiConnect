@@ -9,17 +9,14 @@ import static org.junit.Assert.assertTrue;
 public class MockDatabaseForUT extends Database {
 
     private String expectedDocName;
-    private SimplifiedMusician expectedSimplifiedMusician;
-    private SimplifiedEvent expectedSimplifiedEvent;
-    private DbUserType expectedDbType;
-    private Map<String, Object> expectedNewValueMap;
+    private SimplifiedDbEntry expectedEntry;
+    private SimplifiedEvent expectedEvent;
+    private Map<String, Object> expectedMap;
 
-    MockDatabaseForUT(String expectedDocName, SimplifiedMusician expectedSimplifiedMusician, Map<String, Object> expectedNewValueMap, SimplifiedEvent expectedSimplifiedEvent, DbUserType expectedDbType) {
+    MockDatabaseForUT(String expectedDocName, SimplifiedDbEntry expectedEntry, Map<String, Object> expectedMap) {
         this.expectedDocName = expectedDocName;
-        this.expectedSimplifiedMusician = expectedSimplifiedMusician;
-        this.expectedNewValueMap = expectedNewValueMap;
-        this.expectedSimplifiedEvent = expectedSimplifiedEvent;
-        this.expectedDbType = expectedDbType;
+        this.expectedEntry = expectedEntry;
+        this.expectedMap = expectedMap;
     }
 
     public MockDatabaseForUT() {
@@ -33,8 +30,6 @@ public class MockDatabaseForUT extends Database {
 
     @Override
     void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType) {
-        assertEquals(expectedDbType, userType);
-        assertEquals(expectedSimplifiedEvent, simplifiedEvent);
     }
 
     @Override

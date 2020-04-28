@@ -152,4 +152,5 @@
     <string name="band_name_cant_be_empty">Band name can\'t be empty</string>
     <string name="your_nexts_events">Your nexts events</string>
     <string name="your_bands">Your bands</string>
+    <string name="user_already_in_participation_list">This user is already in the participants list</string>
 </resources>

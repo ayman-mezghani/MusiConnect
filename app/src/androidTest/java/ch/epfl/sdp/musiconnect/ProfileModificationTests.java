@@ -1,5 +1,6 @@
 package ch.epfl.sdp.musiconnect;
 
+
 import android.widget.DatePicker;
 
 import org.hamcrest.Matchers;
@@ -88,6 +89,7 @@ public class ProfileModificationTests {
      * Helper method to avoid duplication
      * @param text: text to recognize on the clickable object
      */
+
     private void clickButtonWithText(int text) {
         onView(withText(text)).perform(ViewActions.scrollTo()).perform(click());
     }

@@ -1,6 +1,7 @@
 package ch.epfl.sdp.musiconnect;
 
 
+
 import android.content.Intent;
 
 import androidx.test.espresso.intent.Intents;
@@ -21,6 +22,8 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.events.Event;
+import ch.epfl.sdp.musiconnect.events.EventPage;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
@@ -76,7 +79,7 @@ public class EventPageTests {
 
     @Test
     public void loadPageShouldShowCorrectEvent() {
-        Musician m1 = md.getDummyMusician(0);
+        Musician m1 = md.getDummyMusician(1);
         Musician m2 = md.getDummyMusician(3);
 
         Event event = new Event(m1, "1");
@@ -94,7 +97,7 @@ public class EventPageTests {
         eventPageRule.launchActivity(intent);
 
         onView(withId(R.id.eventTitle)).check(matches(withText(event.getTitle())));
-        onView(withId(R.id.eventCreatorField)).check(matches(withText(event.getCreator().getName())));
+        onView(withId(R.id.eventCreatorField)).check(matches(withText(event.getCreator().getName().toString())));
         onView(withId(R.id.eventAddressField)).check(matches(withText(event.getAddress())));
         onView(withId(R.id.eventTimeField)).check(matches(withText(event.getDateTime().toString())));
         onView(withId(R.id.eventParticipantsField)).check(matches(withText(s)));

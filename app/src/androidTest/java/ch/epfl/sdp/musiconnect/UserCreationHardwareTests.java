@@ -158,7 +158,7 @@ public class UserCreationHardwareTests {
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
     }
 
-    /*@Test
+    @Test
     public void createBand() {
         ViewInteraction appCompatRadioButton = onView(allOf(withId(R.id.rbBand), withText("Band"),
                 childAtPosition(allOf(withId(R.id.rdg), childAtPosition(
@@ -188,7 +188,7 @@ public class UserCreationHardwareTests {
                 allOf(withId(R.id.btnBandCreationCreate), withText("Start using application"),childAtPosition(childAtPosition(
                                 withClassName(is("android.widget.LinearLayout")),0),1)));
         appCompatButton3.perform(scrollTo(), click());
-    }*/
+    }
 
     @Test
     public void createBandFails() {

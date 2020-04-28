@@ -22,8 +22,8 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
     private String leader;
     private String bandName;
     private String urlVideo;
-    private List<String> members = new ArrayList<>();
-    private List<String> events = new ArrayList<>();
+    private List<String> members;
+    private List<String> events;
 
     static final String LEADER = "Leader";
     static final String BANDNAME = "BandName";
@@ -38,6 +38,7 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
         this.leader = band.getLeaderEmailAddress();
         this.bandName = band.getBandName();
         this.members = new ArrayList<>();
+        this.events = new ArrayList<>();
         for (Musician m : band.setOfMembers()) {
           this.members.add(m.getEmailAddress());
         }
@@ -49,6 +50,7 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
         this.leader = map.get(LEADER) == null ? "" : (String) map.get(LEADER);
         this.bandName = map.get(BANDNAME) == null ? "" : (String) map.get(BANDNAME);
         this.members = new ArrayList<>();
+        this.events = new ArrayList<>();
         if(map.get(MEMBERS) != null) {
             for (String emailAddress : (ArrayList<String>) map.get(MEMBERS)) {
                 this.members.add(emailAddress);

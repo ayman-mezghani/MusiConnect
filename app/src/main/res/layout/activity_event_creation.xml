@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".musiconnect.EventCreation"
+    android:id="@+id/event_creation_scrollview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    tools:context=".musiconnect.EventCreation">
 
-    <LinearLayout android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/eventCreationTitle"
@@ -38,8 +40,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="2">
+            android:layout_weight="2"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -64,6 +66,7 @@
                     android:hint="New event title"
                     android:textSize="18sp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -87,6 +90,7 @@
                     android:hint="New event address"
                     android:textSize="18sp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -101,14 +105,15 @@
                     android:text="Event time: "
                     android:textSize="18sp"
                     android:textStyle="bold" />
+
                 <EditText
                     android:id="@+id/eventCreationNewEventDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:focusable="false"
-                    android:longClickable="false"
                     android:hint="New event date"
+                    android:longClickable="false"
                     android:textSize="18sp" />
 
                 <EditText
@@ -117,10 +122,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:focusable="false"
-                    android:longClickable="false"
                     android:hint="New event time"
+                    android:longClickable="false"
                     android:textSize="18sp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -154,9 +160,9 @@
                     android:id="@+id/eventCreationNewParticipant"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="5dp"
+                    android:layout_weight="1"
                     android:hint="New participant username"
                     android:textSize="18sp" />
             </LinearLayout>
@@ -204,8 +210,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <EditText
@@ -222,8 +228,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"

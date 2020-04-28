@@ -60,7 +60,7 @@ public class ProfileConsultationTests {
         intended(hasComponent(ProfileModification.class.getName()));
     }
 
-    //@Test
+    @Test
     public void profileShowsDefaultUser(){
         waitALittle(2);
         onView(withId(R.id.myFirstname)).check(matches(withText("bob")));
@@ -70,7 +70,7 @@ public class ProfileConsultationTests {
         onView(withId(R.id.myBirthday)).check(matches(withText("1/1/2000")));
     }
 
-    //@Test
+    @Test
     public void profileIsCachedOnLoading(){
         waitALittle(2);
         Executor mExecutor = Executors.newSingleThreadExecutor();

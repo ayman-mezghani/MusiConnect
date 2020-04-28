@@ -48,12 +48,4 @@ public class GoogleLoginTests {
         // Simulate the on activity result call
         ((GoogleLogin) getCurrentActivity()).onActivityResult(0, 0, null);
     }
-
-    public static void waitALittle(int t) {
-        try {
-            TimeUnit.SECONDS.sleep(t);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 }
