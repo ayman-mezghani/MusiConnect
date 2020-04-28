@@ -1,11 +1,12 @@
 package ch.epfl.sdp.musiconnect;
 
-
 import android.content.Intent;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.uiautomator.UiDevice;
 
 import org.junit.After;
 import org.junit.Before;
@@ -107,6 +108,6 @@ public class EventPageTests {
         intent.putExtra("EID", 0);
         eventPageRule.launchActivity(intent);
 
-        onView(withId(R.id.title)).check(matches(withText("Event not found...")));
+        onView(withId(R.id.title)).check(matches(withText(R.string.event_not_found)));
     }
 }
