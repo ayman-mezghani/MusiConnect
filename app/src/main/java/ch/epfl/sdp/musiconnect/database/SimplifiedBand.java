@@ -33,7 +33,7 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
     }
 
     public SimplifiedBand(Band band) {
-        this.leader = band.getLeaderEmailAddress();
+        this.leader = band.getEmailAddress();
         this.bandName = band.getBandName();
         this.members = new ArrayList<>();
         for (Musician m : band.setOfMembers()) {

@@ -76,7 +76,8 @@ public class Band extends User implements Performer {
         return leader.getUserName();
     }
 
-    public String getLeaderEmailAddress() {
+    @Override
+    public String getEmailAddress() {
         return leader.getEmailAddress();
     }
 

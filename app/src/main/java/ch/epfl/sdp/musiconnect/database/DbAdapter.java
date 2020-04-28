@@ -19,7 +19,7 @@ public class DbAdapter {
         }
         else {
             Band band = (Band) user;
-            db.addDoc(userType.toString(), band.getLeaderEmailAddress(), new SimplifiedBand(band));
+            db.addDoc(userType.toString(), band.getEmailAddress(), new SimplifiedBand(band));
         }
     }
 
@@ -30,7 +30,7 @@ public class DbAdapter {
         }
         else {
             Band band = (Band) user;
-            db.deleteDoc(userType.toString(), band.getLeaderEmailAddress());
+            db.deleteDoc(userType.toString(), band.getEmailAddress());
         }
     }
 
@@ -41,7 +41,7 @@ public class DbAdapter {
         }
         else {
             Band band = (Band) user;
-            db.updateDoc(userType.toString(), band.getLeaderEmailAddress(), (new SimplifiedBand(band)).toMap());
+            db.updateDoc(userType.toString(), band.getEmailAddress(), (new SimplifiedBand(band)).toMap());
         }
     }
 

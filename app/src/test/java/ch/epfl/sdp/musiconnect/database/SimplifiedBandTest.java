@@ -39,7 +39,7 @@ public class SimplifiedBandTest {
         sb.setMembers(emailsAdress);
 
         assertEquals(b.getBandName(), sb.getBandName());
-        assertEquals(b.getLeaderEmailAddress(), sb.getLeader());
+        assertEquals(b.getEmailAddress(), sb.getLeader());
         assertEquals(b.getVideoURL(), sb.getUrlVideo());
         //assertEquals(b.getMusicianEmailsAdress(), sb.getMembers());
 

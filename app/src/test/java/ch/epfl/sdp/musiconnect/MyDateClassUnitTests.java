@@ -2,6 +2,8 @@ package ch.epfl.sdp.musiconnect;
 
 import org.junit.Test;
 
+import java.util.Date;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -379,6 +381,19 @@ public class MyDateClassUnitTests {
         String expectedString = String.format("%02d", date) + "." + String.format("%02d", month) + "." + String.format("%04d", year) + "    " + String.format("%02d", hours) + ":" + String.format("%02d", minutes) + "\n";
 
         assertEquals(expectedString, day.toString());
+    }
+
+    @Test
+    public void toDateWorks() {
+        int year = 2020;
+        int month = 2;
+        int date = 2;
+        int hours = 20;
+        int minutes = 20;
+        MyDate day = new MyDate(year, month, date, hours, minutes);
+
+        Date d = new Date(year-MyDate.YEAR_BIAS, month-MyDate.MONTH_BIAS, date, hours, minutes);
+        assertEquals(d, day.toDate());
     }
 
 }

@@ -88,6 +88,7 @@ public abstract class Person extends User {
         this.emailAddress = emailAddress;
     }
 
+    @Override
     public String getEmailAddress() {
         return emailAddress;
     }

@@ -29,7 +29,7 @@ public class BandClassUnitTests {
         assertEquals(john.getFirstName(), beatles.getLeaderFirstName());
         assertEquals(john.getLastName(), beatles.getLeaderLastName());
         assertEquals(john.getUserName(), beatles.getLeaderUserName());
-        assertEquals(john.getEmailAddress(), beatles.getLeaderEmailAddress());
+        assertEquals(john.getEmailAddress(), beatles.getEmailAddress());
     }
 
     @Test

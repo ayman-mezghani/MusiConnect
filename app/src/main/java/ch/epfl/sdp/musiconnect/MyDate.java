@@ -20,6 +20,9 @@ public class MyDate {
     private static final int MINUTES_CORRECTION = 0;
 
 
+    public static final int YEAR_BIAS = 1900;
+    public static final int MONTH_BIAS = 1;
+
     public MyDate(int year, int month, int date, int hours, int minutes) {
         setYear(year);
         setMonth(month);
@@ -174,6 +177,10 @@ public class MyDate {
         }
 
         return false;
+    }
+
+    public Date toDate() {
+        return new Date(this.year - YEAR_BIAS, this.month - MONTH_BIAS, this.getDate(), this.getHours(), this.getMinutes());
     }
 
     @Override
