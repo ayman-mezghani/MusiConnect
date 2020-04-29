@@ -121,17 +121,8 @@ public class CurrentUserTest {
 
     @Test
     public void CurrentUserSetAndGetTypeOfUser() {
-        String firstName = "Espresso";
-        String lastName = "Tests";
-        String userName = "testsEspresso";
-        String emailAddress = "espressotests@gmail.com";
-        MyDate birthday = new MyDate(1940, 10, 9);
-        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
-        john.setTypeOfUser(TypeOfUser.Musician);
-        CurrentUser.getInstance(pageRule.getActivity()).setMusician(john);
-        Band b = new Band("bandName", john);
-        CurrentUser.getInstance(pageRule.getActivity()).setBand(b);
-        assertEquals(b, CurrentUser.getInstance(pageRule.getActivity()).getBand());
+        CurrentUser.getInstance(pageRule.getActivity()).setTypeOfUser(TypeOfUser.Band);
+        assertEquals(TypeOfUser.Band, CurrentUser.getInstance(pageRule.getActivity()).getTypeOfUser());
     }
 
 }
