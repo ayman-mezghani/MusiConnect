@@ -4,72 +4,72 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
+
 import ch.epfl.sdp.musiconnect.database.DbCallback;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbUserType;
 
 public class VisitorProfilePage extends ProfilePage implements DbCallback {
-    private DataBase db;
     private DbAdapter dbAdapter;
-    private String newUsername;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        db = new DataBase();
-        dbAdapter = new DbAdapter(db);
+        dbAdapter = DbGenerator.getDbInstance();
 
         setContentView(R.layout.activity_visitor_profile_page);
         mVideoView = findViewById(R.id.videoView);
-        getVideoUri();
 
         imgVw = findViewById(R.id.imgView);
-        title = findViewById(R.id.profileTitle);
-        firstName = findViewById(R.id.firstname);
-        lastName = findViewById(R.id.lastname);
-        username = findViewById(R.id.username);
-        email = findViewById(R.id.mail);
-        birthday = findViewById(R.id.birthday);
 
-        Intent intent = getIntent();
-        if (!intent.getBooleanExtra("Test", false)) {
-            loadProfileContent();
-        } else {
-            int[] birthday = intent.getIntArrayExtra("Birthday");
-            Musician alyx = new Musician(intent.getStringExtra("FirstName"),
-                    intent.getStringExtra("LastName"),
-                    intent.getStringExtra("UserName"),
-                    intent.getStringExtra("Email"),
-                    new MyDate(birthday[2], birthday[1], birthday[0]));
-            readCallback(alyx);
-        }
+        titleView = findViewById(R.id.visitorProfileTitle);
+        firstNameView = findViewById(R.id.visitorProfileFirstname);
+        lastNameView = findViewById(R.id.visitorProfileLastname);
+        usernameView = findViewById(R.id.visitorProfileUsername);
+        emailView = findViewById(R.id.visitorProfileEmail);
+        birthdayView = findViewById(R.id.visitorProfileBirthday);
+
+        loadProfileContent();
+
+        getVideoUri(userEmail);
     }
 
 
-    // This function should take something like userID as input
     private void loadProfileContent() {
         Intent intent = getIntent();
-        if (intent.hasExtra("UserName")) {
-            newUsername = intent.getStringExtra("UserName");
-            dbAdapter.read(newUsername, this);
+        if (!intent.hasExtra("UserEmail")) {
+            loadNullProfile();
+        } else {
+            userEmail = intent.getStringExtra("UserEmail");
+            dbAdapter.read(DbUserType.Musician, userEmail, new DbCallback() {
+                @Override
+                public void readCallback(User user) {
+                    if (user == null) {
+                        loadNullProfile();
+                    } else {
+                        loadUserProfile(user);
+                    }
+                }
+            });
         }
     }
 
+    private void loadNullProfile() {
+        setContentView(R.layout.activity_visitor_profile_page_null);
+    }
 
-    public void readCallback(User user) {
+    private void loadUserProfile(User user) {
         Musician m = (Musician) user;
         String sTitle = m.getUserName() + "'s profile";
-        title.setText(sTitle);
+        titleView.setText(sTitle);
 
-        firstName.setText(m.getFirstName());
-        lastName.setText(m.getLastName());
-        username.setText(m.getUserName());
-        email.setText(m.getEmailAddress());
-
-        MyDate date = m.getBirthday();
-        String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
-        birthday.setText(s);
+        firstNameView.setText(m.getFirstName());
+        lastNameView.setText(m.getLastName());
+        usernameView.setText(m.getUserName());
+        emailView.setText(m.getEmailAddress());
+        birthdayView.setText(m.getBirthday().toString());
     }
 }

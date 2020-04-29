@@ -1,25 +1,48 @@
 package ch.epfl.sdp.musiconnect.database;
 
+import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.User;
 
 public class DbAdapter {
 
-    private DataBase db;
+    private Database db;
 
-    public DbAdapter(DataBase db) {
+    DbAdapter(Database db) {
         this.db = db;
     }
 
-    public void add(Musician musician) {
-        db.addDoc(musician.getEmailAddress(), new SimplifiedMusician(musician));
+    public void add(DbUserType userType, User user) {
+        if(userType.equals(DbUserType.Musician)) {
+            Musician musician = (Musician) user;
+            db.addDoc(userType.toString(), musician.getEmailAddress(), new SimplifiedMusician(musician));
+        }
+        else {
+            Band band = (Band) user;
+            db.addDoc(userType.toString(), band.getLeaderEmailAddress(), new SimplifiedBand(band));
+        }
     }
 
-    public void delete(Musician musician) {
-        db.deleteDoc(musician.getEmailAddress());
+    public void delete(DbUserType userType, User user) {
+        if(userType.equals(DbUserType.Musician)) {
+            Musician musician = (Musician) user;
+            db.deleteDoc(userType.toString(), musician.getEmailAddress());
+        }
+        else {
+            Band band = (Band) user;
+            db.deleteDoc(userType.toString(), band.getLeaderEmailAddress());
+        }
     }
 
-    public void update(Musician musician) {
-        db.updateDoc(musician.getEmailAddress(), (new SimplifiedMusician(musician)).toMap());
+    public void update(DbUserType userType, User user) {
+        if(userType.equals(DbUserType.Musician)) {
+            Musician musician = (Musician) user;
+            db.updateDoc(userType.toString(), musician.getEmailAddress(), (new SimplifiedMusician(musician)).toMap());
+        }
+        else {
+            Band band = (Band) user;
+            db.updateDoc(userType.toString(), band.getLeaderEmailAddress(), (new SimplifiedBand(band)).toMap());
+        }
     }
 
 //    public void deleteFieldsInDoc(String docName, List<String> fields) {
@@ -30,11 +53,11 @@ public class DbAdapter {
 //        this.updateDoc(docName, updates);
 //    }
 
-    public void read(String index, DbCallback dbCallback) {
-        db.readDoc(index, dbCallback);
+    public void read(DbUserType userType, String index, DbCallback dbCallback) {
+        db.readDoc(userType.toString(), index, dbCallback);
     }
 
-    public void exists(String index, DbCallback dbCallback) {
-        db.docExists(index, dbCallback);
+    public void exists(DbUserType collection, String index, DbCallback dbCallback) {
+        db.docExists(collection.toString(), index, dbCallback);
     }
 }

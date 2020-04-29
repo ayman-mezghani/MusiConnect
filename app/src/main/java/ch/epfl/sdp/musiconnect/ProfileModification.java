@@ -8,44 +8,47 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.widget.VideoView;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.storage.FirebaseStorage;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
-import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
-import ch.epfl.sdp.musiconnect.database.DataBase;
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
-import ch.epfl.sdp.musiconnect.database.SimplifiedMusician;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
+import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
-public class ProfileModification extends AppCompatActivity implements View.OnClickListener {
+import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
+import static ch.epfl.sdp.musiconnect.roomdatabase.MyDateConverter.dateToMyDate;
+
+public class ProfileModification extends ProfilePage implements View.OnClickListener {
 
     String firstName, lastName, username, mail, birthday;
     EditText[] editFields;
     final Calendar calendar = Calendar.getInstance();
 
     protected static int VIDEO_REQUEST = 101;
-    private String testusername = "testUser";
+
     protected Uri videoUri = null;
-    private VideoView mVideoView;
     private CloudStorage storage;
     private boolean videoRecorded = false;
+
+    private List<Musician> result; //used to fetch from room database
+    public static boolean changeStaged = false;    //indicates if there are changes not commited to online database yet
 
 
     @Override
@@ -67,20 +70,8 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         mVideoView = findViewById(R.id.videoViewEdit);
         findViewById(R.id.btnCaptureVideo).setOnClickListener(v -> captureVideo());
 
-        storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
-        String path = testusername + "/" + CloudStorage.FileType.video;
-        String saveName = testusername + "_" + CloudStorage.FileType.video;
-        try {
-            storage.download(path, saveName, fileUri -> {
-                videoUri = fileUri;
-
-                mVideoView.setVideoURI(videoUri);
-                mVideoView.start();
-                mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
-            });
-        } catch (IOException e) {
-            Toast.makeText(this, "An error occured, please contact support.", Toast.LENGTH_LONG).show();
-        }
+        userEmail = CurrentUser.getInstance(this).email;
+        getVideoUri(userEmail);
     }
 
     private void onCreateGetIntentsFields() {
@@ -91,39 +82,19 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
         birthday = getIntent().getStringExtra("BIRTHDAY");
     }
 
-    private void btnSave() {
-        String[] newFields = getNewTextFields();
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("newFields", newFields);
-
-        // Upload video to cloud storage
-        if(videoRecorded) {
-            returnIntent.putExtra("videoUri", videoUri.toString());
-            storage = new CloudStorage(FirebaseStorage.getInstance().getReference(), this);
-            try {
-                storage.upload(videoUri, CloudStorage.FileType.video, testusername);
-            } catch (IOException e) {
-                Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
-            }
-        }
-
-        updateDatabaseFields(newFields);
-        setResult(Activity.RESULT_OK, returnIntent);
-        finish();
-    }
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnSaveProfile:
-                btnSave();
+                String[] newFields = getNewTextFields();
+                if (!isInputDateValid()) {
+                    Toast.makeText(this, R.string.age_too_low, Toast.LENGTH_LONG).show();
+                    break;
+                }
+                btnSave(newFields);
                 break;
             case R.id.btnDoNotSaveProfile:
                 finish(); // Close current activity and do not save anything
-                break;
-            default:
-                // In case another thing happens, simply close the activity and display an error message
-                Toast.makeText(this, getString(R.string.error_in_current_process), Toast.LENGTH_SHORT).show();
-                finish();
                 break;
         }
     }
@@ -131,6 +102,18 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    /**
+     * Check the correctness of the input date
+     * @return true if age >= 13
+     */
+    private boolean isInputDateValid() {
+        UserCreation uc = new UserCreation();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        return Integer.parseInt(uc.getAge(year, month, day)) >= 13;
     }
 
     private void setEditTextFields(EditText[] fields, String[] params) {
@@ -143,30 +126,95 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
 
     /**
      * Update the new values to the database
-     * @param newFields: new values to write
+     * @param modCurrent: profile of current user that has been modified
      */
-    private void updateDatabaseFields(String[] newFields) {
-        DataBase db = new DataBase();
-        DbAdapter adapter = new DbAdapter(db);
-        Map<String, Object> data = new HashMap<>();
-        String[] keys = {"firstName", "lastName", "username", "email", "birthday"};
-        for (int i = 0; i < keys.length; ++i) {
-            if (keys[i].equals("birthday")) {
-                @SuppressLint("SimpleDateFormat")
-                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy"); // KEEP THIS DATE FORMAT !
-                try {
-                    Date d = format.parse(newFields[i]);
-                    data.put(keys[i], new Timestamp(d));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            } else
-                data.put(keys[i], newFields[i]);
+    private void updateDatabaseFields(Musician modCurrent) {
+        while(!checkConnection(ProfileModification.this)) { //semi-busy waiting for the connection to be back up
+            try {
+                TimeUnit.SECONDS.sleep(20);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        data.put("location", new GeoPoint(0, 0));
+        DbAdapter adapter = DbGenerator.getDbInstance();
+        adapter.update(DbUserType.Musician, modCurrent);
+        if(videoRecorded) {
+            storage = CloudStorageGenerator.getCloudInstance(this);
+            try {
+                storage.upload(videoUri, CloudStorage.FileType.video, userEmail);
+            } catch (IOException e) {
+                Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
+            }
+        }
+        changeStaged = false;
+    }
 
-        Musician me = new SimplifiedMusician(data).toMusician();
-        adapter.update(me);
+    private void btnSave(String[] newFields) {
+        changeStaged = true;
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("newFields", newFields);
+
+        Executor mExecutor = Executors.newSingleThreadExecutor();
+        AppDatabase localDb = AppDatabase.getInstance(this);
+        MusicianDao mdao = localDb.musicianDao();
+        String userEmail = CurrentUser.getInstance(this).email;
+        //fetches cached user profile
+        mExecutor.execute(() -> {
+            result = mdao.loadAllByIds(new String[]{userEmail});
+        });
+        while(result == null) {         //semi-busy waiting for async thread
+            try {
+                TimeUnit.MILLISECONDS.sleep(500);
+            } catch (InterruptedException e) {
+                result = new ArrayList<Musician>();
+            }
+        }
+        if(result.isEmpty()){
+            Toast.makeText(ProfileModification.this,"Error: couldn't update profile",Toast.LENGTH_LONG);
+            finish();
+            return;
+        }
+
+        Musician currentCachedMusician = result.get(0);
+        result = null;
+        //update cached profile
+        currentCachedMusician.setFirstName(newFields[0]);
+        currentCachedMusician.setLastName(newFields[1]);
+        currentCachedMusician.setUserName(newFields[2]);
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy"); // KEEP THIS DATE FORMAT !
+        MyDate cUserBirthday = currentCachedMusician.getBirthday();
+        try {
+            Date d = format.parse(newFields[4]);
+            cUserBirthday = dateToMyDate(d);
+
+        } catch (ParseException e) {
+            Toast.makeText(ProfileModification.this,"Error: couldn't update profile",Toast.LENGTH_LONG);
+            finish();
+            return;
+        }
+        currentCachedMusician.setBirthday(cUserBirthday);
+
+        // Upload video to cloud storage
+        if(videoRecorded) {
+            returnIntent.putExtra("videoUri", videoUri.toString());
+
+            storage = CloudStorageGenerator.getCloudInstance(this);
+            try {
+                storage.upload(videoUri, CloudStorage.FileType.video, userEmail);
+            } catch (IOException e) {
+                Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
+            }
+        }
+
+        //launches the update to the database on another thread, so that it doesn't hang up the app if not connected to internet
+        mExecutor.execute(() -> {
+            mdao.updateUsers(new Musician[]{currentCachedMusician});
+            updateDatabaseFields(currentCachedMusician);
+        });
+        CurrentUser.getInstance(ProfileModification.this).setMusician(currentCachedMusician);
+
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
     }
 
     private String[] getNewTextFields() {
@@ -222,5 +270,4 @@ public class ProfileModification extends AppCompatActivity implements View.OnCli
             mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
         }
     }
-
 }

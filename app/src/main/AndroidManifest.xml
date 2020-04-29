@@ -7,6 +7,7 @@
          location permissions for the 'MyLocation' functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-feature
@@ -20,6 +21,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".musiconnect.EventCreation"></activity>
+        <activity android:name=".musiconnect.EventPage" />
+        <activity android:name=".musiconnect.BandCreation"></activity>
         <activity android:name=".musiconnect.UserCreation" />
         <activity android:name=".musiconnect.GoogleLogin">
             <intent-filter>
@@ -45,8 +49,11 @@
         <activity android:name=".musiconnect.HelpPage" />
         <activity android:name=".musiconnect.MyProfilePage" />
         <activity android:name=".musiconnect.ProfileModification" />
-        <activity android:name=".musiconnect.StartPage"/>
+        <activity android:name=".musiconnect.StartPage" />
         <activity android:name=".musiconnect.VisitorProfilePage" />
+        <activity android:name=".musiconnect.FinderPage" />
+        <activity android:name=".musiconnect.MusicianFinderPage" />
+        <activity android:name=".musiconnect.BandFinderPage" />
 
         <service
             android:name=".musiconnect.LocationService"

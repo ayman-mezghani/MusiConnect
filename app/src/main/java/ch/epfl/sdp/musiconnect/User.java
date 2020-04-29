@@ -1,7 +1,5 @@
 package ch.epfl.sdp.musiconnect;
 
-import android.location.Location;
-
 /**
  * @author Manuel Pellegrini, EPFL
  */
@@ -24,12 +22,15 @@ public abstract class User {
         return new MyDate(joinDate);
     }
 
+    public void setJoinDate(MyDate join){ joinDate = new MyDate(join);}
+
     public void setLocation(MyLocation location) {
         this.location.setLocation(location);
     }
 
-
     public MyLocation getLocation() {
         return location.getLocation();
     }
+
+    public abstract String getName();
 }

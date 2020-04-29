@@ -1,6 +1,5 @@
 package ch.epfl.sdp.musiconnect;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,11 +15,13 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DataBase;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbUserType;
 
 public class GoogleLogin extends AppCompatActivity {
+    private static String collection = "newtest";
 
     private static final int RC_SIGN_IN = 0;
     private static final String TAG = "Error";
@@ -58,20 +59,13 @@ public class GoogleLogin extends AppCompatActivity {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
         if (account != null) {
-            DbAdapter db = new DbAdapter(new DataBase());
+            DbAdapter db = DbGenerator.getDbInstance();
 
-            db.exists(account.getEmail(), new DbCallback() {
+            db.exists(DbUserType.Musician, account.getEmail(), new DbCallback() {
                 @Override
                 public void existsCallback(boolean exists) {
-                    if (exists) {
-                        CurrentUser.getInstance(GoogleLogin.this).setCreatedFlag();
-                        startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class));
-                        finish();
-                    }
-//                    else {
-//                        startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.UserCreation.class));
-//                    }
-//                    finish();
+                    redirect(exists);
+                    finish();
                 }
             });
         }
@@ -104,18 +98,12 @@ public class GoogleLogin extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
-            DbAdapter db = new DbAdapter(new DataBase());
+            DbAdapter db = DbGenerator.getDbInstance();
 
-            db.exists(account.getEmail(), new DbCallback() {
+            db.exists(DbUserType.Musician, account.getEmail(), new DbCallback() {
                 @Override
                 public void existsCallback(boolean exists) {
-                    if (exists) {
-                        CurrentUser.getInstance(GoogleLogin.this).setCreatedFlag();
-                        startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class));
-                        finish();
-                    } else {
-                        startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.UserCreation.class));
-                    }
+                    redirect(exists);
                 }
             });
 
@@ -126,6 +114,16 @@ public class GoogleLogin extends AppCompatActivity {
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
             // updateUI(null);
+        }
+    }
+
+    private void redirect(boolean userExists) {
+        if (userExists) {
+            CurrentUser.getInstance(GoogleLogin.this).setCreatedFlag();
+            startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class));
+            finish();
+        } else {
+            startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.UserCreation.class));
         }
     }
 }

@@ -28,6 +28,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
+import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.MockDatabase;
+
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertTrue;
@@ -49,7 +54,16 @@ public class MapsLocationTest {
         Looper.prepare();
     }
 
+    @BeforeClass
+    public static void setMocks() {
+        DbGenerator.setDatabase(new MockDatabase());
+        CloudStorageGenerator.setStorage((new MockCloudStorage()));
+    }
 
+    /**
+     * Code to click on the alerts has been found here:
+     * https://gist.github.com/rocboronat/65b1187a9fca9eabfebb5121d818a3c4
+     */
 
     private static boolean hasNeededPermission() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
@@ -111,7 +125,7 @@ public class MapsLocationTest {
     public static void clickAllow() {
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         clickAlert(device);
-        clickOnDialog(device, 1);
+        // clickOnDialog(device, 1);
     }
 
     /**

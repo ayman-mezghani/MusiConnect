@@ -272,4 +272,9 @@ public class PersonClassUnitTests {
         assertThrows(IllegalArgumentException.class, () -> john.setBirthday(newBirthday));
     }
 
+    @Test
+    public void getNameReturnsCorrect() {
+        Musician john = new Musician("John", "Lennon", "JohnLennon", "john.lennon@gmail.com", new MyDate(1940, 10, 9));
+        assertEquals(john.getUserName(), john.getName());
+    }
 }

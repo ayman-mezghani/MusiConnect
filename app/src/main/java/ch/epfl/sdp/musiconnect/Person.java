@@ -1,5 +1,8 @@
 package ch.epfl.sdp.musiconnect;
 
+import androidx.annotation.NonNull;
+import androidx.room.PrimaryKey;
+
 /**
  * @author Manuel Pellegrini, EPFL
  */
@@ -8,6 +11,8 @@ public abstract class Person extends User {
     private String firstName;
     private String lastName;
     private String userName;
+    @PrimaryKey
+    @NonNull
     private String emailAddress;
     private MyDate birthday;
 
@@ -124,4 +129,8 @@ public abstract class Person extends User {
         return computeAge(birthday);
     }
 
+    @Override
+    public String getName() {
+        return userName;
+    }
 }

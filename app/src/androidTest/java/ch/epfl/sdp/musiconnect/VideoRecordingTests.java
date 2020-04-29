@@ -5,10 +5,17 @@ import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
+
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
+import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -17,7 +24,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.musiconnect.VideoPlayingTests.childAtPosition;
+import static ch.epfl.sdp.musiconnect.testsFunctions.*;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
@@ -30,9 +37,29 @@ public class VideoRecordingTests {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
+    private static boolean setUpIsDone = false;
+
+    public void clickAlerts() {
+        if (setUpIsDone) {
+            return;
+        }
+        MapsLocationTest.clickAllow();
+        setUpIsDone = true;
+    }
+
+    @Before
+    public void setUp() {
+        clickAlerts();
+    }
+
+    @BeforeClass
+    public static void setMocks() {
+        DbGenerator.setDatabase(new MockDatabase());
+        CloudStorageGenerator.setStorage((new MockCloudStorage()));
+    }
+
     @Test
     public void videoRecordingTests() {
-        MapsLocationTest.clickAllow();
         VideoPlayingTests.goToMyProfilePage();
 
         ViewInteraction appCompatButton = onView(

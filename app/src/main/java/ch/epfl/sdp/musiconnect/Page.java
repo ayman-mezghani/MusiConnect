@@ -17,11 +17,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import ch.epfl.sdp.R;
 
+import static ch.epfl.sdp.musiconnect.StartPage.test;
+
 
 public abstract class Page extends AppCompatActivity {
     protected GoogleSignInClient mGoogleSignInClient;
     protected GoogleSignInOptions gso;
-    private boolean test = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,12 +60,22 @@ public abstract class Page extends AppCompatActivity {
                 Intent helpIntent = new Intent(this, HelpPage.class);
                 this.startActivity(helpIntent);
                 break;
-            // In comments right now to avoid duplication
-//            case R.id.search:
-//                return true;
+            case R.id.search:
+                Intent searchIntent = new Intent(this, FinderPage.class);
+                this.startActivity(searchIntent);
+                break;
             case R.id.map:
                 Intent mapsIntent = new Intent(this, MapsActivity.class);
                 this.startActivity(mapsIntent);
+                break;
+
+            case R.id.my_events:
+                Intent eventIntent = new Intent(this, EventPage.class);
+                this.startActivity(eventIntent);
+                break;
+            case R.id.create_event:
+                Intent createEventIntent = new Intent(this, EventCreation.class);
+                this.startActivity(createEventIntent);
                 break;
             case R.id.signout:
                 signOut();
@@ -98,6 +109,7 @@ public abstract class Page extends AppCompatActivity {
     protected void signOut() {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, task -> {
+                    CurrentUser.flush();
                     startActivity(new Intent(Page.this, GoogleLogin.class));
                     finish();
                 });
