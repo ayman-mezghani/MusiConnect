@@ -116,7 +116,6 @@ public class StartPage extends Page {
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter("GPSLocationUpdates"));
-
         String notificationMessage = "A musician is within " + DISTANCE + " meters";
         if (DISTANCE <= 100)
             sendNotificationToMusician(Notifications.MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT, notificationMessage);
@@ -124,7 +123,7 @@ public class StartPage extends Page {
 
     private void sendNotificationToMusician(String channel, int priority, String notificationMessage) {
         Notifications notif = new Notifications();
-        notif.sendNotification(channel, this, notificationMessage, priority);
+        notif.sendNotification(channel, getApplicationContext(), notificationMessage, priority);
     }
 
     protected void button1Click() {
