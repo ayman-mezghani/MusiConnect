@@ -30,6 +30,7 @@ public class Band extends User implements Performer {
         super();
         setBandName(bandName);
         members = new HashSet<Musician>();
+        events = new ArrayList<>();
         addMember(leader);
         setLeader(leader);
         videoURL = "";

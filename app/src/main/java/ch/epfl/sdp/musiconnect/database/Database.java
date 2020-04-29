@@ -10,6 +10,8 @@ abstract class Database {
 
     abstract void addDoc(String collection, String docName, SimplifiedDbEntry entry);
 
+    public abstract void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType);
+
     abstract void deleteDoc(String collection, String docName);
 
     abstract void updateDoc(String collection, String docName, Map<String, Object> newValueMap);
@@ -19,4 +21,5 @@ abstract class Database {
     abstract void readDoc(String collection, String docName, DbCallback dbCallback);
 
     abstract void docExists(String collection, String docName, DbCallback dbCallback);
+
 }

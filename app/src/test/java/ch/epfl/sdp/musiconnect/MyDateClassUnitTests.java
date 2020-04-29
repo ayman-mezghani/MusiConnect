@@ -394,6 +394,10 @@ public class MyDateClassUnitTests {
 
         Date d = new Date(year-MyDate.YEAR_BIAS, month-MyDate.MONTH_BIAS, date, hours, minutes);
         assertEquals(d, day.toDate());
+
+        MyDate newMyDate = new MyDate(d);
+        assertEquals(d, newMyDate.toDate());
+
     }
 
 }

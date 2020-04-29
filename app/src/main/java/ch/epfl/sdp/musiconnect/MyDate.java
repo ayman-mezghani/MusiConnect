@@ -39,6 +39,10 @@ public class MyDate {
         this(date.getYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes());
     }
 
+    public MyDate(Date date) {
+        this(date.getYear() + YEAR_BIAS, date.getMonth() + MONTH_BIAS, date.getDate(), date.getHours(), date.getMinutes());
+    }
+
     public MyDate() {
         Date currentDate = new Date();
         setYear(currentDate.getYear() + YEAR_CORRECTION);

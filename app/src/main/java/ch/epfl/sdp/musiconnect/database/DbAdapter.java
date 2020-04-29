@@ -3,6 +3,7 @@ package ch.epfl.sdp.musiconnect.database;
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.User;
+import ch.epfl.sdp.musiconnect.events.Event;
 
 public class DbAdapter {
 
@@ -21,6 +22,9 @@ public class DbAdapter {
             Band band = (Band) user;
             db.addDoc(userType.toString(), band.getEmailAddress(), new SimplifiedBand(band));
         }
+    }
+    public void add(Event e, DbUserType userType) {
+        db.addDoc(new SimplifiedEvent(e), userType);
     }
 
     public void delete(DbUserType userType, User user) {
