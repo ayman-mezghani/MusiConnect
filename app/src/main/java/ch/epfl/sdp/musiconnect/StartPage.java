@@ -1,7 +1,6 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.Manifest;
-import android.app.NotificationChannel;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -35,16 +34,30 @@ import ch.epfl.sdp.musiconnect.database.DbUserType;
 public class StartPage extends Page {
     private static final String TAG = "MainActivity";
     private FusedLocationProviderClient fusedLocationClient;
+    private Location userLocation;
     private FloatingActionButton fab_menu, fab_button_1, fab_button_2;
     private Animation fabOpen, fabClose, fabClockWise, fabAntiClockWise;
     private TextView fabTv1, fabTv2;
     private boolean isOpen = false;
     private Band b;
     public static boolean test = true;
-    private Location userLocation;
 
-    // Temporary helper variable
-    protected int DISTANCE = 100;
+    // Helper variable
+    private int DISTANCE = 100;
+
+    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle b = intent.getBundleExtra("Location");
+            Location location;
+            if (b != null) {
+                location = b.getParcelable("Location");
+                if (location != null) {
+                    userLocation = location;
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +116,7 @@ public class StartPage extends Page {
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter("GPSLocationUpdates"));
+
         String notificationMessage = "A musician is within " + DISTANCE + " meters";
         if (DISTANCE <= 100)
             sendNotificationToMusician(Notifications.MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT, notificationMessage);
@@ -113,25 +127,15 @@ public class StartPage extends Page {
         notif.sendNotification(channel, this, notificationMessage, priority);
     }
 
-    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Bundle b = intent.getBundleExtra("Location");
-            Location location;
-            if (b != null) {
-                location = b.getParcelable("Location");
-                if (location != null) {
-                    userLocation = location;
-                }
-            }
-        }
-    };
-
     protected void button1Click() {
-        runOnUiThread(() -> Toast.makeText(getApplicationContext(), CurrentUser.getInstance(getApplicationContext()).email, Toast.LENGTH_SHORT).show());
+        runOnUiThread(new Runnable() {
+            public void run() {
+                Toast.makeText(getApplicationContext(), CurrentUser.getInstance(getApplicationContext()).email, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         ArrayList<String> ls = new ArrayList<>();
-        // ls.add("aymanmezghani97@gmail.com");
+//        ls.add("aymanmezghani97@gmail.com");
         ls.add("seboll13@gmail.com");
         DbAdapter db = DbGenerator.getDbInstance();
 
@@ -139,8 +143,8 @@ public class StartPage extends Page {
             db.read(DbUserType.Musician, str, new DbCallback() {
                 @Override
                 public void readCallback(User u) {
-                b.addMember((Musician) u);
-                (DbGenerator.getDbInstance()).add(DbUserType.Band, b);
+                    b.addMember((Musician) u);
+                    (DbGenerator.getDbInstance()).add(DbUserType.Band, b);
                 }
             });
         }
