@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -148,7 +149,8 @@ public abstract class Page extends AppCompatActivity {
         if (DISTANCE <= 100) {
             if (!notificationMessages.contains(notificationMessage)) {
                 Notifications notif = new Notifications();
-                notif.sendNotification(channel, this, notificationMessage, priority);
+                Log.d("CONTEXTTTTTT", getApplicationContext().toString());
+                notif.sendNotification(channel, getApplicationContext(), notificationMessage, priority);
                 notificationMessages.add(notificationMessage);
             }
         }
