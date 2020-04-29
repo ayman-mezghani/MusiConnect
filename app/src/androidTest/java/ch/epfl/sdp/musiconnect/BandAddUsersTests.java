@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+/*package ch.epfl.sdp.musiconnect;
 
 
 import android.view.View;
@@ -32,7 +32,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
 @LargeTest
-//@RunWith(AndroidJUnit4.class)
+@RunWith(AndroidJUnit4.class)
 public class BandAddUsersTests {
 
     @Rule
@@ -50,5 +50,5 @@ public class BandAddUsersTests {
         //((StartPage) getCurrentActivity()).button1Click();
         //((StartPage) getCurrentActivity()).fabMenuClick();
     }
-}
+}*/
 
