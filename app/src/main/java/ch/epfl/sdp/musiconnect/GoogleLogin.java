@@ -72,15 +72,6 @@ public class GoogleLogin extends AppCompatActivity {
                     @Override
                     public void readCallback(User user) {
                         CurrentUser.getInstance(ctx).setTypeOfUser(((Musician) user).getTypeOfUser());
-
-//                        if(CurrentUser.getInstance(ctx).getTypeOfUser() == TypeOfUser.Band) {
-//                            db.read(DbUserType.Band, account.getEmail(), new DbCallback() {
-//                                @Override
-//                                public void readCallback(User user) {
-//                                    CurrentUser.getInstance(ctx).setBand(((Band) user));
-//                                }
-//                            });
-//                        }
                         redirect(exists);
                         finish();
                     }
@@ -127,14 +118,6 @@ public class GoogleLogin extends AppCompatActivity {
                         public void readCallback(User user) {
                             CurrentUser.getInstance(ctx).setTypeOfUser(((Musician) user).getTypeOfUser());
 
-//                        if(CurrentUser.getInstance(ctx).getTypeOfUser() == TypeOfUser.Band) {
-//                            db.read(DbUserType.Band, account.getEmail(), new DbCallback() {
-//                                @Override
-//                                public void readCallback(User user) {
-//                                    CurrentUser.getInstance(ctx).setBand(((Band) user));
-//                                }
-//                            });
-//                        }
                             redirect(exists);
                         }
                     });
@@ -151,7 +134,7 @@ public class GoogleLogin extends AppCompatActivity {
         }
     }
 
-    private void redirect(boolean userExists) {
+    protected void redirect(boolean userExists) {
         if (userExists) {
             CurrentUser.getInstance(GoogleLogin.this).setCreatedFlag();
             startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class));

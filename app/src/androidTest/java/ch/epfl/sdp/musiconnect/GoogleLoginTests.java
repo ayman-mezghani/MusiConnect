@@ -21,9 +21,13 @@ import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sdp.musiconnect.testsFunctions.getCurrentActivity;
+import static ch.epfl.sdp.musiconnect.testsFunctions.waitALittle;
+import static junit.framework.TestCase.assertTrue;
 
 public class GoogleLoginTests {
 
@@ -49,11 +53,11 @@ public class GoogleLoginTests {
         ((GoogleLogin) getCurrentActivity()).onActivityResult(0, 0, null);
     }
 
-    public static void waitALittle(int t) {
-        try {
-            TimeUnit.SECONDS.sleep(t);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    @Test
+    public void redirectTestsTrue() {
+        // Simulate the on activity result call
+        ((GoogleLogin) getCurrentActivity()).redirect(true);
+        intended(hasComponent(StartPage.class.getName()));
+        assertTrue(CurrentUser.getInstance(activityRule.getActivity()).getCreatedFlag());
     }
 }
