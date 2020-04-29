@@ -36,11 +36,12 @@ public abstract class Page extends AppCompatActivity {
     // HELPER VARIABLE
     private int DISTANCE = 100;
 
+    private Notifications notifications;
     private List<String> notificationMessages;
 
     Handler handler = new Handler();
     Runnable runnable;
-    int delay = 10*1000; // 10 seconds (where 1000 milliseconds = 1 sec)
+    int delay = 1000; // 10 seconds (where 1000 milliseconds = 1 sec)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,7 @@ public abstract class Page extends AppCompatActivity {
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
+        notifications = new Notifications(this);
         notificationMessages = new ArrayList<>();
     }
 
@@ -155,8 +157,7 @@ public abstract class Page extends AppCompatActivity {
         String notificationMessage = "A musician is within " + DISTANCE + " meters";
         if (DISTANCE <= 100) {
             if (!notificationMessages.contains(notificationMessage)) {
-                Notifications notif = new Notifications();
-                notif.sendNotification(channel, getApplicationContext(), notificationMessage, priority);
+                notifications.sendNotification(channel, getApplicationContext(), notificationMessage, priority);
                 notificationMessages.add(notificationMessage);
             }
         }

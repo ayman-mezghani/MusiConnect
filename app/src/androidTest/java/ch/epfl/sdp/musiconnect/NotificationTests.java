@@ -6,6 +6,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Objects;
+
+import androidx.core.app.NotificationCompat;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -14,12 +17,13 @@ import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.Until;
+import ch.epfl.sdp.R;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static ch.epfl.sdp.musiconnect.Notifications.MUSICIAN_CHANNEL;
+import static ch.epfl.sdp.musiconnect.StartPage.*;
+import static ch.epfl.sdp.musiconnect.testsFunctions.*;
+
+import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class NotificationTests {
@@ -33,26 +37,14 @@ public class NotificationTests {
     public GrantPermissionRule mGrantPermissionRule =
             GrantPermissionRule.grant("android.permission.ACCESS_FINE_LOCATION");
 
+
     @SuppressWarnings("unused")
-    public void clearAllNotifications() {
+    private void clearAllNotifications() {
         device.openNotification();
         device.wait(Until.hasObject(By.textStartsWith("MusiConnect")), 600);
         UiObject2 clearAll = device.findObject(By.textStartsWith("CLEAR ALL"));
         if (clearAll != null)
             clearAll.click();
-    }
-
-    private void hideNotifications() {
-        device.swipe(200, 200, 200, 100, 5);
-    }
-
-    /**
-     * Helper method to avoid duplicate code
-     * @param stringId
-     */
-    private void openActionsMenu(int stringId) {
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-        onView(withText(stringId)).perform(click());
     }
 
     /**
@@ -65,31 +57,23 @@ public class NotificationTests {
         return targetContext.getResources().getString(id);
     }
 
+
     @Test
-    public void dummyTemporaryTest() {
-        assert(true);
-    }
-
-
-    /*@Test
     public void testCheckThatNotificationIsReceived() {
         String expectedTitle = getResourceString(R.string.musiconnect_notification);
         String expectedMessage = "A musician is within " + 100 + " meters";
 
-        notifs.sendNotification(
-                Notifications.MUSICIAN_CHANNEL,
-                startPageRule.getActivity(),
-                expectedMessage,
-                NotificationCompat.PRIORITY_DEFAULT
+        ((StartPage) Objects.requireNonNull(getCurrentActivity())).sendNotificationToMusician(
+                MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT
         );
 
         device.openNotification();
-        device.wait(Until.hasObject(By.textStartsWith("MusiConnect")), 600);
+        device.wait(Until.hasObject(By.textStartsWith("MusiConnect")), 6000);
         UiObject2 title = device.findObject(By.textStartsWith(expectedTitle));
         UiObject2 message = device.findObject(By.textStartsWith(expectedMessage));
 
         assertEquals(expectedTitle, title.getText());
         assertEquals(expectedMessage, message.getText());
         clearAllNotifications();
-    }*/
+    }
 }
