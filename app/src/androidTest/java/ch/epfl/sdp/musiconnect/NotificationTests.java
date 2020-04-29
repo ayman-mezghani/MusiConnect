@@ -7,6 +7,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -88,5 +91,24 @@ public class NotificationTests {
         assertEquals(expectedTitle, title.getText());
         assertEquals(expectedMessage, message.getText());
         clearAllNotifications();
+    }
+
+    @Test
+    public void testNoTwoNotificationIsTheSame() {
+        int distance = 100;
+
+        String expectedMessage = "A musician is within " + distance + " meters";
+
+        List<String> notificationMessages = new ArrayList<>();
+
+        openActionsMenu(R.string.my_profile);
+        device.pressBack();
+
+        device.openNotification();
+        device.wait(Until.hasObject(By.textStartsWith("MusiConnect")), 600);
+        UiObject2 message = device.findObject(By.textStartsWith(expectedMessage));
+        notificationMessages.add(message.getText());
+
+        assertEquals(1, notificationMessages.size());
     }
 }
