@@ -40,7 +40,7 @@ public abstract class Page extends AppCompatActivity {
 
     Handler handler = new Handler();
     Runnable runnable;
-    int delay = 10*1000; // 10 seconds (where 1000 milliseconds = 1 sec)
+    int delay = 60*1000; // 1 minute (where 1000 milliseconds = 1 sec)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +149,6 @@ public abstract class Page extends AppCompatActivity {
         if (DISTANCE <= 100) {
             if (!notificationMessages.contains(notificationMessage)) {
                 Notifications notif = new Notifications();
-                Log.d("CONTEXTTTTTT", getApplicationContext().toString());
                 notif.sendNotification(channel, getApplicationContext(), notificationMessage, priority);
                 notificationMessages.add(notificationMessage);
             }
