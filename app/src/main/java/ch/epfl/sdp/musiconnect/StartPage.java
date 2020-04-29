@@ -1,6 +1,7 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.Manifest;
+import android.app.NotificationChannel;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -33,27 +35,16 @@ import ch.epfl.sdp.musiconnect.database.DbUserType;
 public class StartPage extends Page {
     private static final String TAG = "MainActivity";
     private FusedLocationProviderClient fusedLocationClient;
-    private Location userLocation;
     private FloatingActionButton fab_menu, fab_button_1, fab_button_2;
     private Animation fabOpen, fabClose, fabClockWise, fabAntiClockWise;
     private TextView fabTv1, fabTv2;
     private boolean isOpen = false;
     private Band b;
     public static boolean test = true;
+    private Location userLocation;
 
-    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-        Bundle b = intent.getBundleExtra("Location");
-        Location location;
-        if (b != null) {
-            location = b.getParcelable("Location");
-            if (location != null) {
-                userLocation = location;
-            }
-        }
-        }
-    };
+    // Temporary helper variable
+    protected int DISTANCE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,15 +93,45 @@ public class StartPage extends Page {
         }
     }
 
-    protected void button1Click() {
-        runOnUiThread(new Runnable() {
-            public void run() {
-                Toast.makeText(getApplicationContext(), CurrentUser.getInstance(getApplicationContext()).email, Toast.LENGTH_SHORT).show();
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter("GPSLocationUpdates"));
+        String notificationMessage = "A musician is within " + DISTANCE + " meters";
+        if (DISTANCE <= 100)
+            sendNotificationToMusician(Notifications.MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT, notificationMessage);
+    }
+
+    private void sendNotificationToMusician(String channel, int priority, String notificationMessage) {
+        Notifications notif = new Notifications();
+        notif.sendNotification(channel, this, notificationMessage, priority);
+    }
+
+    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle b = intent.getBundleExtra("Location");
+            Location location;
+            if (b != null) {
+                location = b.getParcelable("Location");
+                if (location != null) {
+                    userLocation = location;
+                }
             }
-        });
+        }
+    };
+
+    protected void button1Click() {
+        runOnUiThread(() -> Toast.makeText(getApplicationContext(), CurrentUser.getInstance(getApplicationContext()).email, Toast.LENGTH_SHORT).show());
 
         ArrayList<String> ls = new ArrayList<>();
-//        ls.add("aymanmezghani97@gmail.com");
+        // ls.add("aymanmezghani97@gmail.com");
         ls.add("seboll13@gmail.com");
         DbAdapter db = DbGenerator.getDbInstance();
 
@@ -154,20 +175,6 @@ public class StartPage extends Page {
         }
 
         isOpen = !isOpen;
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                messageReceiver, new IntentFilter("GPSLocationUpdates"));
     }
 
     private void startLocationService() {

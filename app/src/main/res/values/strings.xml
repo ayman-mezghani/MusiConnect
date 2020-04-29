@@ -74,7 +74,28 @@
   
     <string name="welcome_message">Welcome to MusiConnect!</string>
     <string name="info_message">Please navigate the app using the menu.</string>
-  
+
+    <string name="add_change_video">add/Change Video</string>
+
+    <string name="event_not_found">Event not found...</string>
+    <string name="profile_not_found">Profile not found...</string>
+    <string name="create_an_event">Create an event</string>
+    <string name="my_events">My events</string>
+    <string name="creation_cancelled">Creation cancelled</string>
+    <string name="add_participant">Add Participant</string>
+    <string name="remove_participant">Remove Participant</string>
+
+    <string name="add_users">Add Users</string>
+    <string name="add_event">Add event</string>
+    <string name="band_creation">Band Creation</string>
+    <string name="band_name">Band name</string>
+    <string name="band_name_cant_be_empty">Band name can\'t be empty</string>
+    <string name="your_nexts_events">Your nexts events</string>
+    <string name="your_bands">Your bands</string>
+
+    <string name="musiconnect_notification">MusiConnect Notification</string>
+    <string name="musiconnect_generalnotifmessage">A musician is nearby !</string>
+
     <string name="finderTitle">Finder</string>
     <string name="findMusicianButton">Find Musician</string>
     <string name="findBandButton">Find Band</string>
@@ -134,22 +155,4 @@
         <item>Advanced</item>
         <item>Professional</item>
     </string-array>
-
-    <string name="add_change_video">add/Change Video</string>
-
-    <string name="event_not_found">Event not found...</string>
-    <string name="profile_not_found">Profile not found...</string>
-    <string name="create_an_event">Create an event</string>
-    <string name="my_events">My events</string>
-    <string name="creation_cancelled">Creation cancelled</string>
-    <string name="add_participant">Add Participant</string>
-    <string name="remove_participant">Remove Participant</string>
-
-    <string name="add_users">Add Users</string>
-    <string name="add_event">Add event</string>
-    <string name="band_creation">Band Creation</string>
-    <string name="band_name">Band name</string>
-    <string name="band_name_cant_be_empty">Band name can\'t be empty</string>
-    <string name="your_nexts_events">Your nexts events</string>
-    <string name="your_bands">Your bands</string>
 </resources>

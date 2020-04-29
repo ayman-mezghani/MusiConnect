@@ -8,6 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -23,37 +24,23 @@ import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class NotificationTests {
-    private UiDevice device;
+    private UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
     @Rule
     public final ActivityTestRule<StartPage> startPageRule =
             new ActivityTestRule<>(StartPage.class);
 
     @Before
-    public void initIntents() {
-        Intents.init();
-        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        MapsLocationTest.clickAlert(device);
-    }
-
-    @After
-    public void releaseIntents() { Intents.release(); }
-
-    /**
-     * Helper method to avoid duplicate code
-     * @param stringId
-     */
-    private void openActionsMenu(int stringId) {
-        openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
-        onView(withText(stringId)).perform(click());
-    }
-
     @SuppressWarnings("unused")
-    private void clearAllNotifications() {
+    public void clearAllNotifications() {
         device.openNotification();
         device.wait(Until.hasObject(By.textStartsWith("MusiConnect")), 600);
         UiObject2 clearAll = device.findObject(By.textStartsWith("CLEAR ALL"));
@@ -67,6 +54,15 @@ public class NotificationTests {
     }
 
     /**
+     * Helper method to avoid duplicate code
+     * @param stringId
+     */
+    private void openActionsMenu(int stringId) {
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(stringId)).perform(click());
+    }
+
+    /**
      * Get string value from strings.xml file
      * @param id: string id
      * @return: string value
@@ -77,27 +73,14 @@ public class NotificationTests {
     }
 
     @Test
-    public void testOpenMaps() {
-        openActionsMenu(R.string.map);
-        intended(hasComponent(MapsActivity.class.getName()));
-    }
+    public void testCheckThatNotificationIsReceivedWhenBackOnStartPageWithSmallDistance() {
+        int distance = 100;
 
-    /*@Test
-    public void testChangeRadius() {
-        openActionsMenu(R.string.map);
-        onView(withId(R.id.distanceThreshold)).perform(click());
-        onView(withText("100m")).perform(click());
-        onView(withText("100m")).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testUseLargeRadiusShouldMakeReceiveNotifications() {
         String expectedTitle = getResourceString(R.string.musiconnect_notification);
-        String expectedMessage = "A musician is nearby !";
+        String expectedMessage = "A musician is within " + distance + " meters";
 
-        openActionsMenu(R.string.map);
-        onView(withId(R.id.distanceThreshold)).perform(click());
-        onView(withText("10km")).perform(click());
+        openActionsMenu(R.string.my_profile);
+        device.pressBack();
 
         device.openNotification();
         device.wait(Until.hasObject(By.textStartsWith("MusiConnect")), 600);
@@ -107,5 +90,5 @@ public class NotificationTests {
         assertEquals(expectedTitle, title.getText());
         assertEquals(expectedMessage, message.getText());
         clearAllNotifications();
-    }*/
+    }
 }
