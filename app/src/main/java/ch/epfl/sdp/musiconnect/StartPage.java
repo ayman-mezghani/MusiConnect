@@ -123,7 +123,7 @@ public class StartPage extends Page {
 
     private void sendNotificationToMusician(String channel, int priority, String notificationMessage) {
         Notifications notif = new Notifications();
-        notif.sendNotification(channel, getApplicationContext(), notificationMessage, priority);
+        notif.sendNotification(channel, StartPage.this, notificationMessage, priority);
     }
 
     protected void button1Click() {
