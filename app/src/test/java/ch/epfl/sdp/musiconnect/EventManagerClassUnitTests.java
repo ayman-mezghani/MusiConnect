@@ -2,8 +2,11 @@ package ch.epfl.sdp.musiconnect;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+
+import ch.epfl.sdp.musiconnect.events.Event;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -569,6 +572,25 @@ public class EventManagerClassUnitTests {
         thirdExpectedString += "Bands:\n" + "    " + bandName + "\n";
 
         assertEquals(thirdExpectedString, brian.toString());
+    }
+
+    @Test
+    public void eventManagerEventsTests() {
+        EventManager john = new EventManager("John", "Lennon", "JohnLennon", "john.lennon@gmail.com", new MyDate(1940, 10, 9));
+
+
+        ArrayList<String> as = new ArrayList<>();
+        Event e = new Event(john, "1");
+
+        as.add(e.getEid());
+        john.addEvent(e.getEid());
+
+        assertEquals(as, john.getEvents());
+
+        as.add("2");
+
+        john.setEvents(as);
+        assertEquals(as, john.getEvents());
     }
 
 }
