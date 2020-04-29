@@ -40,7 +40,7 @@ public abstract class Page extends AppCompatActivity {
 
     Handler handler = new Handler();
     Runnable runnable;
-    int delay = 60*1000; // 1 minute (where 1000 milliseconds = 1 sec)
+    int delay = 10*1000; // 10 seconds (where 1000 milliseconds = 1 sec)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,12 +75,19 @@ public abstract class Page extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        if (getApplicationContext() != null)
+        if (!test)
             handler.postDelayed( runnable = () -> {
                 sendNotificationToMusician(Notifications.MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT);
                 handler.postDelayed(runnable, delay);
             }, delay);
         super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        if (!test)
+            handler.removeCallbacks(runnable);
+        super.onPause();
     }
 
     @Override
@@ -144,7 +151,7 @@ public abstract class Page extends AppCompatActivity {
                 });
     }
 
-    private void sendNotificationToMusician(String channel, int priority) {
+    protected void sendNotificationToMusician(String channel, int priority) {
         String notificationMessage = "A musician is within " + DISTANCE + " meters";
         if (DISTANCE <= 100) {
             if (!notificationMessages.contains(notificationMessage)) {

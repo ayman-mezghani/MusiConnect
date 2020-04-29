@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.core.app.NotificationCompat;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -73,15 +74,18 @@ public class NotificationTests {
         return targetContext.getResources().getString(id);
     }
 
-    /*@Test
-    public void testCheckThatNotificationIsReceivedWhenBackOnStartPageWithSmallDistance() {
-        int distance = 100;
-
+    @Test
+    public void testCheckThatNotificationIsReceived() {
         String expectedTitle = getResourceString(R.string.musiconnect_notification);
-        String expectedMessage = "A musician is within " + distance + " meters";
+        String expectedMessage = "A musician is within " + 100 + " meters";
 
-        openActionsMenu(R.string.my_profile);
-        device.pressBack();
+        Notifications notifs = new Notifications();
+        notifs.sendNotification(
+                Notifications.MUSICIAN_CHANNEL,
+                startPageRule.getActivity(),
+                expectedMessage,
+                NotificationCompat.PRIORITY_DEFAULT
+        );
 
         device.openNotification();
         device.wait(Until.hasObject(By.textStartsWith("MusiConnect")), 600);
@@ -92,23 +96,4 @@ public class NotificationTests {
         assertEquals(expectedMessage, message.getText());
         clearAllNotifications();
     }
-
-    @Test
-    public void testNoTwoNotificationIsTheSame() {
-        int distance = 100;
-
-        String expectedMessage = "A musician is within " + distance + " meters";
-
-        List<String> notificationMessages = new ArrayList<>();
-
-        openActionsMenu(R.string.my_profile);
-        device.pressBack();
-
-        device.openNotification();
-        device.wait(Until.hasObject(By.textStartsWith("MusiConnect")), 600);
-        UiObject2 message = device.findObject(By.textStartsWith(expectedMessage));
-        notificationMessages.add(message.getText());
-
-        assertEquals(1, notificationMessages.size());
-    }*/
 }
