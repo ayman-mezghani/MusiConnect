@@ -57,4 +57,9 @@ public class MockDatabaseForUT extends Database {
         assertEquals(expectedDocName, docName);
         dbCallback.existsCallback(false);
     }
+
+    @Override
+    public void finderQuery(String collection, Map<String, Object> arguments, DbCallback dbCallback) {
+
+    }
 }
