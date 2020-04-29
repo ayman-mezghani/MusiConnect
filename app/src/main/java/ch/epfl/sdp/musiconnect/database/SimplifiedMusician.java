@@ -1,5 +1,6 @@
 package ch.epfl.sdp.musiconnect.database;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.firebase.Timestamp;
@@ -15,6 +16,17 @@ import ch.epfl.sdp.musiconnect.MyLocation;
 import ch.epfl.sdp.musiconnect.TypeOfUser;
 
 public class SimplifiedMusician extends SimplifiedDbEntry {
+//    @TODO use this enum instead of the static fields
+//    public enum Fields {
+//        username, firstName, lastName, email, typeOfUser, birthday, joinDate, LOCATlocationION;
+//
+//        @NonNull
+//        @Override
+//        public String toString() {
+//            return super.toString().toLowerCase();
+//        }
+//    }
+
     private String username;
     private String firstName;
     private String lastName;

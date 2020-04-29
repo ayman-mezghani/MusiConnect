@@ -1,7 +1,5 @@
 package ch.epfl.sdp.musiconnect.database;
 
-import androidx.annotation.NonNull;
-
 import java.util.List;
 import java.util.Map;
 
@@ -20,5 +18,5 @@ abstract class Database {
 
     abstract void docExists(String collection, String docName, DbCallback dbCallback);
 
-    public abstract void query();
+    public abstract void finderQuery(String collection, Map<String, Object> arguments, DbCallback dbCallback);
 }

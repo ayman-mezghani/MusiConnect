@@ -22,12 +22,12 @@ public class CurrentUser {
 
     // private constructor restricted to this class itself
     private CurrentUser(Context context) {
-        if(!checktest()) {
+        if (!checktest()) {
             acct = GoogleSignIn.getLastSignedInAccount(context);
             if (acct != null) {
                 email = acct.getEmail();
             } else email = "";
-        }else{
+        } else {
             email = "bobminion@gmail.com";
         }
     }
@@ -54,7 +54,9 @@ public class CurrentUser {
         return createdFlag;
     }
 
-    public String getBandName() { return this.bandName; }
+    public String getBandName() {
+        return this.bandName;
+    }
 
     public void setBandName(String bandName) {
         if (this.musician.getTypeOfUser() == TypeOfUser.Band)
@@ -74,6 +76,7 @@ public class CurrentUser {
         }
         return istest;
     }
+
     public void setMusician(Musician m) {
         this.musician = m;
     }

@@ -6,23 +6,27 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.User;
 
-class FirebaseDatabase extends Database {
+public class FirebaseDatabase extends Database {
     private static final String TAG = "DataBase";
     private FirebaseFirestore db;
 
@@ -65,33 +69,7 @@ class FirebaseDatabase extends Database {
                     Map<String, Object> data = documentSnapshot.getData();
                     if (data != null && data.size() > 0) {
                         if (data.get("leader") != null) {
-
-                            DbAdapter da = new DbAdapter(this);
-                            da.read(DbUserType.Musician, (String) data.get("leader"), new DbCallback() {
-                                @Override
-                                public void readCallback(User user) {
-                                    Band b = new Band((String) data.get("bandName"), (Musician) user);
-
-                                    if (data.get("videoUrl") != null)
-                                        b.setVideoURL(data.get("videoUrl").toString());
-
-                                    b.setMusicianEmailAdresses((ArrayList<String>) data.get("members"));
-                                    DbAdapter da = DbGenerator.getDbInstance();
-
-                                    for (String me : b.getMusicianEmailsAdress()) {
-                                        da.read(DbUserType.Musician, me, new DbCallback() {
-                                            @Override
-                                            public void readCallback(User user) {
-                                                try {
-                                                    b.addMember((Musician) user);
-                                                } catch (IllegalArgumentException e) {
-                                                }
-                                            }
-                                        });
-                                    }
-                                    dbCallback.readCallback(b);
-                                }
-                            });
+                            fetchBandMembers(data, dbCallback);
                         } else {
                             SimplifiedMusician m = new SimplifiedMusician(data);
                             dbCallback.readCallback(m.toMusician());
@@ -99,6 +77,37 @@ class FirebaseDatabase extends Database {
                     }
                 })
                 .addOnFailureListener(e -> Log.w(TAG, "Error reading document", e));
+    }
+
+    private void fetchBandMembers(Map<String, Object> data, DbCallback dbCallback) {
+
+        DbAdapter da = DbGenerator.getDbInstance();
+
+        da.read(DbUserType.Musician, (String) data.get("leader"), new DbCallback() {
+            @Override
+            public void readCallback(User user) {
+                Band b = new Band((String) data.get("bandName"), (Musician) user);
+
+                if (data.get("videoUrl") != null)
+                    b.setVideoURL(data.get("videoUrl").toString());
+
+                b.setMusicianEmailAdresses((ArrayList<String>) data.get("members"));
+                DbAdapter da = DbGenerator.getDbInstance();
+
+                for (String me : b.getMusicianEmailsAdress()) {
+                    da.read(DbUserType.Musician, me, new DbCallback() {
+                        @Override
+                        public void readCallback(User user) {
+                            try {
+                                b.addMember((Musician) user);
+                            } catch (IllegalArgumentException e) {
+                            }
+                        }
+                    });
+                }
+                dbCallback.readCallback(b);
+            }
+        });
     }
 
     @Override
@@ -118,22 +127,50 @@ class FirebaseDatabase extends Database {
     }
 
     @Override
-    public void query() {
-        db.collection("newtest")
-                .whereEqualTo("email", "musiconnectsdp@gmail.com")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
+    public void finderQuery(String collection, Map<String, Object> arguments, DbCallback dbCallback) {
+        CollectionReference ref = db.collection(collection);
+        unpack(ref, arguments).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<User> queryResult = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Map<String, Object> data = document.getData();
+                            Log.d("checkcheck", document.getId() + " => " + data);
+                            if (collection.equals(DbUserType.Musician.toString())) {
+                                SimplifiedMusician m = new SimplifiedMusician(document.getData());
+                                queryResult.add(m.toMusician());
+                            } else if (collection.equals((DbUserType.Band.toString()))) {
+                                // @TODO can't fetch a list of bands !!!!
                             }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
                         }
-
+                        dbCallback.queryCallback(queryResult);
+                    } else {
+                        Log.d("checkcheck", "Error getting documents: ", task.getException());
                     }
                 });
+    }
+
+    private Query unpack(CollectionReference ref, Map<String, Object> args) {
+        if (args.isEmpty())
+            return ref;
+        else {
+            ArrayDeque<Map.Entry> argEntries = new ArrayDeque<>(args.entrySet());
+            Query res = singleQuery(ref, argEntries.pollFirst());
+            while (!argEntries.isEmpty()) {
+                res = singleQuery(res, argEntries.pollFirst());
+            }
+            return res;
+        }
+    }
+
+    private Query singleQuery(Query prev, Map.Entry<String, Object> clause) {
+        if (clause.getValue() != null) {
+            Log.d("checkcheck", clause.getKey() + "=>" + clause.getValue() + " " + clause.getValue().getClass().getName());
+            if (clause.getKey().equals("")) {
+                return prev.whereArrayContains(clause.getKey(), clause.getValue());
+            } else {
+                return prev.whereEqualTo(clause.getKey(), clause.getValue());
+            }
+        } else return prev;
     }
 }
