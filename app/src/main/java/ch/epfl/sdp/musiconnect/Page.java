@@ -74,10 +74,11 @@ public abstract class Page extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        handler.postDelayed( runnable = () -> {
-            sendNotificationToMusician(Notifications.MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT);
-            handler.postDelayed(runnable, delay);
-        }, delay);
+        if (getApplicationContext() != null)
+            handler.postDelayed( runnable = () -> {
+                sendNotificationToMusician(Notifications.MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT);
+                handler.postDelayed(runnable, delay);
+            }, delay);
         super.onResume();
     }
 
