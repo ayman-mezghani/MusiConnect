@@ -2,6 +2,8 @@ package ch.epfl.sdp.musiconnect;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,6 +18,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import androidx.core.app.NotificationCompat;
 import ch.epfl.sdp.R;
@@ -30,7 +34,12 @@ public abstract class Page extends AppCompatActivity {
 
     // HELPER VARIABLE
     private int DISTANCE = 100;
+
     private List<String> notificationMessages;
+
+    Handler handler = new Handler();
+    Runnable runnable;
+    int delay = 10*1000; // 10 seconds (where 1000 milliseconds = 1 sec)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,19 +74,11 @@ public abstract class Page extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        handler.postDelayed( runnable = () -> {
+            sendNotificationToMusician(Notifications.MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT);
+            handler.postDelayed(runnable, delay);
+        }, delay);
         super.onResume();
-
-        String notificationMessage = "A musician is within " + DISTANCE + " meters";
-        if (DISTANCE <= 100) {
-            if (!notificationMessages.contains(notificationMessage))
-                sendNotificationToMusician(Notifications.MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT, notificationMessage);
-        }
-    }
-
-    private void sendNotificationToMusician(String channel, int priority, String notificationMessage) {
-        Notifications notif = new Notifications();
-        notif.sendNotification(channel, this, notificationMessage, priority);
-        notificationMessages.add(notificationMessage);
     }
 
     @Override
@@ -139,5 +140,16 @@ public abstract class Page extends AppCompatActivity {
                     startActivity(new Intent(Page.this, GoogleLogin.class));
                     finish();
                 });
+    }
+
+    private void sendNotificationToMusician(String channel, int priority) {
+        String notificationMessage = "A musician is within " + DISTANCE + " meters";
+        if (DISTANCE <= 100) {
+            if (!notificationMessages.contains(notificationMessage)) {
+                Notifications notif = new Notifications();
+                notif.sendNotification(channel, this, notificationMessage, priority);
+                notificationMessages.add(notificationMessage);
+            }
+        }
     }
 }

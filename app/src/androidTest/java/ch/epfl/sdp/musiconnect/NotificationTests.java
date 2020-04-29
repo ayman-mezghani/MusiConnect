@@ -73,7 +73,7 @@ public class NotificationTests {
         return targetContext.getResources().getString(id);
     }
 
-    @Test
+    /*@Test
     public void testCheckThatNotificationIsReceivedWhenBackOnStartPageWithSmallDistance() {
         int distance = 100;
 
@@ -110,5 +110,5 @@ public class NotificationTests {
         notificationMessages.add(message.getText());
 
         assertEquals(1, notificationMessages.size());
-    }
+    }*/
 }
