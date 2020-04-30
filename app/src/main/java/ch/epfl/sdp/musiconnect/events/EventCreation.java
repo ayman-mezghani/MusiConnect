@@ -2,6 +2,7 @@ package ch.epfl.sdp.musiconnect.events;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
@@ -15,7 +16,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import ch.epfl.sdp.R;
-
 import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.Page;
@@ -193,30 +193,34 @@ public class EventCreation extends Page {
 
 
     private void sendToDatabase() {
+        Context ctx = this;
         dbAdapter.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
             @Override
             public void readCallback(User user) {
-            Event event = new Event(user, "0");
-            event.setTitle(eventTitleView.getText().toString());
-            event.setAddress(eventAddressView.getText().toString());
-            event.setDescription(eventDescriptionView.getText().toString());
+                Event event = new Event(user, "0");
+                event.setTitle(eventTitleView.getText().toString());
+                event.setAddress(eventAddressView.getText().toString());
+                event.setDescription(eventDescriptionView.getText().toString());
 
-            String time = timeView.getText().toString();
-            String date = dateView.getText().toString();
+                String time = timeView.getText().toString();
+                String date = dateView.getText().toString();
 
-            String[] hourMin = time.split(":");
-            String[] dateMonthYear = date.split("/");
-            MyDate d = new MyDate(Integer.parseInt(dateMonthYear[2]),
-                    Integer.parseInt(dateMonthYear[1]),
-                    Integer.parseInt(dateMonthYear[0]),
-                    Integer.parseInt(hourMin[0]),
-                    Integer.parseInt(hourMin[1]));
+                String[] hourMin = time.split(":");
+                String[] dateMonthYear = date.split("/");
+                MyDate d = new MyDate(Integer.parseInt(dateMonthYear[2]),
+                        Integer.parseInt(dateMonthYear[1]),
+                        Integer.parseInt(dateMonthYear[0]),
+                        Integer.parseInt(hourMin[0]),
+                        Integer.parseInt(hourMin[1]));
 
-            for (User musician: participants) {
-                event.register(musician);
-            }
+                for (User musician: participants) {
+                    event.register(musician);
+                }
 
-            event.setDateTime(d);
+                event.setDateTime(d);
+
+                DbAdapter db = DbGenerator.getDbInstance();
+                db.add(event, DbUserType.valueOf(CurrentUser.getInstance(ctx).getTypeOfUser().toString()));
             }
         });
     }

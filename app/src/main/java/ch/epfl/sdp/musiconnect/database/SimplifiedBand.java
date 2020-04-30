@@ -2,18 +2,11 @@ package ch.epfl.sdp.musiconnect.database;
 
 import androidx.annotation.Nullable;
 
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.GeoPoint;
-
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
@@ -23,11 +16,13 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
     private String bandName;
     private String urlVideo;
     private List<String> members;
+    private List<String> events;
 
     static final String LEADER = "Leader";
     static final String BANDNAME = "BandName";
     static final String URLVIDEO = "UrlVideo";
     static final String MEMBERS = "members";
+    static final String EVENTS = "events";
 
     public SimplifiedBand() {
     }
@@ -40,6 +35,7 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
           this.members.add(m.getEmailAddress());
         }
         this.urlVideo = band.getVideoURL();
+        this.events = band.getEvents();
     }
 
     public SimplifiedBand(Map<String, Object> map) {
@@ -54,6 +50,7 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
             this.members = null;
         }
         this.urlVideo = map.get(URLVIDEO) == null ? "" : (String) map.get(URLVIDEO);
+        this.events = map.get(EVENTS) == null ? null : (ArrayList<String>) map.get(EVENTS);
     }
 
     public Map<String, Object> toMap() {
@@ -62,6 +59,7 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
         res.put(BANDNAME, bandName);
         res.put(MEMBERS, members);
         res.put(URLVIDEO, urlVideo);
+        res.put(EVENTS, events);
         return res;
     }
 
@@ -95,6 +93,14 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
 
     public void setMembers(ArrayList<String> members) {
         this.members = members;
+    }
+
+    public List<String> getEvents() {
+        return events;
+    }
+
+    public void setEvents(ArrayList<String> e) {
+        this.events = e;
     }
 
     @Override

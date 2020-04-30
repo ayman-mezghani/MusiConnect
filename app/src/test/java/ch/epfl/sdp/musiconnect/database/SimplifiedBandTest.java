@@ -48,6 +48,12 @@ public class SimplifiedBandTest {
 
         assertEquals("email2@gmail.com", sb.getLeader());
         assertEquals("bandNameTest", sb.getBandName());
+
+        ArrayList<String> s = new ArrayList<>();
+        s.add("1");
+        s.add("2");
+        sb.setEvents(s);
+        assertEquals(s, sb.getEvents());
     }
 
     @Test
@@ -71,6 +77,7 @@ public class SimplifiedBandTest {
         assertEquals("", sb.getBandName());
         assertEquals(null, sb.getMembers());
         assertEquals("", sb.getUrlVideo());
+        assertEquals(null, sb.getEvents());
     }
 
     @Test
@@ -82,6 +89,7 @@ public class SimplifiedBandTest {
         assertEquals((String) map.get(BANDNAME), (String) mapClone.get(BANDNAME));
         assertEquals(map.get(MEMBERS), mapClone.get(MEMBERS));
         assertEquals((String) map.get(URLVIDEO), (String) mapClone.get(URLVIDEO));
+        assertEquals(map.get("events"), mapClone.get("events"));
     }
 
     @Test
@@ -98,11 +106,18 @@ public class SimplifiedBandTest {
         al.add("email@gmail.com");
         al.add("email3@gmail.com");
         al.add("email2@gmail.com");
+
+        ArrayList<String> el = new ArrayList<>();
+        el.add("1");
+        el.add("2");
+        el.add("3");
+
         Map<String, Object> map = new HashMap<>();
         map.put(LEADER, "email@gmail.com");
         map.put(BANDNAME, "BandName");
         map.put(MEMBERS, al);
         map.put(URLVIDEO, "urlVideo");
+        map.put("events", el);
         return map;
     }
 
@@ -112,6 +127,7 @@ public class SimplifiedBandTest {
         map.put(BANDNAME, null);
         map.put(MEMBERS, null);
         map.put(URLVIDEO, null);
+        map.put("events", null);
         return map;
     }
 }
