@@ -217,6 +217,41 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <RadioGroup
+                    android:id="@+id/event_creation_rdg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="Do you want your event to be visible to every user? "
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                    <RadioButton
+                        android:id="@+id/visible"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:text="Yes, make it visible to everyone" />
+
+                    <RadioButton
+                        android:id="@+id/not_visible"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:textSize="16sp"
+                        android:text="No, hide it from the public" />
+                </RadioGroup>
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout

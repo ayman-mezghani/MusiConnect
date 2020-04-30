@@ -34,6 +34,7 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -153,7 +154,6 @@ public class EventCreationTests {
 
         closeSoftKeyboard();
 
-
         onView(withId(R.id.eventCreationNewEventDate)).perform(ViewActions.scrollTo()).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH));
         onView(withText("OK")).perform(click());
@@ -179,4 +179,18 @@ public class EventCreationTests {
         assertTrue(eventCreationRule.getActivity().isFinishing());
     }
 
+
+    @Test
+    public void testClickVisibleEvent() {
+        onView(withId(R.id.visible)).check(matches(not(isChecked())));
+        onView(withId(R.id.not_visible)).check(matches(isChecked()));
+        onView(withId(R.id.visible)).perform(ViewActions.scrollTo()).perform(click());
+
+        onView(withId(R.id.visible)).check(matches(isChecked()));
+        onView(withId(R.id.not_visible)).check(matches(not(isChecked())));
+        onView(withId(R.id.not_visible)).perform(ViewActions.scrollTo()).perform(click());
+
+        onView(withId(R.id.visible)).check(matches(not(isChecked())));
+        onView(withId(R.id.not_visible)).check(matches(isChecked()));
+    }
 }

@@ -2,7 +2,6 @@ package ch.epfl.sdp.musiconnect;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -70,7 +69,7 @@ public abstract class Page extends AppCompatActivity {
                 break;
 
             case R.id.my_events:
-                Intent eventIntent = new Intent(this, EventPage.class);
+                Intent eventIntent = new Intent(this, EventListPage.class);
                 this.startActivity(eventIntent);
                 break;
             case R.id.create_event:

@@ -7,6 +7,7 @@ import android.text.format.DateFormat;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,9 +32,9 @@ public class EventCreation extends Page {
     Calendar calendar;
     DatePickerDialog datePickerDialog;
     TimePickerDialog timePickerDialog;
+    private RadioGroup rdg;
 
-    Event event;
-    List<User> participants;
+    List<Musician> participants;
     List<String> emails; //List to keep track of users in the list
 
     @Override
@@ -55,6 +56,7 @@ public class EventCreation extends Page {
         dateView = findViewById(R.id.eventCreationNewEventDate);
         participantsView = findViewById(R.id.eventCreationNewEventParticipants);
 
+        rdg = findViewById(R.id.event_creation_rdg);
 
         setupDateTimePickerDialog();
         setupButtons();
@@ -100,24 +102,23 @@ public class EventCreation extends Page {
                 return;
             }
 
-            dbAdapter.read(DbUserType.Musician, email, new DbCallback() {
-                @Override
-                public void readCallback(User user) {
-                    if (user != null) {
-                        if (emails.contains(email)) {
-                            showToastWithText("This user is already in the participants list");
-                        } else {
-                            emails.add(email);
-                            participants.add(user);
-                            updateParticipants();
-                        }
-                    } else {
+            if (emails.contains(email)) {
+                showToastWithText("This user is already in the participants list");
+            } else {
+                emails.add(email);
+                dbAdapter.read(DbUserType.Musician, email, new DbCallback() {
+                    @Override
+                    public void readCallback(User user) {
+                        participants.add((Musician)user);
+                        updateParticipants();
+                    }
+
+                    @Override
+                    public void readFailCallback() {
                         showToastWithText("Please add a valid email");
                     }
-                }
-            });
-
-
+                });
+            }
         });
 
         Button removeParticipant = findViewById(R.id.eventCreationRemoveParticipants);
@@ -128,25 +129,23 @@ public class EventCreation extends Page {
                 showToastWithText("Please add an email");
                 return;
             }
-
-            dbAdapter.read(DbUserType.Musician, email, new DbCallback() {
-                @Override
-                public void readCallback(User user) {
-                    if (user != null) {
-                        if (emails.contains(email)) {
-                            emails.remove(email);
-                            participants.remove(user);
-                            updateParticipants();
-                        } else {
-                            showToastWithText("This user is not in the participants list");
-                        }
-                    } else {
-                        showToastWithText("Please add a valid email");
+            if (emails.contains(email)) {
+                emails.remove(email);
+                for (Musician m: participants) {
+                    if (m.getEmailAddress().equals(email)) {
+                        participants.remove(m);
+                        updateParticipants();
                     }
                 }
-            });
+            } else {
+                showToastWithText("This user is not in the participants list");
+            }
         });
 
+        setupSaveButtons();
+    }
+
+    private void setupSaveButtons() {
         Button doNotSave = findViewById(R.id.eventCreationBtnDoNotSaveEvent);
         doNotSave.setOnClickListener(v -> {
             showToastWithText("Creation cancelled");
@@ -162,6 +161,7 @@ public class EventCreation extends Page {
             }
         });
     }
+
 
     private void showToastWithText(String string) {
         EventCreation.this.runOnUiThread(() -> Toast.makeText(EventCreation.this,
@@ -194,7 +194,7 @@ public class EventCreation extends Page {
         dbAdapter.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
             @Override
             public void readCallback(User user) {
-                Event event = new Event(user, 0);
+                Event event = new Event((Musician)user, 0);
                 event.setTitle(eventTitleView.getText().toString());
                 event.setAddress(eventAddressView.getText().toString());
                 event.setDescription(eventDescriptionView.getText().toString());
@@ -210,11 +210,12 @@ public class EventCreation extends Page {
                         Integer.parseInt(hourMin[0]),
                         Integer.parseInt(hourMin[1]));
 
-                for (User musician: participants) {
+                for (Musician musician: participants) {
                     event.register(musician);
                 }
 
                 event.setDateTime(d);
+                event.setVisible(rdg.getCheckedRadioButtonId() == R.id.visible);
             }
         });
     }

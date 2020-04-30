@@ -48,7 +48,6 @@ public class EventPageTests {
     }
 
 
-    // Before and after methods are used in order to accept tests with intents
     @Before
     public void initIntents() {
         Intents.init();
@@ -58,20 +57,6 @@ public class EventPageTests {
     public void releaseIntents() { Intents.release(); }
 
 
-    private void openActionsMenu(int stringId) {
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-        onView(withText(stringId)).perform(click());
-    }
-
-
-    @Test
-    public void testMyEventClickShouldDoNothing() {
-        Intent intent = new Intent();
-        eventPageRule.launchActivity(intent);
-        openActionsMenu(R.string.my_events);
-
-        intended(hasComponent(EventPage.class.getName()));
-    }
 
 
     @Test

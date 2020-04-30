@@ -96,7 +96,10 @@ class FirebaseDatabase extends Database {
                         }
                     }
                 })
-                .addOnFailureListener(e -> Log.w(TAG, "Error reading document", e));
+                .addOnFailureListener(e -> {
+                    dbCallback.readFailCallback();
+                    Log.w(TAG, "Error reading document", e);
+                });
     }
 
     @Override

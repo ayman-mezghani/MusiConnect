@@ -1,7 +1,6 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.widget.TextView;
 
 import ch.epfl.sdp.R;
@@ -34,15 +33,6 @@ public class EventPage extends Page {
         retrieveEventInfo();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == R.id.my_events) {
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
 
     private void retrieveEventInfo() {
         // TODO retrieve event from database
@@ -54,7 +44,7 @@ public class EventPage extends Page {
         createDummyEvent(eid);
 
         /*
-        event = dbAdapter.read(getIntent().getIntExtra("EID", -1), new DbCallback() {
+        event = dbAdapter.read(DbType.Event, getIntent().getIntExtra("EID", -1), new DbCallback() {
             @Override
             public void onCallback(Event event) {
                 loadEventInfo(event);
@@ -73,7 +63,7 @@ public class EventPage extends Page {
             timeView.setText(event.getDateTime().toString());
 
             StringBuilder s = new StringBuilder();
-            for (User user : event.getParticipants()) {
+            for (Musician user : event.getParticipants()) {
                 s.append(user.getName()).append(System.lineSeparator());
             }
             participantsView.setText(s.toString());
@@ -93,7 +83,7 @@ public class EventPage extends Page {
             dbAdapter.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
-                    Event e1 = new Event(user, eid);
+                    Event e1 = new Event((Musician)user, eid);
                     e1.setAddress("Westminster, London, England");
                     e1.setLocation(51.5007, 0.1245);
                     e1.setDateTime(new MyDate(2020, 9, 21, 14, 30));

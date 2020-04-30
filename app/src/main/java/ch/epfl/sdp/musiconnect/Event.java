@@ -10,9 +10,9 @@ import java.util.List;
 
 public class Event {
     private int eid;
-    private User creator;
+    private Musician creator;
 
-    private List<User> participants;
+    private List<Musician> participants;
 
     private LatLng location;
     private String address;
@@ -23,7 +23,7 @@ public class Event {
     private final String DEFAULT_TITLE = "Event";
     private final String DEFAULT_MESSAGE = "Come watch and play!";
 
-    public Event(User creator, int eid) {
+    public Event(Musician creator, int eid) {
         if (creator == null) {
             throw new IllegalArgumentException();
         }
@@ -51,11 +51,11 @@ public class Event {
         return eid;
     }
 
-    public User getCreator() {
+    public Musician getCreator() {
         return creator;
     }
 
-    public void register(User user) {
+    public void register(Musician user) {
         if (user == null) {
             throw new IllegalArgumentException();
         }
@@ -63,7 +63,7 @@ public class Event {
         participants.add(user);
     }
 
-    public void unregister(User user) {
+    public void unregister(Musician user) {
         if (user == null) {
             throw new IllegalArgumentException();
         }
@@ -71,7 +71,7 @@ public class Event {
         participants.remove(user);
     }
 
-    public List<User> getParticipants() {
+    public List<Musician> getParticipants() {
         return participants;
     }
 
