@@ -224,6 +224,15 @@ public class EventCreation extends Page {
 
                 event.setDateTime(d);
 
+                GeoPoint p1 = getLocationFromAddress(event.getAddress());
+
+                if(p1 == null) {
+                    event.setLocation(0, 0);
+                    Toast.makeText(ctx, R.string.unable_to_resolve_address, Toast.LENGTH_SHORT).show();
+                } else {
+                    event.setLocation(p1.getLatitude(), p1.getLongitude());
+                }
+
                 DbAdapter db = DbGenerator.getDbInstance();
                 db.add(event, DbUserType.valueOf(CurrentUser.getInstance(ctx).getTypeOfUser().toString()));
             }
@@ -267,8 +276,8 @@ public class EventCreation extends Page {
         return empty;
     }
 
-    public GeoPoint getLocationFromAddress(String strAddress, Context ctx){
-        Geocoder coder = new Geocoder(ctx);
+    public GeoPoint getLocationFromAddress(String strAddress){
+        Geocoder coder = new Geocoder(this);
         List<Address> address = null;
         GeoPoint p1 = null;
 
