@@ -82,8 +82,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Spinner spinner;
 
     private boolean updatePos = true;
-
-    private GoogleMap mMap;
+    @VisibleForTesting
+    protected GoogleMap mMap;
     private UiSettings mUiSettings;
 
     private int delay;                                          //delay to updating the users list in ms
