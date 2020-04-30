@@ -109,9 +109,8 @@ public abstract class Page extends AppCompatActivity {
             if (b != null) {
                 location = b.getParcelable("Location");
                 if (location != null) {
-                    if (!test)
-                        if (isUserClose(location))
-                            sendNotificationToMusician(Notifications.MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT);
+                    if (!test && isUserClose(location))
+                        sendNotificationToMusician(Notifications.MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT);
                 }
             }
         }
