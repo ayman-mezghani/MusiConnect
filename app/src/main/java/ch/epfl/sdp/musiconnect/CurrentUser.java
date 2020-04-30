@@ -18,7 +18,9 @@ public class CurrentUser {
     private boolean createdFlag = false;
     private String bandName;
     private Musician musician;
+    private Band band;
     private GoogleSignInAccount acct;
+    private TypeOfUser type;
 
 
 
@@ -89,6 +91,7 @@ public class CurrentUser {
         single_instance = null;
     }
 
+
     public void setLocation(Location location) {
         musician.setLocation(new MyLocation(location.getLatitude(), location.getLongitude()));
     }
@@ -98,5 +101,22 @@ public class CurrentUser {
         newLocation.setLatitude(musician.getLocation().getLatitude());
         newLocation.setLongitude(musician.getLocation().getLongitude());
         return newLocation;
+    }
+
+
+    public Band getBand() {
+        return this.band;
+    }
+
+    public void setBand(Band b) {
+        this.band = b;
+    }
+
+    public TypeOfUser getTypeOfUser() {
+        return this.type;
+    }
+
+    public void setTypeOfUser(TypeOfUser t) {
+        this.type = t;
     }
 }

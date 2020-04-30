@@ -1,16 +1,16 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.events;
 
 import android.os.Bundle;
 import android.widget.Button;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
 
-public class EventEdition extends EventCreation {
+public class EventEdition extends EventModification {
     private String eventTitle, eventAddress, eventDescription;
     private boolean visible;
 
@@ -33,8 +33,8 @@ public class EventEdition extends EventCreation {
 
         onCreateGetIntentsFields();
 
+        setDateTimePickerDefaultValue();
         setupDateTimePickerDialog();
-        setDateTimePickerToDefaultValue();
         setupButtons();
 
     }
@@ -77,9 +77,23 @@ public class EventEdition extends EventCreation {
         }
     }
 
-    private void setDateTimePickerToDefaultValue() {
-        datePickerDialog.updateDate();
-        timePickerDialog.updateTime();
+    private void setDateTimePickerDefaultValue() {
+        String datetime = getIntent().getStringExtra("datetime");
+        String[] dateAndTime = datetime.split("\\s+");
+        String date = dateAndTime[0];
+        String time = dateAndTime[1];
+
+        dateView.setText(date);
+        timeView.setText(time);
+
+        String[] hourMin = time.split(":");
+        String[] dateMonthYear = date.split("\\.");
+
+        year = Integer.parseInt(dateMonthYear[2]);
+        month = Integer.parseInt(dateMonthYear[1]) - 1;
+        dayOfMonth = Integer.parseInt(dateMonthYear[0]);
+        hour = Integer.parseInt(hourMin[0]);
+        minute = Integer.parseInt(hourMin[1]);
     }
 
 
@@ -87,13 +101,13 @@ public class EventEdition extends EventCreation {
 
     @Override
     void setupSaveButtons() {
-        Button doNotSave = findViewById(R.id.eventCreationBtnDoNotSaveEvent);
+        Button doNotSave = findViewById(R.id.eventEditionBtnDoNotSaveEvent);
         doNotSave.setOnClickListener(v -> {
             showToastWithText("Creation cancelled");
             finish();
         });
 
-        Button save = findViewById(R.id.eventCreationBtnSaveEvent);
+        Button save = findViewById(R.id.eventEditionBtnSaveEvent);
         save.setOnClickListener(v -> {
             if (checkEventCreationInput()) {
                 sendToDatabase();

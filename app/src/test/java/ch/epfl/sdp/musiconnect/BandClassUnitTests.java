@@ -2,8 +2,11 @@ package ch.epfl.sdp.musiconnect;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+
+import ch.epfl.sdp.musiconnect.events.Event;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -29,7 +32,7 @@ public class BandClassUnitTests {
         assertEquals(john.getFirstName(), beatles.getLeaderFirstName());
         assertEquals(john.getLastName(), beatles.getLeaderLastName());
         assertEquals(john.getUserName(), beatles.getLeaderUserName());
-        assertEquals(john.getEmailAddress(), beatles.getLeaderEmailAddress());
+        assertEquals(john.getEmailAddress(), beatles.getEmailAddress());
     }
 
     @Test
@@ -442,5 +445,24 @@ public class BandClassUnitTests {
         Musician john = new Musician("John", "Lennon", "JohnLennon", "john.lennon@gmail.com", new MyDate(1940, 10, 9));
         Band band = new Band("BandName", john);
         assertEquals(band.getBandName(), band.getName());
+    }
+
+    @Test
+    public void bandEventsTests() {
+        Musician john = new Musician("John", "Lennon", "JohnLennon", "john.lennon@gmail.com", new MyDate(1940, 10, 9));
+        Band band = new Band("BandName", john);
+
+        ArrayList<String> as = new ArrayList<>();
+        Event e = new Event(john, "1");
+
+        as.add(e.getEid());
+        band.addEvent(e.getEid());
+
+        assertEquals(as, band.getEvents());
+
+        as.add("2");
+
+        band.setEvents(as);
+        assertEquals(as, band.getEvents());
     }
 }

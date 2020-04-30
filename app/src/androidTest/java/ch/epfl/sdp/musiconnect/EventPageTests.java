@@ -1,13 +1,10 @@
 package ch.epfl.sdp.musiconnect;
 
-
 import android.content.Intent;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.uiautomator.UiDevice;
 
 import org.junit.After;
 import org.junit.Before;
@@ -21,6 +18,8 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.events.Event;
+import ch.epfl.sdp.musiconnect.events.EventPage;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
@@ -64,7 +63,7 @@ public class EventPageTests {
         Musician m1 = md.getDummyMusician(0);
         Musician m2 = md.getDummyMusician(3);
 
-        Event event = new Event(m1, 1);
+        Event event = new Event(m1, "1");
         event.setAddress("Westminster, London, England");
         event.setLocation(51.5007, 0.1245);
         event.setDateTime(new MyDate(2020, 9, 21, 14, 30));
@@ -92,6 +91,6 @@ public class EventPageTests {
         intent.putExtra("EID", 0);
         eventPageRule.launchActivity(intent);
 
-        onView(withId(R.id.title)).check(matches(withText("Event not found...")));
+        onView(withId(R.id.title)).check(matches(withText(R.string.event_not_found)));
     }
 }

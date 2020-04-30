@@ -75,6 +75,11 @@
     <string name="welcome_message">Welcome to MusiConnect!</string>
     <string name="info_message">Please navigate the app using the menu.</string>
 
+
+    <string name="musiconnect_notification">MusiConnect Notification</string>
+    <string name="musiconnect_generalnotifmessage">A musician is nearby !</string>
+
+
     <string name="finderTitle">Finder</string>
     <string name="findMusicianButton">Find Musician</string>
     <string name="findBandButton">Find Band</string>
@@ -152,6 +157,7 @@
     <string name="band_name_cant_be_empty">Band name can\'t be empty</string>
     <string name="your_nexts_events">Your nexts events</string>
     <string name="your_bands">Your bands</string>
+
     <string name="event_title">Event title:</string>
     <string name="new_event_title">New event title</string>
     <string name="event_address">Event address:</string>
@@ -167,5 +173,7 @@
     <string name="visibility_answer_yes">Yes, make it visible to everyone</string>
     <string name="visibility_answer_no">No, hide it from the public</string>
     <string name="edit_event">Edit event</string>
-    <string name="edit_event">Edit event</string>
+
+    <string name="channel_name">channel</string>
+    <string name="channel_description">description</string>
 </resources>

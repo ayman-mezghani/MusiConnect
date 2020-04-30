@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".musiconnect.EventEdition"
+    tools:context=".musiconnect.events.EventEdition"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -168,7 +168,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/eventEditionAddParticipants"
+                    android:id="@+id/eventAddParticipants"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -176,7 +176,7 @@
                     android:text="@string/add_participant" />
 
                 <Button
-                    android:id="@+id/eventEditionRemoveParticipants"
+                    android:id="@+id/eventRemoveParticipants"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -205,7 +205,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
                 android:orientation="horizontal">
 

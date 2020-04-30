@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.events.Event;
 
 public class StartPage extends Page {
     private static final String TAG = "MainActivity";
@@ -40,21 +43,6 @@ public class StartPage extends Page {
     private boolean isOpen = false;
     private Band b;
     public static boolean test = true;
-
-    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Bundle b = intent.getBundleExtra("Location");
-            Location location;
-            if (b != null) {
-                location = b.getParcelable("Location");
-                if (location != null) {
-                    userLocation = location;
-
-                }
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,35 +68,98 @@ public class StartPage extends Page {
         fab_button_1.setOnClickListener(v -> button1Click());
 
         fab_button_2.setOnClickListener(v -> {
-            Toast.makeText(this, "Band", Toast.LENGTH_SHORT).show();
+            Context ctx = this;
+            ListView lv = findViewById(R.id.LvEvent);
+            ArrayList<String> events = new ArrayList<>();
+
+
+            final ArrayAdapter<String> adapter = new ArrayAdapter<>
+                    (StartPage.this, android.R.layout.simple_list_item_1, events);
+            lv.setAdapter(adapter);
+
+
+            for(String e : CurrentUser.getInstance(this).getBand().getEvents()) {
+                DbGenerator.getDbInstance().read(DbUserType.Events, e.trim(), new DbCallback() {
+                    @Override
+                    public void readCallback(Event u) {
+                        events.add(u.getTitle());
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
         });
 
 
 
         if(!test) {
-            DbAdapter db = DbGenerator.getDbInstance();
-            db.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
-                @Override
-                public void readCallback(User u) {
-                    CurrentUser.getInstance(StartPage.this).setMusician((Musician) u);
+            updateCurrentUserBand();
+        }
+    }
 
-                    if(((Musician) u).getTypeOfUser() == TypeOfUser.Band) {
-                        db.read(DbUserType.Band, CurrentUser.getInstance(StartPage.this).email, new DbCallback() {
-                            @Override
-                            public void readCallback(User u) {
-                                b = (Band) u;
-                            }
-                        });
-                    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter("GPSLocationUpdates"));
+    }
+
+    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle b = intent.getBundleExtra("Location");
+            Location location;
+            if (b != null) {
+                location = b.getParcelable("Location");
+                if (location != null) {
+                    userLocation = location;
+                }
+            }
+        }
+    };
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (LocationPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults)) {
+            getLastLocation();
+        }
+    }
+
+    private void startLocationService() {
+        LocationPermission.startLocationService(this);
+    }
+
+    private void getLastLocation() {
+        Log.d(TAG, "getLastKnownLocation: called.");
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            checkLocationPermission();
+        } else {
+            fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
+                if (location != null) {
+                    // simply store value right now, may need to
+                    // store in user information
+
+                    userLocation = location;
+                    startLocationService();
                 }
             });
         }
     }
 
-
-
-
-
+    private void checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            LocationPermission.sendLocationPermission(this);
+        }
+        else {
+            getLastLocation();
+        }
+    }
 
     protected void button1Click() {
         runOnUiThread(new Runnable() {
@@ -118,7 +169,7 @@ public class StartPage extends Page {
         });
 
         ArrayList<String> ls = new ArrayList<>();
-//        ls.add("aymanmezghani97@gmail.com");
+        //ls.add("aymanmezghani97@gmail.com");
         ls.add("seboll13@gmail.com");
         DbAdapter db = DbGenerator.getDbInstance();
 
@@ -126,8 +177,8 @@ public class StartPage extends Page {
             db.read(DbUserType.Musician, str, new DbCallback() {
                 @Override
                 public void readCallback(User u) {
-                b.addMember((Musician) u);
-                (DbGenerator.getDbInstance()).add(DbUserType.Band, b);
+                    b.addMember((Musician) u);
+                    (DbGenerator.getDbInstance()).add(DbUserType.Band, b);
                 }
             });
         }
@@ -162,57 +213,5 @@ public class StartPage extends Page {
         }
 
         isOpen = !isOpen;
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                messageReceiver, new IntentFilter("GPSLocationUpdates"));
-    }
-
-    private void startLocationService() {
-        LocationPermission.startLocationService(this);
-    }
-
-    private void getLastLocation() {
-        Log.d(TAG, "getLastKnownLocation: called.");
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            checkLocationPermission();
-        } else {
-            fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
-                if (location != null) {
-                    // simply store value right now, may need to
-                    // store in user information
-                    userLocation = location;
-                    startLocationService();
-                }
-            });
-        }
-    }
-
-    private void checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            LocationPermission.sendLocationPermission(this);
-        }
-        else {
-            getLastLocation();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if (LocationPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults)) {
-            getLastLocation();
-        }
     }
 }

@@ -1,8 +1,8 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,21 +10,22 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -54,11 +55,17 @@ import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
 import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
-import static ch.epfl.sdp.musiconnect.MapsActivity.Utility.generateWarning;
-
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+
+
+    private static final String CHANNEL_ID = "1";
+    private static final int CONNECTION_ID = 10;
+    private static final int LOCATION_ID = 11;
+    private static final int INITLOCATION_ID = 12;
+    private static final int CLOUD_ID = 13;
+    private NotificationManagerCompat notificationManager;
 
 
     private DbAdapter Adb = DbGenerator.getDbInstance();
@@ -73,10 +80,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private boolean updatePos = true;
 
-    private static final String FILE_NAME = "cachePos.txt";
-
     private GoogleMap mMap;
-    private View mapView;
     private UiSettings mUiSettings;
 
     private int delay;                                          //delay to updating the users list in ms
@@ -112,27 +116,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapView = mapFragment.getView();
+        mapFragment.getView();
         mapFragment.getMapAsync(this);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         checkLocationPermission();
 
         localDb = AppDatabase.getInstance(this);
+
+        createNotificationChannel();
+        notificationManager = NotificationManagerCompat.from(MapsActivity.this);
+
     }
 
 
     @Override
     protected void onPause() {
         super.onPause();
-
         LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 messageReceiver, new IntentFilter("GPSLocationUpdates"));
     }
@@ -169,7 +175,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
         spinner.setSelection(2);
@@ -189,7 +196,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mUiSettings = mMap.getUiSettings();
 
         //If there's a connection, fetch Users in the general area; else, load them from cache
-        if(checkConnection(MapsActivity.this)){
+        if (checkConnection(MapsActivity.this)) {
             createPlaceHolderUsers();
             clearCachedUsers();
         } else {
@@ -227,13 +234,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (!co) {
                     updatePos = false;
                     delay = 5000;
-                    generateWarning(MapsActivity.this, "Error: No internet connection. Showing the only last musicians found before losing connection", Utility.warningTypes.Toast);
-                } else if (!loc) {
+                    notificationManager.notify(CONNECTION_ID, buildNotification("Error: No internet connection. Showing the only last musicians found before losing connection").build());
+                } else{
+                    notificationManager.cancel(CONNECTION_ID);
+                }
+                if (!loc) {
                     updatePos = false;
-                    delay = 5000;
-                    generateWarning(MapsActivity.this, "Error: couldn't update your location", Utility.warningTypes.Alert);
-                } else {
+                    delay = 10000;
+                    notificationManager.notify(LOCATION_ID, buildNotification("Error: couldn't update your location to the cloud").build());
+                } else{
+                    notificationManager.cancel(LOCATION_ID);
+                }
+                if (co && loc) {
                     updatePos = true;
+                    delay = 20000;
                     updateUsers();
                     clearCachedUsers();
                     saveUsersToCache();
@@ -251,6 +265,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
                 if (location != null) {
+                    notificationManager.cancel(INITLOCATION_ID);
                     setLocation(location);
                     startLocationService();
                 } else {
@@ -263,7 +278,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                     markers.clear();
                     delay = 20000;
-                    generateWarning(MapsActivity.this, "There was a problem retrieving your location; Please check you are connected to a network", Utility.warningTypes.Alert);
+                    notificationManager.notify(INITLOCATION_ID, buildNotification("There was a problem retrieving your location; Please check you are connected to a network").build());
                 }
 
             });
@@ -283,8 +298,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected Location getSetLocation() {
         return setLoc;
     }
-
-
 
 
     private void setLocation(Location location) {
@@ -308,13 +321,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
 
-       if(CurrentUser.getInstance(this).getCreatedFlag()) {
+        if (CurrentUser.getInstance(this).getCreatedFlag()) {
             Musician current = CurrentUser.getInstance(this).getMusician();
-            current.setLocation(new MyLocation(setLoc.getLatitude(),setLoc.getLongitude()));
+            current.setLocation(new MyLocation(setLoc.getLatitude(), setLoc.getLongitude()));
             DbAdapter adapter = DbGenerator.getDbInstance();
             adapter.update(DbUserType.Musician, current);
+            notificationManager.cancel(CLOUD_ID);
         } else {
-            generateWarning(MapsActivity.this,"Error: couldn't update your location to the cloud", Utility.warningTypes.Toast);
+            notificationManager.notify(CLOUD_ID, buildNotification("Error: couldn't update your location to the cloud").build());
         }
     }
 
@@ -431,8 +445,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    protected boolean checkLocationServices(){
-        LocationManager lm = (LocationManager)MapsActivity.this.getSystemService(Context.LOCATION_SERVICE);
+    protected boolean checkLocationServices() {
+        LocationManager lm = (LocationManager) MapsActivity.this.getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
         boolean network_enabled = false;
 
@@ -513,29 +527,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Adb.add(DbUserType.Musician, person3);
     }
 
-    public static class Utility {
-        public enum warningTypes {
-            Toast,
-            Alert
+    //==============================================================================================
+    @VisibleForTesting
+    boolean createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
         }
-
-        //creates warning message when something goes wrong; Toast is a simple message at the bottom of the screen, Alert is an alertDialog box
-        public static void generateWarning(Context context, String message, warningTypes type) {
-            switch (type) {
-                case Toast:
-                    Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-                    break;
-                case Alert:
-                    AlertDialog wrng = new AlertDialog.Builder(context).create();
-                    wrng.setTitle("Warning!");
-                    wrng.setMessage(message);
-                    wrng.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                            (dialog, which) -> dialog.dismiss());
-                    wrng.show();
-                    break;
-            }
-        }
+        return true;
     }
-
-
+    @VisibleForTesting
+    NotificationCompat.Builder buildNotification(String warning){
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(MapsActivity.this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.notifwarning)
+                .setContentTitle("Warning !")
+                .setContentText(warning)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(warning))
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setOnlyAlertOnce(true);
+        notificationManager.notify(CONNECTION_ID, builder.build());
+        return builder;
+    }
 }

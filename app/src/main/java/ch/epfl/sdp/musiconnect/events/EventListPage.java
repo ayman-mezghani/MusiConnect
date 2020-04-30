@@ -1,21 +1,18 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.events;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.Page;
+import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;

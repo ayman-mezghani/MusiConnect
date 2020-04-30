@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.events;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -17,6 +17,11 @@ import java.util.List;
 
 import ch.epfl.sdp.R;
 
+import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.MyDate;
+import ch.epfl.sdp.musiconnect.Page;
+import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
@@ -44,6 +49,13 @@ public abstract class EventModification extends Page {
         dbAdapter = DbGenerator.getDbInstance();
         participants = new ArrayList<>();
         emails = new ArrayList<>();
+
+        calendar = Calendar.getInstance();
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH);
+        dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        hour = calendar.get(Calendar.HOUR_OF_DAY);
+        minute = calendar.get(Calendar.MINUTE);
     }
 
     @Override
@@ -59,13 +71,6 @@ public abstract class EventModification extends Page {
 
 
     void setupDateTimePickerDialog() {
-        calendar = Calendar.getInstance();
-        year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
-        dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-        hour = calendar.get(Calendar.HOUR_OF_DAY);
-        minute = calendar.get(Calendar.MINUTE);
-
         dateView.setOnClickListener(v -> {
             datePickerDialog = new DatePickerDialog(EventModification.this,
                     (datePicker, year, month, day) -> {
@@ -89,7 +94,7 @@ public abstract class EventModification extends Page {
     }
 
     void setupButtons() {
-        Button addParticipant = findViewById(R.id.eventCreationAddParticipants);
+        Button addParticipant = findViewById(R.id.eventAddParticipants);
         addParticipant.setOnClickListener(v -> {
             String email = eventParticipantView.getText().toString();
 
@@ -117,7 +122,7 @@ public abstract class EventModification extends Page {
             }
         });
 
-        Button removeParticipant = findViewById(R.id.eventCreationRemoveParticipants);
+        Button removeParticipant = findViewById(R.id.eventRemoveParticipants);
         removeParticipant.setOnClickListener(v -> {
             String email = eventParticipantView.getText().toString();
 
@@ -165,7 +170,7 @@ public abstract class EventModification extends Page {
         dbAdapter.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
             @Override
             public void readCallback(User user) {
-                Event event = new Event(user, 0);
+                Event event = new Event(user, "0");
                 event.setTitle(eventTitleView.getText().toString());
                 event.setAddress(eventAddressView.getText().toString());
                 event.setDescription(eventDescriptionView.getText().toString());

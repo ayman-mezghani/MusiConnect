@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.events;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.MyDate;
+import ch.epfl.sdp.musiconnect.Page;
+import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
@@ -16,8 +25,8 @@ import ch.epfl.sdp.musiconnect.database.DbUserType;
 public class EventPage extends Page {
     private DbAdapter dbAdapter;
     private TextView titleView, creatorView, addressView, timeView, participantsView, descriptionView;
-    Event e1;
-
+    private Event e1;
+    private ArrayList<String> emails; // emails is an ArrayList to be able to put it in an intent
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +37,8 @@ public class EventPage extends Page {
         setContentView(R.layout.activity_event_page);
 
         dbAdapter = DbGenerator.getDbInstance();
+
+        emails = new ArrayList<>();
 
         titleView = findViewById(R.id.eventTitle);
         creatorView = findViewById(R.id.eventCreatorField);
@@ -51,6 +62,10 @@ public class EventPage extends Page {
                 intent.putExtra("address", addressView.getText().toString());
                 intent.putExtra("description", descriptionView.getText().toString());
                 intent.putExtra("visible", e1.isVisible());
+                intent.putStringArrayListExtra("emails", emails);
+                intent.putExtra("datetime", timeView.getText().toString());
+
+                EventPage.this.startActivity(intent);
             }
         });
     }
@@ -63,7 +78,7 @@ public class EventPage extends Page {
 
         int eid = getIntent().getIntExtra("EID", 1);
 
-        createDummyEvent(eid);
+        createDummyEvent(String.valueOf(eid));
 
         /*
         event = dbAdapter.read(DbType.Event, getIntent().getIntExtra("EID", -1), new DbCallback() {
@@ -84,8 +99,11 @@ public class EventPage extends Page {
             addressView.setText(event.getAddress());
             timeView.setText(event.getDateTime().toString());
 
+            e1.setVisible(event.isVisible());
+
             StringBuilder s = new StringBuilder();
             for (User user : event.getParticipants()) {
+                emails.add(user.getEmailAddress());
                 s.append(user.getName()).append(System.lineSeparator());
             }
 
@@ -99,8 +117,8 @@ public class EventPage extends Page {
     }
 
     // TODO This function is to be deleted / replaced by MockDatabase query
-    private void createDummyEvent(int eid) {
-        if (eid == 1) {
+    private void createDummyEvent(String eid) {
+        if (eid.equals("1")) {
             Musician m2 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
 
             dbAdapter.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
