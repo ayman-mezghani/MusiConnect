@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.animation.Animation;
@@ -15,7 +14,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -25,9 +23,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
@@ -44,10 +39,7 @@ public class StartPage extends Page {
     private TextView fabTv1, fabTv2;
     private boolean isOpen = false;
     private Band b;
-    public static boolean test = false;
-
-    protected Map<String, Location> userLocations;
-    Location l1, l2;
+    public static boolean test = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,30 +114,6 @@ public class StartPage extends Page {
         }
     };
 
-    public boolean isUserClose() {
-        userLocations = new HashMap<>();
-        helper();
-        if (userLocation != null && userLocations != null)
-            for (Map.Entry<String, Location> val: userLocations.entrySet())
-                if (userLocation.distanceTo(val.getValue()) < DISTANCE_LIMIT)
-                    return true;
-        return false;
-    }
-
-    private void helper() {
-        userLocation = new Location("Main User");
-        userLocation.setLatitude(46.517084);
-        userLocation.setLongitude(6.565630);
-        l1 = new Location("User A");
-        l1.setLatitude(46.517084);
-        l1.setLongitude(6.565630);
-        l2 = new Location("User B");
-        l2.setLatitude(46.521391);
-        l2.setLongitude(6.550472);
-        userLocations.put("User A", l1);
-        userLocations.put("User B", l2);
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         if (LocationPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults)) {
@@ -167,6 +135,7 @@ public class StartPage extends Page {
                 if (location != null) {
                     // simply store value right now, may need to
                     // store in user information
+
                     userLocation = location;
                     startLocationService();
                 }

@@ -8,8 +8,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.Objects;
-
 import androidx.core.app.NotificationCompat;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -23,7 +21,6 @@ import ch.epfl.sdp.R;
 
 import static ch.epfl.sdp.musiconnect.Notifications.MUSICIAN_CHANNEL;
 import static ch.epfl.sdp.musiconnect.Page.*;
-import static ch.epfl.sdp.musiconnect.testsFunctions.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -31,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 public class NotificationTests {
     private UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
-    Location l1, l2, l3;
+    private Location l1, l2;
 
     @Rule
     public final ActivityTestRule<StartPage> startPageRule =
@@ -45,7 +42,6 @@ public class NotificationTests {
     public void initiateLocations() {
         l1 = new Location("User A");
         l2 = new Location("User B");
-        l3 = new Location("User C");
     }
 
     @SuppressWarnings("unused")
@@ -72,11 +68,10 @@ public class NotificationTests {
         String expectedTitle = getResourceString(R.string.musiconnect_notification);
         String expectedMessage = "A musician is within " + DISTANCE_LIMIT + " meters";
 
-        ((StartPage) Objects.requireNonNull(getCurrentActivity())).sendNotificationToMusician(
+        startPageRule.getActivity().sendNotificationToMusician(
                 MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT
         );
 
-        waitALittle(3);
         device.openNotification();
         device.wait(Until.hasObject(By.textStartsWith("MusiConnect")), 600);
         UiObject2 title = device.findObject(By.textStartsWith(expectedTitle));
@@ -91,11 +86,10 @@ public class NotificationTests {
     @Test
     public void testSendSameNotificationMultipleTimesShouldReceiveOnlyOnce() {
         for (int i = 0; i < 3; ++i)
-            ((StartPage) Objects.requireNonNull(getCurrentActivity())).sendNotificationToMusician(
+            startPageRule.getActivity().sendNotificationToMusician(
                     MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT
             );
 
-        waitALittle(3);
         assertEquals(1, notificationMessages.size());
         clearAllNotifications();
     }
@@ -116,7 +110,7 @@ public class NotificationTests {
 
     private void sendNotificationWhenDistanceIsRespected() {
         if (l1.distanceTo(l2) < DISTANCE_LIMIT)
-            ((StartPage) Objects.requireNonNull(getCurrentActivity())).sendNotificationToMusician(
+            startPageRule.getActivity().sendNotificationToMusician(
                     MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT
             );
     }
@@ -139,11 +133,10 @@ public class NotificationTests {
     public void testClickOnNotificationShouldOpenMapsActivity() {
         String expectedMessage = "A musician is within " + DISTANCE_LIMIT + " meters";
 
-        ((StartPage) Objects.requireNonNull(getCurrentActivity())).sendNotificationToMusician(
+        startPageRule.getActivity().sendNotificationToMusician(
                 MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT
         );
 
-        waitALittle(3);
         device.openNotification();
         device.wait(Until.hasObject(By.textStartsWith(getResourceString(R.string.app_name))), 600);
         device.findObject(By.textStartsWith(expectedMessage)).click();

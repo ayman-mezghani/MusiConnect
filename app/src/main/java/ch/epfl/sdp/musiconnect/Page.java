@@ -1,18 +1,18 @@
 package ch.epfl.sdp.musiconnect;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
-import android.os.Build;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -24,14 +24,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import ch.epfl.sdp.R;
 
 import static ch.epfl.sdp.musiconnect.StartPage.test;
-
 
 public abstract class Page extends AppCompatActivity {
 
@@ -39,15 +37,12 @@ public abstract class Page extends AppCompatActivity {
     protected GoogleSignInOptions gso;
 
     // NOTIFICATION HELPER VARIABLES
-    protected static int DISTANCE_LIMIT = 200;
-    public static List<String> notificationMessages;
-    private StartPage sp;
-
-    // Notification sending system initialization
     private Notifications notifications;
-    Handler handler = new Handler();
-    Runnable runnable;
-    int delay = 3*1000; // 3 seconds (where 1000 milliseconds = 1 sec)
+    private String notificationMessage;
+    protected static int DISTANCE_LIMIT = 200;
+    protected Map<String, Location> userLocations;
+    public static List<String> notificationMessages;
+    Location l1, l2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +57,8 @@ public abstract class Page extends AppCompatActivity {
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        sp = new StartPage();
         notifications = new Notifications(this);
+        notificationMessage = "A musician is within " + DISTANCE_LIMIT + " meters";
         notificationMessages = new ArrayList<>();
     }
 
@@ -84,21 +79,53 @@ public abstract class Page extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        if (!test)
-            handler.postDelayed( runnable = () -> {
-                if (sp.isUserClose()) {
-                    sendNotificationToMusician(Notifications.MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT);
-                    handler.postDelayed(runnable, delay);
-                }
-            }, delay);
+        LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter("GPSLocationUpdates"));
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        if (!test)
-            handler.removeCallbacks(runnable);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
         super.onPause();
+    }
+
+    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle b = intent.getBundleExtra("Location");
+            Location location;
+            if (b != null) {
+                location = b.getParcelable("Location");
+                if (location != null) {
+                    Location userLocation = new Location("Main User");
+                    userLocation.setLatitude(46.517084);
+                    userLocation.setLongitude(6.565630);
+                    if (!test)
+                        if (isUserClose(location))
+                            sendNotificationToMusician(Notifications.MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT);
+                }
+            }
+        }
+    };
+
+    public boolean isUserClose(Location loc) {
+        userLocations = new HashMap<>();
+        helper();
+        for (Map.Entry<String, Location> val: userLocations.entrySet())
+            if (loc.distanceTo(val.getValue()) < DISTANCE_LIMIT)
+                return true;
+        return false;
+    }
+
+    private void helper() {
+        l1 = new Location("User A");
+        l1.setLatitude(46.517084);
+        l1.setLongitude(6.565630);
+        l2 = new Location("User B");
+        l2.setLatitude(46.521391);
+        l2.setLongitude(6.550472);
+        userLocations.put("User A", l1);
+        userLocations.put("User B", l2);
     }
 
     @Override
@@ -163,7 +190,6 @@ public abstract class Page extends AppCompatActivity {
     }
 
     protected void sendNotificationToMusician(String channel, int priority) {
-        String notificationMessage = "A musician is within " + DISTANCE_LIMIT + " meters";
         if (!notificationMessages.contains(notificationMessage)) {
             notifications.sendNotification(channel, getApplicationContext(), notificationMessage, priority);
             notificationMessages.add(notificationMessage);
