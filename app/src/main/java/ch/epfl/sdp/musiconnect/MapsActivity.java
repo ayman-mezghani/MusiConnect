@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -531,7 +532,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Adb.add(DbUserType.Musician, person3);
     }
 
-    private void createNotificationChannel() {
+    //==============================================================================================
+    @VisibleForTesting
+    boolean createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.channel_name);
             String description = getString(R.string.channel_description);
@@ -541,10 +544,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
-
+        return true;
     }
-
-    private NotificationCompat.Builder buildNotification(String warning){
+    @VisibleForTesting
+    NotificationCompat.Builder buildNotification(String warning){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(MapsActivity.this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.notifwarning)
                 .setContentTitle("Warning !")
