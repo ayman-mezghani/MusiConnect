@@ -488,12 +488,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        if (((Musician)marker.getTag()).getEmailAddress() != CurrentUser.getInstance(MapsActivity.this).email) {
-            if (!marker.isInfoWindowShown()) {
-                marker.showInfoWindow();
-            }
+        if (marker.getTag() == null) {
+            return true;
+        } else {
+            return false;
         }
-        return true;
     }
 
     @Override

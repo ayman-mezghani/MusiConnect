@@ -1,6 +1,8 @@
 package ch.epfl.sdp.musiconnect;
 
 
+import android.view.View;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.rule.ActivityTestRule;
@@ -21,6 +23,8 @@ import static org.junit.Assert.assertEquals;
 @RunWith(AndroidJUnit4.class)
 @SdkSuppress(minSdkVersion = 18)
 public class CustomInfoWindowGoogleMapTest {
+    View v = null;
+
     @Rule
     public final ActivityTestRule<MapsActivity> startRule =
             new ActivityTestRule<>(MapsActivity.class);
@@ -40,5 +44,4 @@ public class CustomInfoWindowGoogleMapTest {
         CustomInfoWindowGoogleMap g = new CustomInfoWindowGoogleMap(startRule.getActivity().getApplicationContext());
         assertEquals(null,g.getInfoWindow(null));
     }
-
 }
