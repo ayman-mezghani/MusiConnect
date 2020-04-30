@@ -7,9 +7,10 @@ import java.util.Map;
 
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
+import ch.epfl.sdp.musiconnect.User;
 
 public class MockDatabase extends Database {
-    
+
     private final String firstName = "bob";
     private final String lastName = "minion";
     private final String username = "bobminion";
@@ -17,12 +18,13 @@ public class MockDatabase extends Database {
     private final MyDate birthday = new MyDate(2000, 1, 1);
 
     private SimplifiedMusician defaultSm = new SimplifiedMusician(new Musician(firstName, lastName, username, email, birthday));
+
     private SimplifiedMusician dummy1 = new SimplifiedMusician(new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25)));
     private SimplifiedMusician dummy2 = new SimplifiedMusician(new Musician("Alice", "Bardon", "Alyx", "aymanmezghani97@gmail.com", new MyDate(1992, 9, 20)));
     private SimplifiedMusician dummy3 = new SimplifiedMusician(new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1)));
 
     private List<SimplifiedMusician> listOfMusicians;
-    private Map<String,SimplifiedMusician> content;
+    private Map<String, SimplifiedMusician> content;
 
     public MockDatabase() {
         this.content = new HashMap<>();
@@ -72,5 +74,12 @@ public class MockDatabase extends Database {
     @Override
     void docExists(String collection, String docName, DbCallback dbCallback) {
         dbCallback.existsCallback(false);
+    }
+
+    @Override
+    public void finderQuery(String collection, Map<String, Object> arguments, DbCallback dbCallback) {
+        List<User> l = new ArrayList<>();
+        l.add(defaultSm.toMusician());
+        dbCallback.queryCallback(l);
     }
 }
