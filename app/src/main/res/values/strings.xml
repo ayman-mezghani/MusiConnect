@@ -157,4 +157,5 @@
     <string name="your_bands">Your bands</string>
     <string name="channel_name">channel</string>
     <string name="channel_description">description</string>
+    <string name="unable_to_resolve_address">Unable to resolve address</string>
 </resources>

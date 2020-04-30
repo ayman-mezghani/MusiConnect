@@ -85,4 +85,7 @@ public class testsFunctions {
             e.printStackTrace();
         }
     }
+
+    // Asserting Toast
+    //onView(withText("Fill Username field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
 }

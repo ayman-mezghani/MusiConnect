@@ -2,6 +2,8 @@ package ch.epfl.sdp.musiconnect.events;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.location.Address;
+import android.location.Geocoder;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -11,6 +13,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.GeoPoint;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -219,6 +224,15 @@ public class EventCreation extends Page {
 
                 event.setDateTime(d);
 
+                GeoPoint p1 = getLocationFromAddress(event.getAddress());
+
+                if(p1 == null) {
+                    event.setLocation(0, 0);
+                    Toast.makeText(ctx, R.string.unable_to_resolve_address, Toast.LENGTH_SHORT).show();
+                } else {
+                    event.setLocation(p1.getLatitude(), p1.getLongitude());
+                }
+
                 DbAdapter db = DbGenerator.getDbInstance();
                 db.add(event, DbUserType.valueOf(CurrentUser.getInstance(ctx).getTypeOfUser().toString()));
             }
@@ -260,5 +274,33 @@ public class EventCreation extends Page {
         }
 
         return empty;
+    }
+
+    public GeoPoint getLocationFromAddress(String strAddress){
+        Geocoder coder = new Geocoder(this);
+        List<Address> address = null;
+        GeoPoint p1 = null;
+
+        try {
+            try {
+                address = coder.getFromLocationName(strAddress,5);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (address==null) {
+                return null;
+            }
+            Address location=address.get(0);
+            location.getLatitude();
+            location.getLongitude();
+
+            p1 = new GeoPoint((double) (location.getLatitude()),
+                    (double) (location.getLongitude()));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return p1;
     }
 }
