@@ -152,4 +152,20 @@
     <string name="band_name_cant_be_empty">Band name can\'t be empty</string>
     <string name="your_nexts_events">Your nexts events</string>
     <string name="your_bands">Your bands</string>
+    <string name="event_title">Event title:</string>
+    <string name="new_event_title">New event title</string>
+    <string name="event_address">Event address:</string>
+    <string name="new_event_address">New event address</string>
+    <string name="event_time">Event time:</string>
+    <string name="new_event_date">New event date</string>
+    <string name="new_event_time">New event time</string>
+    <string name="participants">Participants:</string>
+    <string name="new_participant_username">New participant username</string>
+    <string name="event_description">Event description:</string>
+    <string name="new_event_description">New event description</string>
+    <string name="visibility_question">Do you want your event to be visible to every user?</string>
+    <string name="visibility_answer_yes">Yes, make it visible to everyone</string>
+    <string name="visibility_answer_no">No, hide it from the public</string>
+    <string name="edit_event">Edit event</string>
+    <string name="edit_event">Edit event</string>
 </resources>

@@ -39,7 +39,6 @@ import static org.junit.Assert.assertTrue;
 
 
 @RunWith(AndroidJUnit4.class)
-@SdkSuppress(minSdkVersion = 18)
 public class MapsLocationTest {
 
 
@@ -47,12 +46,6 @@ public class MapsLocationTest {
     public final ActivityTestRule<MapsActivity> mRule =
             new ActivityTestRule<>(MapsActivity.class);
 
-
-
-    @BeforeClass
-    public static void set() {
-        Looper.prepare();
-    }
 
     @BeforeClass
     public static void setMocks() {
@@ -147,23 +140,6 @@ public class MapsLocationTest {
         int[] results = new int[1];
         results[0] = PackageManager.PERMISSION_DENIED;
         return results;
-    }
-
-    @Test
-    public void testGetLocationReturnsRight() {
-        clickAllow();
-
-        Task<Location> task = mRule.getActivity().getTaskLocation();
-        task.addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if (location != null) {
-                    assertTrue(correctLocation(location));
-                } else { // location will be null if the location services are not available...
-                    assertTrue(location == null);
-                }
-            }
-        });
     }
 
 

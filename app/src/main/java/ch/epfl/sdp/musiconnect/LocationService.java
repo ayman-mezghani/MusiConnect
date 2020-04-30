@@ -52,6 +52,7 @@ public class LocationService extends Service {
 
 
             if (lastLocation == null || location.distanceTo(lastLocation) > THRESHOLD) {
+                Log.d(TAG, "LocationService sent a message containing location ");
                 lastLocation = location;
                 sendMessageToActivity(location);
             }

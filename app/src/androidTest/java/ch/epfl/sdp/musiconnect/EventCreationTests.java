@@ -183,14 +183,14 @@ public class EventCreationTests {
     @Test
     public void testClickVisibleEvent() {
         onView(withId(R.id.visible)).check(matches(not(isChecked())));
-        onView(withId(R.id.not_visible)).check(matches(isChecked()));
+        onView(withId(R.id.notVisible)).check(matches(isChecked()));
         onView(withId(R.id.visible)).perform(ViewActions.scrollTo()).perform(click());
 
         onView(withId(R.id.visible)).check(matches(isChecked()));
-        onView(withId(R.id.not_visible)).check(matches(not(isChecked())));
-        onView(withId(R.id.not_visible)).perform(ViewActions.scrollTo()).perform(click());
+        onView(withId(R.id.notVisible)).check(matches(not(isChecked())));
+        onView(withId(R.id.notVisible)).perform(ViewActions.scrollTo()).perform(click());
 
         onView(withId(R.id.visible)).check(matches(not(isChecked())));
-        onView(withId(R.id.not_visible)).check(matches(isChecked()));
+        onView(withId(R.id.notVisible)).check(matches(isChecked()));
     }
 }

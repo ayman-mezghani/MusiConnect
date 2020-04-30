@@ -44,14 +44,15 @@ public class StartPage extends Page {
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-        Bundle b = intent.getBundleExtra("Location");
-        Location location;
-        if (b != null) {
-            location = b.getParcelable("Location");
-            if (location != null) {
-                userLocation = location;
+            Bundle b = intent.getBundleExtra("Location");
+            Location location;
+            if (b != null) {
+                location = b.getParcelable("Location");
+                if (location != null) {
+                    userLocation = location;
+
+                }
             }
-        }
         }
     };
 
@@ -82,6 +83,8 @@ public class StartPage extends Page {
             Toast.makeText(this, "Band", Toast.LENGTH_SHORT).show();
         });
 
+
+
         if(!test) {
             DbAdapter db = DbGenerator.getDbInstance();
             db.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
@@ -101,6 +104,11 @@ public class StartPage extends Page {
             });
         }
     }
+
+
+
+
+
 
     protected void button1Click() {
         runOnUiThread(new Runnable() {
