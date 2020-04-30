@@ -1,6 +1,8 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.content.Intent;
+import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -18,7 +21,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -33,15 +38,16 @@ public abstract class Page extends AppCompatActivity {
     protected GoogleSignInClient mGoogleSignInClient;
     protected GoogleSignInOptions gso;
 
-    // HELPER VARIABLE
-    private int DISTANCE = 100;
+    // NOTIFICATION HELPER VARIABLES
+    protected static int DISTANCE_LIMIT = 200;
+    public static List<String> notificationMessages;
+    private StartPage sp;
 
+    // Notification sending system initialization
     private Notifications notifications;
-    private List<String> notificationMessages;
-
     Handler handler = new Handler();
     Runnable runnable;
-    int delay = 1000; // 10 seconds (where 1000 milliseconds = 1 sec)
+    int delay = 3*1000; // 3 seconds (where 1000 milliseconds = 1 sec)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +62,7 @@ public abstract class Page extends AppCompatActivity {
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
+        sp = new StartPage();
         notifications = new Notifications(this);
         notificationMessages = new ArrayList<>();
     }
@@ -79,8 +86,10 @@ public abstract class Page extends AppCompatActivity {
     protected void onResume() {
         if (!test)
             handler.postDelayed( runnable = () -> {
-                sendNotificationToMusician(Notifications.MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT);
-                handler.postDelayed(runnable, delay);
+                if (sp.isUserClose()) {
+                    sendNotificationToMusician(Notifications.MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT);
+                    handler.postDelayed(runnable, delay);
+                }
             }, delay);
         super.onResume();
     }
@@ -154,12 +163,10 @@ public abstract class Page extends AppCompatActivity {
     }
 
     protected void sendNotificationToMusician(String channel, int priority) {
-        String notificationMessage = "A musician is within " + DISTANCE + " meters";
-        if (DISTANCE <= 100) {
-            if (!notificationMessages.contains(notificationMessage)) {
-                notifications.sendNotification(channel, getApplicationContext(), notificationMessage, priority);
-                notificationMessages.add(notificationMessage);
-            }
+        String notificationMessage = "A musician is within " + DISTANCE_LIMIT + " meters";
+        if (!notificationMessages.contains(notificationMessage)) {
+            notifications.sendNotification(channel, getApplicationContext(), notificationMessage, priority);
+            notificationMessages.add(notificationMessage);
         }
     }
 }

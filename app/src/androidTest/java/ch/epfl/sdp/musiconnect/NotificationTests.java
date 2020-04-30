@@ -1,7 +1,9 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.content.Context;
+import android.location.Location;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +22,7 @@ import androidx.test.uiautomator.Until;
 import ch.epfl.sdp.R;
 
 import static ch.epfl.sdp.musiconnect.Notifications.MUSICIAN_CHANNEL;
-import static ch.epfl.sdp.musiconnect.StartPage.*;
+import static ch.epfl.sdp.musiconnect.Page.*;
 import static ch.epfl.sdp.musiconnect.testsFunctions.*;
 
 import static org.junit.Assert.assertEquals;
@@ -28,6 +30,8 @@ import static org.junit.Assert.assertEquals;
 @RunWith(AndroidJUnit4.class)
 public class NotificationTests {
     private UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+
+    Location l1, l2, l3;
 
     @Rule
     public final ActivityTestRule<StartPage> startPageRule =
@@ -37,6 +41,12 @@ public class NotificationTests {
     public GrantPermissionRule mGrantPermissionRule =
             GrantPermissionRule.grant("android.permission.ACCESS_FINE_LOCATION");
 
+    @Before
+    public void initiateLocations() {
+        l1 = new Location("User A");
+        l2 = new Location("User B");
+        l3 = new Location("User C");
+    }
 
     @SuppressWarnings("unused")
     private void clearAllNotifications() {
@@ -57,23 +67,70 @@ public class NotificationTests {
         return targetContext.getResources().getString(id);
     }
 
-
     @Test
-    public void testCheckThatNotificationIsReceived() {
+    public void testSendNotificationOnceShouldReceiveOnce() {
         String expectedTitle = getResourceString(R.string.musiconnect_notification);
-        String expectedMessage = "A musician is within " + 100 + " meters";
+        String expectedMessage = "A musician is within " + DISTANCE_LIMIT + " meters";
 
         ((StartPage) Objects.requireNonNull(getCurrentActivity())).sendNotificationToMusician(
                 MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT
         );
 
+        waitALittle(3);
         device.openNotification();
-        device.wait(Until.hasObject(By.textStartsWith("MusiConnect")), 6000);
+        device.wait(Until.hasObject(By.textStartsWith("MusiConnect")), 600);
         UiObject2 title = device.findObject(By.textStartsWith(expectedTitle));
         UiObject2 message = device.findObject(By.textStartsWith(expectedMessage));
 
         assertEquals(expectedTitle, title.getText());
         assertEquals(expectedMessage, message.getText());
+        assertEquals(1, notificationMessages.size());
         clearAllNotifications();
+    }
+
+    @Test
+    public void testSendSameNotificationMultipleTimesShouldReceiveOnlyOnce() {
+        for (int i = 0; i < 3; ++i)
+            ((StartPage) Objects.requireNonNull(getCurrentActivity())).sendNotificationToMusician(
+                    MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT
+            );
+
+        waitALittle(3);
+        assertEquals(1, notificationMessages.size());
+        clearAllNotifications();
+    }
+
+    private void initBigDistances() {
+        l1.setLatitude(1);
+        l1.setLongitude(1);
+        l2.setLatitude(2);
+        l2.setLongitude(2);
+    }
+
+    private void initSmallDistances() {
+        l1.setLatitude(46.517083);
+        l1.setLongitude(6.565630);
+        l2.setLatitude(46.517084);
+        l2.setLongitude(6.565630);
+    }
+
+    @Test
+    public void testDoNotSendNotificationIfNoUsersAreClose() {
+        initBigDistances();
+        if (l1.distanceTo(l2) < DISTANCE_LIMIT)
+            ((StartPage) Objects.requireNonNull(getCurrentActivity())).sendNotificationToMusician(
+                    MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT
+            );
+        assertEquals(0, notificationMessages.size());
+    }
+
+    @Test
+    public void testSendNotificationIfUserIsWithinDistanceLimit() {
+        initSmallDistances();
+        if (l1.distanceTo(l2) < DISTANCE_LIMIT)
+            ((StartPage) Objects.requireNonNull(getCurrentActivity())).sendNotificationToMusician(
+                    MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT
+            );
+        assertEquals(1, notificationMessages.size());
     }
 }

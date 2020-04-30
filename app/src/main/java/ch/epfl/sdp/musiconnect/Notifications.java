@@ -16,7 +16,7 @@ import ch.epfl.sdp.R;
 @SuppressLint("Registered")
 public class Notifications {
 
-    public static final String MUSICIAN_CHANNEL = "musician_channel";
+    static final String MUSICIAN_CHANNEL = "musician_channel";
     private static final String MANAGER_CHANNEL = "manager_channel";
     private Context context;
 
@@ -57,7 +57,7 @@ public class Notifications {
      * @param notificationMessage: main message displayed to user
      * @param priority: priority level (DEFAULT for standard user, HIGH for Manager)
      */
-    protected void sendNotification(String channel, Context context, String notificationMessage, int priority) {
+     public void sendNotification(String channel, Context context, String notificationMessage, int priority) {
         createNotificationChannels();
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channel)
                 .setSmallIcon(R.drawable.ic_notification_icon)
