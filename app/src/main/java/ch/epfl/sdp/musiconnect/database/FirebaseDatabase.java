@@ -12,6 +12,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class FirebaseDatabase extends Database {
     public void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType) {
         db.collection("events").add(simplifiedEvent)
                 .addOnSuccessListener(documentReference -> {
-                    if(userType == DbUserType.Band) {
+                    if (userType == DbUserType.Band) {
                         DbGenerator.getDbInstance().read(DbUserType.Band, simplifiedEvent.getCreatorMail(), new DbCallback() {
                             @Override
                             public void readCallback(User u) {
@@ -58,7 +59,7 @@ public class FirebaseDatabase extends Database {
                                 DbGenerator.getDbInstance().add(userType, b);
                             }
                         });
-                    } else if(userType == DbUserType.Musician) {
+                    } else if (userType == DbUserType.Musician) {
                         DbGenerator.getDbInstance().read(DbUserType.Musician, simplifiedEvent.getCreatorMail(), new DbCallback() {
                             @Override
                             public void readCallback(User u) {
@@ -73,7 +74,6 @@ public class FirebaseDatabase extends Database {
                 })
                 .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
     }
-
 
 
     @Override
@@ -107,7 +107,7 @@ public class FirebaseDatabase extends Database {
                     if (data != null && data.size() > 0) {
                         if (collection.equals((DbUserType.Band.toString()))) {
                             fetchBandMembers(data, dbCallback);
-                        } else if(collection.equals(DbUserType.Events.toString())) {
+                        } else if (collection.equals(DbUserType.Events.toString())) {
                             DbAdapter da = new DbAdapter(this);
                             da.read(DbUserType.Musician, (String) data.get("creatorMail"), new DbCallback() {
                                 @Override
@@ -124,15 +124,15 @@ public class FirebaseDatabase extends Database {
                                             public void readCallback(User user) {
                                                 try {
                                                     e.register((Musician) user);
-                                                } catch (IllegalArgumentException e) {}
+                                                } catch (IllegalArgumentException e) {
+                                                }
                                             }
                                         });
                                     }
                                     dbCallback.readCallback(e);
                                 }
                             });
-                        }
-                        else {
+                        } else {
                             SimplifiedMusician m = new SimplifiedMusician(data);
                             dbCallback.readCallback(m.toMusician());
                         }
@@ -176,40 +176,40 @@ public class FirebaseDatabase extends Database {
     @Override
     public void docExists(String collection, String docName, DbCallback dbCallback) {
         db.collection(collection).document(docName).get()
-            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        dbCallback.existsCallback(document.exists());
-                    } else {
-                        Log.d(TAG, "Failed with: ", task.getException());
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            dbCallback.existsCallback(document.exists());
+                        } else {
+                            Log.d(TAG, "Failed with: ", task.getException());
+                        }
                     }
-                }
-            });
+                });
     }
 
     @Override
     public void finderQuery(String collection, Map<String, Object> arguments, DbCallback dbCallback) {
         CollectionReference ref = db.collection(collection);
-        DatabaseQueryHelpers.unpack(ref, arguments).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        List<User> queryResult = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Map<String, Object> data = document.getData();
-                            Log.d("checkcheck", document.getId() + " => " + data);
-                            if (collection.equals(DbUserType.Musician.toString())) {
-                                SimplifiedMusician m = new SimplifiedMusician(document.getData());
-                                queryResult.add(m.toMusician());
-                            } else if (collection.equals((DbUserType.Band.toString()))) {
-                                // @TODO can't fetch a list of bands !!!!
-                            }
-                        }
-                        dbCallback.queryCallback(queryResult);
-                    } else {
-                        Log.d("checkcheck", "Error getting documents: ", task.getException());
+        Task<QuerySnapshot> t = DatabaseQueryHelpers.unpack(ref, arguments).get();
+        t.addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                List<User> queryResult = new ArrayList<>();
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    Map<String, Object> data = document.getData();
+                    Log.d("checkcheck", document.getId() + " => " + data);
+                    if (collection.equals(DbUserType.Musician.toString())) {
+                        SimplifiedMusician m = new SimplifiedMusician(document.getData());
+                        queryResult.add(m.toMusician());
+                    } else if (collection.equals((DbUserType.Band.toString()))) {
+                        // @TODO can't fetch a list of bands !!!!
                     }
-                });
+                }
+                dbCallback.queryCallback(queryResult);
+            } else {
+                Log.d("checkcheck", "Error getting documents: ", task.getException());
+            }
+        });
     }
 }

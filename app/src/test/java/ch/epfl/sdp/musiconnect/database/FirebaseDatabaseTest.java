@@ -8,6 +8,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
 import org.junit.Before;
@@ -16,9 +17,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyMap;
@@ -35,6 +36,7 @@ public class FirebaseDatabaseTest {
     private String collection = "collection";
     private String docName = "document";
     private FirebaseDatabase database;
+    private Map<String, Object> map;
 
 
     @Mock
@@ -56,14 +58,12 @@ public class FirebaseDatabaseTest {
     Task<DocumentSnapshot> docSnapTask;
 
     @Mock
-    DocumentSnapshot docSnap;
-
-    @Mock
-    Map<String, Object> map;
+    Task<QuerySnapshot> querySnapTask;
 
     @Before
     public void init() {
         database = new FirebaseDatabase(instance);
+        map = new HashMap<>();
 
         when(instance.collection(anyString())).thenReturn(colRef);
         when(colRef.document(anyString())).thenReturn(docRef);
@@ -72,10 +72,12 @@ public class FirebaseDatabaseTest {
         when(docRef.delete()).thenReturn(voidTask);
         when(docRef.update(any(Map.class))).thenReturn(voidTask);
         when(docRef.get()).thenReturn(docSnapTask);
+        when(colRef.get()).thenReturn(querySnapTask);
 
         when(voidTask.addOnSuccessListener(any(OnSuccessListener.class))).thenReturn(voidTask);
         when(voidTask.addOnFailureListener(any(OnFailureListener.class))).thenReturn(voidTask);
         when(docSnapTask.addOnCompleteListener(any(OnCompleteListener.class))).thenReturn(docSnapTask);
+        when(querySnapTask.addOnCompleteListener(any(OnCompleteListener.class))).thenReturn(querySnapTask);
     }
 
     @Test
@@ -165,5 +167,19 @@ public class FirebaseDatabaseTest {
 
         verify(docSnapTask, times(1)).addOnCompleteListener(any());
         verifyNoMoreInteractions(voidTask);
+    }
+
+    @Test
+    public void finderQueryTest() {
+        database.finderQuery(collection, map, any(DbCallback.class));
+
+        verify(instance, times(1)).collection(eq(collection));
+        verifyNoMoreInteractions(instance);
+
+        verify(colRef, times(1)).get();
+        verifyNoMoreInteractions(colRef);
+
+        verify(querySnapTask, times(1)).addOnCompleteListener(any());
+        verifyNoMoreInteractions(querySnapTask);
     }
 }
