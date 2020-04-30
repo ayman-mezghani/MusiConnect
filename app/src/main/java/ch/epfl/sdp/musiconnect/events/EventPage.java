@@ -62,6 +62,8 @@ public class EventPage extends Page {
                     loadEventInfo(e);
                 }
             });
+        } else {
+            loadNullEvent();
         }
 
         //createDummyEvent(String.valueOf(eid));
