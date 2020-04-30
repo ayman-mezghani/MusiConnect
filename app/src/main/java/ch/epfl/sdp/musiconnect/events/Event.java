@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.events;
 
 import android.location.Location;
 
@@ -7,6 +7,9 @@ import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ch.epfl.sdp.musiconnect.MyDate;
+import ch.epfl.sdp.musiconnect.User;
 
 public class Event {
     private int eid;
@@ -43,7 +46,7 @@ public class Event {
 
     }
 
-    protected void setEid(int eid) {
+    public void setEid(int eid) {
         this.eid = eid;
     }
 

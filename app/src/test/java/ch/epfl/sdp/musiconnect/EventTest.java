@@ -2,6 +2,8 @@ package ch.epfl.sdp.musiconnect;
 
 import org.junit.Test;
 
+import ch.epfl.sdp.musiconnect.events.Event;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
