@@ -8,6 +8,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import androidx.core.app.NotificationCompat;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -22,7 +25,9 @@ import ch.epfl.sdp.R;
 import static ch.epfl.sdp.musiconnect.Notifications.MUSICIAN_CHANNEL;
 import static ch.epfl.sdp.musiconnect.Page.*;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(AndroidJUnit4.class)
 public class NotificationTests {
@@ -105,7 +110,7 @@ public class NotificationTests {
         l1.setLatitude(46.517083);
         l1.setLongitude(6.565630);
         l2.setLatitude(46.517084);
-        l2.setLongitude(6.565630);
+        l2.setLongitude(6.565629);
     }
 
     private void sendNotificationWhenDistanceIsRespected() {
@@ -145,5 +150,30 @@ public class NotificationTests {
         device.pressBack();
         device.wait(Until.hasObject(By.text(getResourceString(R.string.app_name))), 600);
         assertEquals(1, notificationMessages.size());
+    }
+
+    @Test
+    public void testIfUserIsClose() {
+        Location l3 = new Location("First user");
+        l3.setLatitude(46.517083);
+        l3.setLongitude(6.565630);
+        assertTrue(startPageRule.getActivity().isUserClose(l3));
+
+        Location l4 = new Location("Second user");
+        l4.setLatitude(41.63);
+        l4.setLongitude(22.9);
+        assertFalse(startPageRule.getActivity().isUserClose(l4));
+    }
+
+    @Test
+    public void testHelperFunction() {
+        Map<String, Location> locations = new HashMap<>();
+        initSmallDistances();
+        locations.put("User A", l1);
+        locations.put("User B", l2);
+
+        startPageRule.getActivity().helper();
+
+        assertEquals(locations.keySet(), startPageRule.getActivity().userLocations.keySet());
     }
 }
