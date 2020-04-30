@@ -68,10 +68,10 @@ public class StartPage extends Page {
         fab_button_1.setOnClickListener(v -> button1Click());
 
         fab_button_2.setOnClickListener(v -> {
+            updateCurrentUserBand();
             Context ctx = this;
             ListView lv = findViewById(R.id.LvEvent);
             ArrayList<String> events = new ArrayList<>();
-
 
             final ArrayAdapter<String> adapter = new ArrayAdapter<>
                     (StartPage.this, android.R.layout.simple_list_item_1, events);
@@ -209,7 +209,6 @@ public class StartPage extends Page {
             fab_button_2.setFocusable(true);
             fab_button_1.setFocusable(true);
         }
-
         isOpen = !isOpen;
     }
 }

@@ -61,7 +61,7 @@ public abstract class Page extends AppCompatActivity {
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        notifications = new Notifications(this);
+        notifications = new Notifications();
         notificationMessage = "A musician is within " + DISTANCE_LIMIT + " meters";
         notificationMessages = new ArrayList<>();
         userLocations = new HashMap<>();
@@ -134,13 +134,13 @@ public abstract class Page extends AppCompatActivity {
     /**
      * Helper method to provide temporary dummy user locations
      */
-    private void helper() {
+    protected void helper() {
         l1 = new Location("User A");
-        l1.setLatitude(46.517084);
+        l1.setLatitude(46.517083);
         l1.setLongitude(6.565630);
         l2 = new Location("User B");
-        l2.setLatitude(46.521391);
-        l2.setLongitude(6.550472);
+        l2.setLatitude(46.517084);
+        l2.setLongitude(6.565629);
         userLocations.put("User A", l1);
         userLocations.put("User B", l2);
     }
@@ -208,7 +208,7 @@ public abstract class Page extends AppCompatActivity {
 
     protected void updateCurrentUserBand() {
         Context ctx = this;
-        if(CurrentUser.getInstance(ctx).getTypeOfUser() == TypeOfUser.Band) {
+        if (CurrentUser.getInstance(ctx).getTypeOfUser() == TypeOfUser.Band) {
             DbGenerator.getDbInstance().read(DbUserType.Band, CurrentUser.getInstance(ctx).email, new DbCallback() {
                 @Override
                 public void readCallback(User u) {
