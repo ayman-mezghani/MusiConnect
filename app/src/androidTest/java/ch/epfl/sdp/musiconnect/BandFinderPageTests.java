@@ -16,14 +16,18 @@ import org.junit.runner.RunWith;
 import ch.epfl.sdp.R;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.is;
 
 /**
  * @author Manuel Pellegrini, EPFL
@@ -61,8 +65,28 @@ public class BandFinderPageTests {
     }
 
     @Test
-    public void testSpinnerFieldsOfBandFinderWork() {
-        // TODO
+    public void testInstrumentSpinnerFieldOfBandFinderWorks() {
+        onView(withId(R.id.myBandFinderInstrumentsID)).perform(scrollTo(), click());
+
+        onData(anything())
+                .inAdapterView(MusicianFinderPageTests.childAtPosition(
+                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
+                        0))
+                .atPosition(13).perform(click());
+
+        assert(true);
+    }
+
+    @Test
+    public void testLevelSpinnerFieldOfBandFinderWorks() {
+        onView(withId(R.id.myBandFinderLevelsID)).perform(scrollTo(), click());
+
+        onData(anything())
+                .inAdapterView(MusicianFinderPageTests.childAtPosition(
+                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
+                        0))
+                .atPosition(3).perform(click());
+
         assert(true);
     }
 
