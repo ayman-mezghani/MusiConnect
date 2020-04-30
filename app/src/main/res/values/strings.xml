@@ -84,27 +84,28 @@
 
     <string name="musicianFinderTitle">Musician finder</string>
     <string name="musicianFinderFirstName">First name</string>
-    <string name="myMusicianFinderFirstName"></string>
+    <string name="myMusicianFinderFirstName">First name</string>
     <string name="musicianFinderLastName">Last name</string>
-    <string name="myMusicianFinderLastName"></string>
+    <string name="myMusicianFinderLastName">Last Name</string>
     <string name="musicianFinderUserName">Username</string>
-    <string name="myMusicianFinderUserName"></string>
+    <string name="myMusicianFinderUserName">Username</string>
     <string name="musicianFinderInstruments">Instrument</string>
     <string name="myMusicianFinderInstruments"></string>
     <string name="musicianFinderLevels">Level</string>
-    <string name="myMusicianFinderLevels">Select level</string>
+    <string name="myMusicianFinderLevels"></string>
     <string name="musicianFinderButton">Find musician</string>
 
     <string name="bandFinderTitle">Band finder</string>
     <string name="bandFinderBandName">Band name</string>
-    <string name="myBandFinderBandName"></string>
-    <string name="bandFinderInstruments">Instruments</string>
+    <string name="myBandFinderBandName">Band name</string>
+    <string name="bandFinderInstruments">Instrument</string>
     <string name="myBandFinderInstruments"></string>
-    <string name="bandFinderLevels">Levels</string>
+    <string name="bandFinderLevels">Level</string>
     <string name="myBandFinderLevels"></string>
     <string name="bandFinderButton">Find band</string>
 
     <string-array name="instruments_array">
+        <item>- Select instrument -</item>
         <item>Accordion</item>
         <item>Bagpipes</item>
         <item>Banjo</item>
@@ -132,6 +133,7 @@
     </string-array>
 
     <string-array name="levels_array">
+        <item>- Select level -</item>
         <item>Beginner</item>
         <item>Intermediate</item>
         <item>Advanced</item>
