@@ -10,6 +10,8 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
+import com.google.firebase.firestore.GeoPoint;
+
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
@@ -39,8 +41,11 @@ import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static ch.epfl.sdp.musiconnect.testsFunctions.getCurrentActivity;
 import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class EventCreationTests {
@@ -180,4 +185,17 @@ public class EventCreationTests {
         assertTrue(eventCreationRule.getActivity().isFinishing());
     }
 
+    @Test
+    public void geocoderWillReturnTrueValue() {
+        GeoPoint p1 = ((EventCreation) getCurrentActivity()).getLocationFromAddress("rue de lausanne, genève");
+        double lat = p1.getLatitude();
+        double lng = p1.getLongitude();
+        assertEquals(lat, 46.218781199999995, 5);
+        assertEquals(lng, 6.1487117, 5);
+    }
+    @Test
+    public void geocoderWillReturnNullValue() {
+        GeoPoint p1 = ((GeoPoint)((EventCreation) getCurrentActivity()).getLocationFromAddress(""));
+        assertNull(p1);
+    }
 }
