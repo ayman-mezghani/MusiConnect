@@ -29,13 +29,20 @@ public class FirebaseDatabase extends Database {
     private static final String TAG = "DataBase";
     private FirebaseFirestore db;
 
-    public FirebaseDatabase() {
+    FirebaseDatabase() {
         this.db = FirebaseFirestore.getInstance();
     }
 
+    FirebaseDatabase(FirebaseFirestore instance) {
+        this.db = instance;
+    }
+
+
     @Override
     public void addDoc(String collection, String docName, SimplifiedDbEntry entry) {
-        db.collection(collection).document(docName).set(entry, SetOptions.merge());
+        db.collection(collection).document(docName).set(entry, SetOptions.merge())
+                .addOnSuccessListener(bVoid -> Log.d(TAG, "DocumentSnapshot successfully added!"))
+                .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
     }
 
     @Override
