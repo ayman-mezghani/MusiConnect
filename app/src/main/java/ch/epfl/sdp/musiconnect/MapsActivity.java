@@ -59,7 +59,6 @@ import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
 import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
 
-
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
 
@@ -84,10 +83,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private boolean updatePos = true;
 
-    private static final String FILE_NAME = "cachePos.txt";
-
     private GoogleMap mMap;
-    private View mapView;
     private UiSettings mUiSettings;
 
     private int delay;                                          //delay to updating the users list in ms
@@ -125,7 +121,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapView = mapFragment.getView();
+        mapFragment.getView();
         mapFragment.getMapAsync(this);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -152,14 +148,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onPause() {
         super.onPause();
-
         LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 messageReceiver, new IntentFilter("GPSLocationUpdates"));
     }
@@ -630,6 +624,4 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         notificationManager.notify(CONNECTION_ID, builder.build());
         return builder;
     }
-
-
 }

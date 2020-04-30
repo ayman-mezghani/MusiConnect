@@ -44,20 +44,6 @@ public class StartPage extends Page {
     private Band b;
     public static boolean test = true;
 
-    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-        Bundle b = intent.getBundleExtra("Location");
-        Location location;
-        if (b != null) {
-            location = b.getParcelable("Location");
-            if (location != null) {
-                userLocation = location;
-            }
-        }
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,12 +73,12 @@ public class StartPage extends Page {
             ArrayList<String> events = new ArrayList<>();
 
 
-            final ArrayAdapter<String> adapter = new ArrayAdapter<String>
+            final ArrayAdapter<String> adapter = new ArrayAdapter<>
                     (StartPage.this, android.R.layout.simple_list_item_1, events);
             lv.setAdapter(adapter);
 
 
-            for(String e : (ArrayList<String>) CurrentUser.getInstance(this).getBand().getEvents()){
+            for(String e : CurrentUser.getInstance(this).getBand().getEvents()) {
                 DbGenerator.getDbInstance().read(DbUserType.Events, e.trim(), new DbCallback() {
                     @Override
                     public void readCallback(Event u) {
@@ -108,6 +94,71 @@ public class StartPage extends Page {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter("GPSLocationUpdates"));
+    }
+
+    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle b = intent.getBundleExtra("Location");
+            Location location;
+            if (b != null) {
+                location = b.getParcelable("Location");
+                if (location != null) {
+                    userLocation = location;
+                }
+            }
+        }
+    };
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (LocationPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults)) {
+            getLastLocation();
+        }
+    }
+
+    private void startLocationService() {
+        LocationPermission.startLocationService(this);
+    }
+
+    private void getLastLocation() {
+        Log.d(TAG, "getLastKnownLocation: called.");
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            checkLocationPermission();
+        } else {
+            fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
+                if (location != null) {
+                    // simply store value right now, may need to
+                    // store in user information
+
+                    userLocation = location;
+                    startLocationService();
+                }
+            });
+        }
+    }
+
+    private void checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            LocationPermission.sendLocationPermission(this);
+        }
+        else {
+            getLastLocation();
+        }
+    }
+
     protected void button1Click() {
         runOnUiThread(new Runnable() {
             public void run() {
@@ -116,7 +167,7 @@ public class StartPage extends Page {
         });
 
         ArrayList<String> ls = new ArrayList<>();
-//        ls.add("aymanmezghani97@gmail.com");
+        //ls.add("aymanmezghani97@gmail.com");
         ls.add("seboll13@gmail.com");
         DbAdapter db = DbGenerator.getDbInstance();
 
@@ -124,8 +175,8 @@ public class StartPage extends Page {
             db.read(DbUserType.Musician, str, new DbCallback() {
                 @Override
                 public void readCallback(User u) {
-                b.addMember((Musician) u);
-                (DbGenerator.getDbInstance()).add(DbUserType.Band, b);
+                    b.addMember((Musician) u);
+                    (DbGenerator.getDbInstance()).add(DbUserType.Band, b);
                 }
             });
         }
@@ -160,57 +211,5 @@ public class StartPage extends Page {
         }
 
         isOpen = !isOpen;
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                messageReceiver, new IntentFilter("GPSLocationUpdates"));
-    }
-
-    private void startLocationService() {
-        LocationPermission.startLocationService(this);
-    }
-
-    private void getLastLocation() {
-        Log.d(TAG, "getLastKnownLocation: called.");
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            checkLocationPermission();
-        } else {
-            fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
-                if (location != null) {
-                    // simply store value right now, may need to
-                    // store in user information
-                    userLocation = location;
-                    startLocationService();
-                }
-            });
-        }
-    }
-
-    private void checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            LocationPermission.sendLocationPermission(this);
-        }
-        else {
-            getLastLocation();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if (LocationPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults)) {
-            getLastLocation();
-        }
     }
 }
