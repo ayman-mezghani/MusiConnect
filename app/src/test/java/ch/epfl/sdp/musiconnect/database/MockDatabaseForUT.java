@@ -33,6 +33,11 @@ public class MockDatabaseForUT extends Database {
     }
 
     @Override
+    public void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType) {
+
+    }
+
+    @Override
     void deleteDoc(String collection, String docName) {
         assertEquals(expectedDocName, docName);
 

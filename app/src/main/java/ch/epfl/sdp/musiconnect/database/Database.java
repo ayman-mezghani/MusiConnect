@@ -8,6 +8,8 @@ abstract class Database {
 
     abstract void addDoc(String collection, String docName, SimplifiedDbEntry entry);
 
+    abstract void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType);
+
     abstract void deleteDoc(String collection, String docName);
 
     abstract void updateDoc(String collection, String docName, Map<String, Object> newValueMap);

@@ -3,6 +3,8 @@ package ch.epfl.sdp.musiconnect;
 import androidx.annotation.NonNull;
 import androidx.room.PrimaryKey;
 
+import java.util.ArrayList;
+
 /**
  * @author Manuel Pellegrini, EPFL
  */
@@ -31,6 +33,7 @@ public abstract class Person extends User {
         setUserName(userName);
         setEmailAddress(emailAddress);
         setBirthday(birthday);
+        events = new ArrayList<>();
     }
 
 
@@ -88,6 +91,7 @@ public abstract class Person extends User {
         this.emailAddress = emailAddress;
     }
 
+    @Override
     public String getEmailAddress() {
         return emailAddress;
     }

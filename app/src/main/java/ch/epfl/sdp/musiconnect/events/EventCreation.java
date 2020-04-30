@@ -1,7 +1,8 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.events;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
@@ -15,7 +16,10 @@ import java.util.Calendar;
 import java.util.List;
 
 import ch.epfl.sdp.R;
-
+import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.MyDate;
+import ch.epfl.sdp.musiconnect.Page;
+import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
@@ -103,21 +107,19 @@ public class EventCreation extends Page {
             dbAdapter.read(DbUserType.Musician, email, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
-                    if (user != null) {
-                        if (emails.contains(email)) {
-                            showToastWithText("This user is already in the participants list");
-                        } else {
-                            emails.add(email);
-                            participants.add(user);
-                            updateParticipants();
-                        }
+                if (user != null) {
+                    if (emails.contains(email)) {
+                        showToastWithText("This user is already in the participants list");
                     } else {
-                        showToastWithText("Please add a valid email");
+                        emails.add(email);
+                        participants.add(user);
+                        updateParticipants();
                     }
+                } else {
+                    showToastWithText("Please add a valid email");
+                }
                 }
             });
-
-
         });
 
         Button removeParticipant = findViewById(R.id.eventCreationRemoveParticipants);
@@ -132,17 +134,17 @@ public class EventCreation extends Page {
             dbAdapter.read(DbUserType.Musician, email, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
-                    if (user != null) {
-                        if (emails.contains(email)) {
-                            emails.remove(email);
-                            participants.remove(user);
-                            updateParticipants();
-                        } else {
-                            showToastWithText("This user is not in the participants list");
-                        }
+                if (user != null) {
+                    if (emails.contains(email)) {
+                        emails.remove(email);
+                        participants.remove(user);
+                        updateParticipants();
                     } else {
-                        showToastWithText("Please add a valid email");
+                        showToastWithText("This user is not in the participants list");
                     }
+                } else {
+                    showToastWithText("Please add a valid email");
+                }
                 }
             });
         });
@@ -191,10 +193,11 @@ public class EventCreation extends Page {
 
 
     private void sendToDatabase() {
+        Context ctx = this;
         dbAdapter.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
             @Override
             public void readCallback(User user) {
-                Event event = new Event(user, 0);
+                Event event = new Event(user, "0");
                 event.setTitle(eventTitleView.getText().toString());
                 event.setAddress(eventAddressView.getText().toString());
                 event.setDescription(eventDescriptionView.getText().toString());
@@ -215,6 +218,9 @@ public class EventCreation extends Page {
                 }
 
                 event.setDateTime(d);
+
+                DbAdapter db = DbGenerator.getDbInstance();
+                db.add(event, DbUserType.valueOf(CurrentUser.getInstance(ctx).getTypeOfUser().toString()));
             }
         });
     }

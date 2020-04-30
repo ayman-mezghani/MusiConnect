@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -24,7 +25,9 @@ import java.util.Queue;
 
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.User;
+import ch.epfl.sdp.musiconnect.events.Event;
 
 public class FirebaseDatabase extends Database {
     private static final String TAG = "DataBase";
@@ -38,6 +41,37 @@ public class FirebaseDatabase extends Database {
     public void addDoc(String collection, String docName, SimplifiedDbEntry entry) {
         db.collection(collection).document(docName).set(entry, SetOptions.merge());
     }
+
+    @Override
+    public void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType) {
+        db.collection("events").add(simplifiedEvent)
+                .addOnSuccessListener(documentReference -> {
+                    if(userType == DbUserType.Band) {
+                        DbGenerator.getDbInstance().read(DbUserType.Band, simplifiedEvent.getCreatorMail(), new DbCallback() {
+                            @Override
+                            public void readCallback(User u) {
+                                Band b = (Band) u;
+                                b.addEvent(documentReference.getId());
+                                DbGenerator.getDbInstance().add(userType, b);
+                            }
+                        });
+                    } else if(userType == DbUserType.Musician) {
+                        DbGenerator.getDbInstance().read(DbUserType.Musician, simplifiedEvent.getCreatorMail(), new DbCallback() {
+                            @Override
+                            public void readCallback(User u) {
+                                Musician m = (Musician) u;
+                                m.addEvent(documentReference.getId());
+                                DbGenerator.getDbInstance().add(userType, m);
+                            }
+                        });
+                    }
+
+                    Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                })
+                .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+    }
+
+
 
     @Override
     public void deleteDoc(String collection, String docName) {
@@ -68,9 +102,34 @@ public class FirebaseDatabase extends Database {
                 .addOnSuccessListener(documentSnapshot -> {
                     Map<String, Object> data = documentSnapshot.getData();
                     if (data != null && data.size() > 0) {
-                        if (data.get("leader") != null) {
+                        if (collection.equals((DbUserType.Band.toString()))) {
                             fetchBandMembers(data, dbCallback);
-                        } else {
+                        } else if(collection.equals(DbUserType.Events.toString())) {
+                            DbAdapter da = new DbAdapter(this);
+                            da.read(DbUserType.Musician, (String) data.get("creatorMail"), new DbCallback() {
+                                @Override
+                                public void readCallback(User user) {
+                                    Event e = new Event((Musician) user, docName);
+                                    e.setAddress((String) data.get("adress"));
+                                    e.setDateTime(new MyDate(((Timestamp) data.get("dateTime")).toDate()));
+                                    e.setDescription((String) data.get("description"));
+                                    e.setTitle((String) data.get("title"));
+
+                                    for (String me : (List<String>) data.get("participants")) {
+                                        da.read(DbUserType.Musician, me, new DbCallback() {
+                                            @Override
+                                            public void readCallback(User user) {
+                                                try {
+                                                    e.register((Musician) user);
+                                                } catch (IllegalArgumentException e) {}
+                                            }
+                                        });
+                                    }
+                                    dbCallback.readCallback(e);
+                                }
+                            });
+                        }
+                        else {
                             SimplifiedMusician m = new SimplifiedMusician(data);
                             dbCallback.readCallback(m.toMusician());
                         }
@@ -92,6 +151,7 @@ public class FirebaseDatabase extends Database {
                     b.setVideoURL(data.get("videoUrl").toString());
 
                 b.setMusicianEmailAdresses((ArrayList<String>) data.get("members"));
+                b.setEvents((ArrayList<String>) data.get("events"));
                 DbAdapter da = DbGenerator.getDbInstance();
 
                 for (String me : b.getMusicianEmailsAdress()) {
@@ -113,17 +173,17 @@ public class FirebaseDatabase extends Database {
     @Override
     public void docExists(String collection, String docName, DbCallback dbCallback) {
         db.collection(collection).document(docName).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            dbCallback.existsCallback(document.exists());
-                        } else {
-                            Log.d(TAG, "Failed with: ", task.getException());
-                        }
+            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        dbCallback.existsCallback(document.exists());
+                    } else {
+                        Log.d(TAG, "Failed with: ", task.getException());
                     }
-                });
+                }
+            });
     }
 
     @Override

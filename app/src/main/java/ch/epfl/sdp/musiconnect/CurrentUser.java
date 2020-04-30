@@ -17,7 +17,9 @@ public class CurrentUser {
     private boolean createdFlag = false;
     private String bandName;
     private Musician musician;
+    private Band band;
     private GoogleSignInAccount acct;
+    private TypeOfUser type;
 
 
     // private constructor restricted to this class itself
@@ -87,5 +89,21 @@ public class CurrentUser {
 
     public static void flush() {
         single_instance = null;
+    }
+
+    public Band getBand() {
+        return this.band;
+    }
+
+    public void setBand(Band b) {
+        this.band = b;
+    }
+
+    public TypeOfUser getTypeOfUser() {
+        return this.type;
+    }
+
+    public void setTypeOfUser(TypeOfUser t) {
+        this.type = t;
     }
 }
