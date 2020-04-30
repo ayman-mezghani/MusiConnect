@@ -14,12 +14,14 @@ import com.google.firebase.firestore.SetOptions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyMap;
@@ -58,6 +60,9 @@ public class FirebaseDatabaseTest {
     Task<DocumentSnapshot> docSnapTask;
 
     @Mock
+    DocumentSnapshot docSnap;
+
+    @Mock
     Task<QuerySnapshot> querySnapTask;
 
     @Before
@@ -74,10 +79,15 @@ public class FirebaseDatabaseTest {
         when(docRef.get()).thenReturn(docSnapTask);
         when(colRef.get()).thenReturn(querySnapTask);
 
+        when(docSnapTask.isSuccessful()).thenReturn(true);
+        when(docSnapTask.getResult()).thenReturn(docSnap);
+        when(docSnap.exists()).thenReturn(true);
+
         when(voidTask.addOnSuccessListener(any(OnSuccessListener.class))).thenReturn(voidTask);
         when(voidTask.addOnFailureListener(any(OnFailureListener.class))).thenReturn(voidTask);
-        when(docSnapTask.addOnCompleteListener(any(OnCompleteListener.class))).thenReturn(docSnapTask);
+//        when(docSnapTask.addOnCompleteListener(any(OnCompleteListener.class))).thenReturn(docSnapTask);
         when(querySnapTask.addOnCompleteListener(any(OnCompleteListener.class))).thenReturn(querySnapTask);
+
     }
 
     @Test
@@ -154,7 +164,12 @@ public class FirebaseDatabaseTest {
 
     @Test
     public void docExistsTest() {
-        database.docExists(collection, docName, any(DbCallback.class));
+        database.docExists(collection, docName, new DbCallback() {
+            @Override
+            public void existsCallback(boolean exists) {
+                assertTrue(exists);
+            }
+        });
 
         verify(instance, times(1)).collection(eq(collection));
         verifyNoMoreInteractions(instance);
@@ -165,8 +180,13 @@ public class FirebaseDatabaseTest {
         verify(docRef, times(1)).get();
         verifyNoMoreInteractions(docRef);
 
-        verify(docSnapTask, times(1)).addOnCompleteListener(any());
-        verifyNoMoreInteractions(voidTask);
+        ArgumentCaptor<OnCompleteListener<DocumentSnapshot>> listenerCaptor = ArgumentCaptor.forClass(OnCompleteListener.class);
+
+        verify(docSnapTask, times(1)).addOnCompleteListener(listenerCaptor.capture());
+//        verifyNoMoreInteractions(voidTask);
+
+        OnCompleteListener listener = listenerCaptor.getValue();
+        listener.onComplete(docSnapTask);
     }
 
     @Test
