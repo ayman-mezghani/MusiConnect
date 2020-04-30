@@ -3,7 +3,9 @@ package ch.epfl.sdp.musiconnect;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -59,11 +61,23 @@ public class Notifications {
      */
      public void sendNotification(String channel, Context context, String notificationMessage, int priority) {
         createNotificationChannels();
+
+        // Open MapsActivity when a notification is clicked on
+        Intent mapsIntent = new Intent(context, MapsActivity.class);
+        PendingIntent mapsPendingIntent = PendingIntent.getActivity(
+            context,
+            1,
+            mapsIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT // Updates Maps Activity if it is already running
+        );
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channel)
                 .setSmallIcon(R.drawable.ic_notification_icon)
                 .setContentTitle("MusiConnect Notification")
                 .setContentText(notificationMessage)
-                .setPriority(priority);
+                .setPriority(priority)
+                .setAutoCancel(true) // Notification disappears when notification is clicked on
+                .setContentIntent(mapsPendingIntent);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(0, builder.build());

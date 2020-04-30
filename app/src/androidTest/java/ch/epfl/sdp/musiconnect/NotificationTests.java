@@ -1,16 +1,21 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import androidx.core.app.NotificationCompat;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -21,6 +26,15 @@ import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.Until;
 import ch.epfl.sdp.R;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.sdp.musiconnect.Notifications.MUSICIAN_CHANNEL;
 import static ch.epfl.sdp.musiconnect.Page.*;
 import static ch.epfl.sdp.musiconnect.testsFunctions.*;
@@ -43,10 +57,14 @@ public class NotificationTests {
 
     @Before
     public void initiateLocations() {
+        Intents.init();
         l1 = new Location("User A");
         l2 = new Location("User B");
         l3 = new Location("User C");
     }
+
+    @After
+    public void releaseIntents() { Intents.release(); }
 
     @SuppressWarnings("unused")
     private void clearAllNotifications() {
@@ -114,23 +132,52 @@ public class NotificationTests {
         l2.setLongitude(6.565630);
     }
 
-    @Test
-    public void testDoNotSendNotificationIfNoUsersAreClose() {
-        initBigDistances();
+    private void sendNotificationWhenDistanceIsRespected() {
         if (l1.distanceTo(l2) < DISTANCE_LIMIT)
             ((StartPage) Objects.requireNonNull(getCurrentActivity())).sendNotificationToMusician(
                     MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT
             );
+    }
+
+    @Test
+    public void testDoNotSendNotificationIfNoUsersAreClose() {
+        initBigDistances();
+        sendNotificationWhenDistanceIsRespected();
         assertEquals(0, notificationMessages.size());
     }
 
     @Test
     public void testSendNotificationIfUserIsWithinDistanceLimit() {
         initSmallDistances();
-        if (l1.distanceTo(l2) < DISTANCE_LIMIT)
-            ((StartPage) Objects.requireNonNull(getCurrentActivity())).sendNotificationToMusician(
-                    MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT
-            );
+        sendNotificationWhenDistanceIsRespected();
         assertEquals(1, notificationMessages.size());
+    }
+
+    /**
+     * Helper method to avoid duplicate code
+     * @param stringId
+     */
+    private void openActionsMenu(int stringId) {
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(stringId)).perform(click());
+    }
+
+    @Test
+    public void testClickOnNotificationShouldOpenMapsActivity() {
+        String expectedMessage = "A musician is within " + DISTANCE_LIMIT + " meters";
+
+        ((StartPage) Objects.requireNonNull(getCurrentActivity())).sendNotificationToMusician(
+                MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT
+        );
+
+        waitALittle(3);
+        device.openNotification();
+        device.wait(Until.hasObject(By.textStartsWith(getResourceString(R.string.app_name))), 600);
+        device.findObject(By.textStartsWith(expectedMessage)).click();
+        device.wait(Until.hasObject(By.text(expectedMessage)), 600);
+
+        device.pressBack();
+        device.wait(Until.hasObject(By.text(getResourceString(R.string.app_name))), 600);
+        onView(withText(getResourceString(R.string.app_name))).check(matches(isDisplayed()));
     }
 }

@@ -46,7 +46,7 @@ public class StartPage extends Page {
     private Band b;
     public static boolean test = true;
 
-    private Map<String, Location> userLocations;
+    protected Map<String, Location> userLocations;
     Location l1, l2;
 
     @Override
@@ -125,15 +125,18 @@ public class StartPage extends Page {
     public boolean isUserClose() {
         userLocations = new HashMap<>();
         helper();
-        for (Map.Entry<String, Location> val: userLocations.entrySet())
-            if (userLocation.distanceTo(val.getValue()) < DISTANCE_LIMIT)
-                return true;
+        if (userLocation != null && userLocations != null)
+            for (Map.Entry<String, Location> val: userLocations.entrySet()) {
+                Log.d("DISTANCEEEEE: ", String.valueOf(userLocation.distanceTo(val.getValue())));
+                if (userLocation.distanceTo(val.getValue()) < DISTANCE_LIMIT)
+                    return true;
+            }
         return false;
     }
 
     private void helper() {
-        userLocation = new Location("Main user");
-        userLocation.setLatitude(46.517083);
+        userLocation = new Location("Main User");
+        userLocation.setLatitude(46.517084);
         userLocation.setLongitude(6.565630);
         l1 = new Location("User A");
         l1.setLatitude(46.517084);
