@@ -44,7 +44,7 @@ public class StartPage extends Page {
     private TextView fabTv1, fabTv2;
     private boolean isOpen = false;
     private Band b;
-    public static boolean test = true;
+    public static boolean test = false;
 
     protected Map<String, Location> userLocations;
     Location l1, l2;
@@ -126,11 +126,9 @@ public class StartPage extends Page {
         userLocations = new HashMap<>();
         helper();
         if (userLocation != null && userLocations != null)
-            for (Map.Entry<String, Location> val: userLocations.entrySet()) {
-                Log.d("DISTANCEEEEE: ", String.valueOf(userLocation.distanceTo(val.getValue())));
+            for (Map.Entry<String, Location> val: userLocations.entrySet())
                 if (userLocation.distanceTo(val.getValue()) < DISTANCE_LIMIT)
                     return true;
-            }
         return false;
     }
 
