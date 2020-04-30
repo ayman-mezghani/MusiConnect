@@ -207,7 +207,7 @@ public class EventCreationTests {
     public void testWithResolvableAddressShoulPass() {
         onView(withId(R.id.eventCreationNewEventTitle)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestTitle"));
 
-        onView(withId(R.id.eventCreationNewEventAddress)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("rue de lausanne, genève"));
+        onView(withId(R.id.eventCreationNewEventAddress)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("rue de lausanne, geneve"));
         onView(withId(R.id.eventCreationNewEventDescription)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestDescription"));
         closeSoftKeyboard();
 

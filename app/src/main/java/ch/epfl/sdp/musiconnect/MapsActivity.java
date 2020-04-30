@@ -51,6 +51,8 @@ import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.events.Event;
+import ch.epfl.sdp.musiconnect.events.EventPage;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
@@ -91,7 +93,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private List<Musician> allUsers = new ArrayList<>();        //all users "near" the current user's position
     private List<Musician> profiles = new ArrayList<>();        //all users within the radius set by the user in the app
     private List<Marker> markers = new ArrayList<>();           //markers on the map associated to profiles
-
+    private List<Event> events = new ArrayList<>();
+    private List<Event> eventNear = new ArrayList<>();
+    private List<Marker> eventMarkers = new ArrayList<>();           //markers on the map associated to events
 
     private Marker marker;                                      //main user's marker
 
@@ -131,6 +135,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         createNotificationChannel();
         notificationManager = NotificationManagerCompat.from(MapsActivity.this);
 
+        if(CurrentUser.getInstance(this).getTypeOfUser() == TypeOfUser.Band) {
+            for (String se: CurrentUser.getInstance(this).getBand().getEvents()) {
+                DbGenerator.getDbInstance().read(DbUserType.Events, se, new DbCallback() {
+                    @Override
+                    public void readCallback(Event e) {
+                        events.add(e);
+                    }
+                });
+            }
+        }
     }
 
 
@@ -178,6 +192,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 updateProfileList();
                 loadProfilesMarker();
 
+                updateEvents();
+                loadEventMarkers();
             }
 
             @Override
@@ -223,6 +239,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //place users' markers
         updateProfileList();
         loadProfilesMarker();
+
+        updateEvents();
+        loadEventMarkers();
 
         //sets listeners on map markers
         mMap.setOnMarkerClickListener(this);
@@ -412,6 +431,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         loadProfilesMarker();
     }
 
+    //From the users around the area, picks the ones that are within the threshold distance.
+    private void updateEvents() {
+        if (setLoc == null) {             //Might be called before we get the first update to the location;
+            return;
+        } else {
+            delay = 20000;              //sets a 20 sec long delay on updates when everything is in place
+        }
+
+        eventNear.clear();
+        for (Event e : events) {
+            Location l = new Location("");
+            l.setLatitude(e.getLocation().getLatitude());
+            l.setLongitude(e.getLocation().getLongitude());
+            if (setLoc.distanceTo(l) <= threshold) {
+                eventNear.add(e);
+            }
+        }
+
+        circle.setRadius(threshold);
+
+        loadEventMarkers();
+    }
+
     //Loads the profile on the map as markers, with associated information
     private void loadProfilesMarker() {
         for (Marker m : markers) {
@@ -429,12 +471,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    //Loads the profile on the map as markers, with associated information
+    private void loadEventMarkers() {
+        for (Marker m : eventMarkers) {
+            m.remove();
+        }
+        eventMarkers.clear();
+
+        for (Event e : eventNear) {
+            LatLng latlng = new LatLng(e.getLocation().getLatitude(), e.getLocation().getLongitude());
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(latlng)
+                    .title(e.getTitle()));
+            marker.setTag(e);
+            eventMarkers.add(marker);
+        }
+    }
+
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        if (profiles.contains(marker.getTag())) {
-            if (!marker.isInfoWindowShown()) {
-                marker.showInfoWindow();
-            }
+        if (profiles.contains(marker.getTag())
+            || eventNear.contains(marker.getTag())) {
+            
+                if (!marker.isInfoWindowShown()) {
+                    marker.showInfoWindow();
+                }
         }
         return false;
     }
@@ -448,6 +509,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             profileIntent.putExtra("UserEmail", m.getEmailAddress());
 
             this.startActivity(profileIntent);
+        } else if(eventNear.contains(marker.getTag())) {
+            Intent eventPageIntent = new Intent(MapsActivity.this, EventPage.class);
+
+            Event e = (Event) marker.getTag();
+            eventPageIntent.putExtra("eid", e.getEid());
+
+            this.startActivity(eventPageIntent);
         }
     }
 
