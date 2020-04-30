@@ -1,5 +1,12 @@
 package ch.epfl.sdp.musiconnect;
 
+import androidx.room.Ignore;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import ch.epfl.sdp.musiconnect.database.DbAdapter;
+
 /**
  * @author Manuel Pellegrini, EPFL
  */
@@ -10,6 +17,8 @@ public abstract class User {
 
     private static final double EPFL_LATITUDE = 46.5185941;
     private static final double EPFL_LONGITUDE = 6.5618969;
+    @Ignore
+    protected List<String> events;
 
 
     public User() {
@@ -33,4 +42,19 @@ public abstract class User {
     }
 
     public abstract String getName();
+
+    public abstract String getEmailAddress();
+
+
+
+    public void addEvent(String eventId) { this.events.add(eventId); }
+
+    public List<String> getEvents() { return this.events; }
+
+    public void setEvents(List<String> e) {
+        this.events = new ArrayList<>();
+
+        if(e != null)
+            this.events = e;
+    }
 }

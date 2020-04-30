@@ -1,8 +1,8 @@
 package ch.epfl.sdp.musiconnect;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,6 +16,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.database.DbCallback;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.events.EventCreation;
+import ch.epfl.sdp.musiconnect.events.EventPage;
 
 import static ch.epfl.sdp.musiconnect.StartPage.test;
 
@@ -106,6 +111,21 @@ public abstract class Page extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Context ctx = this;
+
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+
+        if (!test) {
+            updateCurrentUserBand();
+        }
+    }
+
+
     protected void signOut() {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, task -> {
@@ -113,5 +133,17 @@ public abstract class Page extends AppCompatActivity {
                     startActivity(new Intent(Page.this, GoogleLogin.class));
                     finish();
                 });
+    }
+
+    protected void updateCurrentUserBand() {
+        Context ctx = this;
+        if(CurrentUser.getInstance(ctx).getTypeOfUser() == TypeOfUser.Band) {
+            DbGenerator.getDbInstance().read(DbUserType.Band, CurrentUser.getInstance(ctx).email, new DbCallback() {
+                @Override
+                public void readCallback(User u) {
+                    CurrentUser.getInstance(ctx).setBand((Band) u);
+                }
+            });
+        }
     }
 }

@@ -30,6 +30,7 @@ public class Band extends User implements Performer {
         super();
         setBandName(bandName);
         members = new HashSet<Musician>();
+        events = new ArrayList<>();
         addMember(leader);
         setLeader(leader);
         videoURL = "";
@@ -76,7 +77,8 @@ public class Band extends User implements Performer {
         return leader.getUserName();
     }
 
-    public String getLeaderEmailAddress() {
+    @Override
+    public String getEmailAddress() {
         return leader.getEmailAddress();
     }
 
