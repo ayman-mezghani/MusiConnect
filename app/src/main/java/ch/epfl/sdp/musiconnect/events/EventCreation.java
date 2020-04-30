@@ -267,8 +267,8 @@ public class EventCreation extends Page {
         return empty;
     }
 
-    public GeoPoint getLocationFromAddress(String strAddress){
-        Geocoder coder = new Geocoder(this);
+    public GeoPoint getLocationFromAddress(String strAddress, Context ctx){
+        Geocoder coder = new Geocoder(ctx);
         List<Address> address = null;
         GeoPoint p1 = null;
 

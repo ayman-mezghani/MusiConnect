@@ -187,7 +187,9 @@ public class EventCreationTests {
 
     @Test
     public void geocoderWillReturnTrueValue() {
-        GeoPoint p1 = ((EventCreation) getCurrentActivity()).getLocationFromAddress("rue de lausanne, genève");
+        EventCreation ec = new EventCreation();
+        GeoPoint p1 = ec.getLocationFromAddress("rue de lausanne, genève", eventCreationRule.getActivity());
+        //GeoPoint p1 = ((EventCreation) getCurrentActivity()).getLocationFromAddress("rue de lausanne, genève");
         double lat = p1.getLatitude();
         double lng = p1.getLongitude();
         assertEquals(lat, 46.218781199999995, 5);
@@ -195,7 +197,7 @@ public class EventCreationTests {
     }
     @Test
     public void geocoderWillReturnNullValue() {
-        GeoPoint p1 = ((GeoPoint)((EventCreation) getCurrentActivity()).getLocationFromAddress(""));
+        GeoPoint p1 = ((GeoPoint)((EventCreation) getCurrentActivity()).getLocationFromAddress("", null));
         assertNull(p1);
     }
 }
