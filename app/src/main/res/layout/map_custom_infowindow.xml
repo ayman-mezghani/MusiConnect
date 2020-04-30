@@ -14,15 +14,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <VideoView
-        android:id="@+id/vid"
-        android:layout_width="128dp"
-        android:layout_height="128dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username" />
 
     <TextView
         android:id="@+id/details"
@@ -32,5 +23,5 @@
         android:singleLine="false"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vid" />
+        app:layout_constraintTop_toBottomOf="@+id/username" />
 </androidx.constraintlayout.widget.ConstraintLayout>

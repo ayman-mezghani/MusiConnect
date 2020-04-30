@@ -219,6 +219,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .radius(threshold);
         circle = mMap.addCircle(circleOptions);
 
+        CustomInfoWindowGoogleMap customInfoWindow = new CustomInfoWindowGoogleMap(this);
+        mMap.setInfoWindowAdapter(customInfoWindow);
 
         //place users' markers
         updateProfileList();
@@ -324,8 +326,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
             circle.setCenter(latLng);
-            CustomInfoWindowGoogleMap customInfoWindow = new CustomInfoWindowGoogleMap(this);
-            mMap.setInfoWindowAdapter(customInfoWindow);
 
         }
 
@@ -433,12 +433,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        if (profiles.contains(marker.getTag())) {
+        if (((Musician)marker.getTag()).getEmailAddress() != CurrentUser.getInstance(MapsActivity.this).email) {
             if (!marker.isInfoWindowShown()) {
                 marker.showInfoWindow();
             }
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -521,6 +521,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Musician person1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
         Musician person2 = new Musician("Alice", "Bardon", "Alyx", "aymanmezghani97@gmail.com", new MyDate(1992, 9, 20));
         Musician person3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
+
+        person3.addInstrument(Instrument.BANJO,Level.PROFESSIONAL);
+        person3.addInstrument(Instrument.CLARINET,Level.BEGINNER);
 
         person1.setLocation(new MyLocation(46.52 + r1, 6.52 + r1));
         person2.setLocation(new MyLocation(46.51 + r2, 6.45 + r2));
