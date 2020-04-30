@@ -8,9 +8,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.Page;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
@@ -20,27 +25,34 @@ import ch.epfl.sdp.musiconnect.database.DbUserType;
 
 public class EventListPage extends Page {
 
-    DbAdapter dbAdapter;
-    TextView eventListTitle;
+    private DbAdapter dbAdapter;
+    private TextView eventListTitle;
+    private List<Event> events;
+    private List<String> eventTitles;
+    private Map<String, String> ids;
+
+    private ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_list_page);
 
+        dbAdapter = DbGenerator.getDbInstance();
+
         eventListTitle = findViewById(R.id.eventListTitle);
 
         Intent intent = getIntent();
         String visitorEmail = intent.getStringExtra("UserEmail");
         ListView lv = findViewById(R.id.eventListView);
-        List<String> events = new ArrayList<>();
-        List<Integer> ids = new ArrayList<>();
+        events = new ArrayList<>();
+        eventTitles = new ArrayList<>();
+        ids = new HashMap<>();
 
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>
-                (EventListPage.this, android.R.layout.simple_list_item_1, events);
+        adapter = new ArrayAdapter<>(EventListPage.this, android.R.layout.simple_list_item_1, eventTitles);
         lv.setAdapter(adapter);
-        lv.setOnItemClickListener((parent, view, position, id) -> loadEventPage(ids.get(position)));
+        lv.setOnItemClickListener((parent, view, position, id) -> loadEventPage(ids.get(lv.getItemAtPosition(position))));
 
 
 
@@ -58,23 +70,33 @@ public class EventListPage extends Page {
         }
 
 
-        // TODO
-        // loads events (title and eids) from the user (either current user or visitor)
-        final String DEFAULT_TITLE = "Event";
-        events.add(DEFAULT_TITLE);
-        ids.add(1);
-        adapter.notifyDataSetChanged();
+        dbAdapter.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
+            @Override
+            public void readCallback(User user) {
+                loadIds(user.getEvents());
+            }
+        });
+    }
 
-        /*
-        for(String e : (ArrayList<String>) CurrentUser.getInstance(this).getBand().getEvents()){
-            DbGenerator.getDbInstance().read(DbUserType.Events, e.trim(), new DbCallback() {
+    private void loadIds(List<String> eventIds) {
+
+        for (String eid: eventIds) {
+            dbAdapter.read(DbUserType.Events, eid, new DbCallback() {
                 @Override
-                public void readCallback(Event u) {
-                    events.add(u.getTitle());
-                    adapter.notifyDataSetChanged();
+                public void readCallback(Event e) {
+                    showEvent(e);
                 }
             });
-        }*/
+        }
+    }
+
+
+    private void showEvent(Event e) {
+        events.add(e);
+        eventTitles.add(e.getTitle());
+        ids.put(e.getTitle(), e.getEid());
+
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -86,9 +108,9 @@ public class EventListPage extends Page {
         }
     }
 
-    private void loadEventPage(int eid) {
+    private void loadEventPage(String eid) {
         Intent intent = new Intent(EventListPage.this, EventPage.class);
-        intent.putExtra("EID", eid);
+        intent.putExtra("eid", eid);
         EventListPage.this.startActivity(intent);
     }
 }

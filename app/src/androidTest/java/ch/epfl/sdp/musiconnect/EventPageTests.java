@@ -19,6 +19,7 @@ import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.events.Event;
+import ch.epfl.sdp.musiconnect.events.EventEdition;
 import ch.epfl.sdp.musiconnect.events.EventPage;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -30,6 +31,7 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static ch.epfl.sdp.musiconnect.testsFunctions.waitALittle;
 
 @RunWith(AndroidJUnit4.class)
 public class EventPageTests {
@@ -74,8 +76,10 @@ public class EventPageTests {
         String s = m1.getName() + System.lineSeparator() + m2.getName() + System.lineSeparator();
 
         Intent intent = new Intent();
-        intent.putExtra("EID", 1);
+        intent.putExtra("eid", "1");
         eventPageRule.launchActivity(intent);
+
+        waitALittle(3);
 
         onView(withId(R.id.eventTitle)).check(matches(withText(event.getTitle())));
         onView(withId(R.id.eventCreatorField)).check(matches(withText(event.getCreator().getName())));
@@ -88,9 +92,18 @@ public class EventPageTests {
     @Test
     public void loadNullEvent() {
         Intent intent = new Intent();
-        intent.putExtra("EID", 0);
         eventPageRule.launchActivity(intent);
 
         onView(withId(R.id.title)).check(matches(withText(R.string.event_not_found)));
+    }
+
+    @Test
+    public void editButtonClick() {
+        Intent intent = new Intent();
+        intent.putExtra("eid", "1");
+        eventPageRule.launchActivity(intent);
+        onView(withId(R.id.btnEditEvent)).perform(click());
+
+        intended(hasComponent(EventEdition.class.getName()));
     }
 }

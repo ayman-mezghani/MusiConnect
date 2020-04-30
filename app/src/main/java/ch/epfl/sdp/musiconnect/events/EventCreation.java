@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.database.DbUserType;
 
 public class EventCreation extends EventModification {
 
@@ -26,16 +28,12 @@ public class EventCreation extends EventModification {
 
         setupDateTimePickerDialog();
         setupButtons();
+        setupDoNotSaveButton(R.id.eventCreationBtnDoNotSaveEvent);
+        setupSaveButton();
     }
 
     @Override
-    void setupSaveButtons() {
-       Button doNotSave = findViewById(R.id.eventCreationBtnDoNotSaveEvent);
-        doNotSave.setOnClickListener(v -> {
-            showToastWithText("Creation cancelled");
-            finish();
-        });
-
+    void setupSaveButton() {
         Button save = findViewById(R.id.eventCreationBtnSaveEvent);
         save.setOnClickListener(v -> {
             if (checkEventCreationInput()) {
@@ -44,5 +42,10 @@ public class EventCreation extends EventModification {
                 finish();
             }
         });
+    }
+
+    @Override
+    void updateDatabase(Event event) {
+        dbAdapter.add(event, DbUserType.valueOf(CurrentUser.getInstance(this).getTypeOfUser().toString()));
     }
 }

@@ -68,14 +68,15 @@ public class GoogleLogin extends AppCompatActivity {
             db.exists(DbUserType.Musician, account.getEmail(), new DbCallback() {
                 @Override
                 public void existsCallback(boolean exists) {
-                db.read(DbUserType.Musician, account.getEmail(), new DbCallback() {
+                    db.read(DbUserType.Musician, account.getEmail(), new DbCallback() {
                     @Override
                     public void readCallback(User user) {
                         CurrentUser.getInstance(ctx).setTypeOfUser(((Musician) user).getTypeOfUser());
-                        redirect(exists);
-                        finish();
                     }
                 });
+
+                    redirect(exists);
+                    finish();
                 }
             });
         }
@@ -118,9 +119,10 @@ public class GoogleLogin extends AppCompatActivity {
                         public void readCallback(User user) {
                             CurrentUser.getInstance(ctx).setTypeOfUser(((Musician) user).getTypeOfUser());
 
-                            redirect(exists);
+
                         }
                     });
+                    redirect(exists);
                 }
             });
 

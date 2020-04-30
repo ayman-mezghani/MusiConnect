@@ -19,7 +19,7 @@ public class SimplifiedEventTests {
 
         assertEquals(e.getTitle(), se.getTitle());
         assertEquals(e.getDescription(), se.getDescription());
-        assertEquals(e.getAddress(), se.getAdress());
+        assertEquals(e.getAddress(), se.getAddress());
         assertEquals(e.getDateTime().toDate(), se.getDateTime());
         assertEquals(e.getGeoPoint(), se.getLoc());
         assertEquals(e.getCreator().getEmailAddress(), se.getCreatorMail());
@@ -37,7 +37,7 @@ public class SimplifiedEventTests {
         SimplifiedEvent se = new SimplifiedEvent();
 
         se.setTitle(e.getTitle());
-        se.setAdress(e.getAddress());
+        se.setAddress(e.getAddress());
         se.setDescription(e.getDescription());
         se.setCreatorMail(e.getCreator().getEmailAddress());
         se.setDateTime(e.getDateTime().toDate());
@@ -45,7 +45,7 @@ public class SimplifiedEventTests {
 
         assertEquals(e.getTitle(), se.getTitle());
         assertEquals(e.getDescription(), se.getDescription());
-        assertEquals(e.getAddress(), se.getAdress());
+        assertEquals(e.getAddress(), se.getAddress());
         assertEquals(e.getDateTime().toDate(), se.getDateTime());
         assertEquals(e.getGeoPoint(), se.getLoc());
         assertEquals(e.getCreator().getEmailAddress(), se.getCreatorMail());

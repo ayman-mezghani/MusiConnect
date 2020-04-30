@@ -157,7 +157,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="5dp"
-                    android:hint="@string/new_participant_username"
+                    android:hint="@string/new_participant_email_address"
                     android:textSize="18sp" />
             </LinearLayout>
 

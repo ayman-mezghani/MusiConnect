@@ -120,6 +120,9 @@ public class EventTest {
         e.register(m2);
         assertEquals(e.getParticipants(), lu);
 
+        e.register(m2);
+        assertEquals(e.getParticipants(), lu);
+
         lu.remove(m2);
         e.unregister(m2);
         assertEquals(e.getParticipants(), lu);

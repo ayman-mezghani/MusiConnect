@@ -1,32 +1,28 @@
 package ch.epfl.sdp.musiconnect.events;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.os.Handler;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.CurrentUser;
-import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.Page;
 import ch.epfl.sdp.musiconnect.User;
-import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
 
 
 public class EventPage extends Page {
-    private DbAdapter dbAdapter;
     private TextView titleView, creatorView, addressView, timeView, participantsView, descriptionView;
-    private Event e1;
     private ArrayList<String> emails; // emails is an ArrayList to be able to put it in an intent
+    private Event event;
+    private static int LAUNCH_EVENT_EDIT_INTENT = 105;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +32,7 @@ public class EventPage extends Page {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_page);
 
-        dbAdapter = DbGenerator.getDbInstance();
+        String eid = getIntent().getStringExtra("eid");
 
         emails = new ArrayList<>();
 
@@ -49,61 +45,65 @@ public class EventPage extends Page {
 
         setupEditButton();
         
-        retrieveEventInfo();
+        retrieveEventInfo(eid);
     }
-    
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == LAUNCH_EVENT_EDIT_INTENT && resultCode == Activity.RESULT_OK) {
+            Handler handler = new Handler();
+            handler.postDelayed(() -> retrieveEventInfo(data.getStringExtra("eid")), 2500);
+        }
+    }
+
+
     private void setupEditButton() {
         Button editEvent = findViewById(R.id.btnEditEvent);
-        editEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(EventPage.this, EventEdition.class);
-                intent.putExtra("title", titleView.getText().toString());
-                intent.putExtra("address", addressView.getText().toString());
-                intent.putExtra("description", descriptionView.getText().toString());
-                intent.putExtra("visible", e1.isVisible());
-                intent.putStringArrayListExtra("emails", emails);
-                intent.putExtra("datetime", timeView.getText().toString());
+        editEvent.setOnClickListener(v -> {
+            Intent intent = new Intent(EventPage.this, EventEdition.class);
+            intent.putExtra("eid", getIntent().getStringExtra("eid"));
+            intent.putExtra("title", titleView.getText().toString());
+            intent.putExtra("address", addressView.getText().toString());
+            intent.putExtra("description", descriptionView.getText().toString());
+            intent.putExtra("visible", event.isVisible());
+            intent.putStringArrayListExtra("emails", emails);
+            intent.putExtra("datetime", timeView.getText().toString());
 
-                EventPage.this.startActivity(intent);
-            }
+            startActivityForResult(intent, LAUNCH_EVENT_EDIT_INTENT);
         });
     }
 
 
-    private void retrieveEventInfo() {
-        // TODO retrieve event from database
-        // TODO test using mock database instead
-        // TODO setup new DbCallback for events
-
-        int eid = getIntent().getIntExtra("EID", 1);
-
-        createDummyEvent(String.valueOf(eid));
-
-        /*
-        event = dbAdapter.read(DbType.Event, getIntent().getIntExtra("EID", -1), new DbCallback() {
-            @Override
-            public void onCallback(Event event) {
-                loadEventInfo(event);
-            }
-        });
-        */
+    private void retrieveEventInfo(String eid) {
+        if(eid != null) {
+            DbGenerator.getDbInstance().read(DbUserType.Events, eid, new DbCallback() {
+                @Override
+                public void readCallback(Event e) {
+                    loadEventInfo(e);
+                }
+            });
+        } else {
+            loadNullEvent();
+        }
     }
 
     private void loadEventInfo(Event event) {
         if (event == null) {
             loadNullEvent();
         } else {
+            this.event = event;
             titleView.setText(event.getTitle());
             creatorView.setText(event.getCreator().getName());
             addressView.setText(event.getAddress());
             timeView.setText(event.getDateTime().toString());
 
-            e1.setVisible(event.isVisible());
 
             StringBuilder s = new StringBuilder();
             for (User user : event.getParticipants()) {
-                emails.add(user.getEmailAddress());
+                if (!emails.contains(user.getEmailAddress())) {
+                    emails.add(user.getEmailAddress());
+                }
                 s.append(user.getName()).append(System.lineSeparator());
             }
 
@@ -116,28 +116,4 @@ public class EventPage extends Page {
         setContentView(R.layout.activity_event_page_null);
     }
 
-    // TODO This function is to be deleted / replaced by MockDatabase query
-    private void createDummyEvent(String eid) {
-        if (eid.equals("1")) {
-            Musician m2 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
-
-            dbAdapter.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
-                @Override
-                public void readCallback(User user) {
-                    e1 = new Event(user, eid);
-                    e1.setAddress("Westminster, London, England");
-                    e1.setLocation(51.5007, 0.1245);
-                    e1.setDateTime(new MyDate(2020, 9, 21, 14, 30));
-                    e1.setTitle("Event at Big Ben!");
-                    e1.setVisible(true);
-                    e1.register(m2);
-                    e1.setDescription("Playing at Big Ben, come watch us play!");
-
-                    loadEventInfo(e1);
-                }
-            });
-        } else {
-            loadNullEvent();
-        }
-    }
 }

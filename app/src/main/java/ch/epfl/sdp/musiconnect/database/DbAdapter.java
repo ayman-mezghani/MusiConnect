@@ -23,8 +23,7 @@ public class DbAdapter {
             db.addDoc(userType.toString(), band.getEmailAddress(), new SimplifiedBand(band));
         }
     }
-
-    public void add(DbUserType userType, Event e) {
+    public void add(Event e, DbUserType userType) {
         db.addDoc(new SimplifiedEvent(e), userType);
     }
 
@@ -48,6 +47,10 @@ public class DbAdapter {
             Band band = (Band) user;
             db.updateDoc(userType.toString(), band.getEmailAddress(), (new SimplifiedBand(band)).toMap());
         }
+    }
+
+    public void update(DbUserType userType, Event e) {
+        db.updateDoc(userType.toString(), e.getEid(), (new SimplifiedEvent(e)).toMap());
     }
 
 //    public void deleteFieldsInDoc(String docName, List<String> fields) {

@@ -64,7 +64,9 @@ public class Event {
             throw new IllegalArgumentException();
         }
 
-        participants.add(user);
+        if (!participants.contains(user)) {
+            participants.add(user);
+        }
     }
 
     public void unregister(User user) {
