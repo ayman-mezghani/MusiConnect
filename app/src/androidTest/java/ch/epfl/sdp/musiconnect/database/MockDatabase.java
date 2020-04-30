@@ -43,7 +43,7 @@ public class MockDatabase extends Database {
     }
 
     @Override
-    public void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType) {
+    void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType) {
 
     }
 

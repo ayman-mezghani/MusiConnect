@@ -1,7 +1,5 @@
 package ch.epfl.sdp.musiconnect.database;
 
-import androidx.annotation.NonNull;
-
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +8,7 @@ abstract class Database {
 
     abstract void addDoc(String collection, String docName, SimplifiedDbEntry entry);
 
-    public abstract void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType);
+    abstract void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType);
 
     abstract void deleteDoc(String collection, String docName);
 
