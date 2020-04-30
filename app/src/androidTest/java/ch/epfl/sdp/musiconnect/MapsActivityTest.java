@@ -1,5 +1,8 @@
 package ch.epfl.sdp.musiconnect;
 
+import android.app.Notification;
+
+import androidx.core.app.NotificationCompat;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SdkSuppress;
 import androidx.test.rule.ActivityTestRule;
@@ -15,12 +18,15 @@ import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
+
 @RunWith(AndroidJUnit4.class)
 @SdkSuppress(minSdkVersion = 18)
 public class MapsActivityTest {
     @Rule
-    public final ActivityTestRule<StartPage> startPageRule =
-            new ActivityTestRule<>(StartPage.class);
+    public final ActivityTestRule<MapsActivity> mapsActivityRule =
+            new ActivityTestRule<>(MapsActivity.class);
 
     @Rule
     public GrantPermissionRule mRuntimePermissionRule =
@@ -33,28 +39,13 @@ public class MapsActivityTest {
     }
 
     @Test
-    public void toastWarningGeneratesCorrectly() {
-        String msg = "this is a test";
-        startPageRule.getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                MapsActivity.Utility.generateWarning(startPageRule.getActivity().getApplicationContext(), msg, MapsActivity.Utility.warningTypes.Toast);
-            }
-        });
-
-        //onView(withText(msg)).inRoot(withDecorView(not(is(startPageRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+    public void notificationChannelGeneratesCorrectly() {
+        assertTrue(mapsActivityRule.getActivity().createNotificationChannel());
     }
 
     @Test
     public void alertWarningGeneratesCorrectly(){
-        String msg = "this is a test";
-        startPageRule.getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                //MapsActivity.Utility.generateWarning(startPageRule.getActivity().getApplicationContext(), msg, MapsActivity.Utility.warningTypes.Alert);
-            }
-        });
-        //onView(withText(msg)).check(matches(isDisplayed()));
+        NotificationCompat.Builder notif = mapsActivityRule.getActivity().buildNotification("test");
+        assertEquals(NotificationCompat.PRIORITY_MAX,notif.getPriority());
     }
 }
