@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.events.Event;
 
 public class StartPage extends Page {
     private static final String TAG = "MainActivity";
@@ -39,7 +42,7 @@ public class StartPage extends Page {
     private TextView fabTv1, fabTv2;
     private boolean isOpen = false;
     private Band b;
-    public static boolean test = true;
+    public static boolean test = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,26 +68,29 @@ public class StartPage extends Page {
         fab_button_1.setOnClickListener(v -> button1Click());
 
         fab_button_2.setOnClickListener(v -> {
-            Toast.makeText(this, "Band", Toast.LENGTH_SHORT).show();
+            Context ctx = this;
+            ListView lv = findViewById(R.id.LvEvent);
+            ArrayList<String> events = new ArrayList<>();
+
+
+            final ArrayAdapter<String> adapter = new ArrayAdapter<>
+                    (StartPage.this, android.R.layout.simple_list_item_1, events);
+            lv.setAdapter(adapter);
+
+
+            for(String e : CurrentUser.getInstance(this).getBand().getEvents()) {
+                DbGenerator.getDbInstance().read(DbUserType.Events, e.trim(), new DbCallback() {
+                    @Override
+                    public void readCallback(Event u) {
+                        events.add(u.getTitle());
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
         });
 
         if(!test) {
-            DbAdapter db = DbGenerator.getDbInstance();
-            db.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
-                @Override
-                public void readCallback(User u) {
-                    CurrentUser.getInstance(StartPage.this).setMusician((Musician) u);
-
-                    if(((Musician) u).getTypeOfUser() == TypeOfUser.Band) {
-                        db.read(DbUserType.Band, CurrentUser.getInstance(StartPage.this).email, new DbCallback() {
-                            @Override
-                            public void readCallback(User u) {
-                                b = (Band) u;
-                            }
-                        });
-                    }
-                }
-            });
+            updateCurrentUserBand();
         }
     }
 

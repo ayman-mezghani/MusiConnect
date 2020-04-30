@@ -5,9 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,6 +27,11 @@ import java.util.Map;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.database.DbCallback;
+import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.events.EventCreation;
+import ch.epfl.sdp.musiconnect.events.EventPage;
 
 import static ch.epfl.sdp.musiconnect.StartPage.test;
 
@@ -60,6 +64,7 @@ public abstract class Page extends AppCompatActivity {
         notifications = new Notifications(this);
         notificationMessage = "A musician is within " + DISTANCE_LIMIT + " meters";
         notificationMessages = new ArrayList<>();
+        userLocations = new HashMap<>();
     }
 
     @Override
@@ -79,8 +84,15 @@ public abstract class Page extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter("GPSLocationUpdates"));
         super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter("GPSLocationUpdates"));
+
+        Context ctx = this;
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (!test)
+            updateCurrentUserBand();
     }
 
     @Override
@@ -97,9 +109,6 @@ public abstract class Page extends AppCompatActivity {
             if (b != null) {
                 location = b.getParcelable("Location");
                 if (location != null) {
-                    Location userLocation = new Location("Main User");
-                    userLocation.setLatitude(46.517084);
-                    userLocation.setLongitude(6.565630);
                     if (!test)
                         if (isUserClose(location))
                             sendNotificationToMusician(Notifications.MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT);
@@ -109,7 +118,6 @@ public abstract class Page extends AppCompatActivity {
     };
 
     public boolean isUserClose(Location loc) {
-        userLocations = new HashMap<>();
         helper();
         for (Map.Entry<String, Location> val: userLocations.entrySet())
             if (loc.distanceTo(val.getValue()) < DISTANCE_LIMIT)
@@ -117,6 +125,16 @@ public abstract class Page extends AppCompatActivity {
         return false;
     }
 
+    protected void sendNotificationToMusician(String channel, int priority) {
+        if (!notificationMessages.contains(notificationMessage)) {
+            notifications.sendNotification(channel, getApplicationContext(), notificationMessage, priority);
+            notificationMessages.add(notificationMessage);
+        }
+    }
+
+    /**
+     * Helper method to provide temporary dummy user locations
+     */
     private void helper() {
         l1 = new Location("User A");
         l1.setLatitude(46.517084);
@@ -189,10 +207,15 @@ public abstract class Page extends AppCompatActivity {
                 });
     }
 
-    protected void sendNotificationToMusician(String channel, int priority) {
-        if (!notificationMessages.contains(notificationMessage)) {
-            notifications.sendNotification(channel, getApplicationContext(), notificationMessage, priority);
-            notificationMessages.add(notificationMessage);
+    protected void updateCurrentUserBand() {
+        Context ctx = this;
+        if(CurrentUser.getInstance(ctx).getTypeOfUser() == TypeOfUser.Band) {
+            DbGenerator.getDbInstance().read(DbUserType.Band, CurrentUser.getInstance(ctx).email, new DbCallback() {
+                @Override
+                public void readCallback(User u) {
+                    CurrentUser.getInstance(ctx).setBand((Band) u);
+                }
+            });
         }
     }
 }

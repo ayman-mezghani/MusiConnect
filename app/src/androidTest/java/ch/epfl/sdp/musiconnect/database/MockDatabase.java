@@ -43,6 +43,11 @@ public class MockDatabase extends Database {
     }
 
     @Override
+    void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType) {
+
+    }
+
+    @Override
     void deleteDoc(String collection, String docName) {
     }
 

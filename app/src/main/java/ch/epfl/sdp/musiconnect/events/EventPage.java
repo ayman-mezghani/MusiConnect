@@ -1,10 +1,15 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.events;
 
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.MyDate;
+import ch.epfl.sdp.musiconnect.Page;
+import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
@@ -51,7 +56,7 @@ public class EventPage extends Page {
 
         int eid = getIntent().getIntExtra("EID", 1);
 
-        createDummyEvent(eid);
+        createDummyEvent(String.valueOf(eid));
 
         /*
         event = dbAdapter.read(getIntent().getIntExtra("EID", -1), new DbCallback() {
@@ -86,8 +91,8 @@ public class EventPage extends Page {
     }
 
     // TODO This function is to be deleted / replaced by MockDatabase query
-    private void createDummyEvent(int eid) {
-        if (eid == 1) {
+    private void createDummyEvent(String eid) {
+        if (eid.equals("1")) {
             Musician m2 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
 
             dbAdapter.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
