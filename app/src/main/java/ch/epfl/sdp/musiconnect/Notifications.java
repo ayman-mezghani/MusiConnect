@@ -16,15 +16,10 @@ import androidx.core.app.NotificationManagerCompat;
 import ch.epfl.sdp.R;
 
 @SuppressLint("Registered")
-public class Notifications {
+public class Notifications extends AppCompatActivity {
 
     static final String MUSICIAN_CHANNEL = "musician_channel";
     private static final String MANAGER_CHANNEL = "manager_channel";
-    private Context context;
-
-    public Notifications(Context context) {
-        this.context = context;
-    }
 
     private void createNotificationChannels() {
         // Oreo API lvl 26
@@ -45,7 +40,7 @@ public class Notifications {
             );
             mChannel.setDescription("Notification channel used for event managers.");
 
-            NotificationManager manager = context.getSystemService(NotificationManager.class);
+            NotificationManager manager = this.getSystemService(NotificationManager.class);
             assert manager != null;
             manager.createNotificationChannel(mChannel);
             manager.createNotificationChannel(eChannel);

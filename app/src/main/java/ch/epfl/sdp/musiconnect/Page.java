@@ -61,7 +61,7 @@ public abstract class Page extends AppCompatActivity {
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        notifications = new Notifications(this);
+        notifications = new Notifications();
         notificationMessage = "A musician is within " + DISTANCE_LIMIT + " meters";
         notificationMessages = new ArrayList<>();
         userLocations = new HashMap<>();
@@ -134,7 +134,7 @@ public abstract class Page extends AppCompatActivity {
     /**
      * Helper method to provide temporary dummy user locations
      */
-    private void helper() {
+    protected void helper() {
         l1 = new Location("User A");
         l1.setLatitude(46.517084);
         l1.setLongitude(6.565630);
