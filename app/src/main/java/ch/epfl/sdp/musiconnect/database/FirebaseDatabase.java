@@ -11,17 +11,13 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
@@ -189,7 +185,7 @@ public class FirebaseDatabase extends Database {
     @Override
     public void finderQuery(String collection, Map<String, Object> arguments, DbCallback dbCallback) {
         CollectionReference ref = db.collection(collection);
-        unpack(ref, arguments).get()
+        DatabaseQueryHelpers.unpack(ref, arguments).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         List<User> queryResult = new ArrayList<>();
@@ -208,29 +204,5 @@ public class FirebaseDatabase extends Database {
                         Log.d("checkcheck", "Error getting documents: ", task.getException());
                     }
                 });
-    }
-
-    private Query unpack(CollectionReference ref, Map<String, Object> args) {
-        if (args.isEmpty())
-            return ref;
-        else {
-            ArrayDeque<Map.Entry> argEntries = new ArrayDeque<>(args.entrySet());
-            Query res = singleQuery(ref, argEntries.pollFirst());
-            while (!argEntries.isEmpty()) {
-                res = singleQuery(res, argEntries.pollFirst());
-            }
-            return res;
-        }
-    }
-
-    private Query singleQuery(Query prev, Map.Entry<String, Object> clause) {
-        if (clause.getValue() != null) {
-            Log.d("checkcheck", clause.getKey() + "=>" + clause.getValue() + " " + clause.getValue().getClass().getName());
-            if (clause.getKey().equals("")) {
-                return prev.whereArrayContains(clause.getKey(), clause.getValue());
-            } else {
-                return prev.whereEqualTo(clause.getKey(), clause.getValue());
-            }
-        } else return prev;
     }
 }
