@@ -250,7 +250,7 @@ public class EventCreationTests {
 
         closeSoftKeyboard();
         clickButtonWithText(R.string.save);
-        onView(withText(R.string.unable_to_resolve_address)).inRoot(withDecorView(Matchers.not(eventCreationRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+        onView(withText("Unable to resolve address")).inRoot(withDecorView(Matchers.not(eventCreationRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
         assertTrue(eventCreationRule.getActivity().isFinishing());
     }
 }
