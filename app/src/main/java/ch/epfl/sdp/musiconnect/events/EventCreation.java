@@ -1,7 +1,10 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.events;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.location.Address;
+import android.location.Geocoder;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
@@ -10,12 +13,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.GeoPoint;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import ch.epfl.sdp.R;
-
+import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.MyDate;
+import ch.epfl.sdp.musiconnect.Page;
+import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
@@ -103,21 +112,19 @@ public class EventCreation extends Page {
             dbAdapter.read(DbUserType.Musician, email, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
-                    if (user != null) {
-                        if (emails.contains(email)) {
-                            showToastWithText("This user is already in the participants list");
-                        } else {
-                            emails.add(email);
-                            participants.add(user);
-                            updateParticipants();
-                        }
+                if (user != null) {
+                    if (emails.contains(email)) {
+                        showToastWithText("This user is already in the participants list");
                     } else {
-                        showToastWithText("Please add a valid email");
+                        emails.add(email);
+                        participants.add(user);
+                        updateParticipants();
                     }
+                } else {
+                    showToastWithText("Please add a valid email");
+                }
                 }
             });
-
-
         });
 
         Button removeParticipant = findViewById(R.id.eventCreationRemoveParticipants);
@@ -132,17 +139,17 @@ public class EventCreation extends Page {
             dbAdapter.read(DbUserType.Musician, email, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
-                    if (user != null) {
-                        if (emails.contains(email)) {
-                            emails.remove(email);
-                            participants.remove(user);
-                            updateParticipants();
-                        } else {
-                            showToastWithText("This user is not in the participants list");
-                        }
+                if (user != null) {
+                    if (emails.contains(email)) {
+                        emails.remove(email);
+                        participants.remove(user);
+                        updateParticipants();
                     } else {
-                        showToastWithText("Please add a valid email");
+                        showToastWithText("This user is not in the participants list");
                     }
+                } else {
+                    showToastWithText("Please add a valid email");
+                }
                 }
             });
         });
@@ -191,10 +198,11 @@ public class EventCreation extends Page {
 
 
     private void sendToDatabase() {
+        Context ctx = this;
         dbAdapter.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
             @Override
             public void readCallback(User user) {
-                Event event = new Event(user, 0);
+                Event event = new Event(user, "0");
                 event.setTitle(eventTitleView.getText().toString());
                 event.setAddress(eventAddressView.getText().toString());
                 event.setDescription(eventDescriptionView.getText().toString());
@@ -215,6 +223,18 @@ public class EventCreation extends Page {
                 }
 
                 event.setDateTime(d);
+
+                GeoPoint p1 = getLocationFromAddress(event.getAddress());
+
+                if(p1 == null) {
+                    event.setLocation(0, 0);
+                    Toast.makeText(ctx, R.string.unable_to_resolve_address, Toast.LENGTH_SHORT).show();
+                } else {
+                    event.setLocation(p1.getLatitude(), p1.getLongitude());
+                }
+
+                DbAdapter db = DbGenerator.getDbInstance();
+                db.add(event, DbUserType.valueOf(CurrentUser.getInstance(ctx).getTypeOfUser().toString()));
             }
         });
     }
@@ -254,5 +274,33 @@ public class EventCreation extends Page {
         }
 
         return empty;
+    }
+
+    public GeoPoint getLocationFromAddress(String strAddress){
+        Geocoder coder = new Geocoder(this);
+        List<Address> address = null;
+        GeoPoint p1 = null;
+
+        try {
+            try {
+                address = coder.getFromLocationName(strAddress,5);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (address==null) {
+                return null;
+            }
+            Address location=address.get(0);
+            location.getLatitude();
+            location.getLongitude();
+
+            p1 = new GeoPoint((double) (location.getLatitude()),
+                    (double) (location.getLongitude()));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return p1;
     }
 }
