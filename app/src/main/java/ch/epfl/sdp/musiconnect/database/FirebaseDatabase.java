@@ -13,6 +13,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
@@ -129,6 +130,9 @@ public class FirebaseDatabase extends Database {
                                             }
                                         });
                                     }
+
+                                    GeoPoint loca = (GeoPoint) data.get("loc");
+                                    e.setLocation(loca.getLatitude(), loca.getLongitude());
                                     dbCallback.readCallback(e);
                                 }
                             });

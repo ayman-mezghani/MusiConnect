@@ -67,7 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/myMusicianFinderFirstName"
+                    android:hint="@string/myMusicianFinderFirstName"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -91,7 +91,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/myMusicianFinderLastName"
+                    android:hint="@string/myMusicianFinderLastName"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -115,7 +115,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/myMusicianFinderUserName"
+                    android:hint="@string/myMusicianFinderUserName"
                     android:textSize="18sp" />
             </LinearLayout>
 

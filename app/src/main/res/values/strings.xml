@@ -74,34 +74,38 @@
   
     <string name="welcome_message">Welcome to MusiConnect!</string>
     <string name="info_message">Please navigate the app using the menu.</string>
-  
+
+    <string name="musiconnect_notification">MusiConnect Notification</string>
+    <string name="musiconnect_generalnotifmessage">A musician is nearby !</string>
+
     <string name="finderTitle">Finder</string>
     <string name="findMusicianButton">Find Musician</string>
     <string name="findBandButton">Find Band</string>
 
     <string name="musicianFinderTitle">Musician finder</string>
     <string name="musicianFinderFirstName">First name</string>
-    <string name="myMusicianFinderFirstName"></string>
+    <string name="myMusicianFinderFirstName">First name</string>
     <string name="musicianFinderLastName">Last name</string>
-    <string name="myMusicianFinderLastName"></string>
+    <string name="myMusicianFinderLastName">Last Name</string>
     <string name="musicianFinderUserName">Username</string>
-    <string name="myMusicianFinderUserName"></string>
+    <string name="myMusicianFinderUserName">Username</string>
     <string name="musicianFinderInstruments">Instrument</string>
     <string name="myMusicianFinderInstruments"></string>
     <string name="musicianFinderLevels">Level</string>
-    <string name="myMusicianFinderLevels">Select level</string>
+    <string name="myMusicianFinderLevels"></string>
     <string name="musicianFinderButton">Find musician</string>
 
     <string name="bandFinderTitle">Band finder</string>
     <string name="bandFinderBandName">Band name</string>
-    <string name="myBandFinderBandName"></string>
-    <string name="bandFinderInstruments">Instruments</string>
+    <string name="myBandFinderBandName">Band name</string>
+    <string name="bandFinderInstruments">Instrument</string>
     <string name="myBandFinderInstruments"></string>
-    <string name="bandFinderLevels">Levels</string>
+    <string name="bandFinderLevels">Level</string>
     <string name="myBandFinderLevels"></string>
     <string name="bandFinderButton">Find band</string>
 
     <string-array name="instruments_array">
+        <item>- Select instrument -</item>
         <item>Accordion</item>
         <item>Bagpipes</item>
         <item>Banjo</item>
@@ -129,6 +133,7 @@
     </string-array>
 
     <string-array name="levels_array">
+        <item>- Select level -</item>
         <item>Beginner</item>
         <item>Intermediate</item>
         <item>Advanced</item>
@@ -154,4 +159,5 @@
     <string name="your_bands">Your bands</string>
     <string name="channel_name">channel</string>
     <string name="channel_description">description</string>
+    <string name="unable_to_resolve_address">Unable to resolve address</string>
 </resources>

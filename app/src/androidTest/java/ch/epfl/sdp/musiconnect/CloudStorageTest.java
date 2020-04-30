@@ -14,20 +14,20 @@ import static org.junit.Assert.assertEquals;
 
 public class CloudStorageTest {
     @Rule
-    public final ActivityTestRule<StartPage> startPageRule =
+    public final ActivityTestRule<StartPage> mActivityTestRule =
             new ActivityTestRule<>(StartPage.class);
 
     @Test
     public void prodInstantiationTest() {
         CloudStorageGenerator.flush();
-        CloudStorage cs = CloudStorageGenerator.getCloudInstance(startPageRule.getActivity());
+        CloudStorage cs = CloudStorageGenerator.getCloudInstance(mActivityTestRule.getActivity());
         assertEquals(FirebaseCloudStorage.class.getName(), cs.getClass().getName());
     }
 
     @Test
     public void mockInstantiationTest() {
         CloudStorageGenerator.setStorage(new MockCloudStorage());
-        CloudStorage cs = CloudStorageGenerator.getCloudInstance(startPageRule.getActivity());
+        CloudStorage cs = CloudStorageGenerator.getCloudInstance(mActivityTestRule.getActivity());
         assertEquals(MockCloudStorage.class.getName(), cs.getClass().getName());
     }
 }

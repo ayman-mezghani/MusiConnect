@@ -8,6 +8,7 @@ import java.util.Map;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.User;
+import ch.epfl.sdp.musiconnect.events.Event;
 
 public class MockDatabase extends Database {
 
@@ -26,6 +27,8 @@ public class MockDatabase extends Database {
     private List<SimplifiedMusician> listOfMusicians;
     private Map<String, SimplifiedMusician> content;
 
+    Event event;
+
     public MockDatabase() {
         this.content = new HashMap<>();
         listOfMusicians = new ArrayList<>();
@@ -34,6 +37,17 @@ public class MockDatabase extends Database {
         listOfMusicians.add(dummy1);
         listOfMusicians.add(dummy2);
         listOfMusicians.add(dummy3);
+
+        Musician m1 = this.getDummyMusician(0);
+        Musician m2 = this.getDummyMusician(3);
+
+        event = new Event(m1, "1");
+        event.setAddress("Westminster, London, England");
+        event.setLocation(51.5007, 0.1245);
+        event.setDateTime(new MyDate(2020, 9, 21, 14, 30));
+        event.setTitle("Event at Big Ben!");
+        event.setDescription("Playing at Big Ben, come watch us play!");
+        event.register(m2);
     }
 
     public Musician getDummyMusician(int index) {
@@ -63,6 +77,11 @@ public class MockDatabase extends Database {
 
     @Override
     void readDoc(String collection, String docName, DbCallback dbCallback) {
+        if(collection.equals(DbUserType.Events.toString())) {
+            dbCallback.readCallback(event);
+            return;
+        }
+
         boolean found = false;
         for (SimplifiedMusician sm : listOfMusicians) {
             if (docName.equals(sm.getEmail())) {
