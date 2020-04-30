@@ -56,6 +56,11 @@ public class MusicianFinderPageTests {
         onView(withId(R.id.myMusicianFinderFirstNameID)).perform(ViewActions.scrollTo()).perform(clearText(), typeText(firstName));
         onView(withId(R.id.myMusicianFinderLastNameID)).perform(ViewActions.scrollTo()).perform(clearText(), typeText(lastName));
         onView(withId(R.id.myMusicianFinderUserNameID)).perform(ViewActions.scrollTo()).perform(clearText(), typeText(userName));
+
+        onView(withId(R.id.myMusicianFinderFirstNameID)).check(matches(withText(firstName)));
+        onView(withId(R.id.myMusicianFinderLastNameID)).check(matches(withText(lastName)));
+        onView(withId(R.id.myMusicianFinderUserNameID)).check(matches(withText(userName)));
+
         closeSoftKeyboard();
 
         onView(withId(R.id.myMusicianFinderFirstNameID)).check(matches(withText(firstName)));
