@@ -2,9 +2,12 @@ package ch.epfl.sdp.musiconnect;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+
+import ch.epfl.sdp.musiconnect.events.Event;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -291,6 +294,37 @@ public class MusicianClassUnitTests {
         expectedString += "    " + Instrument.VOICE + " -> level " + Level.PROFESSIONAL + "\n";
 
         assertEquals(expectedString, john.toString());
+    }
+
+    @Test
+    public void musicianTypeOfUserTests() {
+        Musician john = new Musician("John", "Lennon", "JohnLennon", "john.lennon@gmail.com", new MyDate(1940, 10, 9));
+
+        assertEquals(TypeOfUser.Musician, john.getTypeOfUser());
+
+        john.setTypeOfUser(TypeOfUser.Band);
+
+        assertEquals(TypeOfUser.Band, john.getTypeOfUser());
+
+    }
+
+    @Test
+    public void musicianEventsTests() {
+        Musician john = new Musician("John", "Lennon", "JohnLennon", "john.lennon@gmail.com", new MyDate(1940, 10, 9));
+
+
+        ArrayList<String> as = new ArrayList<>();
+        Event e = new Event(john, "1");
+
+        as.add(e.getEid());
+        john.addEvent(e.getEid());
+
+        assertEquals(as, john.getEvents());
+
+        as.add("2");
+
+        john.setEvents(as);
+        assertEquals(as, john.getEvents());
     }
 
 }

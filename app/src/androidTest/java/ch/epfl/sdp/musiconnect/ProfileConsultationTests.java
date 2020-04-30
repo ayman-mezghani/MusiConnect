@@ -16,12 +16,12 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
-import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
+import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;

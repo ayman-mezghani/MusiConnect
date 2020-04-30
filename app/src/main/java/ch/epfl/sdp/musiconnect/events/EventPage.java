@@ -56,7 +56,7 @@ public class EventPage extends Page {
 
         int eid = getIntent().getIntExtra("EID", 1);
 
-        createDummyEvent(eid);
+        createDummyEvent(String.valueOf(eid));
 
         /*
         event = dbAdapter.read(getIntent().getIntExtra("EID", -1), new DbCallback() {
@@ -91,8 +91,8 @@ public class EventPage extends Page {
     }
 
     // TODO This function is to be deleted / replaced by MockDatabase query
-    private void createDummyEvent(int eid) {
-        if (eid == 1) {
+    private void createDummyEvent(String eid) {
+        if (eid.equals("1")) {
             Musician m2 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
 
             dbAdapter.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
