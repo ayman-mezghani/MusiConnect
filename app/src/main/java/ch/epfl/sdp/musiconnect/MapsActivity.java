@@ -136,7 +136,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         createNotificationChannel();
         notificationManager = NotificationManagerCompat.from(MapsActivity.this);
 
-        if(CurrentUser.getInstance(this).getTypeOfUser() == TypeOfUser.Band) {
+        if(CurrentUser.getInstance(this).getBand() != null) {
             for (String se: CurrentUser.getInstance(this).getBand().getEvents()) {
                 DbGenerator.getDbInstance().read(DbUserType.Events, se, new DbCallback() {
                     @Override

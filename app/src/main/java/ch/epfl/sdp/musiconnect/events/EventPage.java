@@ -54,9 +54,17 @@ public class EventPage extends Page {
         // TODO test using mock database instead
         // TODO setup new DbCallback for events
 
-        int eid = getIntent().getIntExtra("EID", 1);
+        String eid = getIntent().getStringExtra("eid");
+        if(eid != null) {
+            DbGenerator.getDbInstance().read(DbUserType.Events, eid, new DbCallback() {
+                @Override
+                public void readCallback(Event e) {
+                    loadEventInfo(e);
+                }
+            });
+        }
 
-        createDummyEvent(String.valueOf(eid));
+        //createDummyEvent(String.valueOf(eid));
 
         /*
         event = dbAdapter.read(getIntent().getIntExtra("EID", -1), new DbCallback() {
