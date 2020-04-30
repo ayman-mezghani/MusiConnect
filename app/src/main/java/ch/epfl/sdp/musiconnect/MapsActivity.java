@@ -246,13 +246,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 if (!loc) {
                     updatePos = false;
-                    delay = 5000;
+                    delay = 10000;
                     notificationManager.notify(LOCATION_ID, buildNotification("Error: couldn't update your location to the cloud").build());
                 } else{
                     notificationManager.cancel(LOCATION_ID);
                 }
                 if (co && loc) {
                     updatePos = true;
+                    delay = 20000;
                     updateUsers();
                     clearCachedUsers();
                     saveUsersToCache();
