@@ -216,13 +216,14 @@ public class EventCreationTests {
     // this test works on my computer, fails on cirrus
     // But works when using the app
     //@Test
-    public void geocoderWillReturnTrueValue() {
-        GeoPoint p1 = ((EventCreation) getCurrentActivity()).getLocationFromAddress("rue de lausanne, genève");
-        double lat = p1.getLatitude();
-        double lng = p1.getLongitude();
-        assertEquals(lat, 46.218781199999995, 5);
-        assertEquals(lng, 6.1487117, 5);
-    }
+//    public void geocoderWillReturnTrueValue() {
+//        GeoPoint p1 = ((EventCreation) getCurrentActivity()).getLocationFromAddress("rue de lausanne, genève");
+//        double lat = p1.getLatitude();
+//        double lng = p1.getLongitude();
+//        assertEquals(lat, 46.218781199999995, 5);
+//        assertEquals(lng, 6.1487117, 5);
+//    }
+
     @Test
     public void geocoderWillReturnNullValue() {
         GeoPoint p1 = ((GeoPoint)((EventCreation) getCurrentActivity()).getLocationFromAddress(""));
@@ -234,42 +235,32 @@ public class EventCreationTests {
         onView(withId(R.id.eventCreationNewEventAddress)).perform(ViewActions.scrollTo()).perform(clearText(), typeText(address));
         onView(withId(R.id.eventCreationNewEventDescription)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestDescription"));
         closeSoftKeyboard();
+
+        onView(withId(R.id.eventCreationNewEventDate)).perform(ViewActions.scrollTo()).perform(click());
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH));
+        onView(withText("OK")).perform(click());
+
+        onView(withId(R.id.eventCreationNewEventTime)).perform(ViewActions.scrollTo()).perform(click());
+        onView(withClassName(Matchers.equalTo(TimePicker.class.getName()))).perform(PickerActions.setTime(Calendar.HOUR_OF_DAY, Calendar.MINUTE));
+        onView(withText("OK")).perform(click());
+
+        onView(withId(R.id.eventCreationNewEventDate)).check(matches(withText(Calendar.DAY_OF_MONTH + "/" + Calendar.MONTH + "/" + Calendar.YEAR)));
+        onView(withId(R.id.eventCreationNewEventTime)).check(matches(withText(Calendar.HOUR_OF_DAY + ":" + Calendar.MINUTE)));
+
+        checkIfFinishing();
     }
 
     @Test
     public void testWithResolvableAddressShoulPass() {
         writeTestValuesWithCustomAddress("rue de lausanne, geneve");
 
-        onView(withId(R.id.eventCreationNewEventDate)).perform(ViewActions.scrollTo()).perform(click());
-        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH));
-        onView(withText("OK")).perform(click());
 
-        onView(withId(R.id.eventCreationNewEventTime)).perform(ViewActions.scrollTo()).perform(click());
-        onView(withClassName(Matchers.equalTo(TimePicker.class.getName()))).perform(PickerActions.setTime(Calendar.HOUR_OF_DAY, Calendar.MINUTE));
-        onView(withText("OK")).perform(click());
-
-        onView(withId(R.id.eventCreationNewEventDate)).check(matches(withText(Calendar.DAY_OF_MONTH + "/" + Calendar.MONTH + "/" + Calendar.YEAR)));
-        onView(withId(R.id.eventCreationNewEventTime)).check(matches(withText(Calendar.HOUR_OF_DAY + ":" + Calendar.MINUTE)));
-
-        checkIfFinishing();
     }
 
     @Test
     public void testWithUnresolvableAddressShoulPopUpToast() {
         writeTestValuesWithCustomAddress("TestAddress");
 
-        onView(withId(R.id.eventCreationNewEventDate)).perform(ViewActions.scrollTo()).perform(click());
-        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH));
-        onView(withText("OK")).perform(click());
-
-        onView(withId(R.id.eventCreationNewEventTime)).perform(ViewActions.scrollTo()).perform(click());
-        onView(withClassName(Matchers.equalTo(TimePicker.class.getName()))).perform(PickerActions.setTime(Calendar.HOUR_OF_DAY, Calendar.MINUTE));
-        onView(withText("OK")).perform(click());
-
-        onView(withId(R.id.eventCreationNewEventDate)).check(matches(withText(Calendar.DAY_OF_MONTH + "/" + Calendar.MONTH + "/" + Calendar.YEAR)));
-        onView(withId(R.id.eventCreationNewEventTime)).check(matches(withText(Calendar.HOUR_OF_DAY + ":" + Calendar.MINUTE)));
-
         //onView(withText("Unable to resolve address")).inRoot(withDecorView(Matchers.not(eventCreationRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
-        checkIfFinishing();
     }
 }

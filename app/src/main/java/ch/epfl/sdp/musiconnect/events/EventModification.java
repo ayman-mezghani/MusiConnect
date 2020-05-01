@@ -79,8 +79,6 @@ public abstract class EventModification extends Page {
         }
     }
 
-
-
     void setupDateTimePickerDialog() {
         dateView.setOnClickListener(v -> {
             datePickerDialog = new DatePickerDialog(EventModification.this,
@@ -104,12 +102,8 @@ public abstract class EventModification extends Page {
         });
     }
 
-    void setupButtons() {
-        setupAddButton();
-        setupRemoveButton();
-    }
 
-    private void setupAddButton() {
+    void setupButtons() {
         Button addParticipant = findViewById(R.id.eventAddParticipants);
         addParticipant.setOnClickListener(v -> {
             String email = eventParticipantView.getText().toString();
@@ -130,6 +124,8 @@ public abstract class EventModification extends Page {
                 addEmailAndUser(email); // too many lines for code climate...
             }
         });
+
+        setupRemoveButton();
     }
 
     private void addEmailAndUser(String email) {
@@ -190,8 +186,7 @@ public abstract class EventModification extends Page {
 
 
     void showToastWithText(String string) {
-        EventModification.this.runOnUiThread(() -> Toast.makeText(EventModification.this,
-                string, Toast.LENGTH_LONG).show());
+        Toast.makeText(EventModification.this, string, Toast.LENGTH_LONG).show();
     }
 
 
@@ -245,9 +240,9 @@ public abstract class EventModification extends Page {
 
         String[] hourMin = time.split(":");
         String[] dateMonthYear = date.split("/");
-        MyDate d = new MyDate(Integer.parseInt(dateMonthYear[2]), Integer.parseInt(dateMonthYear[1]), Integer.parseInt(dateMonthYear[0]),
+
+        return new MyDate(Integer.parseInt(dateMonthYear[2]), Integer.parseInt(dateMonthYear[1]), Integer.parseInt(dateMonthYear[0]),
                 Integer.parseInt(hourMin[0]), Integer.parseInt(hourMin[1]));
-        return d;
     }
 
     public GeoPoint getLocationFromAddress(String strAddress){
