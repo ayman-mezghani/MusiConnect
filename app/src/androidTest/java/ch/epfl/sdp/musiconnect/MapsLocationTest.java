@@ -188,7 +188,6 @@ public class MapsLocationTest {
         assertTrue(b);
     }
 
-
     @Test
     public void testRequestPermissionResultDenied() {
         clickDeny();
