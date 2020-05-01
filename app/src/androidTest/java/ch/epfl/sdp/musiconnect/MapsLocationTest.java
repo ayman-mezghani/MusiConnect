@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Looper;
 
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.SdkSuppress;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.UiDevice;
@@ -34,6 +36,7 @@ import static org.junit.Assert.assertTrue;
 
 
 @RunWith(AndroidJUnit4.class)
+@SdkSuppress(minSdkVersion = 18)
 public class MapsLocationTest {
 
 
@@ -41,6 +44,12 @@ public class MapsLocationTest {
     public final ActivityTestRule<MapsActivity> mRule =
             new ActivityTestRule<>(MapsActivity.class);
 
+
+
+    @BeforeClass
+    public static void set() {
+        Looper.prepare();
+    }
 
     @BeforeClass
     public static void setMocks() {
@@ -53,7 +62,6 @@ public class MapsLocationTest {
      * https://gist.github.com/rocboronat/65b1187a9fca9eabfebb5121d818a3c4
      */
 
-    // Do not delete yet
     private static boolean hasNeededPermission() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         int permissionStatus = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION);
@@ -115,7 +123,6 @@ public class MapsLocationTest {
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         clickAlert(device);
         // clickOnDialog(device, 1);
-
     }
 
     /**
@@ -125,26 +132,6 @@ public class MapsLocationTest {
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         clickAlert(device);
         clickOnDialog(device, 0);
-    }
-
-
-    @Test
-    public void testMessageReceiver() {
-        Location location = new Location("Test");
-        location.setLatitude(0);
-        location.setLongitude(0);
-        sendMessageToActivity(location);
-
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        Location loc = mRule.getActivity().getSetLocation();
-        assertTrue(correctLocation(loc));
-        assertTrue(loc.getLatitude() == location.getLatitude());
-
     }
 
     private int[] grantedPerm() {
@@ -157,6 +144,23 @@ public class MapsLocationTest {
         int[] results = new int[1];
         results[0] = PackageManager.PERMISSION_DENIED;
         return results;
+    }
+
+    @Test
+    public void testGetLocationReturnsRight() {
+        clickAllow();
+
+        Task<Location> task = mRule.getActivity().getTaskLocation();
+        task.addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    assertTrue(correctLocation(location));
+                } else { // location will be null if the location services are not available...
+                    assertTrue(location == null);
+                }
+            }
+        });
     }
 
 
@@ -199,5 +203,25 @@ public class MapsLocationTest {
         mRule.getActivity().onRequestPermissionsResult(0, null, results);
         b = mRule.getActivity().isLocationPermissionGranted();
         assertTrue(!b);
+    }
+
+
+    @Test
+    public void testMessageReceiver() {
+        Location location = new Location("Test");
+        location.setLatitude(0);
+        location.setLongitude(0);
+        sendMessageToActivity(location);
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Location loc = mRule.getActivity().getSetLocation();
+        assertTrue(correctLocation(loc));
+        assertTrue(loc.getLatitude() == location.getLatitude());
+
     }
 }
