@@ -13,7 +13,6 @@ import ch.epfl.sdp.musiconnect.MyDate;
 import static ch.epfl.sdp.musiconnect.database.SimplifiedBand.BANDNAME;
 import static ch.epfl.sdp.musiconnect.database.SimplifiedBand.LEADER;
 import static ch.epfl.sdp.musiconnect.database.SimplifiedBand.MEMBERS;
-import static ch.epfl.sdp.musiconnect.database.SimplifiedBand.URLVIDEO;
 import static ch.epfl.sdp.musiconnect.database.SimplifiedMusicianTest.testMusician1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -83,7 +82,6 @@ public class SimplifiedBandTest {
         assertEquals((String) map.get(LEADER), (String) mapClone.get(LEADER));
         assertEquals((String) map.get(BANDNAME), (String) mapClone.get(BANDNAME));
         assertEquals(map.get(MEMBERS), mapClone.get(MEMBERS));
-        assertEquals((String) map.get(URLVIDEO), (String) mapClone.get(URLVIDEO));
         assertEquals(map.get("events"), mapClone.get("events"));
     }
 
@@ -111,7 +109,6 @@ public class SimplifiedBandTest {
         map.put(LEADER, "email@gmail.com");
         map.put(BANDNAME, "BandName");
         map.put(MEMBERS, al);
-        map.put(URLVIDEO, "urlVideo");
         map.put("events", el);
         return map;
     }
@@ -121,7 +118,6 @@ public class SimplifiedBandTest {
         map.put(LEADER, null);
         map.put(BANDNAME, null);
         map.put(MEMBERS, null);
-        map.put(URLVIDEO, null);
         map.put("events", null);
         return map;
     }
