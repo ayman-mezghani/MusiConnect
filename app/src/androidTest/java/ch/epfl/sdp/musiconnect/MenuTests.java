@@ -57,7 +57,7 @@ public class MenuTests {
     // Before and after methods are used in order to accept tests with intents
     @Before
     public void initIntents() {
-        clickAlerts();
+        // clickAlerts();
         Intents.init();
     }
 
