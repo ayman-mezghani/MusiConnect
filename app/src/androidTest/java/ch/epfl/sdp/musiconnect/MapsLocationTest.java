@@ -112,6 +112,7 @@ public class MapsLocationTest {
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         clickAlert(device);
         // clickOnDialog(device, 1);
+
     }
 
     /**
