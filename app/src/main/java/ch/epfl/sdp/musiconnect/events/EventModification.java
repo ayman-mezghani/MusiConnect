@@ -116,17 +116,17 @@ public abstract class EventModification extends Page {
 
             if (email.equals("")) {
                 showToastWithText("Please add an email");
-                return;
             }
 
-            if (email.equals(CurrentUser.getInstance(this).email)) {
+            else if (email.equals(CurrentUser.getInstance(this).email)) {
                 showToastWithText("You are already a participant!");
-                return;
             }
 
-            if (emails.contains(email)) {
+            else if (emails.contains(email)) {
                 showToastWithText("This user is already in the participants list");
-            } else {
+            }
+
+            else {
                 emails.add(email);
                 dbAdapter.read(DbUserType.Musician, email, new DbCallback() {
                     @Override
@@ -151,15 +151,13 @@ public abstract class EventModification extends Page {
 
             if (email.equals("")) {
                 showToastWithText("Please add an email");
-                return;
             }
 
-            if (email.equals(CurrentUser.getInstance(this).email)) {
+            else if (email.equals(CurrentUser.getInstance(this).email)) {
                 showToastWithText("You cannot remove yourself!");
-                return;
             }
 
-            if (emails.contains(email)) {
+            else if (emails.contains(email)) {
                 emails.remove(email);
                 for (Musician m: participants) {
                     if (m.getEmailAddress().equals(email)) {
@@ -167,7 +165,9 @@ public abstract class EventModification extends Page {
                         updateParticipants();
                     }
                 }
-            } else {
+            }
+
+            else {
                 showToastWithText("This user is not in the participants list");
             }
         });
@@ -217,11 +217,8 @@ public abstract class EventModification extends Page {
 
                 String[] hourMin = time.split(":");
                 String[] dateMonthYear = date.split("/");
-                MyDate d = new MyDate(Integer.parseInt(dateMonthYear[2]),
-                        Integer.parseInt(dateMonthYear[1]),
-                        Integer.parseInt(dateMonthYear[0]),
-                        Integer.parseInt(hourMin[0]),
-                        Integer.parseInt(hourMin[1]));
+                MyDate d = new MyDate(Integer.parseInt(dateMonthYear[2]), Integer.parseInt(dateMonthYear[1]), Integer.parseInt(dateMonthYear[0]),
+                        Integer.parseInt(hourMin[0]), Integer.parseInt(hourMin[1]));
 
                 for (User musician: participants) {
                     event.register(musician);

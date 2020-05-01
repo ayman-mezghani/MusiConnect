@@ -95,6 +95,12 @@ public class EventCreationTests {
         assertFalse(eventCreationRule.getActivity().isFinishing());
     }
 
+    private void checkIfFinishing() {
+        closeSoftKeyboard();
+        clickButtonWithText(R.string.save);
+        assertTrue(eventCreationRule.getActivity().isFinishing());
+    }
+
     @Test
     public void testHelpClickShouldStartNewIntent() {
         onView(withId(R.id.help)).perform(click());
@@ -189,9 +195,7 @@ public class EventCreationTests {
         clickButtonWithText(R.string.remove_participant);
         onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(not(withText("PAlpha"))));
 
-        closeSoftKeyboard();
-        clickButtonWithText(R.string.save);
-        assertTrue(eventCreationRule.getActivity().isFinishing());
+        checkIfFinishing();
     }
 
 
@@ -245,9 +249,7 @@ public class EventCreationTests {
         onView(withId(R.id.eventCreationNewEventDate)).check(matches(withText(Calendar.DAY_OF_MONTH + "/" + Calendar.MONTH + "/" + Calendar.YEAR)));
         onView(withId(R.id.eventCreationNewEventTime)).check(matches(withText(Calendar.HOUR_OF_DAY + ":" + Calendar.MINUTE)));
 
-        closeSoftKeyboard();
-        clickButtonWithText(R.string.save);
-        assertTrue(eventCreationRule.getActivity().isFinishing());
+        checkIfFinishing();
     }
 
     @Test
@@ -270,9 +272,7 @@ public class EventCreationTests {
         onView(withId(R.id.eventCreationNewEventDate)).check(matches(withText(Calendar.DAY_OF_MONTH + "/" + Calendar.MONTH + "/" + Calendar.YEAR)));
         onView(withId(R.id.eventCreationNewEventTime)).check(matches(withText(Calendar.HOUR_OF_DAY + ":" + Calendar.MINUTE)));
 
-        closeSoftKeyboard();
-        clickButtonWithText(R.string.save);
         //onView(withText("Unable to resolve address")).inRoot(withDecorView(Matchers.not(eventCreationRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
-        assertTrue(eventCreationRule.getActivity().isFinishing());
+        checkIfFinishing();
     }
 }
