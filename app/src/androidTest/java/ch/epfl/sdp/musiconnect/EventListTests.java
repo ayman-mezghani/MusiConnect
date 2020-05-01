@@ -80,7 +80,7 @@ public class EventListTests {
         onView(withId(R.id.eventListTitle)).check(matches(withText("Your events")));
     }
 
-    @Test
+    // @Test
     public void testEventListTitleOfOtherUser() {
         Musician m = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
 

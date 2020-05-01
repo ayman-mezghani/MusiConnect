@@ -46,11 +46,12 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.sdp.musiconnect.testsFunctions.getCurrentActivity;
 import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+
+// If this class seems like a mess, this is to resolve all "issues" from code climate
 @RunWith(AndroidJUnit4.class)
 public class EventCreationTests {
     @Rule
@@ -122,10 +123,12 @@ public class EventCreationTests {
     }
 
     @Test
-    public void addEmptyMusicianShouldDoNothing() {
+    public void addOrRemoveEmptyMusicianShouldDoNothing() {
         clickButtonWithText(R.string.add_participant);
         // Toasts take too long / blocked by previous toasts
         // onView(withText("Please add a username")).inRoot(withDecorView(not(eventCreationRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+        onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(withText("")));
+        clickButtonWithText(R.string.remove_participant);
         onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(withText("")));
     }
 
@@ -138,11 +141,6 @@ public class EventCreationTests {
         onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(withText("PAlpha" + System.lineSeparator())));
     }
 
-    @Test
-    public void removeEmptyMusicianShouldDoNothing() {
-        clickButtonWithText(R.string.remove_participant);
-        onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(withText("")));
-    }
 
     @Test
     public void cannotAddOrRemoveYourself() {
@@ -174,7 +172,20 @@ public class EventCreationTests {
         checkIfNotFinishing();
 
         closeSoftKeyboard();
+        testSetDefaultCalendar();
 
+        onView(withId(R.id.eventCreationNewParticipant)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("palpha@gmail.com"));
+        clickButtonWithText(R.string.add_participant);
+        onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(withText("PAlpha" + System.lineSeparator())));
+
+        onView(withId(R.id.eventCreationNewParticipant)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("palpha@gmail.com"));
+        clickButtonWithText(R.string.remove_participant);
+        onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(not(withText("PAlpha"))));
+
+        checkIfFinishing();
+    }
+
+    private void testSetDefaultCalendar() {
         onView(withId(R.id.eventCreationNewEventDate)).perform(ViewActions.scrollTo()).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH));
         onView(withText("OK")).perform(click());
@@ -186,16 +197,6 @@ public class EventCreationTests {
 
         onView(withId(R.id.eventCreationNewEventDate)).check(matches(withText(Calendar.DAY_OF_MONTH + "/" + Calendar.MONTH + "/" + Calendar.YEAR)));
         onView(withId(R.id.eventCreationNewEventTime)).check(matches(withText(Calendar.HOUR_OF_DAY + ":" + Calendar.MINUTE)));
-
-        onView(withId(R.id.eventCreationNewParticipant)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("palpha@gmail.com"));
-        clickButtonWithText(R.string.add_participant);
-        onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(withText("PAlpha" + System.lineSeparator())));
-
-        onView(withId(R.id.eventCreationNewParticipant)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("palpha@gmail.com"));
-        clickButtonWithText(R.string.remove_participant);
-        onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(not(withText("PAlpha"))));
-
-        checkIfFinishing();
     }
 
 
@@ -236,25 +237,13 @@ public class EventCreationTests {
         onView(withId(R.id.eventCreationNewEventDescription)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestDescription"));
         closeSoftKeyboard();
 
-        onView(withId(R.id.eventCreationNewEventDate)).perform(ViewActions.scrollTo()).perform(click());
-        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH));
-        onView(withText("OK")).perform(click());
-
-        onView(withId(R.id.eventCreationNewEventTime)).perform(ViewActions.scrollTo()).perform(click());
-        onView(withClassName(Matchers.equalTo(TimePicker.class.getName()))).perform(PickerActions.setTime(Calendar.HOUR_OF_DAY, Calendar.MINUTE));
-        onView(withText("OK")).perform(click());
-
-        onView(withId(R.id.eventCreationNewEventDate)).check(matches(withText(Calendar.DAY_OF_MONTH + "/" + Calendar.MONTH + "/" + Calendar.YEAR)));
-        onView(withId(R.id.eventCreationNewEventTime)).check(matches(withText(Calendar.HOUR_OF_DAY + ":" + Calendar.MINUTE)));
-
+        testSetDefaultCalendar();
         checkIfFinishing();
     }
 
     @Test
     public void testWithResolvableAddressShoulPass() {
         writeTestValuesWithCustomAddress("rue de lausanne, geneve");
-
-
     }
 
     @Test
