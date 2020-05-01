@@ -229,14 +229,16 @@ public class EventCreationTests {
         assertNull(p1);
     }
 
-    @Test
-    public void testWithResolvableAddressShoulPass() {
+    private void writeTestValuesWithCustomAddress(String address) {
         onView(withId(R.id.eventCreationNewEventTitle)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestTitle"));
-
-        onView(withId(R.id.eventCreationNewEventAddress)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("rue de lausanne, geneve"));
+        onView(withId(R.id.eventCreationNewEventAddress)).perform(ViewActions.scrollTo()).perform(clearText(), typeText(address));
         onView(withId(R.id.eventCreationNewEventDescription)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestDescription"));
         closeSoftKeyboard();
+    }
 
+    @Test
+    public void testWithResolvableAddressShoulPass() {
+        writeTestValuesWithCustomAddress("rue de lausanne, geneve");
 
         onView(withId(R.id.eventCreationNewEventDate)).perform(ViewActions.scrollTo()).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH));
@@ -254,12 +256,7 @@ public class EventCreationTests {
 
     @Test
     public void testWithUnresolvableAddressShoulPopUpToast() {
-        onView(withId(R.id.eventCreationNewEventTitle)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestTitle"));
-
-        onView(withId(R.id.eventCreationNewEventAddress)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestAddress"));
-        onView(withId(R.id.eventCreationNewEventDescription)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestDescription"));
-        closeSoftKeyboard();
-
+        writeTestValuesWithCustomAddress("TestAddress");
 
         onView(withId(R.id.eventCreationNewEventDate)).perform(ViewActions.scrollTo()).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH));

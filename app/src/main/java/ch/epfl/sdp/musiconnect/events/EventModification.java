@@ -127,22 +127,27 @@ public abstract class EventModification extends Page {
             }
 
             else {
-                emails.add(email);
-                dbAdapter.read(DbUserType.Musician, email, new DbCallback() {
-                    @Override
-                    public void readCallback(User user) {
-                        participants.add((Musician)user);
-                        updateParticipants();
-                    }
-
-                    @Override
-                    public void readFailCallback() {
-                        showToastWithText("Please add a valid email");
-                    }
-                });
+                addEmailAndUser(email); // too many lines for code climate...
             }
         });
     }
+
+    private void addEmailAndUser(String email) {
+        emails.add(email);
+        dbAdapter.read(DbUserType.Musician, email, new DbCallback() {
+            @Override
+            public void readCallback(User user) {
+                participants.add((Musician)user);
+                updateParticipants();
+            }
+
+            @Override
+            public void readFailCallback() {
+                showToastWithText("Please add a valid email");
+            }
+        });
+    }
+
 
     private void setupRemoveButton() {
         Button removeParticipant = findViewById(R.id.eventRemoveParticipants);
@@ -212,19 +217,12 @@ public abstract class EventModification extends Page {
                 event.setAddress(eventAddressView.getText().toString());
                 event.setDescription(eventDescriptionView.getText().toString());
 
-                String time = timeView.getText().toString();
-                String date = dateView.getText().toString();
-
-                String[] hourMin = time.split(":");
-                String[] dateMonthYear = date.split("/");
-                MyDate d = new MyDate(Integer.parseInt(dateMonthYear[2]), Integer.parseInt(dateMonthYear[1]), Integer.parseInt(dateMonthYear[0]),
-                        Integer.parseInt(hourMin[0]), Integer.parseInt(hourMin[1]));
+                event.setDateTime(setEventDateAndTime());
 
                 for (User musician: participants) {
                     event.register(musician);
                 }
 
-                event.setDateTime(d);
                 event.setVisible(rdg.getCheckedRadioButtonId() == R.id.visible);
 
                 GeoPoint p1 = getLocationFromAddress(event.getAddress());
@@ -241,6 +239,16 @@ public abstract class EventModification extends Page {
         });
     }
 
+    private MyDate setEventDateAndTime() {
+        String time = timeView.getText().toString();
+        String date = dateView.getText().toString();
+
+        String[] hourMin = time.split(":");
+        String[] dateMonthYear = date.split("/");
+        MyDate d = new MyDate(Integer.parseInt(dateMonthYear[2]), Integer.parseInt(dateMonthYear[1]), Integer.parseInt(dateMonthYear[0]),
+                Integer.parseInt(hourMin[0]), Integer.parseInt(hourMin[1]));
+        return d;
+    }
 
     public GeoPoint getLocationFromAddress(String strAddress){
         Geocoder coder = new Geocoder(this);
