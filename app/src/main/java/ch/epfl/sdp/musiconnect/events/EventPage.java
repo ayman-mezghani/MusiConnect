@@ -91,25 +91,26 @@ public class EventPage extends Page {
     private void loadEventInfo(Event event) {
         if (event == null) {
             loadNullEvent();
-        } else {
-            this.event = event;
-            titleView.setText(event.getTitle());
-            creatorView.setText(event.getCreator().getName());
-            addressView.setText(event.getAddress());
-            timeView.setText(event.getDateTime().toString());
-
-
-            StringBuilder s = new StringBuilder();
-            for (User user : event.getParticipants()) {
-                if (!emails.contains(user.getEmailAddress())) {
-                    emails.add(user.getEmailAddress());
-                }
-                s.append(user.getName()).append(System.lineSeparator());
-            }
-
-            participantsView.setText(s.toString());
-            descriptionView.setText(event.getDescription());
+            return;             // Return statement to address cognitive "complexity" "issue" from code clmate
         }
+
+        this.event = event;
+        titleView.setText(event.getTitle());
+        creatorView.setText(event.getCreator().getName());
+        addressView.setText(event.getAddress());
+        timeView.setText(event.getDateTime().toString());
+
+
+        StringBuilder s = new StringBuilder();
+        for (User user : event.getParticipants()) {
+            if (!emails.contains(user.getEmailAddress())) {
+                emails.add(user.getEmailAddress());
+            }
+            s.append(user.getName()).append(System.lineSeparator());
+        }
+
+        participantsView.setText(s.toString());
+        descriptionView.setText(event.getDescription());
     }
 
     private void loadNullEvent() {

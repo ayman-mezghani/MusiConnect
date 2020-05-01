@@ -43,7 +43,7 @@ public class EventListPage extends Page {
         eventListTitle = findViewById(R.id.eventListTitle);
 
         Intent intent = getIntent();
-        String visitorEmail = intent.getStringExtra("UserEmail");
+//        String visitorEmail = intent.getStringExtra("UserEmail");
         ListView lv = findViewById(R.id.eventListView);
         events = new ArrayList<>();
         eventTitles = new ArrayList<>();
@@ -55,7 +55,7 @@ public class EventListPage extends Page {
         lv.setOnItemClickListener((parent, view, position, id) -> loadEventPage(ids.get(lv.getItemAtPosition(position))));
 
 
-
+        /*
         if (visitorEmail != null) {
             dbAdapter = DbGenerator.getDbInstance();
             dbAdapter.read(DbUserType.Musician, visitorEmail, new DbCallback() {
@@ -67,9 +67,9 @@ public class EventListPage extends Page {
 
         } else {
             eventListTitle.setText("Your events");
-        }
+        }*/
 
-
+        eventListTitle.setText("Your events");
         dbAdapter.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
             @Override
             public void readCallback(User user) {

@@ -105,6 +105,11 @@ public abstract class EventModification extends Page {
     }
 
     void setupButtons() {
+        setupAddButton();
+        setupRemoveButton();
+    }
+
+    private void setupAddButton() {
         Button addParticipant = findViewById(R.id.eventAddParticipants);
         addParticipant.setOnClickListener(v -> {
             String email = eventParticipantView.getText().toString();
@@ -137,7 +142,9 @@ public abstract class EventModification extends Page {
                 });
             }
         });
+    }
 
+    private void setupRemoveButton() {
         Button removeParticipant = findViewById(R.id.eventRemoveParticipants);
         removeParticipant.setOnClickListener(v -> {
             String email = eventParticipantView.getText().toString();

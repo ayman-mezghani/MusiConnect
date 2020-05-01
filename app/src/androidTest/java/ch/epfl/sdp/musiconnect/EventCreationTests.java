@@ -89,11 +89,6 @@ public class EventCreationTests {
         assertTrue(eventCreationRule.getActivity().isFinishing());
     }
 
-    @Test
-    public void testEventCreationSaveShouldDoNothing() {
-        checkIfNotFinishing();
-    }
-
     private void checkIfNotFinishing() {
         closeSoftKeyboard();
         clickButtonWithText(R.string.save);
@@ -144,18 +139,14 @@ public class EventCreationTests {
     }
 
     @Test
-    public void cannotAddYourself() {
+    public void cannotAddOrRemoveYourself() {
         onView(withId(R.id.eventCreationNewParticipant)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("bobminion@gmail.com"));
         clickButtonWithText(R.string.add_participant);
         onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(withText("")));
-    }
-
-    @Test
-    public void cannotRemoveYourself() {
-        onView(withId(R.id.eventCreationNewParticipant)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("bobminion@gmail.com"));
         clickButtonWithText(R.string.remove_participant);
         onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(withText("")));
     }
+
 
     @Test
     public void removeNonExistentMusicianShouldDoNothing() {
@@ -166,6 +157,7 @@ public class EventCreationTests {
 
     @Test
     public void testCorrectInputsAndDoNotFinishIfEmptyField() {
+        checkIfNotFinishing();
         onView(withId(R.id.eventCreationNewEventTitle)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestTitle"));
         checkIfNotFinishing();
 
