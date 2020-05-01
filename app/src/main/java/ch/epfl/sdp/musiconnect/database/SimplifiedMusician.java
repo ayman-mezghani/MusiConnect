@@ -1,5 +1,6 @@
 package ch.epfl.sdp.musiconnect.database;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.firebase.Timestamp;
@@ -16,6 +17,17 @@ import ch.epfl.sdp.musiconnect.MyLocation;
 import ch.epfl.sdp.musiconnect.TypeOfUser;
 
 public class SimplifiedMusician extends SimplifiedDbEntry {
+//    @TODO use this enum instead of the static fields
+//    public enum Fields {
+//        username, firstName, lastName, email, typeOfUser, birthday, joinDate, LOCATlocationION;
+//
+//        @NonNull
+//        @Override
+//        public String toString() {
+//            return super.toString().toLowerCase();
+//        }
+//    }
+
     private String username;
     private String firstName;
     private String lastName;
@@ -71,6 +83,7 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
         Musician musician = new Musician(firstName, lastName, username, email, dateToMyDate(birthday));
         musician.setLocation(geoPointToMyLocation(location));
         musician.setTypeOfUser(TypeOfUser.valueOf(typeOfUser));
+        musician.setEvents(events);
         return musician;
     }
 
@@ -84,6 +97,7 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
         res.put(BIRTHDAY, birthday);
         res.put(JOINDATE, joinDate);
         res.put(LOCATION, location);
+        res.put(EVENTS, events);
         return res;
     }
 
@@ -129,6 +143,10 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
 
     public GeoPoint getLocation() {
         return location;
+    }
+
+    public List<String> getEvents() {
+        return events;
     }
 
     @Override

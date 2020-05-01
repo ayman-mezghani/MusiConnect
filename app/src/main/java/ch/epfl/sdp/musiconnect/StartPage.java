@@ -89,6 +89,8 @@ public class StartPage extends Page {
             }
         });
 
+
+
         if(!test) {
             updateCurrentUserBand();
         }

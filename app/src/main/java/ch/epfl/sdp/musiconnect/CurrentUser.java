@@ -1,6 +1,7 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.content.Context;
+import android.location.Location;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -22,14 +23,15 @@ public class CurrentUser {
     private TypeOfUser type;
 
 
+
     // private constructor restricted to this class itself
     private CurrentUser(Context context) {
-        if(!checktest()) {
+        if (!checktest()) {
             acct = GoogleSignIn.getLastSignedInAccount(context);
             if (acct != null) {
                 email = acct.getEmail();
             } else email = "";
-        }else{
+        } else {
             email = "bobminion@gmail.com";
         }
     }
@@ -56,7 +58,9 @@ public class CurrentUser {
         return createdFlag;
     }
 
-    public String getBandName() { return this.bandName; }
+    public String getBandName() {
+        return this.bandName;
+    }
 
     public void setBandName(String bandName) {
         if (this.musician.getTypeOfUser() == TypeOfUser.Band)
@@ -76,6 +80,7 @@ public class CurrentUser {
         }
         return istest;
     }
+
     public void setMusician(Musician m) {
         this.musician = m;
     }
@@ -87,6 +92,19 @@ public class CurrentUser {
     public static void flush() {
         single_instance = null;
     }
+
+
+    public void setLocation(Location location) {
+        musician.setLocation(new MyLocation(location.getLatitude(), location.getLongitude()));
+    }
+
+    public Location getLocation() {
+        Location newLocation = new Location("");
+        newLocation.setLatitude(musician.getLocation().getLatitude());
+        newLocation.setLongitude(musician.getLocation().getLongitude());
+        return newLocation;
+    }
+
 
     public Band getBand() {
         return this.band;

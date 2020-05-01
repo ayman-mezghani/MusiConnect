@@ -21,7 +21,7 @@ import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.events.EventCreation;
-import ch.epfl.sdp.musiconnect.events.EventPage;
+import ch.epfl.sdp.musiconnect.events.EventListPage;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
@@ -125,7 +125,7 @@ public class MenuTests {
 
         Intent eventIntent = new Intent();
         startPageRule.launchActivity(eventIntent);
-        intended(hasComponent(EventPage.class.getName()));
+        intended(hasComponent(EventListPage.class.getName()));
     }
 
     @Test

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".musiconnect.events.EventCreation"
+    tools:context=".musiconnect.events.EventEdition"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -17,12 +17,12 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/eventCreationTitle"
+                android:id="@+id/eventEditionTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
-                android:text="@string/create_an_event"
+                android:text="@string/edit_event"
                 android:textAlignment="center"
                 android:textSize="30sp"
                 android:textStyle="bold" />
@@ -57,7 +57,7 @@
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/eventCreationNewEventTitle"
+                    android:id="@+id/eventEditionNewEventTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -80,7 +80,7 @@
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/eventCreationNewEventAddress"
+                    android:id="@+id/eventEditionNewEventAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -101,8 +101,9 @@
                     android:text="@string/event_time"
                     android:textSize="18sp"
                     android:textStyle="bold" />
+
                 <EditText
-                    android:id="@+id/eventCreationNewEventDate"
+                    android:id="@+id/eventEditionNewEventDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -112,7 +113,7 @@
                     android:textSize="18sp" />
 
                 <EditText
-                    android:id="@+id/eventCreationNewEventTime"
+                    android:id="@+id/eventEditionNewEventTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -138,7 +139,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/eventCreationNewEventParticipants"
+                    android:id="@+id/eventEditionNewEventParticipants"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -151,7 +152,7 @@
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/eventCreationNewParticipant"
+                    android:id="@+id/eventEditionNewParticipant"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -204,12 +205,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/eventCreationNewEventDescription"
+                    android:id="@+id/eventEditionNewEventDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/new_event_description"
@@ -224,7 +224,7 @@
                 android:orientation="horizontal">
 
                 <RadioGroup
-                    android:id="@+id/eventCreationRdg"
+                    android:id="@+id/eventEditionRdg"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                     <TextView
@@ -267,13 +267,13 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/eventCreationBtnDoNotSaveEvent"
+                    android:id="@+id/eventEditionBtnDoNotSaveEvent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/do_not_save" />
 
                 <Button
-                    android:id="@+id/eventCreationBtnSaveEvent"
+                    android:id="@+id/eventEditionBtnSaveEvent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/save" />

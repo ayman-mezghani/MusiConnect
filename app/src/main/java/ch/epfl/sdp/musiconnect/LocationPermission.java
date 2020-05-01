@@ -27,7 +27,7 @@ public class LocationPermission {
         }
     }
 
-    private static boolean isLocationServiceRunning(Activity activity) {
+    static boolean isLocationServiceRunning(Activity activity) {
         ActivityManager manager = (ActivityManager) activity.getSystemService(ACTIVITY_SERVICE);
         String className = "ch.epfl.sdp.musiconnect.LocationService";
 

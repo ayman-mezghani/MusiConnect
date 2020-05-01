@@ -487,11 +487,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public boolean onMarkerClick(final Marker marker) {
         if (profiles.contains(marker.getTag())
-            || eventNear.contains(marker.getTag())) {
-            
-                if (!marker.isInfoWindowShown()) {
-                    marker.showInfoWindow();
-                }
+                || eventNear.contains(marker.getTag())) {
+
+            if (!marker.isInfoWindowShown()) {
+                marker.showInfoWindow();
+            }
         }
         return false;
     }

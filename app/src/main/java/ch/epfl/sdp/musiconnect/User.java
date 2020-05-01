@@ -24,6 +24,7 @@ public abstract class User {
     public User() {
         joinDate = new MyDate();
         location = new MyLocation(EPFL_LATITUDE, EPFL_LONGITUDE);
+        events = new ArrayList<>();
     }
 
 

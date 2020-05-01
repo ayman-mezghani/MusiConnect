@@ -26,6 +26,11 @@ public class FirebaseCloudStorage implements CloudStorage {
         this.context = context;
     }
 
+    FirebaseCloudStorage(Context context, StorageReference storageReference) {
+        this.storageReference = storageReference;
+        this.context = context;
+    }
+
     public void upload(Uri fileUri, FileType fileType, String userName) throws IOException {
         if (fileUri != null) {
             String cloudPath = userName + "/" + fileType;

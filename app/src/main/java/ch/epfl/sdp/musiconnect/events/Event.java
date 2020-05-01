@@ -15,6 +15,7 @@ public class Event {
     private String eid;
     private User creator;
 
+    private List<String> emails;
     private List<User> participants;
 
     private LatLng location;
@@ -63,7 +64,9 @@ public class Event {
             throw new IllegalArgumentException();
         }
 
-        participants.add(user);
+        if (!participants.contains(user)) {
+            participants.add(user);
+        }
     }
 
     public void unregister(User user) {

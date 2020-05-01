@@ -5,6 +5,7 @@ import org.junit.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+
 /**
  * @author Manuel Pellegrini, EPFL
  */
@@ -82,6 +83,7 @@ public class MyLocationClassUnitTests {
         double newLatitude = 54.5;
         double newLongitude = -145.0;
         MyLocation newLocation = new MyLocation(newLatitude, newLongitude);
+
 
         assertEquals(location, location.getLocation());
         location.setLocation(newLocation);

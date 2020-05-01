@@ -1,5 +1,7 @@
 package ch.epfl.sdp.musiconnect.database;
 
+import java.util.Map;
+
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.User;
@@ -49,6 +51,10 @@ public class DbAdapter {
         }
     }
 
+    public void update(DbUserType userType, Event e) {
+        db.updateDoc(userType.toString(), e.getEid(), (new SimplifiedEvent(e)).toMap());
+    }
+
 //    public void deleteFieldsInDoc(String docName, List<String> fields) {
 //        Map<String, Object> updates = new HashMap<>();
 //        for (String str : fields) {
@@ -63,5 +69,9 @@ public class DbAdapter {
 
     public void exists(DbUserType collection, String index, DbCallback dbCallback) {
         db.docExists(collection.toString(), index, dbCallback);
+    }
+
+    public void query(DbUserType collection, Map<String, Object> filters, DbCallback dbCallback) {
+        db.finderQuery(collection.toString(), filters, dbCallback);
     }
 }
