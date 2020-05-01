@@ -61,23 +61,6 @@ public class MapsLocationTest {
     }
 
 
-    private boolean correctLocation(Location location) {
-        if (location != null) {
-            return (location.getLatitude() < 90.0) && (location.getLatitude() > -90.0) &&
-                    (location.getLongitude() < 180.0) && (location.getLongitude() > -180.0);
-        }
-        return false;
-    }
-
-    private void sendMessageToActivity(Location l) {
-        Intent intent = new Intent("GPSLocationUpdates");
-        Bundle b = new Bundle();
-        b.putParcelable("Location", l);
-        intent.putExtra("Location", b);
-        LocalBroadcastManager.getInstance(InstrumentationRegistry.getInstrumentation().getContext())
-                .sendBroadcast(intent);
-    }
-
 
     /**
      * Clicks on the alert boxes such that location permissions are given
