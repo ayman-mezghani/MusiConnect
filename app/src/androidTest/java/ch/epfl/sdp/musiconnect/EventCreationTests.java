@@ -7,6 +7,7 @@ import android.widget.TimePicker;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.PickerActions;
 import androidx.test.espresso.intent.Intents;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
@@ -18,6 +19,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.Calendar;
 
@@ -37,17 +39,20 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.sdp.musiconnect.testsFunctions.getCurrentActivity;
 import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+
+// If this class seems like a mess, this is to resolve all "issues" from code climate
+@RunWith(AndroidJUnit4.class)
 public class EventCreationTests {
     @Rule
     public final ActivityTestRule<EventCreation> eventCreationRule =
@@ -85,15 +90,16 @@ public class EventCreationTests {
         assertTrue(eventCreationRule.getActivity().isFinishing());
     }
 
-    @Test
-    public void testEventCreationSaveShouldDoNothing() {
-        checkIfNotFinishing();
-    }
-
     private void checkIfNotFinishing() {
         closeSoftKeyboard();
         clickButtonWithText(R.string.save);
         assertFalse(eventCreationRule.getActivity().isFinishing());
+    }
+
+    private void checkIfFinishing() {
+        closeSoftKeyboard();
+        clickButtonWithText(R.string.save);
+        assertTrue(eventCreationRule.getActivity().isFinishing());
     }
 
     @Test
@@ -117,10 +123,12 @@ public class EventCreationTests {
     }
 
     @Test
-    public void addEmptyMusicianShouldDoNothing() {
+    public void addOrRemoveEmptyMusicianShouldDoNothing() {
         clickButtonWithText(R.string.add_participant);
         // Toasts take too long / blocked by previous toasts
         // onView(withText("Please add a username")).inRoot(withDecorView(not(eventCreationRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+        onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(withText("")));
+        clickButtonWithText(R.string.remove_participant);
         onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(withText("")));
     }
 
@@ -133,11 +141,16 @@ public class EventCreationTests {
         onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(withText("PAlpha" + System.lineSeparator())));
     }
 
+
     @Test
-    public void removeEmptyMusicianShouldDoNothing() {
+    public void cannotAddOrRemoveYourself() {
+        onView(withId(R.id.eventCreationNewParticipant)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("bobminion@gmail.com"));
+        clickButtonWithText(R.string.add_participant);
+        onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(withText("")));
         clickButtonWithText(R.string.remove_participant);
         onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(withText("")));
     }
+
 
     @Test
     public void removeNonExistentMusicianShouldDoNothing() {
@@ -148,6 +161,7 @@ public class EventCreationTests {
 
     @Test
     public void testCorrectInputsAndDoNotFinishIfEmptyField() {
+        checkIfNotFinishing();
         onView(withId(R.id.eventCreationNewEventTitle)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestTitle"));
         checkIfNotFinishing();
 
@@ -158,19 +172,7 @@ public class EventCreationTests {
         checkIfNotFinishing();
 
         closeSoftKeyboard();
-
-
-        onView(withId(R.id.eventCreationNewEventDate)).perform(ViewActions.scrollTo()).perform(click());
-        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH));
-        onView(withText("OK")).perform(click());
-        checkIfNotFinishing();
-
-        onView(withId(R.id.eventCreationNewEventTime)).perform(ViewActions.scrollTo()).perform(click());
-        onView(withClassName(Matchers.equalTo(TimePicker.class.getName()))).perform(PickerActions.setTime(Calendar.HOUR_OF_DAY, Calendar.MINUTE));
-        onView(withText("OK")).perform(click());
-
-        onView(withId(R.id.eventCreationNewEventDate)).check(matches(withText(Calendar.DAY_OF_MONTH + "/" + Calendar.MONTH + "/" + Calendar.YEAR)));
-        onView(withId(R.id.eventCreationNewEventTime)).check(matches(withText(Calendar.HOUR_OF_DAY + ":" + Calendar.MINUTE)));
+        testSetDefaultCalendar();
 
         onView(withId(R.id.eventCreationNewParticipant)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("palpha@gmail.com"));
         clickButtonWithText(R.string.add_participant);
@@ -180,75 +182,74 @@ public class EventCreationTests {
         clickButtonWithText(R.string.remove_participant);
         onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(not(withText("PAlpha"))));
 
-        closeSoftKeyboard();
-        clickButtonWithText(R.string.save);
-        assertTrue(eventCreationRule.getActivity().isFinishing());
+        checkIfFinishing();
+    }
+
+    private void testSetDefaultCalendar() {
+        onView(withId(R.id.eventCreationNewEventDate)).perform(ViewActions.scrollTo()).perform(click());
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH));
+        onView(withText("OK")).perform(click());
+        checkIfNotFinishing();
+
+        onView(withId(R.id.eventCreationNewEventTime)).perform(ViewActions.scrollTo()).perform(click());
+        onView(withClassName(Matchers.equalTo(TimePicker.class.getName()))).perform(PickerActions.setTime(Calendar.HOUR_OF_DAY, Calendar.MINUTE));
+        onView(withText("OK")).perform(click());
+
+        onView(withId(R.id.eventCreationNewEventDate)).check(matches(withText(Calendar.DAY_OF_MONTH + "/" + Calendar.MONTH + "/" + Calendar.YEAR)));
+        onView(withId(R.id.eventCreationNewEventTime)).check(matches(withText(Calendar.HOUR_OF_DAY + ":" + Calendar.MINUTE)));
+    }
+
+
+    @Test
+    public void testClickVisibleEvent() {
+        onView(withId(R.id.visible)).check(matches(not(isChecked())));
+        onView(withId(R.id.notVisible)).check(matches(isChecked()));
+        onView(withId(R.id.visible)).perform(ViewActions.scrollTo()).perform(click());
+
+        onView(withId(R.id.visible)).check(matches(isChecked()));
+        onView(withId(R.id.notVisible)).check(matches(not(isChecked())));
+        onView(withId(R.id.notVisible)).perform(ViewActions.scrollTo()).perform(click());
+
+        onView(withId(R.id.visible)).check(matches(not(isChecked())));
+        onView(withId(R.id.notVisible)).check(matches(isChecked()));
     }
 
     // this test works on my computer, fails on cirrus
     // But works when using the app
     //@Test
-    public void geocoderWillReturnTrueValue() {
-        GeoPoint p1 = ((EventCreation) getCurrentActivity()).getLocationFromAddress("rue de lausanne, genève");
-        double lat = p1.getLatitude();
-        double lng = p1.getLongitude();
-        assertEquals(lat, 46.218781199999995, 5);
-        assertEquals(lng, 6.1487117, 5);
-    }
+//    public void geocoderWillReturnTrueValue() {
+//        GeoPoint p1 = ((EventCreation) getCurrentActivity()).getLocationFromAddress("rue de lausanne, genève");
+//        double lat = p1.getLatitude();
+//        double lng = p1.getLongitude();
+//        assertEquals(lat, 46.218781199999995, 5);
+//        assertEquals(lng, 6.1487117, 5);
+//    }
+
     @Test
     public void geocoderWillReturnNullValue() {
         GeoPoint p1 = ((GeoPoint)((EventCreation) getCurrentActivity()).getLocationFromAddress(""));
         assertNull(p1);
     }
 
-    @Test
-    public void testWithResolvableAddressShoulPass() {
+    private void writeTestValuesWithCustomAddress(String address) {
         onView(withId(R.id.eventCreationNewEventTitle)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestTitle"));
-
-        onView(withId(R.id.eventCreationNewEventAddress)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("rue de lausanne, geneve"));
+        onView(withId(R.id.eventCreationNewEventAddress)).perform(ViewActions.scrollTo()).perform(clearText(), typeText(address));
         onView(withId(R.id.eventCreationNewEventDescription)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestDescription"));
         closeSoftKeyboard();
 
+        testSetDefaultCalendar();
+        checkIfFinishing();
+    }
 
-        onView(withId(R.id.eventCreationNewEventDate)).perform(ViewActions.scrollTo()).perform(click());
-        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH));
-        onView(withText("OK")).perform(click());
-
-        onView(withId(R.id.eventCreationNewEventTime)).perform(ViewActions.scrollTo()).perform(click());
-        onView(withClassName(Matchers.equalTo(TimePicker.class.getName()))).perform(PickerActions.setTime(Calendar.HOUR_OF_DAY, Calendar.MINUTE));
-        onView(withText("OK")).perform(click());
-
-        onView(withId(R.id.eventCreationNewEventDate)).check(matches(withText(Calendar.DAY_OF_MONTH + "/" + Calendar.MONTH + "/" + Calendar.YEAR)));
-        onView(withId(R.id.eventCreationNewEventTime)).check(matches(withText(Calendar.HOUR_OF_DAY + ":" + Calendar.MINUTE)));
-
-        closeSoftKeyboard();
-        clickButtonWithText(R.string.save);
-        assertTrue(eventCreationRule.getActivity().isFinishing());
+    @Test
+    public void testWithResolvableAddressShoulPass() {
+        writeTestValuesWithCustomAddress("rue de lausanne, geneve");
     }
 
     @Test
     public void testWithUnresolvableAddressShoulPopUpToast() {
-        onView(withId(R.id.eventCreationNewEventTitle)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestTitle"));
+        writeTestValuesWithCustomAddress("TestAddress");
 
-        onView(withId(R.id.eventCreationNewEventAddress)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestAddress"));
-        onView(withId(R.id.eventCreationNewEventDescription)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestDescription"));
-        closeSoftKeyboard();
-
-
-        onView(withId(R.id.eventCreationNewEventDate)).perform(ViewActions.scrollTo()).perform(click());
-        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH));
-        onView(withText("OK")).perform(click());
-
-        onView(withId(R.id.eventCreationNewEventTime)).perform(ViewActions.scrollTo()).perform(click());
-        onView(withClassName(Matchers.equalTo(TimePicker.class.getName()))).perform(PickerActions.setTime(Calendar.HOUR_OF_DAY, Calendar.MINUTE));
-        onView(withText("OK")).perform(click());
-
-        onView(withId(R.id.eventCreationNewEventDate)).check(matches(withText(Calendar.DAY_OF_MONTH + "/" + Calendar.MONTH + "/" + Calendar.YEAR)));
-        onView(withId(R.id.eventCreationNewEventTime)).check(matches(withText(Calendar.HOUR_OF_DAY + ":" + Calendar.MINUTE)));
-
-        closeSoftKeyboard();
-        clickButtonWithText(R.string.save);
         //onView(withText("Unable to resolve address")).inRoot(withDecorView(Matchers.not(eventCreationRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
-        assertTrue(eventCreationRule.getActivity().isFinishing());
     }
 }

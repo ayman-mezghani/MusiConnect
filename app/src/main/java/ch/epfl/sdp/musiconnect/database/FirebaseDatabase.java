@@ -142,7 +142,10 @@ public class FirebaseDatabase extends Database {
                         }
                     }
                 })
-                .addOnFailureListener(e -> Log.w(TAG, "Error reading document", e));
+                .addOnFailureListener(e -> {
+                    dbCallback.readFailCallback();
+                    Log.w(TAG, "Error reading document", e);
+                });
     }
 
     private void fetchBandMembers(Map<String, Object> data, DbCallback dbCallback) {

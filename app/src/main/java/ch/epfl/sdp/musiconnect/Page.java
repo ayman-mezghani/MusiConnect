@@ -31,7 +31,7 @@ import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
 import ch.epfl.sdp.musiconnect.events.EventCreation;
-import ch.epfl.sdp.musiconnect.events.EventPage;
+import ch.epfl.sdp.musiconnect.events.EventListPage;
 
 import static ch.epfl.sdp.musiconnect.StartPage.test;
 
@@ -176,7 +176,7 @@ public abstract class Page extends AppCompatActivity {
                 this.startActivity(mapsIntent);
                 break;
             case R.id.my_events:
-                Intent eventIntent = new Intent(this, EventPage.class);
+                Intent eventIntent = new Intent(this, EventListPage.class);
                 this.startActivity(eventIntent);
                 break;
             case R.id.create_event:

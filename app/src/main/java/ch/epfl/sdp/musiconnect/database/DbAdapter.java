@@ -51,6 +51,10 @@ public class DbAdapter {
         }
     }
 
+    public void update(DbUserType userType, Event e) {
+        db.updateDoc(userType.toString(), e.getEid(), (new SimplifiedEvent(e)).toMap());
+    }
+
 //    public void deleteFieldsInDoc(String docName, List<String> fields) {
 //        Map<String, Object> updates = new HashMap<>();
 //        for (String str : fields) {
