@@ -122,24 +122,4 @@ public class MapsLocationTest {
         clickAlert(device);
         clickOnDialog(device, 0);
     }
-
-
-    @Test
-    public void testMessageReceiver() {
-        Location location = new Location("Test");
-        location.setLatitude(0);
-        location.setLongitude(0);
-        sendMessageToActivity(location);
-
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        Location loc = mRule.getActivity().getSetLocation();
-        assertTrue(correctLocation(loc));
-        assertTrue(loc.getLatitude() == location.getLatitude());
-
-    }
 }
