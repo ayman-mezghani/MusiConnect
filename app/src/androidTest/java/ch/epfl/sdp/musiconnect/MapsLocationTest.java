@@ -9,41 +9,15 @@ import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
 
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
-import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
-import ch.epfl.sdp.musiconnect.database.MockDatabase;
-
-import static org.junit.Assert.assertTrue;
-
-
-@RunWith(AndroidJUnit4.class)
 public class MapsLocationTest {
 
-
-    @Rule
-    public final ActivityTestRule<MapsActivity> mRule =
-            new ActivityTestRule<>(MapsActivity.class);
-
-
-    @BeforeClass
-    public static void setMocks() {
-        DbGenerator.setDatabase(new MockDatabase());
-        CloudStorageGenerator.setStorage((new MockCloudStorage()));
-    }
 
     /**
      * Code to click on the alerts has been found here:
