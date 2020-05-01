@@ -39,7 +39,6 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +76,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Executor mExecutor = Executors.newSingleThreadExecutor();
 
     private FusedLocationProviderClient fusedLocationClient;
-    private boolean locationPermissionGranted;
     private Location setLoc;
     private Spinner spinner;
 
@@ -307,17 +305,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    protected Task<Location> getTaskLocation() {
-        return fusedLocationClient.getLastLocation();
-    }
-
-    protected boolean isLocationPermissionGranted() {
-        return locationPermissionGranted;
-    }
-
-    protected Location getSetLocation() {
-        return setLoc;
-    }
 
 
     private void setLocation(Location location) {
@@ -361,10 +348,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            locationPermissionGranted = false;
             LocationPermission.sendLocationPermission(this);
         } else {
-            locationPermissionGranted = true;
             getLastLocation();
         }
     }
@@ -372,10 +357,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (LocationPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults)) {
-            locationPermissionGranted = true;
             getLastLocation();
-        } else {
-            locationPermissionGranted = false;
         }
     }
 

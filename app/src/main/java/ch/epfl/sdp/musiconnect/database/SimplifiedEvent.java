@@ -14,7 +14,7 @@ import ch.epfl.sdp.musiconnect.events.Event;
 public class SimplifiedEvent {
     private String creatorMail;
     private List<String> participants;
-    private String address;
+    private String adress;
     private GeoPoint loc;
     private Date dateTime;
     private String title;
@@ -22,7 +22,7 @@ public class SimplifiedEvent {
 
     static final String CREATORMAIL = "creatorMail";
     static final String PARTICIPANTS = "participants";
-    static final String ADDRESS = "adress";
+    static final String ADRESS = "adress";
     static final String LOC = "location";
     static final String DATETIME = "dateTime";
     static final String TITLE = "title";
@@ -38,7 +38,7 @@ public class SimplifiedEvent {
         for (User m :  e.getParticipants()) {
             this.participants.add(m.getEmailAddress());
         }
-        this.address = e.getAddress();
+        this.adress = e.getAddress();
         this.loc = e.getGeoPoint();
         this.dateTime = e.getDateTime().toDate();
         this.title = e.getTitle();
@@ -61,12 +61,12 @@ public class SimplifiedEvent {
         this.participants = participants;
     }
 
-    public String getAddress() {
-        return address;
+    public String getAdress() {
+        return adress;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setAdress(String adress) {
+        this.adress = adress;
     }
 
     public GeoPoint getLoc() {
@@ -106,7 +106,7 @@ public class SimplifiedEvent {
         Map<String, Object> res = new HashMap<>();
         res.put(CREATORMAIL, creatorMail);
         res.put(PARTICIPANTS, participants);
-        res.put(ADDRESS, address);
+        res.put(ADRESS, adress);
         res.put(LOC, loc);
         res.put(DATETIME, dateTime);
         res.put(TITLE, title);

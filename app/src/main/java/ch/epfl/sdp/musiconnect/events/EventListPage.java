@@ -42,7 +42,7 @@ public class EventListPage extends Page {
 
         eventListTitle = findViewById(R.id.eventListTitle);
 
-        Intent intent = getIntent();
+//        Intent intent = getIntent();
 //        String visitorEmail = intent.getStringExtra("UserEmail");
         ListView lv = findViewById(R.id.eventListView);
         events = new ArrayList<>();

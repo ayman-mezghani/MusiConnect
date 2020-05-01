@@ -256,7 +256,7 @@ public abstract class EventModification extends Page {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if (address==null) {
+            if (address==null || address.isEmpty()) {
                 return null;
             }
             Address location=address.get(0);
