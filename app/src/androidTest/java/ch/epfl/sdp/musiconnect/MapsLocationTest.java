@@ -17,6 +17,9 @@ import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -142,5 +145,59 @@ public class MapsLocationTest {
         assertTrue(correctLocation(loc));
         assertTrue(loc.getLatitude() == location.getLatitude());
 
+    }
+
+    private int[] grantedPerm() {
+        int[] results = new int[1];
+        results[0] = PackageManager.PERMISSION_GRANTED;
+        return results;
+    }
+
+    private int[] deniedPerm() {
+        int[] results = new int[1];
+        results[0] = PackageManager.PERMISSION_DENIED;
+        return results;
+    }
+
+
+    /**
+     * This test works only if the user rejected the location permissions
+     */
+    @Test
+    public void testGetLocationFails() {
+        if (!hasNeededPermission()) {
+            clickDeny();
+            Task<Location> task = mRule.getActivity().getTaskLocation();
+            task.addOnSuccessListener(new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    assertTrue(location == null);
+                }
+            });
+        }
+    }
+
+
+    @Test
+    public void testRequestPermissionResultGranted() {
+        clickAllow();
+        int[] results = grantedPerm();
+        mRule.getActivity().onRequestPermissionsResult(LocationService.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
+
+        boolean b = mRule.getActivity().isLocationPermissionGranted();
+        assertTrue(b);
+    }
+
+    @Test
+    public void testRequestPermissionResultDenied() {
+        clickDeny();
+        int[] results = deniedPerm();
+        mRule.getActivity().onRequestPermissionsResult(LocationService.MY_PERMISSIONS_REQUEST_LOCATION, null, results);
+        boolean b = mRule.getActivity().isLocationPermissionGranted();
+        assertTrue(!b);
+
+        mRule.getActivity().onRequestPermissionsResult(0, null, results);
+        b = mRule.getActivity().isLocationPermissionGranted();
+        assertTrue(!b);
     }
 }
