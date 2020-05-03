@@ -169,7 +169,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         spinner = findViewById(R.id.distanceThreshold);
         String[] items = getResources().getStringArray(R.array.distance_array);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+
         spinner.setAdapter(adapter);
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -332,7 +334,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
             circle.setCenter(latLng);
-
         }
 
         if (CurrentUser.getInstance(this).getCreatedFlag()) {

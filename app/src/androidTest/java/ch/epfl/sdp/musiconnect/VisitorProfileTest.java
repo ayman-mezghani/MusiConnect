@@ -55,11 +55,9 @@ public class VisitorProfileTest {
     public void testNoMarkerTransitionToProfile() {
         Musician m1 = new Musician("Alice", "Bardon", "Alyx", "aymanmezghani97@gmail.com", new MyDate(1992, 9, 20));
         Musician m2 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
-        Musician m3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
 
         testMusician(m1);
         testMusician(m2);
-        testMusician(m3);
     }
 
     private void testMusician(Musician m) {

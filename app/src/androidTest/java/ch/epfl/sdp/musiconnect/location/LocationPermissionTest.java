@@ -31,4 +31,6 @@ public class LocationPermissionTest {
         LocationPermission.startLocationService(activity);
         assertTrue(LocationPermission.isLocationServiceRunning(activity));
     }
+
+
 }

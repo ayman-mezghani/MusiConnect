@@ -96,11 +96,13 @@ public class EventListPage extends Page {
 
 
     private void showEvent(Event e) {
-        events.add(e);
-        eventTitles.add(e.getTitle());
-        ids.put(e.getTitle(), e.getEid());
+        if (!events.contains(e)) {
+            events.add(e);
+            eventTitles.add(e.getTitle());
+            ids.put(e.getTitle(), e.getEid());
 
-        adapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
