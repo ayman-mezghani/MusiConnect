@@ -92,7 +92,7 @@ public class MockDatabase extends Database {
             }
         }
 
-        if (!found) {
+        if (!found && collection.equals(DbUserType.Musician.toString())) {
             dbCallback.readCallback(defaultSm.toMusician());
         }
     }

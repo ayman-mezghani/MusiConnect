@@ -66,7 +66,7 @@ public class EventListPage extends Page {
             eventListTitle.setText("Your events");
         }*/
 
-        eventListTitle.setText("Your events");
+        eventListTitle.setText(R.string.your_events);
         dbAdapter.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
             @Override
             public void readCallback(User user) {

@@ -57,7 +57,7 @@ public class MapsLocationTest {
     static void clickAllow() {
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         clickAlert(device);
-        // clickOnDialog(device, 1);
+        clickOnDialog(device, 1);
     }
 
     /**
