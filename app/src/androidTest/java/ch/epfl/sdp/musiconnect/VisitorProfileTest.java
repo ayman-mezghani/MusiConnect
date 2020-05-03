@@ -4,10 +4,8 @@ import android.content.Intent;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
-import androidx.test.uiautomator.UiDevice;
 
 import org.junit.After;
 import org.junit.Before;
@@ -38,7 +36,6 @@ public class VisitorProfileTest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule =
             GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
-    private UiDevice device;
 
     @BeforeClass
     public static void setMocks() {
@@ -46,32 +43,9 @@ public class VisitorProfileTest {
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
 
-    /* @Test
-    public void testClickMarker() {
-        onView(withId(R.id.distanceThreshold)).perform(click());
-        onView(withText(R.string.max_threshold)).perform(click());
-
-        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        UiObject marker = device.findObject(new UiSelector().descriptionContains("Alyx"));
-        try {
-            marker.click();
-        } catch (UiObjectNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        int mWidth= startPageRule.getActivity().getResources().getDisplayMetrics().widthPixels;
-        int mHeight= startPageRule.getActivity().getResources().getDisplayMetrics().heightPixels;
-        device.click(mWidth/2, mHeight/2);
-
-//         startPageRule.getActivity().findViewById(android.R.id.content).performContextClick(200, 200);
-
-    }*/
-
     @Before
     public void initIntents() {
         Intents.init();
-        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        MapsLocationTest.clickAlert(device);
     }
 
     @After

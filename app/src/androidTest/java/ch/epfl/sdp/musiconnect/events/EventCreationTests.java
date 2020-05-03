@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.events;
 
 import android.content.Intent;
 import android.widget.DatePicker;
@@ -24,6 +24,7 @@ import org.junit.runner.RunWith;
 import java.util.Calendar;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.HelpPage;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
@@ -144,7 +145,7 @@ public class EventCreationTests {
 
     @Test
     public void cannotAddOrRemoveYourself() {
-        onView(withId(R.id.eventCreationNewParticipant)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("aymanmezghani97@gmail.com"));
+        onView(withId(R.id.eventCreationNewParticipant)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("bobminion@gmail.com"));
         clickButtonWithText(R.string.add_participant);
         onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(withText("")));
         clickButtonWithText(R.string.remove_participant);

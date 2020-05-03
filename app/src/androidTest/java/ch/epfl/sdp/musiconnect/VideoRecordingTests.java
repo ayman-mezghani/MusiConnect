@@ -15,6 +15,7 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.location.MapsLocationFunctions;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -41,7 +42,7 @@ public class VideoRecordingTests {
         if (setUpIsDone) {
             return;
         }
-        MapsLocationTest.clickAllow();
+        MapsLocationFunctions.clickAllow();
         setUpIsDone = true;
     }
 

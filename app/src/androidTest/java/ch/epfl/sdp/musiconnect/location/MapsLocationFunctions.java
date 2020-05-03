@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.location;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.uiautomator.UiDevice;
@@ -12,16 +12,13 @@ import androidx.test.uiautomator.UiSelector;
  * There is unfortunately no way to avoid showing the alerts
  * We can directly grant location permissions, but those alerts still show up
  */
-public class MapsLocationTest {
-
-
+public class MapsLocationFunctions {
 
     /**
      * Code to click on the alerts has been found here:
      * https://gist.github.com/rocboronat/65b1187a9fca9eabfebb5121d818a3c4
      */
-
-    static void clickAlert(UiDevice device) {
+    private static void clickAlert(UiDevice device) {
         try {
             UiObject alert = device.findObject(new UiSelector().className("android.widget.Button")
                     .text("OK"));
@@ -54,10 +51,10 @@ public class MapsLocationTest {
     /**
      * Clicks on the alert boxes such that location permissions are given
      */
-    static void clickAllow() {
+    public static void clickAllow() {
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         clickAlert(device);
-        clickOnDialog(device, 1);
+        // clickOnDialog(device, 1);
     }
 
     /**

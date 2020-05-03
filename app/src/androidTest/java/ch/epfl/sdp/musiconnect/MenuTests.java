@@ -22,6 +22,8 @@ import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.events.EventCreation;
 import ch.epfl.sdp.musiconnect.events.EventListPage;
+import ch.epfl.sdp.musiconnect.location.MapsActivity;
+import ch.epfl.sdp.musiconnect.location.MapsLocationFunctions;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
@@ -56,7 +58,7 @@ public class MenuTests {
     @Before
     public void initIntents() {
         Intents.init();
-        MapsLocationTest.clickAllow();
+        MapsLocationFunctions.clickAllow();
     }
 
     @After
