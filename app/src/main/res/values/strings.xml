@@ -72,13 +72,14 @@
     <string name="band">Band</string>
     <string name="event_manager">Event Manager</string>
 
+    <string name="sign_in_welcome_message">Welcome to MusiConnect!</string>
+    <string name="sign_in_introduction_message">Please sign in with your Google account.</string>
+
     <string name="welcome_message">Welcome to MusiConnect!</string>
     <string name="info_message">Please navigate the app using the menu.</string>
 
-
     <string name="musiconnect_notification">MusiConnect Notification</string>
     <string name="musiconnect_generalnotifmessage">A musician is nearby !</string>
-
 
     <string name="finderTitle">Finder</string>
     <string name="findMusicianButton">Find Musician</string>
