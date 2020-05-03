@@ -38,7 +38,7 @@ public class MockDatabase extends Database {
         listOfMusicians.add(dummy2);
         listOfMusicians.add(dummy3);
 
-        Musician m1 = this.getDummyMusician(0);
+        Musician m1 = this.getDummyMusician(2);
         Musician m2 = this.getDummyMusician(3);
 
         event = new Event(m1, "1");

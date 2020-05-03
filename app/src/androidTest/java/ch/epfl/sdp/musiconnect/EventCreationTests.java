@@ -144,7 +144,7 @@ public class EventCreationTests {
 
     @Test
     public void cannotAddOrRemoveYourself() {
-        onView(withId(R.id.eventCreationNewParticipant)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("bobminion@gmail.com"));
+        onView(withId(R.id.eventCreationNewParticipant)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("aymanmezghani97@gmail.com"));
         clickButtonWithText(R.string.add_participant);
         onView(withId(R.id.eventCreationNewEventParticipants)).check(matches(withText("")));
         clickButtonWithText(R.string.remove_participant);
