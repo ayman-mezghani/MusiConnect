@@ -44,9 +44,7 @@ public class MenuTests {
 
     // private static boolean setUpIsDone = false;
 
-    public void clickAlerts() {
-        MapsLocationTest.clickAllow();
-    }
+
 
     @BeforeClass
     public static void setMocks() {
@@ -58,7 +56,7 @@ public class MenuTests {
     @Before
     public void initIntents() {
         Intents.init();
-        clickAlerts();
+        MapsLocationTest.clickAllow();
     }
 
     @After
