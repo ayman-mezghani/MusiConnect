@@ -235,6 +235,7 @@ public class EventCreationTests {
     private void writeTestValuesWithCustomAddress(String address) {
         onView(withId(R.id.eventCreationNewEventTitle)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestTitle"));
         onView(withId(R.id.eventCreationNewEventAddress)).perform(ViewActions.scrollTo()).perform(clearText(), typeText(address));
+        closeSoftKeyboard();
         onView(withId(R.id.eventCreationNewEventDescription)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestDescription"));
         closeSoftKeyboard();
 

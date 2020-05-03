@@ -42,7 +42,7 @@ public class VideoPlayingTests {
         if (setUpIsDone) {
             return;
         }
-        MapsLocationFunctions.clickAllow();
+        MapsLocationFunctions.clickPermissionAlert();
         setUpIsDone = true;
     }
 

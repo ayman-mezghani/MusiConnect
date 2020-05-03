@@ -14,7 +14,7 @@ import ch.epfl.sdp.R;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 
-public class LocationPermission {
+public abstract class LocationPermission {
 
 
     public static void startLocationService(Activity activity) {

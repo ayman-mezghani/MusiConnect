@@ -18,7 +18,7 @@ public class MapsLocationFunctions {
      * Code to click on the alerts has been found here:
      * https://gist.github.com/rocboronat/65b1187a9fca9eabfebb5121d818a3c4
      */
-    private static void clickAlert(UiDevice device) {
+    private static void clickAlertOk(UiDevice device) {
         try {
             UiObject alert = device.findObject(new UiSelector().className("android.widget.Button")
                     .text("OK"));
@@ -49,22 +49,29 @@ public class MapsLocationFunctions {
 
 
     /**
+     * Clicks on the alert to simply dismiss the dialog
+     * (The location permission alert dialog still shows up even if we grant the permission via @Rule)
+     */
+    public static void clickPermissionAlert() {
+        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        clickAlertOk(device);
+    }
+
+    /**
      * Clicks on the alert boxes such that location permissions are given
      */
-    public static void clickAllow() {
+    static void clickAllow() {
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        clickAlert(device);
-        // clickOnDialog(device, 1);
+        clickAlertOk(device);
+        clickOnDialog(device, 1);
     }
 
     /**
      * Clicks on the alert boxes such that location permissions are rejected
      */
-    /*
-    public static void clickDeny() {
+    static void clickDeny() {
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        clickAlert(device);
+        clickAlertOk(device);
         clickOnDialog(device, 0);
     }
-    */
 }

@@ -58,7 +58,7 @@ public class MenuTests {
     @Before
     public void initIntents() {
         Intents.init();
-        MapsLocationFunctions.clickAllow();
+        MapsLocationFunctions.clickPermissionAlert();
     }
 
     @After
