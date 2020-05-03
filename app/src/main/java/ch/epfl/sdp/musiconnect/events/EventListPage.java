@@ -24,7 +24,6 @@ import ch.epfl.sdp.musiconnect.database.DbUserType;
 public class EventListPage extends Page {
 
     private DbAdapter dbAdapter;
-    private TextView eventListTitle;
     private List<Event> events;
     private List<String> eventTitles;
     private Map<String, String> ids;
@@ -38,7 +37,7 @@ public class EventListPage extends Page {
 
         dbAdapter = DbGenerator.getDbInstance();
 
-        eventListTitle = findViewById(R.id.eventListTitle);
+        TextView eventListTitle = findViewById(R.id.eventListTitle);
 
 //        Intent intent = getIntent();
 //        String visitorEmail = intent.getStringExtra("UserEmail");

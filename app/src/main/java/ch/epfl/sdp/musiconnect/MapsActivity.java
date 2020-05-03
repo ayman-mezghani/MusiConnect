@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.VisibleForTesting;
 import androidx.core.app.ActivityCompat;
@@ -46,6 +47,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
@@ -77,7 +80,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Executor mExecutor = Executors.newSingleThreadExecutor();
 
     private FusedLocationProviderClient fusedLocationClient;
-    private boolean locationPermissionGranted;
     private Location setLoc;
     private Spinner spinner;
 
@@ -167,18 +169,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selected = parent.getItemAtPosition(position).toString()
-                        .replaceAll("m", "");
-                int meters = 1;
+                String selected = parent.getItemAtPosition(position).toString();
 
-                if (selected.contains("k")) {
-                    meters = 1000;
-                    selected = selected.replaceAll("k", "");
-                }
+                Pattern patternKM = Pattern.compile("(\\d+)km");
+                Pattern patternM = Pattern.compile("(\\d+)m");
 
-                try {
-                    threshold = Integer.parseInt(selected) * meters;
-                } catch (NumberFormatException e) {
+                Matcher matcherKM = patternKM.matcher(selected);
+                Matcher matcherM = patternM.matcher(selected);
+
+                if (matcherKM.find()) {
+                    threshold = Integer.parseInt(matcherKM.group(1)) * 1000;
+                } else if (matcherM.find()) {
+                    threshold = Integer.parseInt(matcherM.group(1));
+                } else {
                     threshold = 0;
                 }
 
@@ -307,21 +310,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    protected Task<Location> getTaskLocation() {
-        return fusedLocationClient.getLastLocation();
-    }
-
-    protected boolean isLocationPermissionGranted() {
-        return locationPermissionGranted;
-    }
-
-    protected Location getSetLocation() {
-        return setLoc;
-    }
-
 
     private void setLocation(Location location) {
-
         if (!updatePos) {
             return;
         }
@@ -361,10 +351,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            locationPermissionGranted = false;
             LocationPermission.sendLocationPermission(this);
         } else {
-            locationPermissionGranted = true;
             getLastLocation();
         }
     }
@@ -372,10 +360,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (LocationPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults)) {
-            locationPermissionGranted = true;
             getLastLocation();
-        } else {
-            locationPermissionGranted = false;
         }
     }
 

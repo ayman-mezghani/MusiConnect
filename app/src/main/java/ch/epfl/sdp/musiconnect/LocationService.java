@@ -1,14 +1,10 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.Manifest;
-import android.app.ActivityManager;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Looper;
@@ -24,14 +20,10 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
-import java.util.Calendar;
-import java.util.Date;
-
 
 public class LocationService extends Service {
     private static final String TAG = "LocationService";
 
-    private LocationRequest locationRequest;
     private Location lastLocation;
     private FusedLocationProviderClient fusedLocationClient;
 
@@ -39,9 +31,7 @@ public class LocationService extends Service {
     private final static long UPDATE_INTERVAL = 10 * 1000;
     private final static long FASTEST_INTERVAL = 5 * 1000;
 
-    private final float THRESHOLD = 5.0f; // 5 meters
-
-    private boolean connected = false;
+    private static final float THRESHOLD = 10.0f; // 10 meters
 
     private LocationCallback locationCallback = new LocationCallback() {
         @Override
@@ -85,7 +75,7 @@ public class LocationService extends Service {
 
 
     private void updateLocation() {
-        locationRequest = LocationRequest.create();
+        LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setInterval(UPDATE_INTERVAL);
         locationRequest.setFastestInterval(FASTEST_INTERVAL);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
