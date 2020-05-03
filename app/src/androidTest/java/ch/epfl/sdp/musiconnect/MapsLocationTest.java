@@ -1,21 +1,19 @@
 package ch.epfl.sdp.musiconnect;
 
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
 
-import org.junit.Rule;
 
-
+/**
+ * This class contains methods to click on the alerts for location permission
+ * There is unfortunately no way to avoid showing the alerts
+ * We can directly grant location permissions, but those alerts still show up
+ */
 public class MapsLocationTest {
 
-
-    @Rule
-    public final ActivityTestRule<MapsActivity> mRule =
-            new ActivityTestRule<>(MapsActivity.class);
 
 
     /**

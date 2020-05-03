@@ -73,6 +73,13 @@ public class EventListPage extends Page {
                 loadIds(user.getEvents());
             }
         });
+
+        dbAdapter.read(DbUserType.Band, CurrentUser.getInstance(this).email, new DbCallback() {
+            @Override
+            public void readCallback(User user) {
+                loadIds(user.getEvents());
+            }
+        });
     }
 
     private void loadIds(List<String> eventIds) {
