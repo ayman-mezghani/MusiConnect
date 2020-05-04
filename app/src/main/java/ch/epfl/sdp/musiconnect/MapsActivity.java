@@ -60,7 +60,7 @@ import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
-        GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+        GoogleMap.OnInfoWindowClickListener {
 
 
     private static final String CHANNEL_ID = "1";
@@ -241,7 +241,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         loadEventMarkers();
 
         //sets listeners on map markers
-        mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
 
         //Handler that updates users list
@@ -336,7 +335,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (mMap != null) {
             String markerName = "You";
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerName));
+            marker = mMap.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .title(markerName)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
             circle.setCenter(latLng);
@@ -463,12 +465,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(latlng)
                     .title(m.getUserName()));
+            marker.setSnippet("Musician");
             marker.setTag(m);
             markers.add(marker);
         }
     }
 
-    //Loads the profile on the map as markers, with associated information
+    //Loads the event on the map as markers, with associated information
     private void loadEventMarkers() {
         for (Marker m : eventMarkers) {
             m.remove();
@@ -481,19 +484,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .position(latlng)
                     .title(e.getTitle())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.event_marker)));
+            marker.setSnippet("Event");
             marker.setTag(e);
             eventMarkers.add(marker);
         }
     }
 
-    @Override
-    public boolean onMarkerClick(final Marker marker) {
-        if (marker.getTag() == null) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     @Override
     public void onInfoWindowClick(Marker marker) {

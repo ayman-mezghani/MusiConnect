@@ -22,6 +22,7 @@ import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.FirebaseCloudStorage;
+import ch.epfl.sdp.musiconnect.events.Event;
 
 public class CustomInfoWindowGoogleMap implements GoogleMap.InfoWindowAdapter {
 
@@ -47,18 +48,35 @@ public class CustomInfoWindowGoogleMap implements GoogleMap.InfoWindowAdapter {
 
 
         name_tv.setText(marker.getTitle());
-        Musician m = (Musician) marker.getTag();
-        Map<Instrument, Level> instruments = m.getInstruments();
-        String instrList = "No instruments listed";
-        if(!instruments.isEmpty()) {
-            StringBuilder list = new StringBuilder();
-            ArrayList<Instrument> listOfKey = new ArrayList<>(instruments.keySet());
-            for (int i = 0; i < listOfKey.size() && i < 5; i++) {
-                list.append(listOfKey.get(i).toString() + " : " + instruments.get(listOfKey.get(i)).toString() + "\n");
-            }
-            instrList = list.toString();
+        String type = marker.getSnippet();
+        if(type == null)
+            return view;
+        switch(type) {
+            case "Musician":
+                Musician m = (Musician) marker.getTag();
+                Map<Instrument, Level> instruments = m.getInstruments();
+                String instrList = "No instruments listed";
+                if (!instruments.isEmpty()) {
+                    StringBuilder list = new StringBuilder();
+                    ArrayList<Instrument> listOfKey = new ArrayList<>(instruments.keySet());
+                    for (int i = 0; i < listOfKey.size() && i < 5; i++) {
+                        list.append(listOfKey.get(i).toString() + " : " + instruments.get(listOfKey.get(i)).toString() + "\n");
+                    }
+                    instrList = list.toString();
+                }
+                details_tv.setText(instrList);
+                break;
+            case "Event":
+                Event e = (Event) marker.getTag();
+                String descr = e.getDescription();
+                String date = e.getDateTime().toString();
+                String details = descr + "\n" + date;
+                details_tv.setText(details);
+                break;
+            default:
+
+
         }
-        details_tv.setText(instrList);
         return view;
     }
 
