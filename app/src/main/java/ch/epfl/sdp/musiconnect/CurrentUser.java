@@ -1,6 +1,7 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.content.Context;
+import android.location.Location;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -20,6 +21,7 @@ public class CurrentUser {
     private Band band;
     private GoogleSignInAccount acct;
     private TypeOfUser type;
+
 
 
     // private constructor restricted to this class itself
@@ -90,6 +92,19 @@ public class CurrentUser {
     public static void flush() {
         single_instance = null;
     }
+
+
+    public void setLocation(Location location) {
+        musician.setLocation(new MyLocation(location.getLatitude(), location.getLongitude()));
+    }
+
+    public Location getLocation() {
+        Location newLocation = new Location("");
+        newLocation.setLatitude(musician.getLocation().getLatitude());
+        newLocation.setLongitude(musician.getLocation().getLongitude());
+        return newLocation;
+    }
+
 
     public Band getBand() {
         return this.band;

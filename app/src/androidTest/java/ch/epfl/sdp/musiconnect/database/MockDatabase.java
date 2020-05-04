@@ -48,6 +48,8 @@ public class MockDatabase extends Database {
         event.setTitle("Event at Big Ben!");
         event.setDescription("Playing at Big Ben, come watch us play!");
         event.register(m2);
+
+        m1.addEvent(event.getEid());
     }
 
     public Musician getDummyMusician(int index) {

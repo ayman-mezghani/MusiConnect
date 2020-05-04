@@ -490,7 +490,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-
     @Override
     public void onInfoWindowClick(Marker marker) {
         if (profiles.contains(marker.getTag())) {

@@ -189,7 +189,7 @@ public class MyDate {
 
     @Override
     public String toString() {
-        return String.format("%02d", date) + "." + String.format("%02d", month) + "." + String.format("%04d", year) + "    " + String.format("%02d", hours) + ":" + String.format("%02d", minutes) + "\n";
+        return String.format("%02d", date) + "/" + String.format("%02d", month) + "/" + String.format("%04d", year) + "    " + String.format("%02d", hours) + ":" + String.format("%02d", minutes) + "\n";
     }
 
 }

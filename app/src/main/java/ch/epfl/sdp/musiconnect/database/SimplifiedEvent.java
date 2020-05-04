@@ -4,7 +4,9 @@ import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.events.Event;
@@ -97,5 +99,18 @@ public class SimplifiedEvent {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> res = new HashMap<>();
+        res.put(CREATORMAIL, creatorMail);
+        res.put(PARTICIPANTS, participants);
+        res.put(ADRESS, adress);
+        res.put(LOC, loc);
+        res.put(DATETIME, dateTime);
+        res.put(TITLE, title);
+        res.put(DESCRIPTION, description);
+        return res;
     }
 }

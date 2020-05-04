@@ -378,7 +378,7 @@ public class MyDateClassUnitTests {
         int minutes = 20;
         MyDate day = new MyDate(year, month, date, hours, minutes);
 
-        String expectedString = String.format("%02d", date) + "." + String.format("%02d", month) + "." + String.format("%04d", year) + "    " + String.format("%02d", hours) + ":" + String.format("%02d", minutes) + "\n";
+        String expectedString = String.format("%02d", date) + "/" + String.format("%02d", month) + "/" + String.format("%04d", year) + "    " + String.format("%02d", hours) + ":" + String.format("%02d", minutes) + "\n";
 
         assertEquals(expectedString, day.toString());
     }

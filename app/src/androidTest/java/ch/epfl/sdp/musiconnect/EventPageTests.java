@@ -19,6 +19,7 @@ import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.events.Event;
+import ch.epfl.sdp.musiconnect.events.EventEdition;
 import ch.epfl.sdp.musiconnect.events.EventPage;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -48,7 +49,6 @@ public class EventPageTests {
     }
 
 
-    // Before and after methods are used in order to accept tests with intents
     @Before
     public void initIntents() {
         Intents.init();
@@ -58,20 +58,6 @@ public class EventPageTests {
     public void releaseIntents() { Intents.release(); }
 
 
-    private void openActionsMenu(int stringId) {
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-        onView(withText(stringId)).perform(click());
-    }
-
-
-    @Test
-    public void testMyEventClickShouldDoNothing() {
-        Intent intent = new Intent();
-        eventPageRule.launchActivity(intent);
-        openActionsMenu(R.string.my_events);
-
-        intended(hasComponent(EventPage.class.getName()));
-    }
 
 
     @Test
@@ -109,5 +95,15 @@ public class EventPageTests {
         eventPageRule.launchActivity(intent);
 
         onView(withId(R.id.title)).check(matches(withText(R.string.event_not_found)));
+    }
+
+    @Test
+    public void editButtonClick() {
+        Intent intent = new Intent();
+        intent.putExtra("eid", "1");
+        eventPageRule.launchActivity(intent);
+        onView(withId(R.id.btnEditEvent)).perform(click());
+
+        intended(hasComponent(EventEdition.class.getName()));
     }
 }
