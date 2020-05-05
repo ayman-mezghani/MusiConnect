@@ -15,6 +15,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.finder.BandFinderPage;
+import ch.epfl.sdp.musiconnect.finder.FinderPage;
+import ch.epfl.sdp.musiconnect.finder.MusicianFinderPage;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;

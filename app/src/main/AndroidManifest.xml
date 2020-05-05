@@ -21,12 +21,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".musiconnect.finder.MusicianFinderResult"></activity>
         <activity android:name=".musiconnect.events.EventEdition" />
         <activity android:name=".musiconnect.events.EventListPage" />
         <activity android:name=".musiconnect.events.EventCreation" />
         <activity android:name=".musiconnect.events.EventPage" />
-
         <activity android:name=".musiconnect.UserCreation" />
         <activity android:name=".musiconnect.BandCreation" />
         <activity android:name=".musiconnect.GoogleLogin">
@@ -55,9 +54,9 @@
         <activity android:name=".musiconnect.ProfileModification" />
         <activity android:name=".musiconnect.StartPage" />
         <activity android:name=".musiconnect.VisitorProfilePage" />
-        <activity android:name=".musiconnect.FinderPage" />
-        <activity android:name=".musiconnect.MusicianFinderPage" />
-        <activity android:name=".musiconnect.BandFinderPage" />
+        <activity android:name=".musiconnect.finder.FinderPage" />
+        <activity android:name=".musiconnect.finder.MusicianFinderPage" />
+        <activity android:name=".musiconnect.finder.BandFinderPage" />
 
         <service
             android:name=".musiconnect.LocationService"
