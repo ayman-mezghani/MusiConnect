@@ -1,5 +1,6 @@
 package ch.epfl.sdp.musiconnect.finder;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -7,6 +8,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Spinner;
 import android.widget.Button;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.Page;
@@ -62,12 +67,25 @@ public class MusicianFinderPage extends Page implements View.OnClickListener {
 
         // If the button findMusician is pressed, then the method onClick(view) is executed
         findMusician = findViewById(R.id.musicianFinderButtonID);
-        findMusician.setOnClickListener(view -> onClick(view));
+        findMusician.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        super.displayNotFinishedFunctionalityMessage();
+        Map<String, Object> searchMap = new HashMap<>();
+        if(!musicianFirstName.getText().toString().equals("")) {
+            searchMap.put("firstName", musicianFirstName.getText().toString());
+        }
+        if(!musicianLastName.getText().toString().equals("")) {
+            searchMap.put("lastName", musicianLastName.getText().toString());
+        }
+        if(!musicianUserName.getText().toString().equals("")) {
+            searchMap.put("username", musicianUserName.getText().toString());
+        }
+
+        Intent i = new Intent(this, MusicianFinderResult.class);
+        i.putExtra("searchMap", (Serializable) searchMap);
+        startActivity(i);
     }
 
 }
