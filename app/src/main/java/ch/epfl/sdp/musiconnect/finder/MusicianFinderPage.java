@@ -73,19 +73,23 @@ public class MusicianFinderPage extends Page implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         Map<String, Object> searchMap = new HashMap<>();
-        if(!musicianFirstName.getText().toString().equals("")) {
+        if(!isEmpty(musicianFirstName)) {
             searchMap.put("firstName", musicianFirstName.getText().toString());
         }
-        if(!musicianLastName.getText().toString().equals("")) {
+        if(!isEmpty(musicianLastName)) {
             searchMap.put("lastName", musicianLastName.getText().toString());
         }
-        if(!musicianUserName.getText().toString().equals("")) {
+        if(!isEmpty(musicianUserName)) {
             searchMap.put("username", musicianUserName.getText().toString());
         }
 
         Intent i = new Intent(this, MusicianFinderResult.class);
         i.putExtra("searchMap", (Serializable) searchMap);
         startActivity(i);
+    }
+
+    private boolean isEmpty(EditText e) {
+        return e.getText().toString().equals("");
     }
 
 }
