@@ -1,5 +1,6 @@
 package ch.epfl.sdp.musiconnect.finder;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.User;
+import ch.epfl.sdp.musiconnect.VisitorProfilePage;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
@@ -28,6 +30,13 @@ public class MusicianFinderResult extends AppCompatActivity {
         List<String> listMusician = new ArrayList<>();
 
         ListView lvMusicianResult = findViewById(R.id.LvMusicianResult);
+        Context ctx = this;
+
+        lvMusicianResult.setOnItemClickListener((parent, view, position, id) -> {
+            Intent i = new Intent(MusicianFinderResult.this, VisitorProfilePage.class);
+            i.putExtra("UserEmail", (String) lvMusicianResult.getItemAtPosition(position));
+            startActivity(i);
+        });
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<>
                 (MusicianFinderResult.this, android.R.layout.simple_list_item_1, listMusician);
