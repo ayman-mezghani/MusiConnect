@@ -2,6 +2,8 @@ package ch.epfl.sdp.musiconnect;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
@@ -35,6 +37,26 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         loadProfileContent();
 
         getVideoUri(userEmail);
+
+        Button addUserToBand = findViewById(R.id.add_user_to_band);
+        if(CurrentUser.getInstance(this).getTypeOfUser() == TypeOfUser.Band) {
+            addUserToBand.setVisibility(View.VISIBLE);
+            addUserToBand.setFocusable(true);
+            addUserToBand.setClickable(true);
+        }
+        /*
+        addUserToBand.setOnClickListener(v -> {
+            DbAdapter db = ;
+            CurrentUser.getInstance(this).getBand()
+            DbGenerator.getDbInstance().read(DbUserType.Musician, str, new DbCallback() {
+                @Override
+                public void readCallback(User u) {
+                    b.addMember((Musician) u);
+                    (DbGenerator.getDbInstance()).add(DbUserType.Band, b);
+                }
+            });
+        });
+         */
     }
 
 

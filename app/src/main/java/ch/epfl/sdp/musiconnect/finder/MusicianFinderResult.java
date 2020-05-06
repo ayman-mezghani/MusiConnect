@@ -1,6 +1,5 @@
 package ch.epfl.sdp.musiconnect.finder;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -30,7 +29,6 @@ public class MusicianFinderResult extends AppCompatActivity {
         List<String> listMusician = new ArrayList<>();
 
         ListView lvMusicianResult = findViewById(R.id.LvMusicianResult);
-        Context ctx = this;
 
         lvMusicianResult.setOnItemClickListener((parent, view, position, id) -> {
             Intent i = new Intent(MusicianFinderResult.this, VisitorProfilePage.class);
