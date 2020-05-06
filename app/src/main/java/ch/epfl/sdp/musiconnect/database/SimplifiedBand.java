@@ -10,6 +10,7 @@ import java.util.Map;
 
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.TypeOfUser;
 
 public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
     private String leader;
@@ -61,6 +62,19 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
         res.put(URLVIDEO, urlVideo);
         res.put(EVENTS, events);
         return res;
+    }
+
+    public Band toBand() {
+        Musician m = new Musician();
+        m.setEmailAddress(this.getLeader());
+        m.setTypeOfUser(TypeOfUser.Musician);
+        m.setFirstName("firstname");
+        m.setLastName("lastname");
+        m.setUserName(this.getLeader().split("@")[0]);
+        Band b = new Band(this.bandName, m);
+        b.setMusicianEmailAdresses((ArrayList<String>) this.members);
+        b.setEvents(this.events);
+        return b;
     }
 
     public String getLeader() {

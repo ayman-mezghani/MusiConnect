@@ -20,6 +20,7 @@ public class Musician extends Person implements Performer {
 
     private static final int MAX_VIDEO_URL_LENGTH = 2048;
 
+    public Musician() {}
 
     public Musician(String firstName, String lastName, String userName, String emailAddress, MyDate birthday) {
         super(firstName, lastName, userName, emailAddress, birthday);
