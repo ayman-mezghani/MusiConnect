@@ -1,5 +1,6 @@
 package ch.epfl.sdp.musiconnect.finder;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -7,8 +8,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Spinner;
 import android.widget.Button;
+import android.widget.Toast;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Page;
 
 /**
@@ -59,7 +66,16 @@ public class BandFinderPage extends Page implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        super.displayNotFinishedFunctionalityMessage();
+        Map<String, Object> searchMap = new HashMap<>();
+        if(!bandBandName.getText().toString().equals("")) {
+            searchMap.put("bandName", bandBandName.getText().toString());
+
+            Intent i = new Intent(this, BandFinderResult.class);
+            i.putExtra("searchMap", (Serializable) searchMap);
+            startActivity(i);
+        } else {
+            Toast.makeText(this, R.string.you_must_enter_bandname_for_search, Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

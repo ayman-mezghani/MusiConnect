@@ -19,9 +19,9 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
     private List<String> members;
     private List<String> events;
 
-    static final String LEADER = "Leader";
-    static final String BANDNAME = "BandName";
-    static final String URLVIDEO = "UrlVideo";
+    static final String LEADER = "leader";
+    static final String BANDNAME = "bandName";
+    static final String URLVIDEO = "urlVideo";
     static final String MEMBERS = "members";
     static final String EVENTS = "events";
 
