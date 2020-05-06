@@ -45,6 +45,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.sdp.musiconnect.testsFunctions.getCurrentActivity;
+import static ch.epfl.sdp.musiconnect.testsFunctions.waitALittle;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -238,10 +239,12 @@ public class EventCreationTests {
         closeSoftKeyboard();
 
         testSetDefaultCalendar();
+        waitALittle(2);
         checkIfFinishing();
+
     }
 
-    //@Test
+    @Test
     public void testWithResolvableAddressShoulPass() {
         writeTestValuesWithCustomAddress("rue de lausanne, geneve");
     }
