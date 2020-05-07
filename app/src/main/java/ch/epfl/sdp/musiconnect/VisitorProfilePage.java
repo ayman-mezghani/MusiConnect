@@ -19,6 +19,7 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
     private DbAdapter dbAdapter;
 
     private Button contactButton;
+    private Button eventListButton;
     private String emailAddress;
 
     @Override
@@ -39,6 +40,7 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         emailView = findViewById(R.id.visitorProfileEmail);
         birthdayView = findViewById(R.id.visitorProfileBirthday);
 
+        eventListButton = findViewById(R.id.btnVisitorEventList);
         contactButton = findViewById(R.id.btnContactMusician);
 
         Button addUserToBand = findViewById(R.id.add_user_to_band);
@@ -129,8 +131,6 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
     }
 
     private void setupEventListButton() {
-        Button eventListButton = findViewById(R.id.btnVisitorEventList);
-
         eventListButton.setOnClickListener(v -> {
             Intent intent = new Intent(VisitorProfilePage.this, EventListPage.class);
             intent.putExtra("UserEmail", userEmail);
