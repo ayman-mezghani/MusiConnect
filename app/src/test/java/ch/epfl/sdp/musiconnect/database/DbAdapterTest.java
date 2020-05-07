@@ -35,7 +35,7 @@ public class DbAdapterTest {
     @Before
     public void init() {
         musician = new Musician(firstName, lastName, username, emailAddress, birthDate);
-        band = new Band(bandName, musician);
+        band = new Band(bandName, musician.getEmailAddress());
         sm = new SimplifiedMusician(musician);
         sb = new SimplifiedBand(band);
         queryMap = new HashMap<>();
