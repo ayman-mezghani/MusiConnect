@@ -16,7 +16,7 @@ public interface CloudStorage {
 
     void upload(FileType fileType, String username, Uri fileUri) throws IOException;
 
-    void download(FileType fileType, String username, CloudCallback cloudCallback) throws IOException;
+    void download(FileType fileType, String username, CloudCallback cloudCallback);
 
     void delete(String cloudPath);
 }

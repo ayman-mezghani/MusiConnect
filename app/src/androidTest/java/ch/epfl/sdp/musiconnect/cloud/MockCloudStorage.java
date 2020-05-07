@@ -12,7 +12,7 @@ public class MockCloudStorage implements CloudStorage {
     }
 
     @Override
-    public void download(FileType fileType, String username, CloudCallback cloudCallback) throws IOException {
+    public void download(FileType fileType, String username, CloudCallback cloudCallback) {
         cloudCallback.onFailure();
     }
 
