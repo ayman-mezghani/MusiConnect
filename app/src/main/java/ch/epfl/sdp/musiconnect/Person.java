@@ -25,9 +25,6 @@ public abstract class Person extends User {
     private static final int MIN_AGE = 13;
     private static final int MAX_AGE = 120;
 
-
-    public Person() {}
-
     public Person(String firstName, String lastName, String userName, String emailAddress, MyDate birthday) {
         super();
         setFirstName(firstName);

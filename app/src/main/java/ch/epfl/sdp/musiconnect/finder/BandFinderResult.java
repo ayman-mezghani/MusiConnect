@@ -29,13 +29,6 @@ public class BandFinderResult extends AppCompatActivity {
         List<String> listMusician = new ArrayList<>();
 
         ListView lvMusicianResult = findViewById(R.id.LvBandResult);
-        /*
-        lvMusicianResult.setOnItemClickListener((parent, view, position, id) -> {
-            Intent i = new Intent(BandFinderResult.this, VisitorProfilePage.class);
-            i.putExtra("UserEmail", (String) lvMusicianResult.getItemAtPosition(position));
-            startActivity(i);
-        });
-         */
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<>
                 (BandFinderResult.this, android.R.layout.simple_list_item_1, listMusician);
