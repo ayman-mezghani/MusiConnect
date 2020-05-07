@@ -74,8 +74,8 @@ public class MusicianFinderTests {
     @Test
     public void testSearchShoulOpenProfilePage() {
         onView(withId(R.id.myMusicianFinderFirstNameID)).perform(scrollTo(), typeText("Bob"));
-        onView(withId(R.id.myMusicianFinderLastNameID)).perform(scrollTo(), typeText("Minion"));
-        onView(withId(R.id.myMusicianFinderUserNameID)).perform(scrollTo(), typeText("bobminion"));
+        /*onView(withId(R.id.myMusicianFinderLastNameID)).perform(scrollTo(), typeText("Minion"));
+        onView(withId(R.id.myMusicianFinderUserNameID)).perform(scrollTo(), typeText("bobminion"));*/
         onView(withId(R.id.musicianFinderButtonID)).perform(scrollTo(), click());
         intended(hasComponent(MusicianFinderResult.class.getName()));
 
