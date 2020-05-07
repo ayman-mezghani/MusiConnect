@@ -32,23 +32,19 @@ public abstract class ProfilePage extends Page {
 
     protected void getVideoUri(String s) {
         CloudStorage storage = CloudStorageGenerator.getCloudInstance(this);
-        try {
-            storage.download(CloudStorage.FileType.video, s, new CloudCallback() {
-                @Override
-                public void onSuccess(Uri fileUri) {
-                    videoUri = fileUri;
-                    showVideo();
-                }
+        storage.download(CloudStorage.FileType.video, s, new CloudCallback() {
+            @Override
+            public void onSuccess(Uri fileUri) {
+                videoUri = fileUri;
+                showVideo();
+            }
 
-                @Override
-                public void onFailure() {
-                    videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.minion);
-                    Log.d("profilevideo",getPackageName());
-                    showVideo();
-                }
-            });
-        } catch (IOException e) {
-            Toast.makeText(this, "An error occured, please contact support.", Toast.LENGTH_LONG).show();
-        }
+            @Override
+            public void onFailure() {
+                videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.minion);
+                Log.d("profilevideo", getPackageName());
+                showVideo();
+            }
+        });
     }
 }
