@@ -180,5 +180,13 @@
     <string name="channel_description">description</string>
     <string name="unable_to_resolve_address">Unable to resolve address</string>
     <string name="new_participant_email_address">New participant email address</string>
+    <string name="band_finder_page">Band Finder Page</string>
+    <string name="search_result">Search result</string>
+    <string name="you_must_enter_bandname_for_search">You must enter a band name to perform a search</string>
+    <string name="band_profile">Band profile</string>
+    <string name="leader">Leader</string>
+    <string name="bandName">Band name</string>
+    <string name="members">Members</string>
+    <string name="events">Events</string>
     <string name="your_events">Your events</string>
 </resources>
