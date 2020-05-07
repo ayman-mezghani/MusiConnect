@@ -32,6 +32,7 @@ import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
 import ch.epfl.sdp.musiconnect.events.Event;
+import ch.epfl.sdp.musiconnect.location.LocationPermission;
 
 public class StartPage extends Page {
     private static final String TAG = "MainActivity";
@@ -68,6 +69,7 @@ public class StartPage extends Page {
         fab_button_1.setOnClickListener(v -> button1Click());
 
         fab_button_2.setOnClickListener(v -> {
+            updateCurrentUserBand(this);
             Context ctx = this;
             ListView lv = findViewById(R.id.LvEvent);
             ArrayList<String> events = new ArrayList<>();
@@ -92,7 +94,7 @@ public class StartPage extends Page {
 
 
         if(!test) {
-            updateCurrentUserBand();
+            updateCurrentUserBand(this);
         }
     }
 
@@ -162,26 +164,16 @@ public class StartPage extends Page {
     }
 
     protected void button1Click() {
-        runOnUiThread(new Runnable() {
+       runOnUiThread(new Runnable() {
             public void run() {
                 Toast.makeText(getApplicationContext(), CurrentUser.getInstance(getApplicationContext()).email, Toast.LENGTH_SHORT).show();
             }
         });
+        updateCurrentUserBand(this);
 
-        ArrayList<String> ls = new ArrayList<>();
-        //ls.add("aymanmezghani97@gmail.com");
-        ls.add("seboll13@gmail.com");
-        DbAdapter db = DbGenerator.getDbInstance();
-
-        for (String str: ls) {
-            db.read(DbUserType.Musician, str, new DbCallback() {
-                @Override
-                public void readCallback(User u) {
-                    b.addMember((Musician) u);
-                    (DbGenerator.getDbInstance()).add(DbUserType.Band, b);
-                }
-            });
-        }
+        CurrentUser.getInstance(this).getBand().addMember("aymanmezghani97@gmail.com");
+        CurrentUser.getInstance(this).getBand().addMember("seboll13@gmail.com");
+        (DbGenerator.getDbInstance()).add(DbUserType.Band, CurrentUser.getInstance(this).getBand());
     }
 
     protected void fabMenuClick() {

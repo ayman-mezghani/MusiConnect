@@ -3,8 +3,6 @@ package ch.epfl.sdp.musiconnect;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import ch.epfl.sdp.musiconnect.events.Event;
 
@@ -26,12 +24,7 @@ public class BandClassUnitTests {
         Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
-
-        assertEquals(bandName, beatles.getBandName());
-        assertEquals(john.getFirstName(), beatles.getLeaderFirstName());
-        assertEquals(john.getLastName(), beatles.getLeaderLastName());
-        assertEquals(john.getUserName(), beatles.getLeaderUserName());
+        Band beatles = new Band(bandName, john.getEmailAddress());
         assertEquals(john.getEmailAddress(), beatles.getEmailAddress());
     }
 
@@ -45,13 +38,13 @@ public class BandClassUnitTests {
         Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
         String newBandName = "The Fab Four";
 
-        assertEquals(bandName, beatles.getBandName());
+        assertEquals(bandName, beatles.getName());
         beatles.setBandName(newBandName);
-        assertEquals(newBandName, beatles.getBandName());
+        assertEquals(newBandName, beatles.getName());
     }
 
     @Test
@@ -64,7 +57,7 @@ public class BandClassUnitTests {
         Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
         String newBandName = "";
 
@@ -81,7 +74,7 @@ public class BandClassUnitTests {
         Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
         String newBandName = "The Beatles (The Fab Four)";
 
@@ -105,20 +98,20 @@ public class BandClassUnitTests {
         Musician paul = new Musician(paulFirstName, paulLastName, paulUserName, paulEmailAddress, paulBirthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
-        assertEquals(true, beatles.isLeader(john));
-        assertEquals(false, beatles.isLeader(paul));
+        assertEquals(true, beatles.isLeader(john.getEmailAddress()));
+        assertEquals(false, beatles.isLeader(paul.getEmailAddress()));
 
-        beatles.addMember(paul);
+        beatles.addMember(paul.getEmailAddress());
 
-        assertEquals(true, beatles.isLeader(john));
-        assertEquals(false, beatles.isLeader(paul));
+        assertEquals(true, beatles.isLeader(john.getEmailAddress()));
+        assertEquals(false, beatles.isLeader(paul.getEmailAddress()));
 
-        beatles.setLeader(paul);
+        beatles.setLeader(paul.getEmailAddress());
 
-        assertEquals(false, beatles.isLeader(john));
-        assertEquals(true, beatles.isLeader(paul));
+        assertEquals(false, beatles.isLeader(john.getEmailAddress()));
+        assertEquals(true, beatles.isLeader(paul.getEmailAddress()));
     }
 
     @Test
@@ -131,7 +124,7 @@ public class BandClassUnitTests {
         Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
         assertThrows(NullPointerException.class, () -> beatles.setLeader(null));
     }
@@ -153,9 +146,9 @@ public class BandClassUnitTests {
         Musician paul = new Musician(paulFirstName, paulLastName, paulUserName, paulEmailAddress, paulBirthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
-        assertThrows(IllegalArgumentException.class, () -> beatles.setLeader(paul));
+        assertThrows(IllegalArgumentException.class, () -> beatles.setLeader(paul.getEmailAddress()));
     }
 
     @Test
@@ -175,15 +168,15 @@ public class BandClassUnitTests {
         Musician paul = new Musician(paulFirstName, paulLastName, paulUserName, paulEmailAddress, paulBirthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
-        assertEquals(true, beatles.isLeader(john));
-        assertEquals(false, beatles.isLeader(paul));
+        assertEquals(true, beatles.isLeader(john.getEmailAddress()));
+        assertEquals(false, beatles.isLeader(paul.getEmailAddress()));
 
-        beatles.addMember(paul);
+        beatles.addMember(paul.getEmailAddress());
 
-        assertEquals(true, beatles.isLeader(john));
-        assertEquals(false, beatles.isLeader(paul));
+        assertEquals(true, beatles.isLeader(john.getEmailAddress()));
+        assertEquals(false, beatles.isLeader(paul.getEmailAddress()));
     }
 
     @Test
@@ -202,7 +195,7 @@ public class BandClassUnitTests {
         MyDate paulBirthday = new MyDate(1942, 6, 18);
         Musician paul = new Musician(paulFirstName, paulLastName, paulUserName, paulEmailAddress, paulBirthday);
 
-        String bandName = "The Beatles";
+        /*String bandName = "The Beatles";
         Band beatles = new Band(bandName, john);
 
         Set<Musician> members = new HashSet<Musician>();
@@ -213,7 +206,7 @@ public class BandClassUnitTests {
         members.add(paul);
 
         beatles.addMember(paul);
-        assertEquals(members, beatles.setOfMembers());
+        assertEquals(members, beatles.setOfMembers());*/
     }
 
     @Test
@@ -226,7 +219,7 @@ public class BandClassUnitTests {
         Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
         assertThrows(NullPointerException.class, () -> beatles.addMember(null));
     }
@@ -241,9 +234,9 @@ public class BandClassUnitTests {
         Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
-        assertThrows(IllegalArgumentException.class, () -> beatles.addMember(john));
+        assertThrows(IllegalArgumentException.class, () -> beatles.addMember(john.getEmailAddress()));
     }
 
     @Test
@@ -263,10 +256,10 @@ public class BandClassUnitTests {
         Musician paul = new Musician(paulFirstName, paulLastName, paulUserName, paulEmailAddress, paulBirthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
-        beatles.addMember(paul);
+        Band beatles = new Band(bandName, john.getEmailAddress());
+        beatles.addMember(paul.getEmailAddress());
 
-        Set<Musician> members = new HashSet<Musician>();
+        /*Set<Musician> members = new HashSet<Musician>();
         members.add(john);
         members.add(paul);
 
@@ -275,7 +268,7 @@ public class BandClassUnitTests {
         members.remove(paul);
 
         beatles.removeMember(paul);
-        assertEquals(members, beatles.setOfMembers());
+        assertEquals(members, beatles.setOfMembers());*/
     }
 
     @Test
@@ -295,9 +288,9 @@ public class BandClassUnitTests {
         Musician paul = new Musician(paulFirstName, paulLastName, paulUserName, paulEmailAddress, paulBirthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
-        assertThrows(IllegalArgumentException.class, () -> beatles.removeMember(paul));
+        assertThrows(IllegalArgumentException.class, () -> beatles.removeMember(paul.getEmailAddress()));
     }
 
     @Test
@@ -310,9 +303,9 @@ public class BandClassUnitTests {
         Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
-        assertThrows(IllegalArgumentException.class, () -> beatles.removeMember(john));
+        assertThrows(IllegalArgumentException.class, () -> beatles.removeMember(john.getEmailAddress()));
     }
 
     @Test
@@ -332,12 +325,12 @@ public class BandClassUnitTests {
         Musician paul = new Musician(paulFirstName, paulLastName, paulUserName, paulEmailAddress, paulBirthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
         assertEquals(1, beatles.numberOfMembers());
-        beatles.addMember(paul);
+        beatles.addMember(paul.getEmailAddress());
         assertEquals(2, beatles.numberOfMembers());
-        beatles.removeMember(paul);
+        beatles.removeMember(paul.getEmailAddress());
         assertEquals(1, beatles.numberOfMembers());
     }
 
@@ -358,56 +351,16 @@ public class BandClassUnitTests {
         Musician paul = new Musician(paulFirstName, paulLastName, paulUserName, paulEmailAddress, paulBirthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
         assertEquals(true, beatles.containsMember(john));
         assertEquals(false, beatles.containsMember(paul));
-        beatles.addMember(paul);
+        beatles.addMember(paul.getEmailAddress());
         assertEquals(true, beatles.containsMember(john));
         assertEquals(true, beatles.containsMember(paul));
-        beatles.removeMember(paul);
+        beatles.removeMember(paul.getEmailAddress());
         assertEquals(true, beatles.containsMember(john));
         assertEquals(false, beatles.containsMember(paul));
-    }
-
-    @Test
-    public void getterAndSetterOfVideoURLWorkWithValidInput() {
-        String firstName = "John";
-        String lastName = "Lennon";
-        String userName = "JohnLennon";
-        String emailAddress = "john.lennon@gmail.com";
-        MyDate birthday = new MyDate(1940, 10, 9);
-        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
-
-        String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
-
-        String videoURL = "www.the-beatles.uk/OurVideo";
-
-        //assertThrows(Error.class, () -> beatles.getVideoURL());
-        beatles.setVideoURL(videoURL);
-        assertEquals(videoURL, beatles.getVideoURL());
-    }
-
-    @Test
-    public void setVideoURLThrowsExceptionIfVideoURLIsTooLong() {
-        String firstName = "John";
-        String lastName = "Lennon";
-        String userName = "JohnLennon";
-        String emailAddress = "john.lennon@gmail.com";
-        MyDate birthday = new MyDate(1940, 10, 9);
-        Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
-
-        String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
-
-        String videoURL = "www.the-beatles.uk/OurVideo";
-        for (int i = 0; i < 255; ++i) {
-            videoURL += "/abcdefg";
-        }
-        String finalVideoURL = videoURL;
-
-        assertThrows(IllegalArgumentException.class, () -> beatles.setVideoURL(finalVideoURL));
     }
 
     @Test
@@ -427,15 +380,15 @@ public class BandClassUnitTests {
         Musician paul = new Musician(paulFirstName, paulLastName, paulUserName, paulEmailAddress, paulBirthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
-        String expectedString = bandName + "\n" + "    " + johnFirstName + " " + johnLastName + " (Leader)\n";
+        String expectedString = bandName + "\n" + "    " + john.getEmailAddress() + " (Leader)\n";
 
         assertEquals(expectedString, beatles.toString());
 
-        beatles.addMember(paul);
+        beatles.addMember(paul.getEmailAddress());
 
-        expectedString += "    " + paulFirstName + " " + paulLastName + "\n";
+        expectedString += "    " + paul.getEmailAddress() + "\n";
 
         assertEquals(expectedString, beatles.toString());
     }
@@ -443,14 +396,14 @@ public class BandClassUnitTests {
     @Test
     public void getNameReturnsCorrect() {
         Musician john = new Musician("John", "Lennon", "JohnLennon", "john.lennon@gmail.com", new MyDate(1940, 10, 9));
-        Band band = new Band("BandName", john);
-        assertEquals(band.getBandName(), band.getName());
+        Band band = new Band("BandName", john.getEmailAddress());
+        assertEquals(band.getName(), band.getName());
     }
 
     @Test
     public void bandEventsTests() {
         Musician john = new Musician("John", "Lennon", "JohnLennon", "john.lennon@gmail.com", new MyDate(1940, 10, 9));
-        Band band = new Band("BandName", john);
+        Band band = new Band("BandName", john.getEmailAddress());
 
         ArrayList<String> as = new ArrayList<>();
         Event e = new Event(john, "1");
