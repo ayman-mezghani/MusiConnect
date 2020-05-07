@@ -146,13 +146,6 @@ public class Event {
         location.setLongitude(longitude);
     }
 
-    /*public Location getLocation() {
-        Location l = new Location("");
-        l.setLatitude(location.getLatitude());
-        l.setLongitude(location.getLongitude());
-        return l;
-    }*/
-
     public MyLocation getLocation(){
         return location;
     }

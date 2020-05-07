@@ -1,7 +1,5 @@
 package ch.epfl.sdp.musiconnect;
 
-import android.location.Location;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
