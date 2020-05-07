@@ -68,10 +68,11 @@ public class StartPage extends Page {
         fab_button_1.setOnClickListener(v -> button1Click());
 
         fab_button_2.setOnClickListener(v -> {
-            updateCurrentUserBand();
+            updateCurrentUserBand(this);
             Context ctx = this;
             ListView lv = findViewById(R.id.LvEvent);
             ArrayList<String> events = new ArrayList<>();
+
 
             final ArrayAdapter<String> adapter = new ArrayAdapter<>
                     (StartPage.this, android.R.layout.simple_list_item_1, events);
@@ -92,7 +93,7 @@ public class StartPage extends Page {
 
 
         if(!test) {
-            updateCurrentUserBand();
+            updateCurrentUserBand(this);
         }
     }
 
@@ -167,21 +168,11 @@ public class StartPage extends Page {
                 Toast.makeText(getApplicationContext(), CurrentUser.getInstance(getApplicationContext()).email, Toast.LENGTH_SHORT).show();
             }
         });
+        updateCurrentUserBand(this);
 
-        ArrayList<String> ls = new ArrayList<>();
-        //ls.add("aymanmezghani97@gmail.com");
-        ls.add("seboll13@gmail.com");
-        DbAdapter db = DbGenerator.getDbInstance();
-
-        for (String str: ls) {
-            db.read(DbUserType.Musician, str, new DbCallback() {
-                @Override
-                public void readCallback(User u) {
-                    b.addMember((Musician) u);
-                    (DbGenerator.getDbInstance()).add(DbUserType.Band, b);
-                }
-            });
-        }
+        CurrentUser.getInstance(this).getBand().addMember("aymanmezghani97@gmail.com");
+        CurrentUser.getInstance(this).getBand().addMember("seboll13@gmail.com");
+        (DbGenerator.getDbInstance()).add(DbUserType.Band, CurrentUser.getInstance(this).getBand());
     }
 
     protected void fabMenuClick() {
@@ -197,7 +188,6 @@ public class StartPage extends Page {
 
             fab_button_2.setFocusable(false);
             fab_button_1.setFocusable(false);
-
         } else {
             fab_button_2.startAnimation(fabOpen);
             fabTv2.startAnimation(fabOpen);
@@ -211,6 +201,7 @@ public class StartPage extends Page {
             fab_button_2.setFocusable(true);
             fab_button_1.setFocusable(true);
         }
+
         isOpen = !isOpen;
     }
 }

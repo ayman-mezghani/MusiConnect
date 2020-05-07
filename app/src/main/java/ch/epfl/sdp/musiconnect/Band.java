@@ -1,39 +1,26 @@
 package ch.epfl.sdp.musiconnect;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
-import java.util.HashSet;
 
 /**
  * @author Manuel Pellegrini, EPFL
  */
-public class Band extends User implements Performer {
+public class Band extends User {
 
     private String bandName;
-    private Musician leader;
-    private Set<Musician> members;
-    private String videoURL;
+    private String leader;
     private ArrayList<String> musicianEmails;
 
     private static final int MAX_BAND_NAME_LENGTH = 16;
-    private static final int MAX_VIDEO_URL_LENGTH = 2048;
 
 
-    public Band(String bandName, Musician leader) {
+    public Band(String bandName, String leader) {
         super();
         setBandName(bandName);
-        members = new HashSet<Musician>();
         events = new ArrayList<>();
+        musicianEmails = new ArrayList<>();
         addMember(leader);
         setLeader(leader);
-        videoURL = "";
     }
 
 
@@ -47,127 +34,89 @@ public class Band extends User implements Performer {
         this.bandName = bandName;
     }
 
-    public String getBandName() {
-        return bandName;
-    }
-
-    public void setLeader(Musician leader) {
+    public void setLeader(String leader) {
         if (leader == null) {
             throw new NullPointerException("Leader is invalid");
-        } else if (!containsMember(leader)) {
+        } else if (!this.musicianEmails.contains(leader)) {
             throw new IllegalArgumentException("Leader must already be member of the band");
         }
 
         this.leader = leader;
     }
 
-    public boolean isLeader(Musician member) {
+    public boolean isLeader(String member) {
         return leader.equals(member);
     }
 
-    public String getLeaderFirstName() {
-        return leader.getFirstName();
-    }
-
-    public String getLeaderLastName() {
-        return leader.getLastName();
-    }
-
-    public String getLeaderUserName() {
-        return leader.getUserName();
-    }
-
-    @Override
-    public String getEmailAddress() {
-        return leader.getEmailAddress();
-    }
-
-    public void addMember(Musician member) {
+    public void addMember(String member) {
         if (member == null) {
             throw new NullPointerException("Member is invalid");
-        } else if (containsMember(member)) {
+        } else if (this.containsMember(member)) {
             throw new IllegalArgumentException("Member already exists");
         }
 
-        members.add(member);
+        musicianEmails.add(member);
     }
 
-    public void removeMember(Musician member) {
+    public void removeMember(String member) {
         if (!containsMember(member)) {
             throw new IllegalArgumentException("Member does not exist");
         } else if (isLeader(member)) {
             throw new IllegalArgumentException("Impossible to remove the leader from the band");
         }
 
-        members.remove(member);
+        musicianEmails.remove(member);
     }
 
     public int numberOfMembers() {
-        return members.size();
+        return musicianEmails.size();
     }
 
     public boolean containsMember(Musician member) {
-        for(Musician m: members) {
-            if (m.getEmailAddress().equals(member.getEmailAddress()))
+        for(String s: musicianEmails) {
+            if (s.equals(member.getEmailAddress()))
                 return true;
         }
-        return members.contains(member);
+        return musicianEmails.contains(member.getEmailAddress());
     }
 
-    public Set<Musician> setOfMembers() {
-        return new HashSet<Musician>(members);
-    }
-
-    public void setVideoURL(String videoURL) {
-        if (videoURL.length() > MAX_VIDEO_URL_LENGTH) {
-            throw new IllegalArgumentException("Video URL too long");
+    public boolean containsMember(String memberEmail) {
+        for(String s: musicianEmails) {
+            if (s.equals(memberEmail))
+                return true;
         }
-
-        this.videoURL = videoURL;
+        return musicianEmails.contains(memberEmail);
     }
 
-    public String getVideoURL() {
-        /*
-        if (videoURL.isEmpty()) {
-            throw new Error("No video URL is present");
-        }
-        */
-
-        return videoURL;
+    //@Override
+    public String getName() {
+        return this.bandName;
     }
+
 
     @Override
-    public String getName() {
-        return bandName;
+    public String getEmailAddress() {
+        return leader;
     }
 
     @Override
     public String toString() {
-        String tmp = getBandName() + "\n";
-        tmp += "    " + getLeaderFirstName() + " " + getLeaderLastName() + " (Leader)\n";
-        for (Musician member : members) {
+        String tmp = this.getName() + "\n";
+        tmp += "    " + this.leader + " (Leader)\n";
+        for (String member : this.musicianEmails) {
             if (!isLeader(member)) {
-                tmp += "    " + member.getFirstName() + " " + member.getLastName() + "\n";
+                tmp += "    " + member + "\n";
             }
         }
 
         return tmp;
     }
 
-    public void setMusicianEmailAdresses(ArrayList<String> listEmailAdress) {
+    public void setMusiciansEmailAdresses(ArrayList<String> listEmailAdress) {
         this.musicianEmails = listEmailAdress;
-//        for(String emailAdress: listEmailAdress)
-//            this.musicianEmails.add(emailAdress);
     }
 
-    public ArrayList<String> getMusicianEmailsAdress() {
-        if(!members.isEmpty() && members.size() > 1){
-            musicianEmails = new ArrayList<>();
-            for(Musician m: members) {
-                musicianEmails.add(m.getEmailAddress());
-            }
-        }
-
+    public ArrayList<String> getMusiciansEmailsAdress() {
         return this.musicianEmails;
     }
 
