@@ -269,6 +269,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (co && loc) {
                     updatePos = true;
                     delay = 20000;
+                    updateEvents();
                     updateUsers();
                     clearCachedUsers();
                     saveUsersToCache();
@@ -430,12 +431,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         loadProfilesMarker();
     }
 
-    //From the users around the area, picks the ones that are within the threshold distance.
+    //From the events around the area, picks the ones that are within the threshold distance.
     private void updateEvents() {
         if (setLoc == null) {             //Might be called before we get the first update to the location;
             return;
-        } else {
-            delay = 20000;              //sets a 20 sec long delay on updates when everything is in place
         }
 
         eventNear.clear();
@@ -447,8 +446,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 eventNear.add(e);
             }
         }
-
-        circle.setRadius(threshold);
 
         loadEventMarkers();
     }
