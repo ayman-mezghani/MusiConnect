@@ -74,14 +74,12 @@ public class MyEventPage extends EventPage {
                     User m = event.getCreator();
                     m.removeEvent(event.getEid());
 
-                    /*
                     if (m instanceof Musician) {
                         dbAdapter.update(DbUserType.Musician, m);
                     } else {
                         dbAdapter.update(DbUserType.Band, m);
                     }
 
-                     */
 
                     dbAdapter.delete(DbUserType.Events, event);
                     MyEventPage.this.finish();

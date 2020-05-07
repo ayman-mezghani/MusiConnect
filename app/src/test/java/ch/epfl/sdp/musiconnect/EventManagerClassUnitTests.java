@@ -578,12 +578,10 @@ public class EventManagerClassUnitTests {
     public void eventManagerEventsTests() {
         EventManager john = new EventManager("John", "Lennon", "JohnLennon", "john.lennon@gmail.com", new MyDate(1940, 10, 9));
 
-
         ArrayList<String> as = new ArrayList<>();
         Event e = new Event(john, "1");
 
         as.add(e.getEid());
-        john.addEvent(e.getEid());
 
         assertEquals(as, john.getEvents());
 

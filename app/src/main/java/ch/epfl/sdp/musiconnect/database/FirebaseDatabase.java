@@ -145,6 +145,12 @@ public class FirebaseDatabase extends Database {
                             dbCallback.readCallback(m.toMusician());
                         }
                     }
+
+                    // Data is null!
+                    else {
+                        dbCallback.readFailCallback();
+                        Log.w(TAG, "Error: the element does not exist in the database");
+                    }
                 })
                 .addOnFailureListener(e -> {
                     dbCallback.readFailCallback();

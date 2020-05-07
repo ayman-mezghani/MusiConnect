@@ -20,7 +20,6 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
@@ -69,13 +68,7 @@ public class EventPageTests {
         Musician m1 = md.getDummyMusician(0);
         Musician m2 = md.getDummyMusician(3);
 
-        Event event = new Event(m1, "1");
-        event.setAddress("Westminster, London, England");
-        event.setLocation(51.5007, 0.1245);
-        event.setDateTime(new MyDate(2020, 9, 21, 14, 30));
-        event.setTitle("Event at Big Ben!");
-        event.setDescription("Playing at Big Ben, come watch us play!");
-        event.register(m2);
+        Event event = md.getDummyEvent(0);
 
         String s = m1.getName() + System.lineSeparator() + m2.getName() + System.lineSeparator();
 

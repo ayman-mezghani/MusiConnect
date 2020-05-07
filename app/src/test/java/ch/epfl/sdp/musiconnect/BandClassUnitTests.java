@@ -409,7 +409,6 @@ public class BandClassUnitTests {
         Event e = new Event(john, "1");
 
         as.add(e.getEid());
-        band.addEvent(e.getEid());
 
         assertEquals(as, band.getEvents());
 
