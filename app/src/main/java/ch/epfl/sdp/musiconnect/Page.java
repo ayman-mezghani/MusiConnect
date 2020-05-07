@@ -32,6 +32,7 @@ import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
 import ch.epfl.sdp.musiconnect.events.EventCreation;
 import ch.epfl.sdp.musiconnect.events.EventListPage;
+import ch.epfl.sdp.musiconnect.finder.FinderPage;
 import ch.epfl.sdp.musiconnect.location.MapsActivity;
 
 import static ch.epfl.sdp.musiconnect.StartPage.test;
