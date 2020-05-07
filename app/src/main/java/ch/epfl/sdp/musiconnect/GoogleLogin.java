@@ -72,11 +72,12 @@ public class GoogleLogin extends AppCompatActivity {
                     @Override
                     public void readCallback(User user) {
                         CurrentUser.getInstance(ctx).setTypeOfUser(((Musician) user).getTypeOfUser());
+                        StartPage.updateCurrentUserBand(ctx);
                     }
                 });
 
-                    redirect(exists);
-                    finish();
+                redirect(exists);
+                finish();
                 }
             });
         }

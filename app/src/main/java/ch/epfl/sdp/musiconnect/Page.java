@@ -93,7 +93,7 @@ public abstract class Page extends AppCompatActivity {
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (!test)
-            updateCurrentUserBand();
+            updateCurrentUserBand(this);
     }
 
     @Override
@@ -207,8 +207,7 @@ public abstract class Page extends AppCompatActivity {
                 });
     }
 
-    protected void updateCurrentUserBand() {
-        Context ctx = this;
+    public static void updateCurrentUserBand(Context ctx) {
         if(CurrentUser.getInstance(ctx).getTypeOfUser() == TypeOfUser.Band) {
             DbGenerator.getDbInstance().read(DbUserType.Band, CurrentUser.getInstance(ctx).email, new DbCallback() {
                 @Override
