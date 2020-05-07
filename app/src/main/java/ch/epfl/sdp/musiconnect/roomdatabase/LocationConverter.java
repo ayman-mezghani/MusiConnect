@@ -7,12 +7,12 @@ import androidx.room.TypeConverter;
 public class LocationConverter {
 
     @TypeConverter
-    public String locationToString(Location l){
+    public static String locationToString(Location l){
         return l.getLatitude() + ";" + l.getLongitude();
     }
 
     @TypeConverter
-    public Location stringToLocation(String s){
+    public static Location stringToLocation(String s){
         String[] split = s.split(";");
         Location l = new Location("");
         l.setLatitude(Double.valueOf(split[0]));
