@@ -64,6 +64,9 @@ public class EventListPage extends Page {
         isVisitor = intent.hasExtra("UserEmail");
         if (isVisitor) {
             userEmail = intent.getStringExtra("UserEmail");
+
+            // TODO get actual usertype from user
+            dbUserType = DbUserType.Musician;
             dbAdapter.read(DbUserType.Musician, userEmail, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
@@ -97,7 +100,9 @@ public class EventListPage extends Page {
                 readFromDbAndLoadEvents(dbUserType);
             } else {
                 readFromDbAndLoadEvents(DbUserType.Musician);
-                readFromDbAndLoadEvents(DbUserType.Band);
+
+                // TODO
+                // readFromDbAndLoadEvents(DbUserType.Band);
             }
 
         }, 500);

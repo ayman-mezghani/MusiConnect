@@ -406,9 +406,10 @@ public class BandClassUnitTests {
         Band band = new Band("BandName", john.getEmailAddress());
 
         ArrayList<String> as = new ArrayList<>();
-        Event e = new Event(band, "1");
+        Event e = new Event(john, "1");
 
         as.add(e.getEid());
+        band.addEvent(e.getEid());
 
         assertEquals(as, band.getEvents());
 

@@ -587,9 +587,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         allUsers.add(person2);
         allUsers.add(person3);
 
+
+        /*
         Adb.add(DbUserType.Musician, person1);
         Adb.add(DbUserType.Musician, person2);
         Adb.add(DbUserType.Musician, person3);
+         */
     }
 
     //==============================================================================================

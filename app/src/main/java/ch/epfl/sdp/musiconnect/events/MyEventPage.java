@@ -71,16 +71,7 @@ public class MyEventPage extends EventPage {
         deleteEvent.setOnClickListener(v -> new AlertDialog.Builder(MyEventPage.this)
                 .setMessage("Do you really want to delete this event?")
                 .setPositiveButton("Yes", (dialogInterface, i) -> {
-                    User m = event.getCreator();
-                    m.removeEvent(event.getEid());
-
-                    if (m instanceof Musician) {
-                        dbAdapter.update(DbUserType.Musician, m);
-                    } else {
-                        dbAdapter.update(DbUserType.Band, m);
-                    }
-
-
+                    // TODO EventPageList will update the db, maybe update here? but need to remove single item and not whole list
                     dbAdapter.delete(DbUserType.Events, event);
                     MyEventPage.this.finish();
 

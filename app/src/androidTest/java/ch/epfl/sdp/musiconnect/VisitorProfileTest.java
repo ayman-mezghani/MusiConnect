@@ -7,6 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
+import androidx.test.uiautomator.UiDevice;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,33 +16,31 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import androidx.test.uiautomator.By;
-import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.Until;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.events.Event;
+import ch.epfl.sdp.musiconnect.events.EventListPage;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertEquals;
 
 
 @RunWith(AndroidJUnit4.class)
 public class VisitorProfileTest {
-    private UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+
+    private static MockDatabase md;
+
 
     @Rule
     public final ActivityTestRule<VisitorProfilePage> visitorActivityTestRule = new ActivityTestRule<>(VisitorProfilePage.class,
@@ -53,7 +52,8 @@ public class VisitorProfileTest {
 
     @BeforeClass
     public static void setMocks() {
-        DbGenerator.setDatabase(new MockDatabase());
+        md = new MockDatabase();
+        DbGenerator.setDatabase(md);
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
 
@@ -64,6 +64,20 @@ public class VisitorProfileTest {
 
     @After
     public void releaseIntents() { Intents.release(); }
+
+
+    @Test
+    public void testSeeTheEventsClick() {
+        Musician m = md.getDummyMusician(1);
+
+        Intent intent = new Intent();
+        intent.putExtra("UserEmail", m.getEmailAddress());
+        visitorActivityTestRule.launchActivity(intent);
+
+        onView(withId(R.id.btnVisitorEventList)).perform(scrollTo(), click());
+
+        intended(hasComponent(EventListPage.class.getName()));
+    }
 
     @Test
     public void testNoMarkerTransitionToProfile() {

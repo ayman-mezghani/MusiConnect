@@ -49,8 +49,6 @@ public class Event {
         this.eid = eid;
         this.creator = creator;
 
-        this.creator.addEvent(eid);
-
         participants = new ArrayList<>();
         participants.add(creator);
 

@@ -4,18 +4,16 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import android.view.View;
-
-import java.util.ArrayList;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
-
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.events.EventListPage;
 
 public class VisitorProfilePage extends ProfilePage implements DbCallback {
     private DbAdapter dbAdapter;
@@ -52,10 +50,10 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
 
         addUserToBand.setOnClickListener(v -> addUserToBand());
 
-        loadProfileContent();
 
         loadProfileContent();
         getVideoUri(userEmail);
+        setupEventListButton();
 
         contactButton.setOnClickListener(view ->
             sendEmail(emailAddress, getResources().getString(R.string.musiconnect_contact_mail))
@@ -128,6 +126,17 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
 
         emailAddress = m.getEmailAddress();
         addFirstNameToContactButtonText(m.getFirstName());
+    }
+
+    private void setupEventListButton() {
+        Button eventListButton = findViewById(R.id.btnVisitorEventList);
+
+        eventListButton.setOnClickListener(v -> {
+            Intent intent = new Intent(VisitorProfilePage.this, EventListPage.class);
+            intent.putExtra("UserEmail", userEmail);
+
+            VisitorProfilePage.this.startActivity(intent);
+        });
     }
 
     @SuppressLint("SetTextI18n")

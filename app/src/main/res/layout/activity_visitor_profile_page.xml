@@ -178,6 +178,12 @@
                 android:orientation="horizontal">
 
                 <Button
+                    android:id="@+id/btnVisitorEventList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="See the events"/>
+
+                <Button
                     android:id="@+id/btnContactMusician"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
