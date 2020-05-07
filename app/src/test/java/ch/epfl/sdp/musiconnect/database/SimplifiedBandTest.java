@@ -13,7 +13,6 @@ import ch.epfl.sdp.musiconnect.MyDate;
 import static ch.epfl.sdp.musiconnect.database.SimplifiedBand.BANDNAME;
 import static ch.epfl.sdp.musiconnect.database.SimplifiedBand.LEADER;
 import static ch.epfl.sdp.musiconnect.database.SimplifiedBand.MEMBERS;
-import static ch.epfl.sdp.musiconnect.database.SimplifiedBand.URLVIDEO;
 import static ch.epfl.sdp.musiconnect.database.SimplifiedMusicianTest.testMusician1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -22,25 +21,22 @@ public class SimplifiedBandTest {
     @Test
     public void CreationFromBandTest() {
         Musician musician = testMusician1();
-        Band b = new Band("testBand", musician);
+        Band b = new Band("testBand", musician.getEmailAddress());
         SimplifiedBand sb = new SimplifiedBand(b);
-        sb.setUrlVideo("video");
-        b.setVideoURL(sb.getUrlVideo());
 
         Musician musician2 = new Musician("firstName2", "lastName2", "username2", "email2@gmail.com", new MyDate(2000, 1, 1));
         Musician musician3 = new Musician("firstName3", "lastName3", "username3", "email3@gmail.com", new MyDate(2000, 1, 1));
 
-        b.addMember(musician2);
-        b.addMember(musician3);
+        b.addMember(musician2.getEmailAddress());
+        b.addMember(musician3.getEmailAddress());
         ArrayList<String> emailsAdress = new ArrayList<String>();
         emailsAdress.add("email@gmail.com");
         emailsAdress.add("email3@gmail.com");
         emailsAdress.add("email2@gmail.com");
         sb.setMembers(emailsAdress);
 
-        assertEquals(b.getBandName(), sb.getBandName());
+        assertEquals(b.getName(), sb.getBandName());
         assertEquals(b.getEmailAddress(), sb.getLeader());
-        assertEquals(b.getVideoURL(), sb.getUrlVideo());
         //assertEquals(b.getMusicianEmailsAdress(), sb.getMembers());
 
         sb.setBandName("bandNameTest");
@@ -65,7 +61,6 @@ public class SimplifiedBandTest {
         assertEquals((String) map.get(LEADER), sb.getLeader());
         assertEquals((String) map.get(BANDNAME), sb.getBandName());
         assertEquals(map.get(MEMBERS), sb.getMembers());
-        assertEquals((String) map.get(URLVIDEO), sb.getUrlVideo());
     }
 
     @Test
@@ -76,7 +71,6 @@ public class SimplifiedBandTest {
         assertEquals("", sb.getLeader());
         assertEquals("", sb.getBandName());
         assertEquals(null, sb.getMembers());
-        assertEquals("", sb.getUrlVideo());
         assertEquals(null, sb.getEvents());
     }
 
@@ -88,7 +82,6 @@ public class SimplifiedBandTest {
         assertEquals((String) map.get(LEADER), (String) mapClone.get(LEADER));
         assertEquals((String) map.get(BANDNAME), (String) mapClone.get(BANDNAME));
         assertEquals(map.get(MEMBERS), mapClone.get(MEMBERS));
-        assertEquals((String) map.get(URLVIDEO), (String) mapClone.get(URLVIDEO));
         assertEquals(map.get("events"), mapClone.get("events"));
     }
 
@@ -116,7 +109,6 @@ public class SimplifiedBandTest {
         map.put(LEADER, "email@gmail.com");
         map.put(BANDNAME, "BandName");
         map.put(MEMBERS, al);
-        map.put(URLVIDEO, "urlVideo");
         map.put("events", el);
         return map;
     }
@@ -126,7 +118,6 @@ public class SimplifiedBandTest {
         map.put(LEADER, null);
         map.put(BANDNAME, null);
         map.put(MEMBERS, null);
-        map.put(URLVIDEO, null);
         map.put("events", null);
         return map;
     }
