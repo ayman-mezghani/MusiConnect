@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sdp.musiconnect.MyDate;
+import ch.epfl.sdp.musiconnect.MyLocation;
 import ch.epfl.sdp.musiconnect.User;
 
 @Entity
@@ -27,7 +28,7 @@ public class Event {
     @Ignore
     private List<User> participants;
 
-    private Location location;
+    private MyLocation location;
     private String address;
     private MyDate dateTime;
     private boolean visible;
@@ -51,9 +52,7 @@ public class Event {
         participants = new ArrayList<>();
         participants.add(creator);
 
-        location = new Location("");
-        location.setLatitude(0);
-        location.setLongitude(0);
+        location = new MyLocation(0,0);
         dateTime = new MyDate();
         visible = false;
         title = DEFAULT_TITLE;
@@ -64,9 +63,7 @@ public class Event {
 
     //this constructor should only be used with room database caching
     public Event(){
-        location = new Location("");
-        location.setLatitude(0);
-        location.setLongitude(0);
+        location = new MyLocation(0,0);
         dateTime = new MyDate();
         visible = false;
         title = DEFAULT_TITLE;
@@ -133,6 +130,14 @@ public class Event {
         this.location.setLongitude(location.getLongitude());
     }
 
+    public void setLocation(MyLocation location) {
+        if (checkLocationValues(location.getLatitude(), location.getLongitude())) {
+            throw new IllegalArgumentException();
+        }
+        this.location.setLatitude(location.getLatitude());
+        this.location.setLongitude(location.getLongitude());
+    }
+
     public void setLocation(double latitude, double longitude) {
         if (checkLocationValues(latitude, longitude)) {
             throw new IllegalArgumentException();
@@ -141,11 +146,15 @@ public class Event {
         location.setLongitude(longitude);
     }
 
-    public Location getLocation() {
+    /*public Location getLocation() {
         Location l = new Location("");
         l.setLatitude(location.getLatitude());
         l.setLongitude(location.getLongitude());
         return l;
+    }*/
+
+    public MyLocation getLocation(){
+        return location;
     }
 
     public GeoPoint getGeoPoint() {

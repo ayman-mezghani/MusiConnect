@@ -25,7 +25,6 @@ import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.EventDao;
 import ch.epfl.sdp.musiconnect.roomdatabase.InstrumentConverter;
-import ch.epfl.sdp.musiconnect.roomdatabase.LocationConverter;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 import ch.epfl.sdp.musiconnect.roomdatabase.MyDateConverter;
 import ch.epfl.sdp.musiconnect.roomdatabase.MyLocationConverter;
@@ -211,28 +210,6 @@ public class RoomDatabaseTest {
         assertEquals(loc2, (MyLocationConverter.strToMyLocation(MyLocationConverter.myLocationToString(loc2))));
         assertEquals(loc3,MyLocationConverter.myLocationToString(MyLocationConverter.strToMyLocation(loc3)));
         assertEquals(loc4,MyLocationConverter.myLocationToString(MyLocationConverter.strToMyLocation(loc4)));
-
-    }
-
-    @Test
-    public void locationConverterTest(){
-        Location loc1 = new Location("");
-        loc1.setLatitude(80);
-        loc1.setLongitude(-80);
-        Location loc2 = new Location("");
-        loc2.setLatitude(-80);
-        loc2.setLongitude(80);
-        String loc3 = "-60.0;60.0";
-        String loc4 = "50.0;-70.0";
-
-        assertEquals(0, Double.compare(loc1.getLatitude(), (LocationConverter.stringToLocation(LocationConverter.locationToString(loc1))).getLatitude()));
-        assertEquals(0, Double.compare(loc1.getLongitude(), (LocationConverter.stringToLocation(LocationConverter.locationToString(loc1))).getLongitude()));
-
-        assertEquals(0, Double.compare(loc2.getLatitude(), (LocationConverter.stringToLocation(LocationConverter.locationToString(loc2))).getLatitude()));
-        assertEquals(0, Double.compare(loc2.getLongitude(), (LocationConverter.stringToLocation(LocationConverter.locationToString(loc2))).getLongitude()));
-
-        assertEquals(loc3,LocationConverter.locationToString(LocationConverter.stringToLocation(loc3)));
-        assertEquals(loc4,LocationConverter.locationToString(LocationConverter.stringToLocation(loc4)));
 
     }
 

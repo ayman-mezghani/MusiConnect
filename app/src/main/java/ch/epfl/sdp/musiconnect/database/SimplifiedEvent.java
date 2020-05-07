@@ -61,11 +61,11 @@ public class SimplifiedEvent {
         this.participants = participants;
     }
 
-    public String getAdress() {
+    public String getAddress() {
         return adress;
     }
 
-    public void setAdress(String adress) {
+    public void setAddress(String adress) {
         this.adress = adress;
     }
 

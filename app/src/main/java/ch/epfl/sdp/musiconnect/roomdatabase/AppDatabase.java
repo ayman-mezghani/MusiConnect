@@ -11,7 +11,7 @@ import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.events.Event;
 
 @Database(entities = {Musician.class, Event.class}, version = 2)
-@TypeConverters({InstrumentConverter.class,MyDateConverter.class,MyLocationConverter.class,LocationConverter.class})
+@TypeConverters({InstrumentConverter.class,MyDateConverter.class,MyLocationConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase sInstance;
     public abstract MusicianDao musicianDao();
