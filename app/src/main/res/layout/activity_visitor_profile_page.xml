@@ -183,6 +183,17 @@
                     android:layout_height="wrap_content"
                     android:text="@string/contact_musician"/>
             </LinearLayout>
+            <Button
+                android:id="@+id/add_user_to_band"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:visibility="invisible"
+                android:clickable="false"
+                android:focusable="false"
+
+                android:text="@string/add_user_to_band"/>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

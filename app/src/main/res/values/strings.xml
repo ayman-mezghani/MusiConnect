@@ -56,6 +56,7 @@
     <string name="band_name">Band name</string>
     <string name="band_name_cant_be_empty">Band name can\'t be empty</string>
     <string name="your_bands">Your bands</string>
+    <string name="add_user_to_band">Add user to band</string>
 
 
     <!-- Event related messages -->
@@ -140,6 +141,7 @@
     <string name="members">Members</string>
     <string name="events">Events</string>
 
+    <string name="musician_finder_title">Musician\'s Finder</string>
     <string name="myMusicianFinderLevels"></string>
     <string name="myBandFinderLevels"></string>
     <string name="myBandFinderInstruments"></string>
@@ -155,6 +157,7 @@
     <string name="musicianFinderLevels">Level</string>
     <string name="musicianFinderButton">Find musician</string>
     <string name="you_must_enter_bandname_for_search">You must enter a band name to perform a search</string>
+    <string name="you_must_fill_at_least_one_field">You must fill at least one field to permform a search</string>
 
     <string name="bandFinderTitle">Band finder</string>
     <string name="bandFinderBandName">Band name</string>

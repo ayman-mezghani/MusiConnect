@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
+import android.view.View;
+
+import java.util.ArrayList;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
@@ -41,6 +43,17 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
 
         contactButton = findViewById(R.id.btnContactMusician);
 
+        Button addUserToBand = findViewById(R.id.add_user_to_band);
+        if(CurrentUser.getInstance(this).getTypeOfUser() == TypeOfUser.Band) {
+            addUserToBand.setVisibility(View.VISIBLE);
+            addUserToBand.setFocusable(true);
+            addUserToBand.setClickable(true);
+        }
+
+        addUserToBand.setOnClickListener(v -> addUserToBand());
+
+        loadProfileContent();
+
         loadProfileContent();
         getVideoUri(userEmail);
 
@@ -67,6 +80,14 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void addUserToBand () {
+        Band b = CurrentUser.getInstance(this).getBand();
+        if(b!=null && !b.containsMember(userEmail)) {
+            b.addMember(userEmail);
+        }
+        (DbGenerator.getDbInstance()).add(DbUserType.Band, b);
     }
 
 
