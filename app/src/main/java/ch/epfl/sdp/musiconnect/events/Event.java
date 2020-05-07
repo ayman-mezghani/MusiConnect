@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.events;
 
 import android.location.Location;
 
@@ -8,10 +8,14 @@ import com.google.firebase.firestore.GeoPoint;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.epfl.sdp.musiconnect.MyDate;
+import ch.epfl.sdp.musiconnect.User;
+
 public class Event {
-    private int eid;
+    private String eid;
     private User creator;
 
+    private List<String> emails;
     private List<User> participants;
 
     private LatLng location;
@@ -23,7 +27,7 @@ public class Event {
     private final String DEFAULT_TITLE = "Event";
     private final String DEFAULT_MESSAGE = "Come watch and play!";
 
-    public Event(User creator, int eid) {
+    public Event(User creator, String eid) {
         if (creator == null) {
             throw new IllegalArgumentException();
         }
@@ -43,11 +47,11 @@ public class Event {
 
     }
 
-    protected void setEid(int eid) {
+    public void setEid(String eid) {
         this.eid = eid;
     }
 
-    public int getEid() {
+    public String getEid() {
         return eid;
     }
 
@@ -60,7 +64,9 @@ public class Event {
             throw new IllegalArgumentException();
         }
 
-        participants.add(user);
+        if (!participants.contains(user)) {
+            participants.add(user);
+        }
     }
 
     public void unregister(User user) {

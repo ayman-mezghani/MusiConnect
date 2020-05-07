@@ -1,18 +1,23 @@
 package ch.epfl.sdp.musiconnect.database;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import ch.epfl.sdp.musiconnect.User;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class MockDatabaseForUT extends Database {
 
+    private String expectedCollection;
     private String expectedDocName;
     private SimplifiedDbEntry expectedEntry;
     private Map<String, Object> expectedMap;
 
-    MockDatabaseForUT(String expectedDocName, SimplifiedDbEntry expectedEntry, Map<String, Object> expectedMap) {
+    MockDatabaseForUT(String collectionName, String expectedDocName, SimplifiedDbEntry expectedEntry, Map<String, Object> expectedMap) {
+        this.expectedCollection = collectionName;
         this.expectedDocName = expectedDocName;
         this.expectedEntry = expectedEntry;
         this.expectedMap = expectedMap;
@@ -25,6 +30,11 @@ public class MockDatabaseForUT extends Database {
     void addDoc(String collection, String docName, SimplifiedDbEntry entry) {
         assertEquals(expectedDocName, docName);
         assertTrue(expectedEntry.equals(expectedEntry));
+    }
+
+    @Override
+    public void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType) {
+
     }
 
     @Override
@@ -56,5 +66,14 @@ public class MockDatabaseForUT extends Database {
     void docExists(String collection, String docName, DbCallback dbCallback) {
         assertEquals(expectedDocName, docName);
         dbCallback.existsCallback(false);
+    }
+
+    @Override
+    public void finderQuery(String collection, Map<String, Object> arguments, DbCallback dbCallback) {
+        assertEquals(expectedCollection, collection);
+        assertEquals(expectedMap, arguments);
+        List<User> l = new ArrayList<>();
+        l.add(((SimplifiedMusician) expectedEntry).toMusician());
+        dbCallback.queryCallback(l);
     }
 }

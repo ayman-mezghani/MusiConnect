@@ -206,6 +206,8 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
             }
         }
 
+        currentCachedMusician.setTypeOfUser(CurrentUser.getInstance(this).getTypeOfUser());
+
         //launches the update to the database on another thread, so that it doesn't hang up the app if not connected to internet
         mExecutor.execute(() -> {
             mdao.updateUsers(new Musician[]{currentCachedMusician});

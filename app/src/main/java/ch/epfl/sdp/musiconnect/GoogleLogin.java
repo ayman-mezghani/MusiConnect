@@ -1,5 +1,6 @@
 package ch.epfl.sdp.musiconnect;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+
+import java.lang.reflect.Type;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
@@ -60,10 +63,18 @@ public class GoogleLogin extends AppCompatActivity {
 
         if (account != null) {
             DbAdapter db = DbGenerator.getDbInstance();
+            Context ctx = this;
 
             db.exists(DbUserType.Musician, account.getEmail(), new DbCallback() {
                 @Override
                 public void existsCallback(boolean exists) {
+                    db.read(DbUserType.Musician, account.getEmail(), new DbCallback() {
+                    @Override
+                    public void readCallback(User user) {
+                        CurrentUser.getInstance(ctx).setTypeOfUser(((Musician) user).getTypeOfUser());
+                    }
+                });
+
                     redirect(exists);
                     finish();
                 }
@@ -99,10 +110,18 @@ public class GoogleLogin extends AppCompatActivity {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
             DbAdapter db = DbGenerator.getDbInstance();
-
+            Context ctx = this;
             db.exists(DbUserType.Musician, account.getEmail(), new DbCallback() {
                 @Override
                 public void existsCallback(boolean exists) {
+                    db.read(DbUserType.Musician, account.getEmail(), new DbCallback() {
+                        @Override
+                        public void readCallback(User user) {
+                            CurrentUser.getInstance(ctx).setTypeOfUser(((Musician) user).getTypeOfUser());
+
+
+                        }
+                    });
                     redirect(exists);
                 }
             });
@@ -117,7 +136,7 @@ public class GoogleLogin extends AppCompatActivity {
         }
     }
 
-    private void redirect(boolean userExists) {
+    protected void redirect(boolean userExists) {
         if (userExists) {
             CurrentUser.getInstance(GoogleLogin.this).setCreatedFlag();
             startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class));

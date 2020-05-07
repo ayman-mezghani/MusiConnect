@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".musiconnect.EventPage">
+    tools:context=".musiconnect.events.EventPage">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
-                android:text="Event Title "
+                android:text="Event Title"
                 android:textAlignment="center"
                 android:textSize="30sp"
                 android:textStyle="bold" />
@@ -45,7 +45,7 @@
                     android:id="@+id/eventCreator"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:text="Event Creator: "
                     android:layout_marginStart="10dp"
                     android:textSize="18sp"
@@ -69,7 +69,7 @@
                     android:id="@+id/eventAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:text="Where: "
                     android:layout_marginStart="10dp"
                     android:textSize="18sp"
@@ -94,7 +94,7 @@
                     android:id="@+id/eventTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:text="When: "
                     android:layout_marginStart="10dp"
                     android:textSize="18sp"
@@ -119,7 +119,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:text="Participants: "
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -163,8 +163,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_weight="3">
+            android:gravity="center"
+            android:layout_weight="2">
 
+            <Button
+                android:id="@+id/btnEditEvent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/edit_event" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

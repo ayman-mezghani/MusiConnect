@@ -47,11 +47,12 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
             dbAdapter.read(DbUserType.Musician, userEmail, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
-                    if (user == null) {
-                        loadNullProfile();
-                    } else {
-                        loadUserProfile(user);
-                    }
+                    loadUserProfile(user);
+                }
+
+                @Override
+                public void readFailCallback() {
+                    loadNullProfile();
                 }
             });
         }

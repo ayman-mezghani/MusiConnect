@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".musiconnect.EventCreation"
+    tools:context=".musiconnect.events.EventCreation"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_weight="2"
-                    android:text="Event title: "
+                    android:text="@string/event_title"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -61,7 +61,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="New event title"
+                    android:hint="@string/new_event_title"
                     android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout
@@ -75,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_weight="2"
-                    android:text="Event address: "
+                    android:text="@string/event_address"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -84,7 +84,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="New event address"
+                    android:hint="@string/new_event_address"
                     android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout
@@ -98,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
-                    android:text="Event time: "
+                    android:text="@string/event_time"
                     android:textSize="18sp"
                     android:textStyle="bold" />
                 <EditText
@@ -108,7 +108,7 @@
                     android:layout_weight="1"
                     android:focusable="false"
                     android:longClickable="false"
-                    android:hint="New event date"
+                    android:hint="@string/new_event_date"
                     android:textSize="18sp" />
 
                 <EditText
@@ -118,7 +118,7 @@
                     android:layout_weight="1"
                     android:focusable="false"
                     android:longClickable="false"
-                    android:hint="New event time"
+                    android:hint="@string/new_event_time"
                     android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout
@@ -133,7 +133,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_weight="2"
-                    android:text="Participants: "
+                    android:text="@string/participants"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -157,7 +157,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="5dp"
-                    android:hint="New participant username"
+                    android:hint="@string/new_participant_email_address"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -167,7 +167,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/eventCreationAddParticipants"
+                    android:id="@+id/eventAddParticipants"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -175,7 +175,7 @@
                     android:text="@string/add_participant" />
 
                 <Button
-                    android:id="@+id/eventCreationRemoveParticipants"
+                    android:id="@+id/eventRemoveParticipants"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -192,11 +192,11 @@
 
                 <TextView
                     android:id="@+id/eventDescription"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
-                    android:text="Event description: "
+                    android:text="@string/event_description"
                     android:textSize="18sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -212,9 +212,44 @@
                     android:id="@+id/eventCreationNewEventDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="New event description"
+                    android:hint="@string/new_event_description"
                     android:textSize="18sp" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <RadioGroup
+                    android:id="@+id/eventCreationRdg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/visibility_question"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                    <RadioButton
+                        android:id="@+id/visible"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:text="@string/visibility_answer_yes" />
+
+                    <RadioButton
+                        android:id="@+id/notVisible"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:textSize="16sp"
+                        android:text="@string/visibility_answer_no" />
+                </RadioGroup>
             </LinearLayout>
 
         </LinearLayout>

@@ -1,5 +1,6 @@
 package ch.epfl.sdp.musiconnect.database;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.firebase.Timestamp;
@@ -7,6 +8,7 @@ import com.google.firebase.firestore.GeoPoint;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ch.epfl.sdp.musiconnect.Musician;
@@ -15,6 +17,17 @@ import ch.epfl.sdp.musiconnect.MyLocation;
 import ch.epfl.sdp.musiconnect.TypeOfUser;
 
 public class SimplifiedMusician extends SimplifiedDbEntry {
+//    @TODO use this enum instead of the static fields
+//    public enum Fields {
+//        username, firstName, lastName, email, typeOfUser, birthday, joinDate, LOCATlocationION;
+//
+//        @NonNull
+//        @Override
+//        public String toString() {
+//            return super.toString().toLowerCase();
+//        }
+//    }
+
     private String username;
     private String firstName;
     private String lastName;
@@ -23,6 +36,7 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
     private Date birthday;
     private Date joinDate;
     private GeoPoint location;
+    private List<String> events;
 
     static final String USERNAME = "username";
     static final String FIRSTNAME = "firstName";
@@ -32,6 +46,7 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
     static final String BIRTHDAY = "birthday";
     static final String JOINDATE = "joinDate";
     static final String LOCATION = "location";
+    static final String EVENTS = "events";
 
     private static final int YEAR_BIAS = 1900;
     private static final int MONTH_BIAS = 1;
@@ -49,6 +64,7 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
         this.birthday = myDateToDate(musician.getBirthday());
         this.joinDate = myDateToDate(musician.getJoinDate());
         this.location = myLocationToGeoPoint(musician.getLocation());
+        this.events = musician.getEvents();
     }
 
     public SimplifiedMusician(Map<String, Object> map) {
@@ -60,12 +76,14 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
         this.birthday = map.get(BIRTHDAY) == null ? null : ((Timestamp) map.get(BIRTHDAY)).toDate();
         this.joinDate = map.get(JOINDATE) == null ? null : ((Timestamp) map.get(JOINDATE)).toDate();
         this.location = map.get(LOCATION) == null ? null : (GeoPoint) map.get(LOCATION);
+        this.events = map.get(EVENTS) == null ? null : (List<String>) map.get(EVENTS);
     }
 
     public Musician toMusician() {
         Musician musician = new Musician(firstName, lastName, username, email, dateToMyDate(birthday));
         musician.setLocation(geoPointToMyLocation(location));
         musician.setTypeOfUser(TypeOfUser.valueOf(typeOfUser));
+        musician.setEvents(events);
         return musician;
     }
 
@@ -79,6 +97,7 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
         res.put(BIRTHDAY, birthday);
         res.put(JOINDATE, joinDate);
         res.put(LOCATION, location);
+        res.put(EVENTS, events);
         return res;
     }
 
@@ -124,6 +143,10 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
 
     public GeoPoint getLocation() {
         return location;
+    }
+
+    public List<String> getEvents() {
+        return events;
     }
 
     @Override
