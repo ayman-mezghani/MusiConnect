@@ -132,6 +132,14 @@
     <string name="findMusicianButton">Find Musician</string>
     <string name="findBandButton">Find Band</string>
 
+    <string name="band_finder_page">Band Finder Page</string>
+    <string name="search_result">Search result</string>
+    <string name="band_profile">Band profile</string>
+    <string name="leader">Leader</string>
+    <string name="bandName">Band name</string>
+    <string name="members">Members</string>
+    <string name="events">Events</string>
+
     <string name="myMusicianFinderLevels"></string>
     <string name="myBandFinderLevels"></string>
     <string name="myBandFinderInstruments"></string>
