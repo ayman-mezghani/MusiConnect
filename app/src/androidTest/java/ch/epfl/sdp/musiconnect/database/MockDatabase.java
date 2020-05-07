@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.User;
@@ -28,6 +29,8 @@ public class MockDatabase extends Database {
     private Map<String, SimplifiedMusician> content;
 
     Event event;
+
+    private Band b = new Band("totofire", "musiconnectsdp@gmail.com");
 
     public MockDatabase() {
         this.content = new HashMap<>();
@@ -93,6 +96,11 @@ public class MockDatabase extends Database {
             }
         }
 
+        if(collection.equals(DbUserType.Band.toString())) {
+            dbCallback.readCallback(b);
+            return;
+        }
+
         dbCallback.readCallback(defaultSm.toMusician());
     }
 
@@ -106,5 +114,9 @@ public class MockDatabase extends Database {
         List<User> l = new ArrayList<>();
         l.add(defaultSm.toMusician());
         dbCallback.queryCallback(l);
+    }
+
+    public Band getBand() {
+        return this.b;
     }
 }

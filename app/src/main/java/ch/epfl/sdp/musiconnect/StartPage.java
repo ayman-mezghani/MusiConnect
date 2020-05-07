@@ -43,7 +43,7 @@ public class StartPage extends Page {
     private TextView fabTv1, fabTv2;
     private boolean isOpen = false;
     private Band b;
-    public static boolean test = false;
+    public static boolean test = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

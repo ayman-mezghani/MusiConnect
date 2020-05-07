@@ -25,6 +25,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -35,15 +36,19 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class MusicianFinderTests {
     @Rule
     public IntentsTestRule<MusicianFinderPage> activityRule = new IntentsTestRule<>(MusicianFinderPage.class);
 
+    private static MockDatabase md;
+
     @BeforeClass
     public static void setMocks() {
-        DbGenerator.setDatabase(new MockDatabase());
+        md = new MockDatabase();
+        DbGenerator.setDatabase(md);
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
 
@@ -85,6 +90,29 @@ public class MusicianFinderTests {
                 .atPosition(0);
         appCompatTextView.perform(click());
         intended(hasComponent(VisitorProfilePage.class.getName()));
+    }
 
+    @Test
+    public void testSearchShouldAddUserToBand() {
+        onView(withId(R.id.myMusicianFinderFirstNameID)).perform(scrollTo(), typeText("Bob"));
+        onView(withId(R.id.myMusicianFinderLastNameID)).perform(scrollTo(), typeText("Minion"));
+        onView(withId(R.id.myMusicianFinderUserNameID)).perform(scrollTo(), typeText("bobminion"));
+        onView(withId(R.id.musicianFinderButtonID)).perform(scrollTo(), click());
+        intended(hasComponent(MusicianFinderResult.class.getName()));
+
+        String minionMail = ((Musician)(new MockDatabase()).getDummyMusician(0)).getEmailAddress();
+        onView(allOf(withText(minionMail), withParent(withId(R.id.LvMusicianResult))));
+
+        DataInteraction appCompatTextView = onData(anything())
+                .inAdapterView(allOf(withId(R.id.LvMusicianResult),
+                        childAtPosition(
+                                withClassName(is("android.widget.LinearLayout")),
+                                2)))
+                .atPosition(0);
+        appCompatTextView.perform(click());
+        intended(hasComponent(VisitorProfilePage.class.getName()));
+        onView(withId(R.id.add_user_to_band)).perform(scrollTo(), click());
+
+        assertTrue(md.getBand().containsMember(minionMail));
     }
 }
