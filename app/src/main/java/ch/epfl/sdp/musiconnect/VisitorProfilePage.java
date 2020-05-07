@@ -1,7 +1,9 @@
 package ch.epfl.sdp.musiconnect;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
@@ -13,6 +15,7 @@ import ch.epfl.sdp.musiconnect.database.DbUserType;
 public class VisitorProfilePage extends ProfilePage implements DbCallback {
     private DbAdapter dbAdapter;
 
+    private Button contactButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,9 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         usernameView = findViewById(R.id.visitorProfileUsername);
         emailView = findViewById(R.id.visitorProfileEmail);
         birthdayView = findViewById(R.id.visitorProfileBirthday);
+
+        contactButton = findViewById(R.id.btnContactMusician);
+        contactButton.setOnClickListener(view -> displayNotFinishedFunctionalityMessage());
 
         loadProfileContent();
 
@@ -72,5 +78,12 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         usernameView.setText(m.getUserName());
         emailView.setText(m.getEmailAddress());
         birthdayView.setText(m.getBirthday().toString());
+
+        addFirstNameToContactButtonText(m.getFirstName());
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void addFirstNameToContactButtonText(String firstName) {
+        contactButton.setText("Contact " + firstName);
     }
 }

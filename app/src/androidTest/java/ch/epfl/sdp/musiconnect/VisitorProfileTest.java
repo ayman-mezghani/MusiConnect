@@ -23,9 +23,18 @@ import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -45,27 +54,6 @@ public class VisitorProfileTest {
         DbGenerator.setDatabase(new MockDatabase());
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
-
-    /* @Test
-    public void testClickMarker() {
-        onView(withId(R.id.distanceThreshold)).perform(click());
-        onView(withText(R.string.max_threshold)).perform(click());
-
-        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        UiObject marker = device.findObject(new UiSelector().descriptionContains("Alyx"));
-        try {
-            marker.click();
-        } catch (UiObjectNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        int mWidth= startPageRule.getActivity().getResources().getDisplayMetrics().widthPixels;
-        int mHeight= startPageRule.getActivity().getResources().getDisplayMetrics().heightPixels;
-        device.click(mWidth/2, mHeight/2);
-
-//         startPageRule.getActivity().findViewById(android.R.id.content).performContextClick(200, 200);
-
-    }*/
 
     @Before
     public void initIntents() {
@@ -127,5 +115,41 @@ public class VisitorProfileTest {
         visitorActivityTestRule.launchActivity(intent);
 
         onView(withId(R.id.visitorProfileTitle)).check(matches(withText("Profile not found...")));
+    }
+
+    @Test
+    public void testChangeTextOfContactButton() {
+        Musician m = new Musician(
+                "Bob",
+                "Mallet",
+                "Bob",
+                "bob@gmail.com",
+                new MyDate(2000, 1, 1)
+        );
+
+        Intent intent = new Intent();
+        intent.putExtra("UserEmail", m.getEmailAddress());
+        visitorActivityTestRule.launchActivity(intent);
+
+        onView(allOf(withText("Contact" + m.getFirstName()), withParent(withId(R.id.btnContactMusician))));
+
+        visitorActivityTestRule.finishActivity();
+    }
+
+    @Test
+    public void testContactButtonClickShouldDisplayMessage() {
+        Musician m = new Musician(
+                "Julien",
+                "Dore",
+                "ilestpasbeau",
+                "jdore@gmail.com",
+                new MyDate(1950, 12, 31)
+        );
+
+        Intent intent = new Intent();
+        intent.putExtra("UserEmail", m.getEmailAddress());
+        visitorActivityTestRule.launchActivity(intent);
+        onView(withId(R.id.btnContactMusician)).perform(scrollTo(), click());
+        onView(withText(R.string.not_yet_done)).inRoot(withDecorView(not(visitorActivityTestRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 }
