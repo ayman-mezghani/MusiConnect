@@ -44,10 +44,9 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         loadProfileContent();
         getVideoUri(userEmail);
 
-        contactButton.setOnClickListener(view -> {
-            Toast.makeText(this, getResources().getString(R.string.mail_info_message), Toast.LENGTH_SHORT).show();
-            sendEmail(emailAddress, getResources().getString(R.string.musiconnect_contact_mail));
-        });
+        contactButton.setOnClickListener(view ->
+            sendEmail(emailAddress, getResources().getString(R.string.musiconnect_contact_mail))
+        );
     }
 
     // Some of this method code is inspired from stackoverflow.com
