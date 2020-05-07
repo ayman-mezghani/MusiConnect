@@ -163,12 +163,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"/>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnContactMusician"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/contact_musician"/>
+            </LinearLayout>
             <Button
                 android:id="@+id/add_user_to_band"
                 android:layout_gravity="center"
