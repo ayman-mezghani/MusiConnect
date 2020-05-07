@@ -50,6 +50,9 @@ import java.util.regex.Pattern;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.CustomInfoWindowGoogleMap;
+import ch.epfl.sdp.musiconnect.Instrument;
+import ch.epfl.sdp.musiconnect.Level;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.MyLocation;
@@ -565,7 +568,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Musician person2 = new Musician("Alice", "Bardon", "Alyx", "aymanmezghani97@gmail.com", new MyDate(1992, 9, 20));
         Musician person3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
 
-        person3.addInstrument(Instrument.BANJO,Level.PROFESSIONAL);
+        person3.addInstrument(Instrument.BANJO, Level.PROFESSIONAL);
         person3.addInstrument(Instrument.CLARINET,Level.BEGINNER);
 
         person1.setLocation(new MyLocation(46.52 + r1, 6.52 + r1));
