@@ -55,6 +55,7 @@ import ch.epfl.sdp.musiconnect.database.DbUserType;
 import ch.epfl.sdp.musiconnect.events.Event;
 import ch.epfl.sdp.musiconnect.events.EventPage;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
+import ch.epfl.sdp.musiconnect.roomdatabase.EventDao;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
 import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
@@ -216,8 +217,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (checkConnection(MapsActivity.this)) {
             createPlaceHolderUsers();
             clearCachedUsers();
+            clearCachedEvents();
         } else {
             loadUsersFromCache();
+            loadEventsFromCache();
         }
 
 
@@ -273,6 +276,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     updateUsers();
                     clearCachedUsers();
                     saveUsersToCache();
+                    clearCachedEvents();
+                    saveEventsToCache();
                 }
                 handler.postDelayed(this, delay);
             }
@@ -561,6 +566,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
+    private void saveEventsToCache(){
+        EventDao eventDao = localDb.eventDao();
+        mExecutor.execute(() -> {
+            eventDao.insertAll(eventNear.toArray(new Event[eventNear.size()]));
+        });
+    }
+
+    private void loadEventsFromCache(){
+        EventDao eventDao = localDb.eventDao();
+
+        mExecutor.execute(() -> {
+            events = eventDao.getAll();
+        });
+    }
+
+    private void clearCachedEvents(){
+        EventDao eventDao = localDb.eventDao();
+        mExecutor.execute(() -> {
+            eventDao.nukeTable();
+        });
+    }
 
     //Should be replaced by a function that fetch user from the database; right now it generates 3 fixed users
     private void createPlaceHolderUsers() {

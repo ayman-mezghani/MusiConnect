@@ -2,6 +2,11 @@ package ch.epfl.sdp.musiconnect.events;
 
 import android.location.Location;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -11,20 +16,28 @@ import java.util.List;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.User;
 
+@Entity
 public class Event {
+    @PrimaryKey
+    @NonNull
     private String eid;
+    @Ignore
     private User creator;
 
+    @Ignore
     private List<String> emails;
+    @Ignore
     private List<User> participants;
 
-    private LatLng location;
+    private Location location;
     private String address;
     private MyDate dateTime;
     private boolean visible;
     private String title;
     private String description;
+    @Ignore
     private final String DEFAULT_TITLE = "Event";
+    @Ignore
     private final String DEFAULT_MESSAGE = "Come watch and play!";
 
     public Event(User creator, String eid) {
@@ -38,13 +51,27 @@ public class Event {
         participants = new ArrayList<>();
         participants.add(creator);
 
-        location = new LatLng(0, 0);
+        location = new Location("");
+        location.setLatitude(0);
+        location.setLongitude(0);
         dateTime = new MyDate();
         visible = false;
         title = DEFAULT_TITLE;
         description = DEFAULT_MESSAGE;
         address = "";
 
+    }
+
+    //this constructor should only be used with room database caching
+    public Event(){
+        location = new Location("");
+        location.setLatitude(0);
+        location.setLongitude(0);
+        dateTime = new MyDate();
+        visible = false;
+        title = DEFAULT_TITLE;
+        description = DEFAULT_MESSAGE;
+        address = "";
     }
 
     public void setEid(String eid) {
@@ -103,26 +130,27 @@ public class Event {
         if (checkLocationValues(location.getLatitude(), location.getLongitude())) {
             throw new IllegalArgumentException();
         }
-
-        this.location = new LatLng(location.getLatitude(), location.getLongitude());
+        this.location.setLatitude(location.getLatitude());
+        this.location.setLongitude(location.getLongitude());
     }
 
     public void setLocation(double latitude, double longitude) {
         if (checkLocationValues(latitude, longitude)) {
             throw new IllegalArgumentException();
         }
-        location = new LatLng(latitude, longitude);
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
     }
 
     public Location getLocation() {
         Location l = new Location("");
-        l.setLatitude(location.latitude);
-        l.setLongitude(location.longitude);
+        l.setLatitude(location.getLatitude());
+        l.setLongitude(location.getLongitude());
         return l;
     }
 
     public GeoPoint getGeoPoint() {
-        return new GeoPoint(location.latitude, location.longitude);
+        return new GeoPoint(location.getLatitude(), location.getLongitude());
     }
 
     public void setDateTime(MyDate dateTime) {
