@@ -1,5 +1,6 @@
 package ch.epfl.sdp.musiconnect.cloud;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
@@ -11,7 +12,10 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
+import java.util.TimeZone;
 
 import ch.epfl.sdp.R;
 
@@ -37,9 +41,16 @@ public class FirebaseCloudStorage implements CloudStorage {
 
             StorageReference fileRef = storageReference.child(cloudPath);
 
+            Date date = new Date();
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy_HHmmss");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String today = dateFormat.format(date);
+
+            Log.d(TAG, today);
+
             StorageMetadata metadata = new StorageMetadata.Builder()
                     .setContentType("video/mp4")
-                    .setCustomMetadata("Upload Date", )
+                    .setCustomMetadata("Upload Date", today)
                     .build();
 
             fileRef.putFile(fileUri, metadata)
@@ -62,8 +73,7 @@ public class FirebaseCloudStorage implements CloudStorage {
         StorageReference fileRef = storageReference.child(cloudPath);
 
         Log.d(TAG, saveName);
-
-
+        
         File localFile = File.createTempFile(saveName + "_", "", null);
 
         fileRef.getFile(localFile)
