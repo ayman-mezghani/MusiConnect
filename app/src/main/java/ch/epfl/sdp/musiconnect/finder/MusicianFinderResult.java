@@ -30,11 +30,7 @@ public class MusicianFinderResult extends AppCompatActivity {
 
         ListView lvMusicianResult = findViewById(R.id.LvMusicianResult);
 
-        lvMusicianResult.setOnItemClickListener((parent, view, position, id) -> {
-            Intent i = new Intent(MusicianFinderResult.this, VisitorProfilePage.class);
-            i.putExtra("UserEmail", (String) lvMusicianResult.getItemAtPosition(position));
-            startActivity(i);
-        });
+        listViewAddOnItemClickListner(lvMusicianResult);
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<>
                 (MusicianFinderResult.this, android.R.layout.simple_list_item_1, listMusician);
@@ -44,11 +40,8 @@ public class MusicianFinderResult extends AppCompatActivity {
         Map<String, Object> searchMap = (HashMap<String, Object>)intent.getSerializableExtra("searchMap");
 
         for(Map.Entry<String, Object> entry : searchMap.entrySet()) {
-            String key = entry.getKey();
-            String value = (String) entry.getValue();
-
             HashMap<String, Object> innerMap = new HashMap<>();
-            innerMap.put(key, value);
+            innerMap.put(entry.getKey(), (String) entry.getValue());
 
             DbGenerator.getDbInstance().query(DbUserType.Musician, innerMap, new DbCallback() {
                 @Override
@@ -62,16 +55,14 @@ public class MusicianFinderResult extends AppCompatActivity {
             });
         }
 
-        /*
-        DbGenerator.getDbInstance().query(DbUserType.Musician, searchMap, new DbCallback() {
-            @Override
-            public void queryCallback(List<User> userList) {
-                for (User u: userList) {
-                    listMusician.add(u.getEmailAddress());
-                }
-                adapter.notifyDataSetChanged();
-            }
+
+    }
+
+    private void listViewAddOnItemClickListner(ListView l) {
+        l.setOnItemClickListener((parent, view, position, id) -> {
+            Intent i = new Intent(MusicianFinderResult.this, VisitorProfilePage.class);
+            i.putExtra("UserEmail", (String) l.getItemAtPosition(position));
+            startActivity(i);
         });
-        */
     }
 }
