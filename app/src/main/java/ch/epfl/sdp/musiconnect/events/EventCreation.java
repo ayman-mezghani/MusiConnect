@@ -4,6 +4,8 @@ package ch.epfl.sdp.musiconnect.events;
 import android.os.Bundle;
 import android.widget.Button;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
@@ -30,6 +32,10 @@ public class EventCreation extends EventModification {
         setupButtons();
         setupDoNotSaveButton(R.id.eventCreationBtnDoNotSaveEvent);
         setupSaveButton();
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
+        bottomNavigationView.setSelectedItemId(R.id.my_events);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> super.onOptionsItemSelected(item));
     }
 
     @Override
