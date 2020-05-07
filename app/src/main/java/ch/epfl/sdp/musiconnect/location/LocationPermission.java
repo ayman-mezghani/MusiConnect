@@ -1,26 +1,23 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.location;
 
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import ch.epfl.sdp.R;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 
-public class LocationPermission {
+public abstract class LocationPermission {
 
 
-    static void startLocationService(Activity activity) {
+    public static void startLocationService(Activity activity) {
         if (!isLocationServiceRunning(activity)) {
             Intent serviceIntent = new Intent(activity, LocationService.class);
             activity.startService(serviceIntent);
@@ -29,7 +26,7 @@ public class LocationPermission {
 
     static boolean isLocationServiceRunning(Activity activity) {
         ActivityManager manager = (ActivityManager) activity.getSystemService(ACTIVITY_SERVICE);
-        String className = "ch.epfl.sdp.musiconnect.LocationService";
+        String className = "ch.epfl.sdp.musiconnect.location.LocationService";
 
         if (manager == null) {
             return false;
@@ -45,7 +42,7 @@ public class LocationPermission {
 
 
 
-    static void sendLocationPermission(Activity activity) {
+    public static void sendLocationPermission(Activity activity) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                 Manifest.permission.ACCESS_FINE_LOCATION)) {
 
@@ -75,7 +72,7 @@ public class LocationPermission {
     }
 
 
-    static boolean onRequestPermissionsResult(Activity activity, int requestCode, String[] permissions, int[] grantResults) {
+    public static boolean onRequestPermissionsResult(Activity activity, int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode != LocationService.MY_PERMISSIONS_REQUEST_LOCATION) {
             return false;
         }

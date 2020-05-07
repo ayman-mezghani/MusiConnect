@@ -32,6 +32,7 @@ import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
 import ch.epfl.sdp.musiconnect.events.Event;
+import ch.epfl.sdp.musiconnect.location.LocationPermission;
 
 public class StartPage extends Page {
     private static final String TAG = "MainActivity";

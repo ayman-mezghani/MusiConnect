@@ -4,10 +4,8 @@ import android.content.Intent;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
-import androidx.test.uiautomator.UiDevice;
 
 import org.junit.After;
 import org.junit.Before;
@@ -47,7 +45,6 @@ public class VisitorProfileTest {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule =
             GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
-    private UiDevice device;
 
     @BeforeClass
     public static void setMocks() {
@@ -58,8 +55,6 @@ public class VisitorProfileTest {
     @Before
     public void initIntents() {
         Intents.init();
-        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        MapsLocationTest.clickAlert(device);
     }
 
     @After
@@ -69,11 +64,9 @@ public class VisitorProfileTest {
     public void testNoMarkerTransitionToProfile() {
         Musician m1 = new Musician("Alice", "Bardon", "Alyx", "aymanmezghani97@gmail.com", new MyDate(1992, 9, 20));
         Musician m2 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
-        Musician m3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
 
         testMusician(m1);
         testMusician(m2);
-        testMusician(m3);
     }
 
     private void testMusician(Musician m) {
