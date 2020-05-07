@@ -6,20 +6,14 @@ import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 import java.util.TimeZone;
 
@@ -42,9 +36,7 @@ public class FirebaseCloudStorage implements CloudStorage {
     FirebaseCloudStorage(Context context, StorageReference storageReference) {
         this.storageReference = storageReference;
         this.context = context;
-        this.cacheDirPath = context
-                .getCacheDir()
-                .getPath();
+        this.cacheDirPath = context.getCacheDir().getPath();
     }
 
     public void upload(FileType fileType, String username, Uri fileUri) throws IOException {
@@ -65,12 +57,11 @@ public class FirebaseCloudStorage implements CloudStorage {
 
             fileRef.putFile(fileUri, metadata)
                     .addOnSuccessListener(taskSnapshot -> {
-                        Log.d(TAG, "Uploading file");
                         Toast.makeText(context, R.string.cloud_upload_successful, Toast.LENGTH_LONG).show();
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(context, R.string.cloud_upload_failed, Toast.LENGTH_LONG).show();
-                        Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+                        Log.e(TAG, Objects.requireNonNull(e.getMessage()));
                     });
         } else {
             throw new IOException();
@@ -94,43 +85,15 @@ public class FirebaseCloudStorage implements CloudStorage {
                     if (!directory.exists())
                         directory.mkdir();
 
-                    Log.d(TAG, directory.exists() + "");
-
-                    String[] paths = directory.list();
-
-                    for (String p : paths)
-                        Log.d(TAG, p);
-
-                    File localFile = new File(directory, localFileName);
-
-                    if (!localFile.exists()) {
-                        File[] matchingFiles = directory.listFiles((dir, name) -> name.startsWith(localFileNamePattern));
-
-                        if (matchingFiles != null) {
-                            for (File f : matchingFiles)
-                                f.delete();
-                        }
-
-                        try {
-                            localFile.createNewFile();
-                            fileRef.getFile(localFile)
-                                    .addOnSuccessListener(taskSnapshot -> {
-                                        // Local file has been created
-                                        Log.d(TAG, "File created. Created " + localFile.toString());
-                                        cloudCallback.onSuccess(Uri.fromFile(localFile));
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        // Handle any errors
-                                        failureRoutine(e, cloudCallback);
-                                    });
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        cloudCallback.onSuccess(Uri.fromFile(localFile));
-                    }
+//                    Log.d(TAG, directory.exists() + "");
+//
+//                    String[] paths = directory.list();
+//
+//                    for (String p : paths)
+//                        Log.d(TAG, p);
+                    downloader(directory, fileRef, localFileNamePattern, localFileName, cloudCallback);
                 }).addOnFailureListener(e -> {
-            failureRoutine(e, cloudCallback);
+            DownloadFailureRoutine(e, cloudCallback);
         });
     }
 
@@ -142,9 +105,38 @@ public class FirebaseCloudStorage implements CloudStorage {
                 .addOnFailureListener(exception -> Toast.makeText(context, R.string.cloud_delete_failed, Toast.LENGTH_LONG).show());
     }
 
-    private void failureRoutine(Exception e, CloudCallback cloudCallback) {
+    private void downloader(File cacheDirectory, StorageReference fileRef, String localFileNamePattern, String localFileName, CloudCallback cloudCallback) {
+        File localFile = new File(cacheDirectory, localFileName);
+
+        if (!localFile.exists()) {
+            File[] matchingFiles = cacheDirectory.listFiles((dir, name) -> name.startsWith(localFileNamePattern));
+
+            if (matchingFiles != null) {
+                for (File f : matchingFiles)
+                    f.delete();
+            }
+
+            try {
+                localFile.createNewFile();
+                fileRef.getFile(localFile)
+                        .addOnSuccessListener(taskSnapshot -> {
+                            Log.d(TAG, "File created. Created " + localFile.toString());
+                            cloudCallback.onSuccess(Uri.fromFile(localFile));
+                        })
+                        .addOnFailureListener(e -> {
+                            DownloadFailureRoutine(e, cloudCallback);
+                        });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            cloudCallback.onSuccess(Uri.fromFile(localFile));
+        }
+    }
+
+    private void DownloadFailureRoutine(Exception e, CloudCallback cloudCallback) {
         Toast.makeText(context, R.string.cloud_download_failed, Toast.LENGTH_LONG).show();
-        Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+        Log.e(TAG, Objects.requireNonNull(e.getMessage()));
         cloudCallback.onFailure();
     }
 }
