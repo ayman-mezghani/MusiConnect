@@ -65,6 +65,7 @@ import ch.epfl.sdp.musiconnect.database.DbUserType;
 import ch.epfl.sdp.musiconnect.events.Event;
 import ch.epfl.sdp.musiconnect.events.EventPage;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
+import ch.epfl.sdp.musiconnect.roomdatabase.EventDao;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
 import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
@@ -227,9 +228,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //If there's a connection, fetch Users in the general area; else, load them from cache
         if (checkConnection(MapsActivity.this)) {
             createPlaceHolderUsers();
-            clearCachedUsers();
+            clearCache();
         } else {
-            loadUsersFromCache();
+            loadCache();
         }
 
 
@@ -283,8 +284,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     delay = 20000;
                     updateEvents();
                     updateUsers();
-                    clearCachedUsers();
-                    saveUsersToCache();
+                    clearCache();
+                    saveToCache();
                 }
                 handler.postDelayed(this, delay);
             }
@@ -523,34 +524,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    private void saveUsersToCache() {
+    private void saveToCache() {
 
         MusicianDao musicianDao = localDb.musicianDao();
+        EventDao eventDao = localDb.eventDao();
 
         mExecutor.execute(() -> {
             musicianDao.insertAll(allUsers.toArray(new Musician[allUsers.size()]));
+            eventDao.insertAll(eventNear.toArray(new Event[eventNear.size()]));
         });
 
 
     }
 
-    private void loadUsersFromCache() {
+    private void loadCache() {
 
         MusicianDao musicianDao = localDb.musicianDao();
+        EventDao eventDao = localDb.eventDao();
 
         mExecutor.execute(() -> {
             allUsers = musicianDao.getAll();
             List<Musician> currentUser = musicianDao.loadAllByIds(new String[]{CurrentUser.getInstance(MapsActivity.this).email});
             allUsers.removeAll(currentUser);
+            events = eventDao.getAll();
         });
 
 
     }
 
-    private void clearCachedUsers() {
+    private void clearCache() {
         MusicianDao musicianDao = localDb.musicianDao();
+        EventDao eventDao = localDb.eventDao();
+
         mExecutor.execute(() -> {
             musicianDao.nukeTable();
+            eventDao.nukeTable();
         });
     }
 
