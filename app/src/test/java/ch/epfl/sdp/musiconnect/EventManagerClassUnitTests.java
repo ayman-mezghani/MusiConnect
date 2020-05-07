@@ -324,7 +324,7 @@ public class EventManagerClassUnitTests {
         Musician john = new Musician(johnFirstName, johnLastName, johnUserName, johnEmailAddress, johnBirthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
         Set<Band> bands = new HashSet<Band>();
 
@@ -365,7 +365,7 @@ public class EventManagerClassUnitTests {
         Musician john = new Musician(johnFirstName, johnLastName, johnUserName, johnEmailAddress, johnBirthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
         brian.addBand(beatles);
 
@@ -389,7 +389,7 @@ public class EventManagerClassUnitTests {
         Musician john = new Musician(johnFirstName, johnLastName, johnUserName, johnEmailAddress, johnBirthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
         brian.addBand(beatles);
 
@@ -421,7 +421,7 @@ public class EventManagerClassUnitTests {
         Musician john = new Musician(johnFirstName, johnLastName, johnUserName, johnEmailAddress, johnBirthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
         assertThrows(IllegalArgumentException.class, () -> brian.removeBand(beatles));
     }
@@ -443,7 +443,7 @@ public class EventManagerClassUnitTests {
         Musician john = new Musician(johnFirstName, johnLastName, johnUserName, johnEmailAddress, johnBirthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
         brian.addBand(beatles);
 
@@ -470,7 +470,7 @@ public class EventManagerClassUnitTests {
         Musician john = new Musician(johnFirstName, johnLastName, johnUserName, johnEmailAddress, johnBirthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
         assertEquals(false, brian.containsAnyBand());
         brian.addBand(beatles);
@@ -496,7 +496,7 @@ public class EventManagerClassUnitTests {
         Musician john = new Musician(johnFirstName, johnLastName, johnUserName, johnEmailAddress, johnBirthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
         assertEquals(0, brian.numberOfBands());
         brian.addBand(beatles);
@@ -522,7 +522,7 @@ public class EventManagerClassUnitTests {
         Musician john = new Musician(johnFirstName, johnLastName, johnUserName, johnEmailAddress, johnBirthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
         assertEquals(false, brian.containsBand(beatles));
         brian.addBand(beatles);
@@ -548,7 +548,7 @@ public class EventManagerClassUnitTests {
         Musician john = new Musician(johnFirstName, johnLastName, johnUserName, johnEmailAddress, johnBirthday);
 
         String bandName = "The Beatles";
-        Band beatles = new Band(bandName, john);
+        Band beatles = new Band(bandName, john.getEmailAddress());
 
         String firstExpectedString = "Event (Organizer: " + brianFirstName + " " + brianLastName + ")\n";
 

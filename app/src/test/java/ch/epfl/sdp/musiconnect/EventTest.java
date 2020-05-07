@@ -71,8 +71,8 @@ public class EventTest {
     @Test
     public void eventCreationBandTest() {
         Musician m = new Musician("firstName", "lastName", "username", "email@gmail.com", new MyDate(2000, 1, 1));
-        Band b = new Band("test", m);
-        Band b1 = new Band("Another test", m);
+        Band b = new Band("test", m.getEmailAddress());
+        Band b1 = new Band("Another test", m.getEmailAddress());
         Event e = new Event(b, "0");
 
         assertEquals(b.getName(), e.getCreator().getName());

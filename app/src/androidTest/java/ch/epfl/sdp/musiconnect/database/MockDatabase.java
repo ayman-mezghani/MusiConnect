@@ -110,7 +110,7 @@ public class MockDatabase extends Database {
             l.add(defaultSm.toMusician());
             dbCallback.queryCallback(l);
         } else if(collection.equals(DbUserType.Band)) {
-            Band b = new Band("totofire" ,defaultSm.toMusician());
+            Band b = new Band("totofire" ,defaultSm.getEmail());
             l.add(b);
             dbCallback.queryCallback(l);
         }
