@@ -185,7 +185,6 @@
     <string name="add_user_to_band">Add user to Band</string>
     <string name="you_must_fill_at_least_one_field">You must fill at least one field to permform a search</string>
     <string name="band_finder_page">Band Finder Page</string>
-    <string name="search_result">Search result</string>
     <string name="you_must_enter_bandname_for_search">You must enter a band name to perform a search</string>
     <string name="band_profile">Band profile</string>
     <string name="leader">Leader</string>
