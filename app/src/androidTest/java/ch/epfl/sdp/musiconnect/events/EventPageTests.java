@@ -65,7 +65,7 @@ public class EventPageTests {
 
     @Test
     public void loadPageShouldShowCorrectEvent() {
-        Musician m1 = md.getDummyMusician(0);
+        Musician m1 = md.getDummyMusician(1);
         Musician m2 = md.getDummyMusician(3);
 
         Event event = md.getDummyEvent(0);
@@ -134,7 +134,7 @@ public class EventPageTests {
 
     @Test
     public void testDeleteYesButtonClick() {
-        Musician m = md.getDummyMusician(0);
+        Musician m = md.getDummyMusician(1);
         Event e = md.getDummyEvent(0);
         assertEquals(e.getEid(), m.getEvents().get(0));
 

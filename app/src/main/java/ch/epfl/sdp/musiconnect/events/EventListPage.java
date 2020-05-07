@@ -100,9 +100,7 @@ public class EventListPage extends Page {
                 readFromDbAndLoadEvents(dbUserType);
             } else {
                 readFromDbAndLoadEvents(DbUserType.Musician);
-
-                // TODO
-                // readFromDbAndLoadEvents(DbUserType.Band);
+                readFromDbAndLoadEvents(DbUserType.Band);
             }
 
         }, 500);

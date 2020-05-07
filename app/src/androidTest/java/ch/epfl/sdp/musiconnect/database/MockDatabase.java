@@ -34,14 +34,23 @@ public class MockDatabase extends Database {
         listOfMusicians = new ArrayList<>();
         listOfEvent = new ArrayList<>();
 
+        Musician m = new Musician(firstName, lastName, username, email, birthday);
+        m.addEvent("1");
+        defaultSm = new SimplifiedMusician(m);
         listOfMusicians.add(defaultSm);
 
-        listOfMusicians.add(new SimplifiedMusician(new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25))));
-        listOfMusicians.add(new SimplifiedMusician(new Musician("Alice", "Bardon", "Alyx", "aymanmezghani97@gmail.com", new MyDate(1992, 9, 20))));
+        Musician m1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
+        m1.addEvent("1");
+
+        Musician m2 = new Musician("Alice", "Bardon", "Alyx", "aymanmezghani97@gmail.com", new MyDate(1992, 9, 20));
+        m2.addEvent("2");
+
+        listOfMusicians.add(new SimplifiedMusician(m1));
+        listOfMusicians.add(new SimplifiedMusician(m2));
         listOfMusicians.add(new SimplifiedMusician(new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1))));
 
-        listOfEvent.add(createEvent(getDummyMusician(0), "1"));
-        listOfEvent.add(createEvent(getDummyMusician(1), "2"));
+        listOfEvent.add(createEvent(getDummyMusician(1), "1"));
+        listOfEvent.add(createEvent(getDummyMusician(2), "2"));
     }
 
     public Musician getDummyMusician(int index) {
@@ -116,12 +125,14 @@ public class MockDatabase extends Database {
                     return;
                 }
             }
-            dbCallback.readCallback(defaultSm.toMusician());
         }
 
         if(collection.equals(DbUserType.Band.toString())) {
             dbCallback.readCallback(b);
+            return;
         }
+
+        dbCallback.readCallback(defaultSm.toMusician());
     }
 
     @Override

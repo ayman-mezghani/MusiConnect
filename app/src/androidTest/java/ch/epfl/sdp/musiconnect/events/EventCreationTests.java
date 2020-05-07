@@ -24,7 +24,9 @@ import org.junit.runner.RunWith;
 import java.util.Calendar;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.HelpPage;
+import ch.epfl.sdp.musiconnect.TypeOfUser;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
@@ -98,7 +100,7 @@ public class EventCreationTests {
     }
 
     private void checkIfFinishing() {
-        closeSoftKeyboard();
+        //closeSoftKeyboard();
         clickButtonWithText(R.string.save);
         //assertTrue(eventCreationRule.getActivity().isFinishing());
     }
@@ -162,6 +164,8 @@ public class EventCreationTests {
 
     @Test
     public void testCorrectInputsAndDoNotFinishIfEmptyField() {
+        CurrentUser.getInstance(eventCreationRule.getActivity()).setTypeOfUser(TypeOfUser.Musician);
+
         checkIfNotFinishing();
         onView(withId(R.id.eventCreationNewEventTitle)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestTitle"));
         checkIfNotFinishing();
@@ -233,6 +237,8 @@ public class EventCreationTests {
     }
 
     private void writeTestValuesWithCustomAddress(String address) {
+        CurrentUser.getInstance(eventCreationRule.getActivity()).setTypeOfUser(TypeOfUser.Musician);
+
         onView(withId(R.id.eventCreationNewEventTitle)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestTitle"));
         onView(withId(R.id.eventCreationNewEventAddress)).perform(ViewActions.scrollTo()).perform(clearText(), typeText(address));
         closeSoftKeyboard();

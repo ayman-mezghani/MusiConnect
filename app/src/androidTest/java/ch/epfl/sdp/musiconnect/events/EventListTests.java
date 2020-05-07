@@ -16,8 +16,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
+import ch.epfl.sdp.musiconnect.TypeOfUser;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
@@ -79,6 +81,8 @@ public class EventListTests {
 
     @Test
     public void testEventListTitle() {
+        CurrentUser.getInstance(eventListRule.getActivity()).setTypeOfUser(TypeOfUser.Musician);
+
         Intent intent = new Intent();
         eventListRule.launchActivity(intent);
 
@@ -99,6 +103,8 @@ public class EventListTests {
 
     @Test
     public void testClickEventShouldLoadPage() {
+        CurrentUser.getInstance(eventListRule.getActivity()).setTypeOfUser(TypeOfUser.Musician);
+
         Event e = md.getDummyEvent(0);
 
         Intent intent = new Intent();

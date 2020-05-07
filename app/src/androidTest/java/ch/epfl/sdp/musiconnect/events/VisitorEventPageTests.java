@@ -56,7 +56,7 @@ public class VisitorEventPageTests {
     public void testLoadOtherEvent() {
         Musician m1 = md.getDummyMusician(1);
         Musician m2 = md.getDummyMusician(3);
-        Event event = md.getDummyEvent(1);
+        Event event = md.getDummyEvent(0);
 
         Intent intent = new Intent();
         intent.putExtra("eid", event.getEid());

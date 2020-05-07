@@ -4,10 +4,8 @@ import android.content.Intent;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
-import androidx.test.uiautomator.UiDevice;
 
 import org.junit.After;
 import org.junit.Before;
@@ -21,7 +19,6 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
-import ch.epfl.sdp.musiconnect.events.Event;
 import ch.epfl.sdp.musiconnect.events.EventListPage;
 
 import static androidx.test.espresso.Espresso.onView;
