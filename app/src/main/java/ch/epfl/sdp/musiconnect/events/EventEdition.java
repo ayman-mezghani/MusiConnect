@@ -13,7 +13,6 @@ import ch.epfl.sdp.musiconnect.database.DbUserType;
 
 public class EventEdition extends EventModification {
     private String eventTitle, eventAddress, eventDescription;
-    private boolean visible;
 
 
     @Override
@@ -51,7 +50,7 @@ public class EventEdition extends EventModification {
         setFieldTexts();
 
 
-        visible = getIntent().getBooleanExtra("visible", false);
+        boolean visible = getIntent().getBooleanExtra("visible", false);
         if (visible) {
             rdg.check(R.id.visible);
         } else {
@@ -82,22 +81,24 @@ public class EventEdition extends EventModification {
     }
 
     private void setDateTimePickerDefaultValue() {
-        String datetime = getIntent().getStringExtra("datetime");
-        String[] dateAndTime = datetime.split("\\s+");
-        String date = dateAndTime[0];
-        String time = dateAndTime[1];
+        if (getIntent().hasExtra("datetime")) {
+            String datetime = getIntent().getStringExtra("datetime");
+            String[] dateAndTime = datetime.split("\\s+");
+            String date = dateAndTime[0];
+            String time = dateAndTime[1];
 
-        dateView.setText(date);
-        timeView.setText(time);
+            dateView.setText(date);
+            timeView.setText(time);
 
-        String[] hourMin = time.split(":");
-        String[] dateMonthYear = date.split("/");
+            String[] hourMin = time.split(":");
+            String[] dateMonthYear = date.split("/");
 
-        year = Integer.parseInt(dateMonthYear[2]);
-        month = Integer.parseInt(dateMonthYear[1]) - 1;
-        dayOfMonth = Integer.parseInt(dateMonthYear[0]);
-        hour = Integer.parseInt(hourMin[0]);
-        minute = Integer.parseInt(hourMin[1]);
+            year = Integer.parseInt(dateMonthYear[2]);
+            month = Integer.parseInt(dateMonthYear[1]) - 1;
+            dayOfMonth = Integer.parseInt(dateMonthYear[0]);
+            hour = Integer.parseInt(hourMin[0]);
+            minute = Integer.parseInt(hourMin[1]);
+        }
     }
 
 
