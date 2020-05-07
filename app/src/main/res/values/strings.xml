@@ -184,4 +184,5 @@
     <string name="search_result">Search result</string>
     <string name="add_user_to_band">Add user to Band</string>
     <string name="you_must_fill_at_least_one_field">You must fill at least one field to permform a search</string>
+    <string name="your_events">Your events</string>
 </resources>

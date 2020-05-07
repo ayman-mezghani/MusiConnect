@@ -23,6 +23,8 @@ import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.events.EventCreation;
 import ch.epfl.sdp.musiconnect.events.EventListPage;
 import ch.epfl.sdp.musiconnect.finder.FinderPage;
+import ch.epfl.sdp.musiconnect.location.MapsActivity;
+import ch.epfl.sdp.musiconnect.location.MapsLocationFunctions;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
@@ -45,9 +47,7 @@ public class MenuTests {
 
     // private static boolean setUpIsDone = false;
 
-    public void clickAlerts() {
-        MapsLocationTest.clickAllow();
-    }
+
 
     @BeforeClass
     public static void setMocks() {
@@ -58,22 +58,13 @@ public class MenuTests {
     // Before and after methods are used in order to accept tests with intents
     @Before
     public void initIntents() {
-        clickAlerts();
         Intents.init();
+        MapsLocationFunctions.clickPermissionAlert();
     }
 
     @After
     public void releaseIntents() { Intents.release(); }
 
-
-    @Test
-    public void testSearchClickShouldDisplayMessage() {
-        onView(withId(R.id.search)).perform(click());
-
-        Intent searchIntent = new Intent();
-        startPageRule.launchActivity(searchIntent);
-        intended(hasComponent(FinderPage.class.getName()));
-    }
 
     @Test
     public void testHelpClickShouldStartNewIntent() {
@@ -82,6 +73,15 @@ public class MenuTests {
         Intent helpIntent = new Intent();
         startPageRule.launchActivity(helpIntent);
         intended(hasComponent(HelpPage.class.getName()));
+    }
+
+    @Test
+    public void testSearchClickShouldStartNewIntent() {
+        onView(withId(R.id.search)).perform(click());
+
+        Intent searchIntent = new Intent();
+        startPageRule.launchActivity(searchIntent);
+        intended(hasComponent(FinderPage.class.getName()));
     }
 
     /**

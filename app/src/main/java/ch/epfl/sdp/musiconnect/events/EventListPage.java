@@ -24,7 +24,6 @@ import ch.epfl.sdp.musiconnect.database.DbUserType;
 public class EventListPage extends Page {
 
     private DbAdapter dbAdapter;
-    private TextView eventListTitle;
     private List<Event> events;
     private List<String> eventTitles;
     private Map<String, String> ids;
@@ -38,7 +37,7 @@ public class EventListPage extends Page {
 
         dbAdapter = DbGenerator.getDbInstance();
 
-        eventListTitle = findViewById(R.id.eventListTitle);
+        TextView eventListTitle = findViewById(R.id.eventListTitle);
 
 //        Intent intent = getIntent();
 //        String visitorEmail = intent.getStringExtra("UserEmail");
@@ -67,8 +66,15 @@ public class EventListPage extends Page {
             eventListTitle.setText("Your events");
         }*/
 
-        eventListTitle.setText("Your events");
+        eventListTitle.setText(R.string.your_events);
         dbAdapter.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
+            @Override
+            public void readCallback(User user) {
+                loadIds(user.getEvents());
+            }
+        });
+
+        dbAdapter.read(DbUserType.Band, CurrentUser.getInstance(this).email, new DbCallback() {
             @Override
             public void readCallback(User user) {
                 loadIds(user.getEvents());
@@ -90,11 +96,13 @@ public class EventListPage extends Page {
 
 
     private void showEvent(Event e) {
-        events.add(e);
-        eventTitles.add(e.getTitle());
-        ids.put(e.getTitle(), e.getEid());
+        if (!events.contains(e)) {
+            events.add(e);
+            eventTitles.add(e.getTitle());
+            ids.put(e.getTitle(), e.getEid());
 
-        adapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
