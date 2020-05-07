@@ -7,11 +7,12 @@ import java.io.IOException;
 public class MockCloudStorage implements CloudStorage {
 
     @Override
-    public void upload(Uri fileUri, FirebaseCloudStorage.FileType fileType, String userName) throws IOException {
+    public void upload(FileType fileType, String username, Uri fileUri) throws IOException {
+
     }
 
     @Override
-    public void download(String cloudPath, String saveName, CloudCallback cloudCallback) throws IOException {
+    public void download(FileType fileType, String username, CloudCallback cloudCallback) {
         cloudCallback.onFailure();
     }
 

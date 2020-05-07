@@ -56,11 +56,11 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_modification);
 
-        editFields = new EditText[] {findViewById(R.id.newFirstName), findViewById(R.id.newLastName), findViewById(R.id.newUsername), findViewById(R.id.newEmailAddress), findViewById(R.id.newBirthday)};
-
-        manageDatePickerDialog(editFields[4]);
+        editFields = new EditText[]{findViewById(R.id.newFirstName), findViewById(R.id.newLastName), findViewById(R.id.newUsername), findViewById(R.id.newEmailAddress), findViewById(R.id.newBirthday)};
 
         onCreateGetIntentsFields();
+
+        manageDatePickerDialog(editFields[4]);
 
         setEditTextFields(editFields, new String[]{firstName, lastName, username, mail, birthday});
 
@@ -106,6 +106,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
 
     /**
      * Check the correctness of the input date
+     *
      * @return true if age >= 13
      */
     private boolean isInputDateValid() {
@@ -118,7 +119,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
 
     private void setEditTextFields(EditText[] fields, String[] params) {
         int idx = 0;
-        for (EditText f: fields) {
+        for (EditText f : fields) {
             f.setText(params[idx]);
             ++idx;
         }
@@ -126,10 +127,11 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
 
     /**
      * Update the new values to the database
+     *
      * @param modCurrent: profile of current user that has been modified
      */
     private void updateDatabaseFields(Musician modCurrent) {
-        while(!checkConnection(ProfileModification.this)) { //semi-busy waiting for the connection to be back up
+        while (!checkConnection(ProfileModification.this)) { //semi-busy waiting for the connection to be back up
             try {
                 TimeUnit.SECONDS.sleep(20);
             } catch (InterruptedException e) {
@@ -138,10 +140,10 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
         }
         DbAdapter adapter = DbGenerator.getDbInstance();
         adapter.update(DbUserType.Musician, modCurrent);
-        if(videoRecorded) {
+        if (videoRecorded) {
             storage = CloudStorageGenerator.getCloudInstance(this);
             try {
-                storage.upload(videoUri, CloudStorage.FileType.video, userEmail);
+                storage.upload(CloudStorage.FileType.video, userEmail, videoUri);
             } catch (IOException e) {
                 Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
             }
@@ -162,15 +164,15 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
         mExecutor.execute(() -> {
             result = mdao.loadAllByIds(new String[]{userEmail});
         });
-        while(result == null) {         //semi-busy waiting for async thread
+        while (result == null) {         //semi-busy waiting for async thread
             try {
                 TimeUnit.MILLISECONDS.sleep(500);
             } catch (InterruptedException e) {
                 result = new ArrayList<Musician>();
             }
         }
-        if(result.isEmpty()){
-            Toast.makeText(ProfileModification.this,"Error: couldn't update profile",Toast.LENGTH_LONG);
+        if (result.isEmpty()) {
+            Toast.makeText(ProfileModification.this, "Error: couldn't update profile", Toast.LENGTH_LONG);
             finish();
             return;
         }
@@ -188,22 +190,15 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
             cUserBirthday = dateToMyDate(d);
 
         } catch (ParseException e) {
-            Toast.makeText(ProfileModification.this,"Error: couldn't update profile",Toast.LENGTH_LONG);
+            Toast.makeText(ProfileModification.this, "Error: couldn't update profile", Toast.LENGTH_LONG);
             finish();
             return;
         }
         currentCachedMusician.setBirthday(cUserBirthday);
 
         // Upload video to cloud storage
-        if(videoRecorded) {
+        if (videoRecorded) {
             returnIntent.putExtra("videoUri", videoUri.toString());
-
-            storage = CloudStorageGenerator.getCloudInstance(this);
-            try {
-                storage.upload(videoUri, CloudStorage.FileType.video, userEmail);
-            } catch (IOException e) {
-                Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
-            }
         }
 
         currentCachedMusician.setTypeOfUser(CurrentUser.getInstance(this).getTypeOfUser());
@@ -229,6 +224,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
 
     /**
      * Helper method to initialize the datepicker dialog
+     *
      * @param bdayField
      */
     private void manageDatePickerDialog(EditText bdayField) {
@@ -238,6 +234,10 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             updateLabel(editFields[4]);
         };
+
+        String[] bday = birthday.split("/");
+        calendar.set(Integer.parseInt(bday[2]), Integer.parseInt(bday[1]) - 1, Integer.parseInt(bday[0]));
+
         bdayField.setOnClickListener(v -> new DatePickerDialog(
                 ProfileModification.this, date, calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show());
