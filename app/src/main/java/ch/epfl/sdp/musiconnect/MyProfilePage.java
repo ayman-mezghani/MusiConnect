@@ -76,6 +76,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             List<Musician> result = mdao.loadAllByIds(new String[]{userEmail});
             currentCachedUser = result.isEmpty() ? null : result.get(0);
         });
+
         try {                                           //wait for async thread to fetch cached profile
             TimeUnit.MILLISECONDS.sleep(500);
         } catch (InterruptedException e) {
@@ -118,15 +119,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
 
     }
 
-    /*
-    public void captureVideo(View view) {
-        Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-
-        if (videoIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(videoIntent, VIDEO_REQUEST);
-        }
-    }*/
-
     @Override
     public void onStart() {
         super.onStart();
@@ -154,12 +146,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
                 getVideoUri(userEmail);
             }
         }
-
-//        TODO: refresh the intent, may be useful after video change
-//        finish();
-//        overridePendingTransition( 0, 0);
-//        startActivity(getIntent());
-//        overridePendingTransition( 0, 0);
     }
 
     @Override
