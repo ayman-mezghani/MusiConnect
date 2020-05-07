@@ -9,18 +9,15 @@ import java.util.List;
 import java.util.Map;
 
 import ch.epfl.sdp.musiconnect.Band;
-import ch.epfl.sdp.musiconnect.Musician;
 
 public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
     private String leader;
     private String bandName;
-    private String urlVideo;
     private List<String> members;
     private List<String> events;
 
-    static final String LEADER = "Leader";
-    static final String BANDNAME = "BandName";
-    static final String URLVIDEO = "UrlVideo";
+    static final String LEADER = "leader";
+    static final String BANDNAME = "bandName";
     static final String MEMBERS = "members";
     static final String EVENTS = "events";
 
@@ -29,12 +26,8 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
 
     public SimplifiedBand(Band band) {
         this.leader = band.getEmailAddress();
-        this.bandName = band.getBandName();
-        this.members = new ArrayList<>();
-        for (Musician m : band.setOfMembers()) {
-          this.members.add(m.getEmailAddress());
-        }
-        this.urlVideo = band.getVideoURL();
+        this.bandName = band.getName();
+        this.members = band.getMusiciansEmailsAdress();
         this.events = band.getEvents();
     }
 
@@ -42,14 +35,7 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
         this.leader = map.get(LEADER) == null ? "" : (String) map.get(LEADER);
         this.bandName = map.get(BANDNAME) == null ? "" : (String) map.get(BANDNAME);
         this.members = new ArrayList<>();
-        if(map.get(MEMBERS) != null) {
-            for (String emailAddress : (ArrayList<String>) map.get(MEMBERS)) {
-                this.members.add(emailAddress);
-            }
-        } else {
-            this.members = null;
-        }
-        this.urlVideo = map.get(URLVIDEO) == null ? "" : (String) map.get(URLVIDEO);
+        this.members = map.get(MEMBERS) == null ? null : (ArrayList<String>) map.get(MEMBERS);
         this.events = map.get(EVENTS) == null ? null : (ArrayList<String>) map.get(EVENTS);
     }
 
@@ -58,9 +44,15 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
         res.put(LEADER, leader);
         res.put(BANDNAME, bandName);
         res.put(MEMBERS, members);
-        res.put(URLVIDEO, urlVideo);
         res.put(EVENTS, events);
         return res;
+    }
+
+    public Band toBand() {
+        Band b = new Band(this.getBandName(), this.getLeader());
+        b.setMusiciansEmailAdresses((ArrayList<String>) this.members);
+        b.setEvents(this.events);
+        return b;
     }
 
     public String getLeader() {
@@ -77,14 +69,6 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
 
     public void setBandName(String bandName) {
         this.bandName = bandName;
-    }
-
-    public String getUrlVideo() {
-        return urlVideo;
-    }
-
-    public void setUrlVideo(String urlVideo) {
-        this.urlVideo = urlVideo;
     }
 
     public List<String> getMembers() {
@@ -108,7 +92,6 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
         SimplifiedBand that = (SimplifiedBand) obj;
         return this.leader == that.getLeader()
                 && this.bandName == that.getBandName()
-                && this.urlVideo == that.getUrlVideo()
                 && this.members == that.getMembers();
     }
 }
