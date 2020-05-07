@@ -59,6 +59,7 @@ public class ProfileTests {
         onView(withText(stringId)).perform(click());
     }
 
+    /**
     @Test
     public void testProfileClickShouldDoNothing() {
         openActionsMenu(R.string.my_profile);
@@ -68,10 +69,13 @@ public class ProfileTests {
 
         intended(hasComponent(MyProfilePage.class.getName()));
     }
+     */
 
+    /**
     @Test
     public void testHelpClickFromProfileShouldStartNewIntent() {
         MenuTests m = new MenuTests();
         m.testHelpClickShouldStartNewIntent();
     }
+     */
 }

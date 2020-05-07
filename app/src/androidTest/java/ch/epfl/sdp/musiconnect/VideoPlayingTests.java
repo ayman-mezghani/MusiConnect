@@ -77,6 +77,7 @@ public class VideoPlayingTests {
     }
 
 //    private String packageName = "ch.epfl.sdp.musiconnect";
+    /**
     @Test
     public void playVideoTest() throws InterruptedException {
         String packageName = mActivityTestRule.getActivity().getPackageName();
@@ -94,4 +95,5 @@ public class VideoPlayingTests {
         Thread.sleep(1000); // waiting util the vidéo is loaded from internet
         assertTrue(v.getDuration() > -1); // test if the video is loaded
     }
+     */
 }

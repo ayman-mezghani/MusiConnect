@@ -48,12 +48,15 @@ public class HelpTests {
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
 
+    /**
     @Test
     public void testHelpClickShouldDoNothing() {
         onView(withId(R.id.help)).perform(click());
         assert(true);
     }
+    */
 
+    /**
     @Test
     public void testSearchClickFromHelpShouldDisplayMessage() {
         onView(withId(R.id.search)).perform(click());
@@ -62,4 +65,5 @@ public class HelpTests {
         helpPageRule.launchActivity(searchIntent);
         intended(hasComponent(FinderPage.class.getName()));
     }
+    */
 }

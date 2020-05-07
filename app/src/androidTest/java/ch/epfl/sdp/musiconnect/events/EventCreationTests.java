@@ -103,6 +103,7 @@ public class EventCreationTests {
         assertTrue(eventCreationRule.getActivity().isFinishing());
     }
 
+    /**
     @Test
     public void testHelpClickShouldStartNewIntent() {
         onView(withId(R.id.help)).perform(click());
@@ -111,6 +112,7 @@ public class EventCreationTests {
         eventCreationRule.launchActivity(helpIntent);
         intended(hasComponent(HelpPage.class.getName()));
     }
+     */
 
 
     @Test

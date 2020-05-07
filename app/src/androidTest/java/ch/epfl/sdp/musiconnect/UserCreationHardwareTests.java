@@ -225,9 +225,11 @@ public class UserCreationHardwareTests {
         assertEquals(((UserCreation) testsFunctions.getCurrentActivity()).getAge(1995, 10, 19), "24");
     }
 
+    /**
     @Test
     public void testHelpClickFromProfileShouldStartNewIntent() {
         MenuTests m = new MenuTests();
         m.testHelpClickShouldStartNewIntent();
     }
+     */
 }
