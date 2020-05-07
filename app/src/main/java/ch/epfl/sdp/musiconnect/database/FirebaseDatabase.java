@@ -188,7 +188,8 @@ public class FirebaseDatabase extends Database {
                         SimplifiedMusician m = new SimplifiedMusician(document.getData());
                         queryResult.add(m.toMusician());
                     } else if (collection.equals((DbUserType.Band.toString()))) {
-                        // @TODO can't fetch a list of bands !!!!
+                        SimplifiedBand sb = new SimplifiedBand(document.getData());
+                        queryResult.add(sb.toBand());
                     }
                 }
                 dbCallback.queryCallback(queryResult);

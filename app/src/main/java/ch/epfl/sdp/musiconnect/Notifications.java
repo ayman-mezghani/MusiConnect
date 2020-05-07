@@ -57,16 +57,16 @@ public class Notifications {
      * @param notificationMessage: main message displayed to user
      * @param priority: priority level (DEFAULT for standard user, HIGH for Manager)
      */
-     public void sendNotification(String channel, Context context, String notificationMessage, int priority) {
+    public void sendNotification(String channel, Context context, String notificationMessage, int priority) {
         createNotificationChannels();
 
         // Open MapsActivity when a notification is clicked on
         Intent mapsIntent = new Intent(context, MapsActivity.class);
         PendingIntent mapsPendingIntent = PendingIntent.getActivity(
-            context,
-            1,
-            mapsIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT // Updates Maps Activity if it is already running
+                context,
+                1,
+                mapsIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT // Updates Maps Activity if it is already running
         );
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channel)

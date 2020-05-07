@@ -32,7 +32,7 @@ public class SimplifiedEventTests {
     }
 
     @Test
-    public void dimplifiedEventGetterSetter() {
+    public void simplifiedEventGetterSetter() {
         Event e = testEvent();
         SimplifiedEvent se = new SimplifiedEvent();
 

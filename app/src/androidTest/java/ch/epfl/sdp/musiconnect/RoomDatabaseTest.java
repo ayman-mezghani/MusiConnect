@@ -21,6 +21,7 @@ import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
+import ch.epfl.sdp.musiconnect.roomdatabase.EventDao;
 import ch.epfl.sdp.musiconnect.roomdatabase.InstrumentConverter;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 import ch.epfl.sdp.musiconnect.roomdatabase.MyDateConverter;
@@ -36,6 +37,7 @@ public class RoomDatabaseTest {
 
     private AppDatabase roomDb;
     private MusicianDao musicianDao;
+    private EventDao eventDao;
     private Executor mExecutor = Executors.newSingleThreadExecutor();
     private List<Musician> users = new ArrayList<>();
 
@@ -53,8 +55,10 @@ public class RoomDatabaseTest {
     public void instantiateTestRoomDatabase() {
         roomDb = AppDatabase.getInstance(startPageRule.getActivity().getApplicationContext());
         musicianDao = roomDb.musicianDao();
+        eventDao = roomDb.eventDao();
         mExecutor.execute(() -> {
             musicianDao.nukeTable();
+            eventDao.nukeTable();
         });
         waitALittle(1);
     }
@@ -64,6 +68,7 @@ public class RoomDatabaseTest {
     public void cleanDatabaseAfterTest() {
         mExecutor.execute(() -> {
             musicianDao.nukeTable();
+            eventDao.nukeTable();
         });
         waitALittle(1);
     }

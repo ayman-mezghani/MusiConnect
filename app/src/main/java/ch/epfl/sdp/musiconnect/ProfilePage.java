@@ -17,7 +17,6 @@ import ch.epfl.sdp.musiconnect.cloud.FirebaseCloudStorage;
 
 public abstract class ProfilePage extends Page {
     protected TextView titleView, firstNameView, lastNameView, usernameView, emailView, birthdayView;
-    protected static int VIDEO_REQUEST = 101;
     protected Uri videoUri = null;
     protected VideoView mVideoView;
     protected ImageView imgVw;
@@ -33,25 +32,19 @@ public abstract class ProfilePage extends Page {
 
     protected void getVideoUri(String s) {
         CloudStorage storage = CloudStorageGenerator.getCloudInstance(this);
-        String path = s + "/" + FirebaseCloudStorage.FileType.video;
-        String saveName = s + "_" + FirebaseCloudStorage.FileType.video;
-        try {
-            storage.download(path, saveName, new CloudCallback() {
-                @Override
-                public void onSuccess(Uri fileUri) {
-                    videoUri = fileUri;
-                    showVideo();
-                }
+        storage.download(CloudStorage.FileType.video, s, new CloudCallback() {
+            @Override
+            public void onSuccess(Uri fileUri) {
+                videoUri = fileUri;
+                showVideo();
+            }
 
-                @Override
-                public void onFailure() {
-                    videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.minion);
-                    Log.d("profilevideo",getPackageName());
-                    showVideo();
-                }
-            });
-        } catch (IOException e) {
-            Toast.makeText(this, "An error occured, please contact support.", Toast.LENGTH_LONG).show();
-        }
+            @Override
+            public void onFailure() {
+                videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.minion);
+                Log.d("profilevideo", getPackageName());
+                showVideo();
+            }
+        });
     }
 }

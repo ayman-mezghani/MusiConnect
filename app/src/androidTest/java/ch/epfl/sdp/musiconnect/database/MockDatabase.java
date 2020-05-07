@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.User;
@@ -25,6 +26,8 @@ public class MockDatabase extends Database {
     private Map<String, SimplifiedMusician> content;
 
 
+
+    private Band b = new Band("totofire", "musiconnectsdp@gmail.com");
 
     public MockDatabase() {
         this.content = new HashMap<>();
@@ -65,6 +68,9 @@ public class MockDatabase extends Database {
 
     @Override
     void addDoc(String collection, String docName, SimplifiedDbEntry entry) {
+        if(collection.equals(DbUserType.Band.toString())) {
+            this.b = ((SimplifiedBand)entry).toBand();
+        }
     }
 
     @Override
@@ -113,6 +119,9 @@ public class MockDatabase extends Database {
             dbCallback.readCallback(defaultSm.toMusician());
         }
 
+        if(collection.equals(DbUserType.Band.toString())) {
+            dbCallback.readCallback(b);
+        }
     }
 
     @Override
@@ -123,7 +132,17 @@ public class MockDatabase extends Database {
     @Override
     public void finderQuery(String collection, Map<String, Object> arguments, DbCallback dbCallback) {
         List<User> l = new ArrayList<>();
-        l.add(defaultSm.toMusician());
-        dbCallback.queryCallback(l);
+        if(collection.equals(DbUserType.Musician.toString())) {
+            l.add(defaultSm.toMusician());
+            dbCallback.queryCallback(l);
+        } else if(collection.equals(DbUserType.Band.toString())) {
+            Band b = new Band("totofire" ,defaultSm.getEmail());
+            l.add(b);
+            dbCallback.queryCallback(l);
+        }
+    }
+
+    public Band getBand() {
+        return this.b;
     }
 }
