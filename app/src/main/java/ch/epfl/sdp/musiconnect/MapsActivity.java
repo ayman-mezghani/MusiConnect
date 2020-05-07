@@ -60,7 +60,7 @@ import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
-        GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+        GoogleMap.OnInfoWindowClickListener {
 
 
     private static final String CHANNEL_ID = "1";
@@ -82,8 +82,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Spinner spinner;
 
     private boolean updatePos = true;
-
-    private GoogleMap mMap;
+    @VisibleForTesting
+    protected GoogleMap mMap;
     private UiSettings mUiSettings;
 
     private int delay;                                          //delay to updating the users list in ms
@@ -230,6 +230,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .radius(threshold);
         circle = mMap.addCircle(circleOptions);
 
+        CustomInfoWindowGoogleMap customInfoWindow = new CustomInfoWindowGoogleMap(this);
+        mMap.setInfoWindowAdapter(customInfoWindow);
 
         //place users' markers
         updateProfileList();
@@ -239,7 +241,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         loadEventMarkers();
 
         //sets listeners on map markers
-        mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
 
         //Handler that updates users list
@@ -268,6 +269,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (co && loc) {
                     updatePos = true;
                     delay = 20000;
+                    updateEvents();
                     updateUsers();
                     clearCachedUsers();
                     saveUsersToCache();
@@ -334,7 +336,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (mMap != null) {
             String markerName = "You";
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            marker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerName));
+            marker = mMap.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .title(markerName)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
             circle.setCenter(latLng);
@@ -426,12 +431,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         loadProfilesMarker();
     }
 
-    //From the users around the area, picks the ones that are within the threshold distance.
+    //From the events around the area, picks the ones that are within the threshold distance.
     private void updateEvents() {
         if (setLoc == null) {             //Might be called before we get the first update to the location;
             return;
-        } else {
-            delay = 20000;              //sets a 20 sec long delay on updates when everything is in place
         }
 
         eventNear.clear();
@@ -443,8 +446,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 eventNear.add(e);
             }
         }
-
-        circle.setRadius(threshold);
 
         loadEventMarkers();
     }
@@ -461,12 +462,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(latlng)
                     .title(m.getUserName()));
+            marker.setSnippet("Musician");
             marker.setTag(m);
             markers.add(marker);
         }
     }
 
-    //Loads the profile on the map as markers, with associated information
+    //Loads the event on the map as markers, with associated information
     private void loadEventMarkers() {
         for (Marker m : eventMarkers) {
             m.remove();
@@ -479,21 +481,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .position(latlng)
                     .title(e.getTitle())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.event_marker)));
+            marker.setSnippet("Event");
             marker.setTag(e);
             eventMarkers.add(marker);
         }
-    }
-
-    @Override
-    public boolean onMarkerClick(final Marker marker) {
-        if (profiles.contains(marker.getTag())
-                || eventNear.contains(marker.getTag())) {
-
-            if (!marker.isInfoWindowShown()) {
-                marker.showInfoWindow();
-            }
-        }
-        return false;
     }
 
     @Override
@@ -583,6 +574,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Musician person1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
         Musician person2 = new Musician("Alice", "Bardon", "Alyx", "aymanmezghani97@gmail.com", new MyDate(1992, 9, 20));
         Musician person3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
+
+        person3.addInstrument(Instrument.BANJO,Level.PROFESSIONAL);
+        person3.addInstrument(Instrument.CLARINET,Level.BEGINNER);
 
         person1.setLocation(new MyLocation(46.52 + r1, 6.52 + r1));
         person2.setLocation(new MyLocation(46.51 + r2, 6.45 + r2));
