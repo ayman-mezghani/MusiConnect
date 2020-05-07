@@ -1,12 +1,18 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.content.Intent;
 import android.widget.TextView;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.events.EventListPage;
 
 /**
  * @author Manuel Pellegrini, EPFL
@@ -31,6 +37,10 @@ public class FinderPage extends Page implements View.OnClickListener {
         // If the button findBand is pressed, then the method openBandFinderPage() is executed
         findBand = findViewById(R.id.findBandButtonID);
         findBand.setOnClickListener(view -> openBandFinderPage());
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
+        bottomNavigationView.setSelectedItemId(R.id.search);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> super.onOptionsItemSelected(item));
     }
 
     /**

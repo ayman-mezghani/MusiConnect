@@ -182,4 +182,10 @@
     <string name="unable_to_resolve_address">Unable to resolve address</string>
     <string name="new_participant_email_address">New participant email address</string>
     <string name="your_events">Your events</string>
+
+    <string name="navigation_home">Home</string>
+    <string name="navigation_profile">My profile</string>
+    <string name="navigation_events">My events</string>
+    <string name="navigation_map">Map</string>
+    <string name="navigation_finder">Finder</string>
 </resources>

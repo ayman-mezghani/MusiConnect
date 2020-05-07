@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,6 +42,9 @@ public class HelpPage extends Page {
                     Log.d("checkcheck", user.getClass().getName()+" " +  user.toString());
             }
         });
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> super.onOptionsItemSelected(item));
     }
 
     @Override

@@ -8,6 +8,8 @@ import android.widget.TextView;
 import android.widget.Spinner;
 import android.widget.Button;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import ch.epfl.sdp.R;
 
 /**
@@ -54,6 +56,10 @@ public class BandFinderPage extends Page implements View.OnClickListener {
         // If the button findBand is pressed, then the method onClick(view) is executed
         findBand = findViewById(R.id.bandFinderButtonID);
         findBand.setOnClickListener(view -> onClick(view));
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
+        bottomNavigationView.setSelectedItemId(R.id.search);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> super.onOptionsItemSelected(item));
     }
 
     @Override
