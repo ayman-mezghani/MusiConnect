@@ -6,12 +6,17 @@ import java.io.IOException;
 
 public interface CloudStorage {
     public enum FileType {
-        profile_image, video
+        profile_image, video;
+
+        @Override
+        public String toString() {
+            return super.toString().toLowerCase();
+        }
     }
 
-    void upload(Uri fileUri, FirebaseCloudStorage.FileType fileType, String userName) throws IOException;
+    void upload(FileType fileType, String username, Uri fileUri) throws IOException;
 
-    void download(String cloudPath, String saveName, CloudCallback cloudCallback) throws IOException;
+    void download(FileType fileType, String username, CloudCallback cloudCallback) throws IOException;
 
     void delete(String cloudPath);
 }

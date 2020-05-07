@@ -143,7 +143,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
         if (videoRecorded) {
             storage = CloudStorageGenerator.getCloudInstance(this);
             try {
-                storage.upload(videoUri, CloudStorage.FileType.video, userEmail);
+                storage.upload(CloudStorage.FileType.video, userEmail, videoUri);
             } catch (IOException e) {
                 Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
             }

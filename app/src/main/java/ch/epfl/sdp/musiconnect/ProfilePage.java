@@ -31,10 +31,8 @@ public abstract class ProfilePage extends Page {
 
     protected void getVideoUri(String s) {
         CloudStorage storage = CloudStorageGenerator.getCloudInstance(this);
-        String path = s + "/" + FirebaseCloudStorage.FileType.video;
-        String saveName = s + "_" + FirebaseCloudStorage.FileType.video;
         try {
-            storage.download(path, saveName, new CloudCallback() {
+            storage.download(CloudStorage.FileType.video, s, new CloudCallback() {
                 @Override
                 public void onSuccess(Uri fileUri) {
                     videoUri = fileUri;
