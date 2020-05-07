@@ -30,6 +30,8 @@ public class MockDatabase extends Database {
 
     Event event;
 
+    private Band b = new Band("totofire", "musiconnectsdp@gmail.com");
+
     public MockDatabase() {
         this.content = new HashMap<>();
         listOfMusicians = new ArrayList<>();
@@ -59,6 +61,9 @@ public class MockDatabase extends Database {
 
     @Override
     void addDoc(String collection, String docName, SimplifiedDbEntry entry) {
+        if(collection.equals(DbUserType.Band.toString())) {
+            this.b = ((SimplifiedBand)entry).toBand();
+        }
     }
 
     @Override
@@ -94,6 +99,11 @@ public class MockDatabase extends Database {
             }
         }
 
+        if(collection.equals(DbUserType.Band.toString())) {
+            dbCallback.readCallback(b);
+            return;
+        }
+
         dbCallback.readCallback(defaultSm.toMusician());
     }
 
@@ -105,13 +115,17 @@ public class MockDatabase extends Database {
     @Override
     public void finderQuery(String collection, Map<String, Object> arguments, DbCallback dbCallback) {
         List<User> l = new ArrayList<>();
-        if(collection.equals(DbUserType.Musician)) {
+        if(collection.equals(DbUserType.Musician.toString())) {
             l.add(defaultSm.toMusician());
             dbCallback.queryCallback(l);
-        } else if(collection.equals(DbUserType.Band)) {
+        } else if(collection.equals(DbUserType.Band.toString())) {
             Band b = new Band("totofire" ,defaultSm.getEmail());
             l.add(b);
             dbCallback.queryCallback(l);
         }
+    }
+
+    public Band getBand() {
+        return this.b;
     }
 }

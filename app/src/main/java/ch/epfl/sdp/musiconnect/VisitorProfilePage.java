@@ -1,7 +1,12 @@
 package ch.epfl.sdp.musiconnect;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
+import java.util.ArrayList;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
@@ -32,9 +37,42 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         emailView = findViewById(R.id.visitorProfileEmail);
         birthdayView = findViewById(R.id.visitorProfileBirthday);
 
+        Button addUserToBand = findViewById(R.id.add_user_to_band);
+        if(CurrentUser.getInstance(this).getTypeOfUser() == TypeOfUser.Band) {
+            addUserToBand.setVisibility(View.VISIBLE);
+            addUserToBand.setFocusable(true);
+            addUserToBand.setClickable(true);
+        }
+
+        addUserToBand.setOnClickListener(v -> addUserToBand());
+
         loadProfileContent();
 
         getVideoUri(userEmail);
+
+
+        /*
+        addUserToBand.setOnClickListener(v -> {
+            DbAdapter db = ;
+            CurrentUser.getInstance(this).getBand()
+            DbGenerator.getDbInstance().read(DbUserType.Musician, str, new DbCallback() {
+                @Override
+                public void readCallback(User u) {
+                    b.addMember((Musician) u);
+                    (DbGenerator.getDbInstance()).add(DbUserType.Band, b);
+                }
+            });
+        });
+         */
+    }
+
+    private void addUserToBand() {
+        ArrayList<String> ls = new ArrayList<>();
+        Band b = CurrentUser.getInstance(this).getBand();
+        if(b!=null && !b.containsMember(userEmail)) {
+            b.addMember(userEmail);
+        }
+        (DbGenerator.getDbInstance()).add(DbUserType.Band, b);
     }
 
 
