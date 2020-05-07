@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.User;
@@ -84,17 +85,16 @@ public class MockDatabase extends Database {
             return;
         }
 
-        boolean found = false;
-        for (SimplifiedMusician sm : listOfMusicians) {
-            if (docName.equals(sm.getEmail())) {
-                dbCallback.readCallback(sm.toMusician());
-                found = true;
+        if (collection.equals(DbUserType.Musician.toString())) {
+            for (SimplifiedMusician sm : listOfMusicians) {
+                if (docName.equals(sm.getEmail())) {
+                    dbCallback.readCallback(sm.toMusician());
+                    return;
+                }
             }
         }
 
-        if (!found) {
-            dbCallback.readCallback(defaultSm.toMusician());
-        }
+        dbCallback.readCallback(defaultSm.toMusician());
     }
 
     @Override
@@ -105,7 +105,13 @@ public class MockDatabase extends Database {
     @Override
     public void finderQuery(String collection, Map<String, Object> arguments, DbCallback dbCallback) {
         List<User> l = new ArrayList<>();
-        l.add(defaultSm.toMusician());
-        dbCallback.queryCallback(l);
+        if(collection.equals(DbUserType.Musician)) {
+            l.add(defaultSm.toMusician());
+            dbCallback.queryCallback(l);
+        } else if(collection.equals(DbUserType.Band)) {
+            Band b = new Band("totofire" ,defaultSm.getEmail());
+            l.add(b);
+            dbCallback.queryCallback(l);
+        }
     }
 }

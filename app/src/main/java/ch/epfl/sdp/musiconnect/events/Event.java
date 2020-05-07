@@ -25,8 +25,6 @@ public class Event {
     private User creator;
 
     @Ignore
-    private List<String> emails;
-    @Ignore
     private List<User> participants;
 
     private Location location;
@@ -35,10 +33,12 @@ public class Event {
     private boolean visible;
     private String title;
     private String description;
-    @Ignore
-    private final String DEFAULT_TITLE = "Event";
-    @Ignore
-    private final String DEFAULT_MESSAGE = "Come watch and play!";
+
+    private static final String DEFAULT_TITLE = "Event";
+    private static final String DEFAULT_MESSAGE = "Come watch and play!";
+
+    private static final double MAX_LATITUDE = 90;
+    private static final double MAX_LONGITUDE = 180;
 
     public Event(User creator, String eid) {
         if (creator == null) {
@@ -109,10 +109,9 @@ public class Event {
     }
 
     private boolean checkLocationValues(double latitude, double longitude) {
-        return (!(latitude > -90)) || (!(latitude < 90)) ||
-                (!(longitude > -180)) || (!(longitude < 180));
+        return (!(latitude > -MAX_LATITUDE)) || (!(latitude < MAX_LATITUDE)) ||
+                (!(longitude > -MAX_LONGITUDE)) || (!(longitude < MAX_LONGITUDE));
     }
-
 
     public void setAddress(String address) {
         if (address == null) {

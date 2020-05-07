@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.events;
 
 import android.content.Intent;
 import android.widget.DatePicker;
@@ -24,6 +24,7 @@ import org.junit.runner.RunWith;
 import java.util.Calendar;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.HelpPage;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
@@ -234,6 +235,7 @@ public class EventCreationTests {
     private void writeTestValuesWithCustomAddress(String address) {
         onView(withId(R.id.eventCreationNewEventTitle)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestTitle"));
         onView(withId(R.id.eventCreationNewEventAddress)).perform(ViewActions.scrollTo()).perform(clearText(), typeText(address));
+        closeSoftKeyboard();
         onView(withId(R.id.eventCreationNewEventDescription)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestDescription"));
         closeSoftKeyboard();
 

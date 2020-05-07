@@ -20,7 +20,6 @@ public class Musician extends Person {
 
     private static final int MAX_VIDEO_URL_LENGTH = 2048;
 
-
     public Musician(String firstName, String lastName, String userName, String emailAddress, MyDate birthday) {
         super(firstName, lastName, userName, emailAddress, birthday);
         videoURL = "";

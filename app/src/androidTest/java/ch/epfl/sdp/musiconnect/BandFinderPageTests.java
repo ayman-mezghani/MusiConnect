@@ -3,9 +3,7 @@ package ch.epfl.sdp.musiconnect;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.uiautomator.UiDevice;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.finder.BandFinderPage;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onData;
@@ -40,14 +39,11 @@ public class BandFinderPageTests {
     @Rule
     public final ActivityTestRule<BandFinderPage> bandFinderPageRule = new ActivityTestRule<>(BandFinderPage.class);
 
-    private UiDevice device;
 
     // Before and after methods are used in order to accept tests with intents
     @Before
     public void initIntents() {
         Intents.init();
-        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        MapsLocationTest.clickAlert(device);
     }
 
     @After

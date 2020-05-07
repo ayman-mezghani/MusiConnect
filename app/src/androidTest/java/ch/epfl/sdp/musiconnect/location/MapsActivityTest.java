@@ -1,10 +1,8 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.location;
 
 
-import android.view.View;
-
+import androidx.core.app.NotificationCompat;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.SdkSuppress;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
@@ -18,15 +16,13 @@ import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
-@SdkSuppress(minSdkVersion = 18)
-public class CustomInfoWindowGoogleMapTest {
-    View v = null;
-
+public class MapsActivityTest {
     @Rule
-    public final ActivityTestRule<MapsActivity> startRule =
+    public final ActivityTestRule<MapsActivity> mapsActivityRule =
             new ActivityTestRule<>(MapsActivity.class);
 
     @Rule
@@ -39,9 +35,16 @@ public class CustomInfoWindowGoogleMapTest {
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
 
+
     @Test
-    public void getInfoWindowIsNull(){
-        CustomInfoWindowGoogleMap g = new CustomInfoWindowGoogleMap(startRule.getActivity().getApplicationContext());
-        assertEquals(null,g.getInfoWindow(null));
+    public void notificationChannelGeneratesCorrectly() {
+        assertTrue(mapsActivityRule.getActivity().createNotificationChannel());
     }
+
+    @Test
+    public void alertWarningGeneratesCorrectly(){
+        NotificationCompat.Builder notif = mapsActivityRule.getActivity().buildNotification("test");
+        assertEquals(NotificationCompat.PRIORITY_MAX,notif.getPriority());
+    }
+
 }
