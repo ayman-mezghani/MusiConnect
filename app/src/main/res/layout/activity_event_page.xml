@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
-                android:text="Event Title"
+                android:text="@string/event_title"
                 android:textAlignment="center"
                 android:textSize="30sp"
                 android:textStyle="bold" />
@@ -46,7 +46,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="Event Creator: "
+                    android:text="@string/event_creator"
                     android:layout_marginStart="10dp"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -70,7 +70,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="Where: "
+                    android:text="@string/where"
                     android:layout_marginStart="10dp"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -95,7 +95,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="When: "
+                    android:text="@string/when"
                     android:layout_marginStart="10dp"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -120,7 +120,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_weight="2"
-                    android:text="Participants: "
+                    android:text="@string/participants"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -143,7 +143,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Description: "
+                    android:text="@string/description"
                     android:layout_marginStart="10dp"
                     android:textSize="18sp"
                     android:textStyle="bold" />

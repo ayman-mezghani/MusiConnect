@@ -43,6 +43,21 @@ public class EventListPage extends Page {
 
         dbAdapter = DbGenerator.getDbInstance();
 
+        setupListTitle();
+
+
+        ListView lv = findViewById(R.id.eventListView);
+        eventTitles = new ArrayList<>();
+        titleToIds = new HashMap<>();
+
+
+        adapter = new ArrayAdapter<>(EventListPage.this, android.R.layout.simple_list_item_1, eventTitles);
+        lv.setAdapter(adapter);
+        lv.setOnItemClickListener((parent, view, position, id) -> loadEventPage(titleToIds.get(lv.getItemAtPosition(position))));
+
+    }
+
+    private void setupListTitle() {
         TextView eventListTitle = findViewById(R.id.eventListTitle);
 
         Intent intent = getIntent();
@@ -66,17 +81,6 @@ public class EventListPage extends Page {
 
             eventListTitle.setText(R.string.your_events);
         }
-
-
-        ListView lv = findViewById(R.id.eventListView);
-        eventTitles = new ArrayList<>();
-        titleToIds = new HashMap<>();
-
-
-        adapter = new ArrayAdapter<>(EventListPage.this, android.R.layout.simple_list_item_1, eventTitles);
-        lv.setAdapter(adapter);
-        lv.setOnItemClickListener((parent, view, position, id) -> loadEventPage(titleToIds.get(lv.getItemAtPosition(position))));
-
     }
 
     @Override
