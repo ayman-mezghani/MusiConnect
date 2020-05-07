@@ -13,13 +13,13 @@ import ch.epfl.sdp.musiconnect.events.Event;
 
 public class MockDatabase extends Database {
 
-    private final String firstName = "bob";
-    private final String lastName = "minion";
-    private final String username = "bobminion";
-    private final String email = "bobminion@gmail.com";
-    private final MyDate birthday = new MyDate(2000, 1, 1);
+    private final static String firstName = "bob";
+    private final static String lastName = "minion";
+    private final static String username = "bobminion";
+    private final static String email = "bobminion@gmail.com";
+    private final static MyDate birthday = new MyDate(2000, 1, 1);
 
-    private SimplifiedMusician defaultSm = new SimplifiedMusician(new Musician(firstName, lastName, username, email, birthday));
+    private SimplifiedMusician defaultSm;
 
     private List<SimplifiedMusician> listOfMusicians;
     private List<Event> listOfEvent;
