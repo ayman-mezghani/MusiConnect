@@ -1,20 +1,8 @@
 <resources>
     <string name="app_name">MusiConnect</string>
     <string name="title_activity_main_page">MainPage</string>
-    <string name="login">Login</string>
-    <string name="username">Username</string>
-    <string name="sign_in_with_google">sign in with google</string>
-    <string name="my_profile">My profile</string>
-    <string name="map">Map</string>
-    <string name="search">Search</string>
-    <string name="settings">Settings</string>
-    <string name="help">Help</string>
-    <string name="my_profile_page">My profile page</string>
-    <string name="title_activity_help_page">HelpPage</string>
-    <string name="title_activity_settings_page">SettingsPage</string>
 
-    <string name="myprofile">My profile</string>
-    <string name="editmyprofile">Edit my profile</string>
+    <!-- Basic user information fields -->
     <string name="email_address">Email address :</string>
     <string name="new_email_address">New email address</string>
     <string name="date_of_birth">Date of birth :</string>
@@ -23,13 +11,80 @@
     <string name="new_first_name">New first name</string>
     <string name="last_name">Last name :</string>
     <string name="new_last_name">New last name</string>
+    <string name="username">Username</string>
     <string name="username_field">Username :</string>
     <string name="new_username">New username</string>
-    <string name="edit_profile_button_text">Edit profile</string>
-    <string name="do_not_save">Don\'t save</string>
-    <string name="save">Save</string>
-    <string name="capture_video">Capture video</string>
+    <string name="musician">Musician</string>
+    <string name="band">Band</string>
+    <string name="event_manager">Event Manager</string>
 
+
+    <!-- Pages -->
+    <string name="map">Map</string>
+    <string name="search">Search</string>
+    <string name="settings">Settings</string>
+    <string name="title_activity_settings_page">SettingsPage</string>
+    <string name="help">Help</string>
+    <string name="title_activity_help_page">HelpPage</string>
+    <string name="my_profile">My profile</string>
+    <string name="myprofile">My profile</string>
+    <string name="my_profile_page">My profile page</string>
+    <string name="UserCreation">User Creation</string>
+
+
+    <!-- Actions -->
+    <string name="login">Login</string>
+    <string name="save">Save</string>
+    <string name="do_not_save">Don\'t save</string>
+    <string name="editmyprofile">Edit my profile</string>
+    <string name="edit_profile_button_text">Edit profile</string>
+    <string name="capture_video">Capture video</string>
+    <string name="sign_in_with_google">sign in with google</string>
+    <string name="contact_musician">Contact </string> <!-- leave blank space after contact to avoid failing tests -->
+    <string name="musiconnect_contact_mail">MusiConnect Contact Mail</string>
+    <string name="start_using_application">Start using application</string>
+    <string name="signout">Sign Out</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="add_change_video">add/Change Video</string>
+    <string name="new_participant_email_address">New participant email address</string>
+    <string name="your_events">Your events</string>
+    <string name="channel_name">channel</string>
+    <string name="channel_description">description</string>
+    <string name="add_users">Add Users</string>
+    <string name="add_event">Add event</string>
+    <string name="band_creation">Band Creation</string>
+    <string name="band_name">Band name</string>
+    <string name="band_name_cant_be_empty">Band name can\'t be empty</string>
+    <string name="your_bands">Your bands</string>
+    <string name="add_user_to_band">Add user to band</string>
+
+
+    <!-- Event related messages -->
+    <string name="your_nexts_events">Your nexts events</string>
+    <string name="create_an_event">Create an event</string>
+    <string name="my_events">My events</string>
+    <string name="add_participant">Add Participant</string>
+    <string name="remove_participant">Remove Participant</string>
+    <string name="event_title">Event title:</string>
+    <string name="new_event_title">New event title</string>
+    <string name="event_address">Event address:</string>
+    <string name="new_event_address">New event address</string>
+    <string name="event_time">Event time:</string>
+    <string name="new_event_date">New event date</string>
+    <string name="new_event_time">New event time</string>
+    <string name="participants">Participants:</string>
+    <string name="new_participant_username">New participant username</string>
+    <string name="event_description">Event description:</string>
+    <string name="new_event_description">New event description</string>
+    <string name="visibility_question">Do you want your event to be visible to every user?</string>
+    <string name="visibility_answer_yes">Yes, make it visible to everyone</string>
+    <string name="visibility_answer_no">No, hide it from the public</string>
+    <string name="edit_event">Edit event</string>
+
+
+    <!-- Basic information messages -->
+    <string name="welcome_message">Welcome to MusiConnect!</string>
+    <string name="info_message">Please navigate the app using the menu.</string>
     <string name="help_message">Help is on the way !</string>
     <string name="settings_message">Settings to come…</string>
     <string name="in_construction">Still under construction…</string>
@@ -37,10 +92,28 @@
     <string name="error_in_current_process">The app detected an error and has quit the current page. Sorry for the inconvenience.</string>
     <string name="perm_granted">Permission granted</string>
     <string name="perm_denied">Permission denied</string>
+    <string name="mail_info_message">Opening mail intent</string>
+    <string name="musiconnect_notification">MusiConnect Notification</string>
+    <string name="musiconnect_generalnotifmessage">A musician is nearby !</string>
+    <string name="age_too_low">Age is too low, please change your birth date.</string>
+    <string name="cloud_upload_successful">File uploaded successfully</string>
+    <string name="cloud_upload_failed">File upload failed</string>
+    <string name="cloud_download_successful">File downloaded successfully</string>
+    <string name="cloud_download_failed">File download failed</string>
+    <string name="cloud_uploading_file">Uploading: </string>
+    <string name="cloud_downloading_file">Downloading: </string>
+    <string name="cloud_upload_invalid_file_path">Invalid file path</string>
+    <string name="cloud_delete_successful">File deleted successfully</string>
+    <string name="cloud_delete_failed">File delete failed</string>
+    <string name="unable_to_resolve_address">Unable to resolve address</string>
+    <string name="event_not_found">Event not found...</string>
+    <string name="profile_not_found">Profile not found...</string>
+    <string name="creation_cancelled">Creation cancelled</string>
+
+
+    <!-- Map radius -->
     <string name="show_users">Show users within :</string>
-
     <string name="max_threshold">10km</string>
-
     <string-array name="distance_array">
         <item>10m</item>
         <item>20m</item>
@@ -54,36 +127,25 @@
         <item>@string/max_threshold</item>
     </string-array>
 
-    <string name="cloud_upload_successful">File uploaded successfully</string>
-    <string name="cloud_upload_failed">File upload failed</string>
-    <string name="cloud_download_successful">File downloaded successfully</string>
-    <string name="cloud_download_failed">File download failed</string>
-    <string name="cloud_uploading_file">Uploading: </string>
-    <string name="cloud_downloading_file">Downloading: </string>
-    <string name="cloud_upload_invalid_file_path">Invalid file path</string>
-    <string name="cloud_delete_successful">File deleted successfully</string>
-    <string name="cloud_delete_failed">File delete failed</string>
-    <string name="age_too_low">Age is too low, please change your birth date.</string>
-    <string name="signout">Sign Out</string>
-    <string name="UserCreation">User Creation</string>
-    <string name="btn_cancel">Cancel</string>
-    <string name="start_using_application">Start using application</string>
-    <string name="musician">Musician</string>
-    <string name="band">Band</string>
-    <string name="event_manager">Event Manager</string>
 
-    <string name="welcome_message">Welcome to MusiConnect!</string>
-    <string name="info_message">Please navigate the app using the menu.</string>
-
-
-    <string name="musiconnect_notification">MusiConnect Notification</string>
-    <string name="musiconnect_generalnotifmessage">A musician is nearby !</string>
-
-
+    <!-- FINDER related strings -->
     <string name="finderTitle">Finder</string>
     <string name="findMusicianButton">Find Musician</string>
     <string name="findBandButton">Find Band</string>
 
+    <string name="band_finder_page">Band Finder Page</string>
+    <string name="search_result">Search result</string>
+    <string name="band_profile">Band profile</string>
+    <string name="leader">Leader</string>
+    <string name="bandName">Band name</string>
+    <string name="members">Members</string>
+    <string name="events">Events</string>
+
+    <string name="musician_finder_title">Musician\'s Finder</string>
+    <string name="myMusicianFinderLevels"></string>
+    <string name="myBandFinderLevels"></string>
+    <string name="myBandFinderInstruments"></string>
+    <string name="myMusicianFinderInstruments"></string>
     <string name="musicianFinderTitle">Musician finder</string>
     <string name="musicianFinderFirstName">First name</string>
     <string name="myMusicianFinderFirstName">First name</string>
@@ -92,18 +154,16 @@
     <string name="musicianFinderUserName">Username</string>
     <string name="myMusicianFinderUserName">Username</string>
     <string name="musicianFinderInstruments">Instrument</string>
-    <string name="myMusicianFinderInstruments"></string>
     <string name="musicianFinderLevels">Level</string>
-    <string name="myMusicianFinderLevels"></string>
     <string name="musicianFinderButton">Find musician</string>
+    <string name="you_must_enter_bandname_for_search">You must enter a band name to perform a search</string>
+    <string name="you_must_fill_at_least_one_field">You must fill at least one field to permform a search</string>
 
     <string name="bandFinderTitle">Band finder</string>
     <string name="bandFinderBandName">Band name</string>
     <string name="myBandFinderBandName">Band name</string>
     <string name="bandFinderInstruments">Instrument</string>
-    <string name="myBandFinderInstruments"></string>
     <string name="bandFinderLevels">Level</string>
-    <string name="myBandFinderLevels"></string>
     <string name="bandFinderButton">Find band</string>
 
     <string-array name="instruments_array">
@@ -141,52 +201,4 @@
         <item>Advanced</item>
         <item>Professional</item>
     </string-array>
-
-    <string name="add_change_video">add/Change Video</string>
-
-    <string name="event_not_found">Event not found...</string>
-    <string name="profile_not_found">Profile not found...</string>
-    <string name="create_an_event">Create an event</string>
-    <string name="my_events">My events</string>
-    <string name="creation_cancelled">Creation cancelled</string>
-    <string name="add_participant">Add Participant</string>
-    <string name="remove_participant">Remove Participant</string>
-
-    <string name="add_users">Add Users</string>
-    <string name="add_event">Add event</string>
-    <string name="band_creation">Band Creation</string>
-    <string name="band_name">Band name</string>
-    <string name="band_name_cant_be_empty">Band name can\'t be empty</string>
-    <string name="your_nexts_events">Your nexts events</string>
-    <string name="your_bands">Your bands</string>
-
-    <string name="event_title">Event title:</string>
-    <string name="new_event_title">New event title</string>
-    <string name="event_address">Event address:</string>
-    <string name="new_event_address">New event address</string>
-    <string name="event_time">Event time:</string>
-    <string name="new_event_date">New event date</string>
-    <string name="new_event_time">New event time</string>
-    <string name="participants">Participants:</string>
-    <string name="new_participant_username">New participant username</string>
-    <string name="event_description">Event description:</string>
-    <string name="new_event_description">New event description</string>
-    <string name="visibility_question">Do you want your event to be visible to every user?</string>
-    <string name="visibility_answer_yes">Yes, make it visible to everyone</string>
-    <string name="visibility_answer_no">No, hide it from the public</string>
-    <string name="edit_event">Edit event</string>
-
-    <string name="channel_name">channel</string>
-    <string name="channel_description">description</string>
-    <string name="unable_to_resolve_address">Unable to resolve address</string>
-    <string name="new_participant_email_address">New participant email address</string>
-    <string name="band_finder_page">Band Finder Page</string>
-    <string name="search_result">Search result</string>
-    <string name="you_must_enter_bandname_for_search">You must enter a band name to perform a search</string>
-    <string name="band_profile">Band profile</string>
-    <string name="leader">Leader</string>
-    <string name="bandName">Band name</string>
-    <string name="members">Members</string>
-    <string name="events">Events</string>
-    <string name="your_events">Your events</string>
 </resources>

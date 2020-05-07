@@ -1,7 +1,14 @@
 package ch.epfl.sdp.musiconnect;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.Toast;
+import android.view.View;
+
+import java.util.ArrayList;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
@@ -13,6 +20,8 @@ import ch.epfl.sdp.musiconnect.database.DbUserType;
 public class VisitorProfilePage extends ProfilePage implements DbCallback {
     private DbAdapter dbAdapter;
 
+    private Button contactButton;
+    private String emailAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +41,53 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         emailView = findViewById(R.id.visitorProfileEmail);
         birthdayView = findViewById(R.id.visitorProfileBirthday);
 
+        contactButton = findViewById(R.id.btnContactMusician);
+
+        Button addUserToBand = findViewById(R.id.add_user_to_band);
+        if(CurrentUser.getInstance(this).getTypeOfUser() == TypeOfUser.Band) {
+            addUserToBand.setVisibility(View.VISIBLE);
+            addUserToBand.setFocusable(true);
+            addUserToBand.setClickable(true);
+        }
+
+        addUserToBand.setOnClickListener(v -> addUserToBand());
+
         loadProfileContent();
 
+        loadProfileContent();
         getVideoUri(userEmail);
+
+        contactButton.setOnClickListener(view ->
+            sendEmail(emailAddress, getResources().getString(R.string.musiconnect_contact_mail))
+        );
+    }
+
+    // Some of this method code is inspired from stackoverflow.com
+    @SuppressLint("IntentReset")
+    protected void sendEmail(String to, String subject) {
+        String[] TO = {to};
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setType("text/plain");
+
+
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Sending mail..."));
+            finish();
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void addUserToBand () {
+        Band b = CurrentUser.getInstance(this).getBand();
+        if(b!=null && !b.containsMember(userEmail)) {
+            b.addMember(userEmail);
+        }
+        (DbGenerator.getDbInstance()).add(DbUserType.Band, b);
     }
 
 
@@ -72,5 +125,13 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         usernameView.setText(m.getUserName());
         emailView.setText(m.getEmailAddress());
         birthdayView.setText(m.getBirthday().toString());
+
+        emailAddress = m.getEmailAddress();
+        addFirstNameToContactButtonText(m.getFirstName());
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void addFirstNameToContactButtonText(String firstName) {
+        contactButton.setText("Contact " + firstName);
     }
 }
