@@ -114,7 +114,7 @@ public class CurrentUserTest {
         Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
         john.setTypeOfUser(TypeOfUser.Musician);
         CurrentUser.getInstance(pageRule.getActivity()).setMusician(john);
-        Band b = new Band("bandName", john);
+        Band b = new Band("bandName", john.getEmailAddress());
         CurrentUser.getInstance(pageRule.getActivity()).setBand(b);
         assertEquals(b, CurrentUser.getInstance(pageRule.getActivity()).getBand());
     }
