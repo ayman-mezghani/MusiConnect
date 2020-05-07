@@ -61,6 +61,9 @@ public class MockDatabase extends Database {
 
     @Override
     void addDoc(String collection, String docName, SimplifiedDbEntry entry) {
+        if(collection.equals(DbUserType.Band.toString())) {
+            this.b = ((SimplifiedBand)entry).toBand();
+        }
     }
 
     @Override
