@@ -34,16 +34,18 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         emailView = findViewById(R.id.visitorProfileEmail);
         birthdayView = findViewById(R.id.visitorProfileBirthday);
 
-        loadProfileContent();
-
-        getVideoUri(userEmail);
-
         Button addUserToBand = findViewById(R.id.add_user_to_band);
         if(CurrentUser.getInstance(this).getTypeOfUser() == TypeOfUser.Band) {
             addUserToBand.setVisibility(View.VISIBLE);
             addUserToBand.setFocusable(true);
             addUserToBand.setClickable(true);
         }
+
+        loadProfileContent();
+
+        getVideoUri(userEmail);
+
+
         /*
         addUserToBand.setOnClickListener(v -> {
             DbAdapter db = ;
