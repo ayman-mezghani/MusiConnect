@@ -43,8 +43,8 @@ public class HelpPage extends Page {
             }
         });
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> super.onOptionsItemSelected(item));
+        // BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
+        // bottomNavigationView.setOnNavigationItemSelectedListener(item -> super.onOptionsItemSelected(item));
     }
 
     @Override

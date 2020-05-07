@@ -15,8 +15,8 @@ public class SettingsPage extends Page {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_page);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> super.onOptionsItemSelected(item));
+        // BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
+        // bottomNavigationView.setOnNavigationItemSelectedListener(item -> super.onOptionsItemSelected(item));
     }
 
     @Override
