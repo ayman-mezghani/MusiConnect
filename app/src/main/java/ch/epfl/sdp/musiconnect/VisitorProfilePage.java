@@ -1,9 +1,12 @@
 package ch.epfl.sdp.musiconnect;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import java.util.ArrayList;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
@@ -41,6 +44,8 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
             addUserToBand.setClickable(true);
         }
 
+        addUserToBand.setOnClickListener(v -> addUserToBand());
+
         loadProfileContent();
 
         getVideoUri(userEmail);
@@ -59,6 +64,15 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
             });
         });
          */
+    }
+
+    private void addUserToBand() {
+        ArrayList<String> ls = new ArrayList<>();
+        Band b = CurrentUser.getInstance(this).getBand();
+        if(b!=null && !b.containsMember(userEmail)) {
+            b.addMember(userEmail);
+        }
+        (DbGenerator.getDbInstance()).add(DbUserType.Band, b);
     }
 
 
