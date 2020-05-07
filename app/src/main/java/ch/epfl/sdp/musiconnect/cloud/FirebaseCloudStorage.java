@@ -17,7 +17,7 @@ import ch.epfl.sdp.R;
 
 public class FirebaseCloudStorage implements CloudStorage {
 
-    private static final String TAG = "Cloud";
+    private static final String TAG = "FirebaseCloudStorage";
     private StorageReference storageReference;
     private final Context context;
 
@@ -34,14 +34,16 @@ public class FirebaseCloudStorage implements CloudStorage {
 
             StorageMetadata metadata = new StorageMetadata.Builder()
                     .setContentType("video/mp4")
+                    .setCustomMetadata("Upload Date", )
                     .build();
 
             fileRef.putFile(fileUri, metadata)
                     .addOnSuccessListener(taskSnapshot -> {
+                        Log.d(TAG, "Uploading file");
                         Toast.makeText(context, R.string.cloud_upload_successful, Toast.LENGTH_LONG).show();
                     })
                     .addOnFailureListener(e -> {
-                        //Toast.makeText(context, R.string.cloud_upload_failed, Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, R.string.cloud_upload_failed, Toast.LENGTH_LONG).show();
                         Log.d(TAG, Objects.requireNonNull(e.getMessage()));
                     });
         } else {
@@ -54,13 +56,17 @@ public class FirebaseCloudStorage implements CloudStorage {
             IOException {
         StorageReference fileRef = storageReference.child(cloudPath);
 
-        File localFile = File.createTempFile(saveName + "_", null, null);
+        Log.d(TAG, saveName);
+
+
+        File localFile = File.createTempFile(saveName + "_", "", null);
 
         fileRef.getFile(localFile)
                 .addOnSuccessListener(taskSnapshot -> {
-                    // Local temp file has been created
+                    // Local file has been created
 //                    Toast.makeText(context, R.string.cloud_download_successful, Toast.LENGTH_LONG).show();
-                    Log.e(TAG, "File created. Created " + localFile.toString());
+                    Log.d(TAG, "File created. Created " + localFile.toString());
+                    Log.d(TAG, context.getCacheDir().toString());
                     cloudCallback.onSuccess(Uri.fromFile(localFile));
                 })
                 .addOnFailureListener(e -> {
