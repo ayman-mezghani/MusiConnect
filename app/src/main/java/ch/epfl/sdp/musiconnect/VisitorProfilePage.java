@@ -2,8 +2,11 @@ package ch.epfl.sdp.musiconnect;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
+import android.widget.Toast;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
@@ -16,6 +19,7 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
     private DbAdapter dbAdapter;
 
     private Button contactButton;
+    private String emailAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +40,34 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         birthdayView = findViewById(R.id.visitorProfileBirthday);
 
         contactButton = findViewById(R.id.btnContactMusician);
-        contactButton.setOnClickListener(view -> displayNotFinishedFunctionalityMessage());
 
         loadProfileContent();
-
         getVideoUri(userEmail);
+
+        contactButton.setOnClickListener(view -> {
+            Toast.makeText(this, getResources().getString(R.string.mail_info_message), Toast.LENGTH_SHORT).show();
+            sendEmail(emailAddress, getResources().getString(R.string.musiconnect_contact_mail));
+        });
+    }
+
+    // Some of this method code is inspired from stackoverflow.com
+    @SuppressLint("IntentReset")
+    protected void sendEmail(String to, String subject) {
+        String[] TO = {to};
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setType("text/plain");
+
+
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Sending mail..."));
+            finish();
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -79,6 +106,7 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         emailView.setText(m.getEmailAddress());
         birthdayView.setText(m.getBirthday().toString());
 
+        emailAddress = m.getEmailAddress();
         addFirstNameToContactButtonText(m.getFirstName());
     }
 

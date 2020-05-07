@@ -4,6 +4,7 @@ import android.content.Intent;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
@@ -14,6 +15,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidx.test.uiautomator.By;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.Until;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
@@ -37,6 +41,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class VisitorProfileTest {
+    private UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
     @Rule
     public final ActivityTestRule<VisitorProfilePage> visitorActivityTestRule = new ActivityTestRule<>(VisitorProfilePage.class,
@@ -143,6 +148,11 @@ public class VisitorProfileTest {
         intent.putExtra("UserEmail", m.getEmailAddress());
         visitorActivityTestRule.launchActivity(intent);
         onView(withId(R.id.btnContactMusician)).perform(scrollTo(), click());
-        onView(withText(R.string.not_yet_done)).inRoot(withDecorView(not(visitorActivityTestRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+
+        device.wait(Until.hasObject(By.textStartsWith("Gmail")), 600);
+        device.findObject(By.textStartsWith("Gmail")).click();
+
+        device.wait(Until.hasObject(By.textStartsWith("Compose")), 600);
+        device.pressBack();
     }
 }

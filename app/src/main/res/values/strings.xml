@@ -30,6 +30,8 @@
     <string name="save">Save</string>
     <string name="capture_video">Capture video</string>
     <string name="contact_musician">Contact </string>
+    <string name="mail_info_message">Opening mail intent</string>
+    <string name="musiconnect_contact_mail">MusiConnect Contact Mail</string>
 
     <string name="help_message">Help is on the way !</string>
     <string name="settings_message">Settings to come…</string>
