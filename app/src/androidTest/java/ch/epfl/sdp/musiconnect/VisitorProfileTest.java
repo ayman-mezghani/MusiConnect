@@ -148,11 +148,5 @@ public class VisitorProfileTest {
         intent.putExtra("UserEmail", m.getEmailAddress());
         visitorActivityTestRule.launchActivity(intent);
         onView(withId(R.id.btnContactMusician)).perform(scrollTo(), click());
-
-        device.wait(Until.hasObject(By.textStartsWith("Gmail")), 600);
-        device.findObject(By.textStartsWith("Gmail")).click();
-
-        device.wait(Until.hasObject(By.textStartsWith("Compose")), 600);
-        device.pressBack();
     }
 }
