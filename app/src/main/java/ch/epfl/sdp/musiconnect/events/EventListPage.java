@@ -2,6 +2,7 @@ package ch.epfl.sdp.musiconnect.events;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -71,24 +72,28 @@ public class EventListPage extends Page {
     protected void onResume() {
         super.onResume();
 
-        // Wait a bit before updating list
-        eventTitles.clear();
-        ids.clear();
-        adapter.notifyDataSetChanged();
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            eventTitles.clear();
+            ids.clear();
+            adapter.notifyDataSetChanged();
 
-        dbAdapter.read(DbUserType.Musician, userEmail, new DbCallback() {
-            @Override
-            public void readCallback(User user) {
-                loadIds(user.getEvents());
-            }
-        });
+            dbAdapter.read(DbUserType.Musician, userEmail, new DbCallback() {
+                @Override
+                public void readCallback(User user) {
+                    loadIds(user.getEvents());
+                }
+            });
 
-        dbAdapter.read(DbUserType.Band, userEmail, new DbCallback() {
-            @Override
-            public void readCallback(User user) {
-                loadIds(user.getEvents());
-            }
-        });
+            dbAdapter.read(DbUserType.Band, userEmail, new DbCallback() {
+                @Override
+                public void readCallback(User user) {
+                    loadIds(user.getEvents());
+                }
+            });
+        }, 500);
+
+
     }
 
 
@@ -127,8 +132,14 @@ public class EventListPage extends Page {
     }
 
     private void loadEventPage(String eid) {
-        Intent intent = new Intent(EventListPage.this, MyEventPage.class);
-        intent.putExtra("eid", eid);
-        EventListPage.this.startActivity(intent);
+        if (!isVisitor) {
+            Intent intent = new Intent(EventListPage.this, MyEventPage.class);
+            intent.putExtra("eid", eid);
+            EventListPage.this.startActivity(intent);
+        } else {
+            Intent intent = new Intent(EventListPage.this, VisitorEventPage.class);
+            intent.putExtra("eid", eid);
+            EventListPage.this.startActivity(intent);
+        }
     }
 }

@@ -4,7 +4,12 @@ import android.content.Intent;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObjectNotFoundException;
+import androidx.test.uiautomator.UiSelector;
 
 import org.junit.After;
 import org.junit.Before;
@@ -29,6 +34,8 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.musiconnect.testsFunctions.waitALittle;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class EventPageTests {
@@ -95,12 +102,63 @@ public class EventPageTests {
     }
 
     @Test
-    public void editButtonClick() {
+    public void testEditButtonClick() {
         Intent intent = new Intent();
         intent.putExtra("eid", "1");
         eventPageRule.launchActivity(intent);
         onView(withId(R.id.btnEditEvent)).perform(click());
 
         intended(hasComponent(EventEditionPage.class.getName()));
+    }
+
+
+    private void clickOnAlert(String text) {
+        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        try {
+            UiObject alert = device.findObject(new UiSelector().className("android.widget.Button")
+                    .text(text));
+
+            if (alert.exists()) {
+                alert.clickAndWaitForNewWindow();
+            }
+        } catch (UiObjectNotFoundException e) {
+            System.out.println("There is no permissions dialog to interact with");
+        }
+    }
+
+    @Test
+    public void testDeleteCancelButtonClick() {
+        Intent intent = new Intent();
+        intent.putExtra("eid", "1");
+        eventPageRule.launchActivity(intent);
+        onView(withId(R.id.btnDeleteEvent)).perform(click());
+
+        clickOnAlert("CANCEL");
+
+        intended(hasComponent(MyEventPage.class.getName()));
+    }
+
+
+    @Test
+    public void testDeleteYesButtonClick() {
+        Musician m = md.getDummyMusician(0);
+        Event e = md.getDummyEvent(0);
+        assertEquals(e.getEid(), m.getEvents().get(0));
+
+        Intent intent = new Intent();
+        intent.putExtra("eid", "1");
+        eventPageRule.launchActivity(intent);
+        onView(withId(R.id.btnDeleteEvent)).perform(click());
+
+        clickOnAlert("YES");
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+
+        m = md.getDummyMusician(0);
+        assertTrue(m.getEvents().isEmpty());
     }
 }

@@ -40,11 +40,17 @@ public class EventListTests {
     public final ActivityTestRule<EventListPage> eventListRule =
             new ActivityTestRule<>(EventListPage.class, true, false);
 
+
+    private static MockDatabase md;
+
     @BeforeClass
     public static void setMocks() {
-        DbGenerator.setDatabase(new MockDatabase());
+        md = new MockDatabase();
+        DbGenerator.setDatabase(md);
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
+
+
 
     @Before
     public void initIntents() {
@@ -76,18 +82,16 @@ public class EventListTests {
         Intent intent = new Intent();
         eventListRule.launchActivity(intent);
 
-
         onView(withId(R.id.eventListTitle)).check(matches(withText("Your events")));
     }
 
-    // @Test
+    @Test
     public void testEventListTitleOfOtherUser() {
-        Musician m = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
+        Musician m = md.getDummyMusician(1);
 
         Intent intent = new Intent();
         intent.putExtra("UserEmail", m.getEmailAddress());
         eventListRule.launchActivity(intent);
-
 
         onView(withId(R.id.eventListTitle)).check(matches(withText(m.getName() + "'s events")));
     }
@@ -95,10 +99,37 @@ public class EventListTests {
 
     @Test
     public void testClickEventShouldLoadPage() {
+        Event e = md.getDummyEvent(0);
+
         Intent intent = new Intent();
         eventListRule.launchActivity(intent);
-        onView(withText("Event at Big Ben!")).perform(ViewActions.scrollTo()).perform(click());
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+
+        onView(withText(e.getTitle())).perform(ViewActions.scrollTo()).perform(click());
         intended(hasComponent(MyEventPage.class.getName()));
     }
 
+    @Test
+    public void testClickOthersEventShouldLoadPage() {
+        Event e = md.getDummyEvent(1);
+        Musician m = md.getDummyMusician(1);
+
+        Intent intent = new Intent();
+        intent.putExtra("UserEmail", m.getEmailAddress());
+        eventListRule.launchActivity(intent);
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+
+        onView(withText(e.getTitle())).perform(ViewActions.scrollTo()).perform(click());
+        intended(hasComponent(VisitorEventPage.class.getName()));
+    }
 }

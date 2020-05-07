@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Button;
+import android.widget.Toast;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
 
@@ -71,10 +73,25 @@ public class MyEventPage extends EventPage {
                 .setPositiveButton("Yes", (dialogInterface, i) -> {
                     User m = event.getCreator();
                     m.removeEvent(event.getEid());
+
+                    /*
+                    if (m instanceof Musician) {
+                        dbAdapter.update(DbUserType.Musician, m);
+                    } else {
+                        dbAdapter.update(DbUserType.Band, m);
+                    }
+
+                     */
+
                     dbAdapter.delete(DbUserType.Events, event);
                     MyEventPage.this.finish();
+
+                    Toast.makeText(MyEventPage.this, "Deletion confirmed", Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    Toast.makeText(MyEventPage.this, "Deletion cancelled", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                })
                 .create()
                 .show());
     }
