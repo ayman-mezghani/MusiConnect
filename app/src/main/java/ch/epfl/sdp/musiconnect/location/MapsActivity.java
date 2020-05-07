@@ -60,7 +60,7 @@ import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
 import ch.epfl.sdp.musiconnect.events.Event;
-import ch.epfl.sdp.musiconnect.events.EventPage;
+import ch.epfl.sdp.musiconnect.events.MyEventPage;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
@@ -496,7 +496,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             this.startActivity(profileIntent);
         } else if(eventNear.contains(marker.getTag())) {
-            Intent eventPageIntent = new Intent(MapsActivity.this, EventPage.class);
+            Intent eventPageIntent = new Intent(MapsActivity.this, MyEventPage.class);
 
             Event e = (Event) marker.getTag();
             eventPageIntent.putExtra("eid", e.getEid());

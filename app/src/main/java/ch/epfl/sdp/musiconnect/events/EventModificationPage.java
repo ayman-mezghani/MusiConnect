@@ -34,7 +34,7 @@ import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
 
-public abstract class EventModification extends Page {
+public abstract class EventModificationPage extends Page {
 
     DbAdapter dbAdapter;
 
@@ -46,7 +46,7 @@ public abstract class EventModification extends Page {
     TimePickerDialog timePickerDialog;
     RadioGroup rdg;
 
-    List<Musician> participants;
+    List<User> participants;
     ArrayList<String> emails; // emails is an ArrayList to be able to put it in an intent
 
 
@@ -82,7 +82,7 @@ public abstract class EventModification extends Page {
 
     void setupDateTimePickerDialog() {
         dateView.setOnClickListener(v -> {
-            datePickerDialog = new DatePickerDialog(EventModification.this,
+            datePickerDialog = new DatePickerDialog(EventModificationPage.this,
                     (datePicker, year, month, day) -> {
                         dateView.setText(String.format(Locale.FRANCE, "%d/%d/%d", day, month + 1, year));
                         calendar.set(year, month, day);
@@ -93,7 +93,7 @@ public abstract class EventModification extends Page {
         });
 
         timeView.setOnClickListener(v -> {
-            timePickerDialog = new TimePickerDialog(EventModification.this,
+            timePickerDialog = new TimePickerDialog(EventModificationPage.this,
                     (timePicker, hour, minute) -> {
                         timeView.setText(String.format(Locale.FRANCE, "%d:%d", hour, minute));
                         calendar.set(year, month, dayOfMonth, hour, minute);
@@ -161,7 +161,7 @@ public abstract class EventModification extends Page {
 
             else if (emails.contains(email)) {
                 emails.remove(email);
-                for (Musician m: participants) {
+                for (User m: participants) {
                     if (m.getEmailAddress().equals(email)) {
                         participants.remove(m);
                         updateParticipants();
@@ -175,10 +175,10 @@ public abstract class EventModification extends Page {
         });
     }
 
-    void setupDoNotSaveButton(int id) {
+    void setupDoNotSaveButton(int id, String text) {
         Button doNotSave = findViewById(id);
         doNotSave.setOnClickListener(v -> {
-            showToastWithText("Creation cancelled");
+            showToastWithText(text);
             finish();
         });
 
@@ -187,7 +187,7 @@ public abstract class EventModification extends Page {
 
 
     void showToastWithText(String string) {
-        Toast.makeText(EventModification.this, string, Toast.LENGTH_LONG).show();
+        Toast.makeText(EventModificationPage.this, string, Toast.LENGTH_LONG).show();
     }
 
 

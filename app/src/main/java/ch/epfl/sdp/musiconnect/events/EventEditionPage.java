@@ -6,12 +6,11 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
 
-public class EventEdition extends EventModification {
+public class EventEditionPage extends EventModificationPage {
     private String eventTitle, eventAddress, eventDescription;
 
 
@@ -38,7 +37,7 @@ public class EventEdition extends EventModification {
 
         setupDateTimePickerDialog();
         setupButtons();
-        setupDoNotSaveButton(R.id.eventEditionBtnDoNotSaveEvent);
+        setupDoNotSaveButton(R.id.eventEditionBtnDoNotSaveEvent, "Edition cancelled");
         setupSaveButton();
     }
 
@@ -73,7 +72,7 @@ public class EventEdition extends EventModification {
             dbAdapter.read(DbUserType.Musician, email, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
-                    participants.add((Musician)user);
+                    participants.add(user);
                     updateParticipants();
                 }
             });

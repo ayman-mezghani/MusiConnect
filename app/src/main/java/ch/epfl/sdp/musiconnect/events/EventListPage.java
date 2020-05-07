@@ -24,9 +24,10 @@ import ch.epfl.sdp.musiconnect.database.DbUserType;
 public class EventListPage extends Page {
 
     private DbAdapter dbAdapter;
-    private List<Event> events;
+    private String userEmail;
     private List<String> eventTitles;
     private Map<String, String> ids;
+    private boolean isVisitor;
 
     private ArrayAdapter<String> adapter;
 
@@ -39,10 +40,23 @@ public class EventListPage extends Page {
 
         TextView eventListTitle = findViewById(R.id.eventListTitle);
 
-//        Intent intent = getIntent();
-//        String visitorEmail = intent.getStringExtra("UserEmail");
+        Intent intent = getIntent();
+        isVisitor = intent.hasExtra("UserEmail");
+        if (isVisitor) {
+            userEmail = intent.getStringExtra("UserEmail");
+            dbAdapter.read(DbUserType.Musician, userEmail, new DbCallback() {
+                @Override
+                public void readCallback(User user) {
+                    eventListTitle.setText(String.format("%s's events", user.getName()));
+                }
+            });
+        } else {
+            userEmail = CurrentUser.getInstance(this).email;
+            eventListTitle.setText(R.string.your_events);
+        }
+
+
         ListView lv = findViewById(R.id.eventListView);
-        events = new ArrayList<>();
         eventTitles = new ArrayList<>();
         ids = new HashMap<>();
 
@@ -51,30 +65,25 @@ public class EventListPage extends Page {
         lv.setAdapter(adapter);
         lv.setOnItemClickListener((parent, view, position, id) -> loadEventPage(ids.get(lv.getItemAtPosition(position))));
 
+    }
 
-        /*
-        if (visitorEmail != null) {
-            dbAdapter = DbGenerator.getDbInstance();
-            dbAdapter.read(DbUserType.Musician, visitorEmail, new DbCallback() {
-                @Override
-                public void readCallback(User user) {
-                    eventListTitle.setText(String.format("%s's events", user.getName()));
-                }
-            });
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-        } else {
-            eventListTitle.setText("Your events");
-        }*/
+        // Wait a bit before updating list
+        eventTitles.clear();
+        ids.clear();
+        adapter.notifyDataSetChanged();
 
-        eventListTitle.setText(R.string.your_events);
-        dbAdapter.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
+        dbAdapter.read(DbUserType.Musician, userEmail, new DbCallback() {
             @Override
             public void readCallback(User user) {
                 loadIds(user.getEvents());
             }
         });
 
-        dbAdapter.read(DbUserType.Band, CurrentUser.getInstance(this).email, new DbCallback() {
+        dbAdapter.read(DbUserType.Band, userEmail, new DbCallback() {
             @Override
             public void readCallback(User user) {
                 loadIds(user.getEvents());
@@ -82,8 +91,8 @@ public class EventListPage extends Page {
         });
     }
 
-    private void loadIds(List<String> eventIds) {
 
+    private void loadIds(List<String> eventIds) {
         for (String eid: eventIds) {
             dbAdapter.read(DbUserType.Events, eid, new DbCallback() {
                 @Override
@@ -96,18 +105,21 @@ public class EventListPage extends Page {
 
 
     private void showEvent(Event e) {
-        if (!events.contains(e)) {
-            events.add(e);
-            eventTitles.add(e.getTitle());
-            ids.put(e.getTitle(), e.getEid());
+        String eid = e.getEid();
+        String title = e.getTitle();
 
-            adapter.notifyDataSetChanged();
+        if (!ids.containsValue(eid)) {
+            eventTitles.add(title);
+            ids.put(title, eid);
+
+            EventListPage.this.runOnUiThread(() -> adapter.notifyDataSetChanged());
         }
     }
 
+
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == R.id.my_events) {
+        if (item.getItemId() == R.id.my_events && !isVisitor) {
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -115,7 +127,7 @@ public class EventListPage extends Page {
     }
 
     private void loadEventPage(String eid) {
-        Intent intent = new Intent(EventListPage.this, EventPage.class);
+        Intent intent = new Intent(EventListPage.this, MyEventPage.class);
         intent.putExtra("eid", eid);
         EventListPage.this.startActivity(intent);
     }

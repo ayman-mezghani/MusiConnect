@@ -22,7 +22,6 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
-import ch.epfl.sdp.musiconnect.events.EventEdition;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
@@ -36,8 +35,8 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class EventEditionTests {
     @Rule
-    public final ActivityTestRule<EventEdition> eventEditionRule =
-            new ActivityTestRule<>(EventEdition.class, true, false);
+    public final ActivityTestRule<EventEditionPage> eventEditionRule =
+            new ActivityTestRule<>(EventEditionPage.class, true, false);
 
     @Rule
     public GrantPermissionRule mRuntimePermissionRule =

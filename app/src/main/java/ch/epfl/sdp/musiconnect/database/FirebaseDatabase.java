@@ -105,10 +105,13 @@ public class FirebaseDatabase extends Database {
         db.collection(collection).document(docName).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     Map<String, Object> data = documentSnapshot.getData();
+
                     if (data != null && data.size() > 0) {
                         if (collection.equals((DbUserType.Band.toString()))) {
                             fetchBandMembers(data, dbCallback);
-                        } else if (collection.equals(DbUserType.Events.toString())) {
+                        }
+
+                        else if (collection.equals(DbUserType.Events.toString())) {
                             DbAdapter da = new DbAdapter(this);
                             da.read(DbUserType.Musician, (String) data.get("creatorMail"), new DbCallback() {
                                 @Override
@@ -136,7 +139,9 @@ public class FirebaseDatabase extends Database {
                                     dbCallback.readCallback(e);
                                 }
                             });
-                        } else {
+                        }
+
+                        else {
                             SimplifiedMusician m = new SimplifiedMusician(data);
                             dbCallback.readCallback(m.toMusician());
                         }

@@ -21,12 +21,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".musiconnect.events.EventEdition" />
+        <activity android:name=".musiconnect.events.VisitorEventPage"></activity>
+        <activity android:name=".musiconnect.events.EventEditionPage" />
         <activity android:name=".musiconnect.events.EventListPage" />
-        <activity android:name=".musiconnect.events.EventCreation" />
-        <activity android:name=".musiconnect.events.EventPage" />
-
+        <activity android:name=".musiconnect.events.EventCreationPage" />
+        <activity android:name=".musiconnect.events.MyEventPage" />
         <activity android:name=".musiconnect.UserCreation" />
         <activity android:name=".musiconnect.BandCreation" />
         <activity android:name=".musiconnect.GoogleLogin">

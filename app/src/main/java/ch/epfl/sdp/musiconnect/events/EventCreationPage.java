@@ -8,7 +8,7 @@ import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
 
-public class EventCreation extends EventModification {
+public class EventCreationPage extends EventModificationPage {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class EventCreation extends EventModification {
 
         setupDateTimePickerDialog();
         setupButtons();
-        setupDoNotSaveButton(R.id.eventCreationBtnDoNotSaveEvent);
+        setupDoNotSaveButton(R.id.eventCreationBtnDoNotSaveEvent, "Creation cancelled");
         setupSaveButton();
     }
 

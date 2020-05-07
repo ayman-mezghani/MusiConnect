@@ -22,8 +22,6 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
-import ch.epfl.sdp.musiconnect.events.EventListPage;
-import ch.epfl.sdp.musiconnect.events.EventPage;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
@@ -100,7 +98,7 @@ public class EventListTests {
         Intent intent = new Intent();
         eventListRule.launchActivity(intent);
         onView(withText("Event at Big Ben!")).perform(ViewActions.scrollTo()).perform(click());
-        intended(hasComponent(EventPage.class.getName()));
+        intended(hasComponent(MyEventPage.class.getName()));
     }
 
 }
