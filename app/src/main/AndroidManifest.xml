@@ -22,6 +22,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".musiconnect.finder.MusicianFinderResult"></activity>
+        <activity android:name=".musiconnect.BandProfile"></activity>
+        <activity android:name=".musiconnect.finder.BandFinderResult" />
         <activity android:name=".musiconnect.events.EventEdition" />
         <activity android:name=".musiconnect.events.EventListPage" />
         <activity android:name=".musiconnect.events.EventCreation" />
