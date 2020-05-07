@@ -48,7 +48,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".musiconnect.MapsActivity" />
+        <activity android:name=".musiconnect.location.MapsActivity" />
         <activity android:name=".musiconnect.SettingsPage" />
         <activity android:name=".musiconnect.HelpPage" />
         <activity android:name=".musiconnect.MyProfilePage" />
@@ -60,7 +60,7 @@
         <activity android:name=".musiconnect.finder.BandFinderPage" />
 
         <service
-            android:name=".musiconnect.LocationService"
+            android:name=".musiconnect.location.LocationService"
             android:stopWithTask="true" />
     </application>
 

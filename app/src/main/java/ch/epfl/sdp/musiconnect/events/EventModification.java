@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import ch.epfl.sdp.R;
 
@@ -83,7 +84,7 @@ public abstract class EventModification extends Page {
         dateView.setOnClickListener(v -> {
             datePickerDialog = new DatePickerDialog(EventModification.this,
                     (datePicker, year, month, day) -> {
-                        dateView.setText(day + "/" + (month + 1) + "/" + year);
+                        dateView.setText(String.format(Locale.FRANCE, "%d/%d/%d", day, month + 1, year));
                         calendar.set(year, month, day);
                     }
                     , year, month, dayOfMonth);
@@ -94,7 +95,7 @@ public abstract class EventModification extends Page {
         timeView.setOnClickListener(v -> {
             timePickerDialog = new TimePickerDialog(EventModification.this,
                     (timePicker, hour, minute) -> {
-                        timeView.setText(hour + ":" + minute);
+                        timeView.setText(String.format(Locale.FRANCE, "%d:%d", hour, minute));
                         calendar.set(year, month, dayOfMonth, hour, minute);
                     }, hour, minute,  DateFormat.is24HourFormat(this));
 

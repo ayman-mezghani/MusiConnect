@@ -85,17 +85,16 @@ public class MockDatabase extends Database {
             return;
         }
 
-        boolean found = false;
-        for (SimplifiedMusician sm : listOfMusicians) {
-            if (docName.equals(sm.getEmail())) {
-                dbCallback.readCallback(sm.toMusician());
-                found = true;
+        if (collection.equals(DbUserType.Musician.toString())) {
+            for (SimplifiedMusician sm : listOfMusicians) {
+                if (docName.equals(sm.getEmail())) {
+                    dbCallback.readCallback(sm.toMusician());
+                    return;
+                }
             }
         }
 
-        if (!found) {
-            dbCallback.readCallback(defaultSm.toMusician());
-        }
+        dbCallback.readCallback(defaultSm.toMusician());
     }
 
     @Override
