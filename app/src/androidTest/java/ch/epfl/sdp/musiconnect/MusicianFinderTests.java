@@ -91,28 +91,4 @@ public class MusicianFinderTests {
         appCompatTextView.perform(click());
         intended(hasComponent(VisitorProfilePage.class.getName()));
     }
-
-    @Test
-    public void testSearchShouldAddUserToBand() {
-        onView(withId(R.id.myMusicianFinderFirstNameID)).perform(scrollTo(), typeText("Bob"));
-        onView(withId(R.id.myMusicianFinderLastNameID)).perform(scrollTo(), typeText("Minion"));
-        onView(withId(R.id.myMusicianFinderUserNameID)).perform(scrollTo(), typeText("bobminion"));
-        onView(withId(R.id.musicianFinderButtonID)).perform(scrollTo(), click());
-        intended(hasComponent(MusicianFinderResult.class.getName()));
-
-        String minionMail = ((Musician)(new MockDatabase()).getDummyMusician(0)).getEmailAddress();
-        onView(allOf(withText(minionMail), withParent(withId(R.id.LvMusicianResult))));
-
-        DataInteraction appCompatTextView = onData(anything())
-                .inAdapterView(allOf(withId(R.id.LvMusicianResult),
-                        childAtPosition(
-                                withClassName(is("android.widget.LinearLayout")),
-                                2)))
-                .atPosition(0);
-        appCompatTextView.perform(click());
-        intended(hasComponent(VisitorProfilePage.class.getName()));
-        onView(withId(R.id.add_user_to_band)).perform(scrollTo(), click());
-
-        assertTrue(md.getBand().containsMember(minionMail));
-    }
 }
