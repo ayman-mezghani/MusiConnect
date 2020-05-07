@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Spinner;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -73,19 +74,26 @@ public class MusicianFinderPage extends Page implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         Map<String, Object> searchMap = new HashMap<>();
+        boolean canSearch = false;
         if(!isEmpty(musicianFirstName)) {
             searchMap.put("firstName", musicianFirstName.getText().toString());
+            canSearch = true;
         }
         if(!isEmpty(musicianLastName)) {
             searchMap.put("lastName", musicianLastName.getText().toString());
+            canSearch = true;
         }
         if(!isEmpty(musicianUserName)) {
             searchMap.put("username", musicianUserName.getText().toString());
+            canSearch = true;
         }
-
-        Intent i = new Intent(this, MusicianFinderResult.class);
-        i.putExtra("searchMap", (Serializable) searchMap);
-        startActivity(i);
+        if(canSearch) {
+            Intent i = new Intent(this, MusicianFinderResult.class);
+            i.putExtra("searchMap", (Serializable) searchMap);
+            startActivity(i);
+        } else {
+            Toast.makeText(this, R.string.you_must_fill_at_least_one_field, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private boolean isEmpty(EditText e) {
