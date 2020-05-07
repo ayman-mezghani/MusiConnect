@@ -11,7 +11,7 @@ import java.util.Set;
  * @author Manuel Pellegrini, EPFL
  */
 @Entity
-public class Musician extends Person implements Performer {
+public class Musician extends Person {
 
     private String videoURL;
     private Map<Instrument, Level> instruments;

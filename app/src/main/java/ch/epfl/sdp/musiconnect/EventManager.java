@@ -151,7 +151,7 @@ public class EventManager extends Person {
         if (containsAnyBand()) {
             tmp += "Bands:\n";
             for (Band band : bands) {
-                tmp += "    " + band.getBandName() + "\n";
+                tmp += "    " + band.getName() + "\n";
             }
         }
 

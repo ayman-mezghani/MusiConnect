@@ -55,18 +55,18 @@ public class FirebaseDatabase extends Database {
                         DbGenerator.getDbInstance().read(DbUserType.Band, simplifiedEvent.getCreatorMail(), new DbCallback() {
                             @Override
                             public void readCallback(User u) {
-                                Band b = (Band) u;
-                                b.addEvent(documentReference.getId());
-                                DbGenerator.getDbInstance().add(userType, b);
+                            Band b = (Band) u;
+                            b.addEvent(documentReference.getId());
+                            DbGenerator.getDbInstance().add(userType, b);
                             }
                         });
                     } else if (userType == DbUserType.Musician) {
                         DbGenerator.getDbInstance().read(DbUserType.Musician, simplifiedEvent.getCreatorMail(), new DbCallback() {
                             @Override
                             public void readCallback(User u) {
-                                Musician m = (Musician) u;
-                                m.addEvent(documentReference.getId());
-                                DbGenerator.getDbInstance().add(userType, m);
+                            Musician m = (Musician) u;
+                            m.addEvent(documentReference.getId());
+                            DbGenerator.getDbInstance().add(userType, m);
                             }
                         });
                     }
@@ -108,10 +108,9 @@ public class FirebaseDatabase extends Database {
 
                     if (data != null && data.size() > 0) {
                         if (collection.equals((DbUserType.Band.toString()))) {
-                            fetchBandMembers(data, dbCallback);
-                        }
-
-                        else if (collection.equals(DbUserType.Events.toString())) {
+                            SimplifiedBand sb = new SimplifiedBand(data);
+                            dbCallback.readCallback(sb.toBand());
+                        } else if (collection.equals(DbUserType.Events.toString())) {
                             DbAdapter da = new DbAdapter(this);
                             da.read(DbUserType.Musician, (String) data.get("creatorMail"), new DbCallback() {
                                 @Override
@@ -151,38 +150,6 @@ public class FirebaseDatabase extends Database {
                     dbCallback.readFailCallback();
                     Log.w(TAG, "Error reading document", e);
                 });
-    }
-
-    private void fetchBandMembers(Map<String, Object> data, DbCallback dbCallback) {
-
-        DbAdapter da = DbGenerator.getDbInstance();
-
-        da.read(DbUserType.Musician, (String) data.get("leader"), new DbCallback() {
-            @Override
-            public void readCallback(User user) {
-                Band b = new Band((String) data.get("bandName"), (Musician) user);
-
-                if (data.get("videoUrl") != null)
-                    b.setVideoURL(data.get("videoUrl").toString());
-
-                b.setMusicianEmailAdresses((ArrayList<String>) data.get("members"));
-                b.setEvents((ArrayList<String>) data.get("events"));
-                DbAdapter da = DbGenerator.getDbInstance();
-
-                for (String me : b.getMusicianEmailsAdress()) {
-                    da.read(DbUserType.Musician, me, new DbCallback() {
-                        @Override
-                        public void readCallback(User user) {
-                            try {
-                                b.addMember((Musician) user);
-                            } catch (IllegalArgumentException e) {
-                            }
-                        }
-                    });
-                }
-                dbCallback.readCallback(b);
-            }
-        });
     }
 
     @Override
