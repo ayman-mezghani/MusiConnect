@@ -95,8 +95,8 @@ public class MockDatabase extends Database {
     void updateDoc(String collection, String docName, Map<String, Object> newValueMap) {
         Object value = newValueMap.get(SimplifiedMusician.EVENTS);
 
-        if (collection.equals(DbUserType.Musician.toString()) && docName.equals(getDummyMusician(0).getEmailAddress()) && value != null) {
-            getDummyMusician(0).setEvents((List<String>) value);
+        if (collection.equals(DbUserType.Musician.toString()) && docName.equals(getDummyMusician(1).getEmailAddress()) && value != null) {
+            getDummyMusician(1).setEvents((List<String>) value);
         }
 
 
