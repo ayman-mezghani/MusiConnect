@@ -66,14 +66,14 @@ public class FirebaseCloudStorageTest {
 
         when(storageReference.child(anyString())).thenReturn(storageReference);
         when(storageReference.putFile(any(Uri.class), any(StorageMetadata.class))).thenReturn(uploadTask);
-        when(storageReference.getMetadata()).thenReturn(metadataTask);
+//        when(storageReference.getMetadata()).thenReturn(metadataTask);
         when(storageReference.delete()).thenReturn(deleteTask);
 
         when(uploadTask.addOnSuccessListener(any())).thenReturn(uploadTask);
         when(uploadTask.addOnFailureListener(any())).thenReturn(uploadTask);
 
-        when(metadataTask.addOnSuccessListener(any())).thenReturn(metadataTask);
-        when(metadataTask.addOnFailureListener(any())).thenReturn(metadataTask);
+//        when(metadataTask.addOnSuccessListener(any())).thenReturn(metadataTask);
+//        when(metadataTask.addOnFailureListener(any())).thenReturn(metadataTask);
 
         when(deleteTask.addOnSuccessListener(any())).thenReturn(deleteTask);
         when(deleteTask.addOnFailureListener(any())).thenReturn(deleteTask);
@@ -94,18 +94,18 @@ public class FirebaseCloudStorageTest {
         assertThrows(IOException.class, () -> cloudStorage.upload(null, null, null));
     }
 
-    @Test
-    public void downloadTest() throws IOException {
-        cloudStorage.download(CloudStorage.FileType.video, username, any(CloudCallback.class));
-
-        verify(storageReference, times(1)).child(anyString());
-        verify(storageReference, times(1)).getMetadata();
-        verifyZeroInteractions(storageReference);
-
-        verify(metadataTask, times(1)).addOnSuccessListener(any());
-        verify(metadataTask, times(1)).addOnFailureListener(any());
-        verifyNoMoreInteractions(metadataTask);
-    }
+//    @Test
+//    public void downloadTest() throws IOException {
+//        cloudStorage.download(CloudStorage.FileType.video, username, any(CloudCallback.class));
+//
+//        verify(storageReference, times(1)).child(anyString());
+//        verify(storageReference, times(1)).getMetadata();
+//        verifyZeroInteractions(storageReference);
+//
+//        verify(metadataTask, times(1)).addOnSuccessListener(any());
+//        verify(metadataTask, times(1)).addOnFailureListener(any());
+//        verifyNoMoreInteractions(metadataTask);
+//    }
 
     @Test
     public void deleteTest() throws IOException {
