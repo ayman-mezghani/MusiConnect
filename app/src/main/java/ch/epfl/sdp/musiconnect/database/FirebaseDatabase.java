@@ -105,6 +105,7 @@ public class FirebaseDatabase extends Database {
         db.collection(collection).document(docName).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     Map<String, Object> data = documentSnapshot.getData();
+
                     if (data != null && data.size() > 0) {
                         if (collection.equals((DbUserType.Band.toString()))) {
                             SimplifiedBand sb = new SimplifiedBand(data);
@@ -137,10 +138,18 @@ public class FirebaseDatabase extends Database {
                                     dbCallback.readCallback(e);
                                 }
                             });
-                        } else {
+                        }
+
+                        else {
                             SimplifiedMusician m = new SimplifiedMusician(data);
                             dbCallback.readCallback(m.toMusician());
                         }
+                    }
+
+                    // Data is null!
+                    else {
+                        dbCallback.readFailCallback();
+                        Log.w(TAG, "Error: the element does not exist in the database");
                     }
                 })
                 .addOnFailureListener(e -> {

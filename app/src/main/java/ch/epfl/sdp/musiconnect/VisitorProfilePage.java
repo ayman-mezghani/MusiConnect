@@ -4,23 +4,22 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import android.view.View;
-
-import java.util.ArrayList;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
-
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.events.EventListPage;
 
 public class VisitorProfilePage extends ProfilePage implements DbCallback {
     private DbAdapter dbAdapter;
 
     private Button contactButton;
+    private Button eventListButton;
     private String emailAddress;
 
     @Override
@@ -41,6 +40,7 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         emailView = findViewById(R.id.visitorProfileEmail);
         birthdayView = findViewById(R.id.visitorProfileBirthday);
 
+        eventListButton = findViewById(R.id.btnVisitorEventList);
         contactButton = findViewById(R.id.btnContactMusician);
 
         Button addUserToBand = findViewById(R.id.add_user_to_band);
@@ -52,14 +52,12 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
 
         addUserToBand.setOnClickListener(v -> addUserToBand());
 
-        loadProfileContent();
 
         loadProfileContent();
         getVideoUri(userEmail);
+        setupEventListButton();
 
-        contactButton.setOnClickListener(view ->
-            sendEmail(emailAddress, getResources().getString(R.string.musiconnect_contact_mail))
-        );
+        contactButton.setOnClickListener(view -> sendEmail(emailAddress, getResources().getString(R.string.musiconnect_contact_mail)));
     }
 
     // Some of this method code is inspired from stackoverflow.com
@@ -128,6 +126,15 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
 
         emailAddress = m.getEmailAddress();
         addFirstNameToContactButtonText(m.getFirstName());
+    }
+
+    private void setupEventListButton() {
+        eventListButton.setOnClickListener(v -> {
+            Intent intent = new Intent(VisitorProfilePage.this, EventListPage.class);
+            intent.putExtra("UserEmail", userEmail);
+
+            VisitorProfilePage.this.startActivity(intent);
+        });
     }
 
     @SuppressLint("SetTextI18n")

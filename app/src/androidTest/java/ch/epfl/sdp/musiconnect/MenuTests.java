@@ -20,7 +20,7 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
-import ch.epfl.sdp.musiconnect.events.EventCreation;
+import ch.epfl.sdp.musiconnect.events.EventCreationPage;
 import ch.epfl.sdp.musiconnect.events.EventListPage;
 import ch.epfl.sdp.musiconnect.finder.FinderPage;
 import ch.epfl.sdp.musiconnect.location.MapsActivity;
@@ -135,7 +135,7 @@ public class MenuTests {
 
         Intent eventIntent = new Intent();
         startPageRule.launchActivity(eventIntent);
-        intended(hasComponent(EventCreation.class.getName()));
+        intended(hasComponent(EventCreationPage.class.getName()));
     }
 
 

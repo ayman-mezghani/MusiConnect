@@ -13,7 +13,6 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
-import ch.epfl.sdp.musiconnect.events.EventCreation;
 import ch.epfl.sdp.musiconnect.finder.BandFinderPage;
 import ch.epfl.sdp.musiconnect.finder.BandFinderResult;
 
@@ -29,7 +28,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.musiconnect.testsFunctions.waitALittle;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.not;
 

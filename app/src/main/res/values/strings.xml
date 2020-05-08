@@ -63,6 +63,12 @@
     <string name="your_nexts_events">Your nexts events</string>
     <string name="create_an_event">Create an event</string>
     <string name="my_events">My events</string>
+
+    <string name="event_creator">Event Creator:</string>
+    <string name="where">Where:</string>
+    <string name="when">When:</string>
+    <string name="description">Description:</string>
+
     <string name="add_participant">Add Participant</string>
     <string name="remove_participant">Remove Participant</string>
     <string name="event_title">Event title:</string>
@@ -80,6 +86,8 @@
     <string name="visibility_answer_yes">Yes, make it visible to everyone</string>
     <string name="visibility_answer_no">No, hide it from the public</string>
     <string name="edit_event">Edit event</string>
+    <string name="delete_event">Delete event</string>
+
 
 
     <!-- Basic information messages -->
@@ -165,6 +173,8 @@
     <string name="bandFinderInstruments">Instrument</string>
     <string name="bandFinderLevels">Level</string>
     <string name="bandFinderButton">Find band</string>
+
+
 
     <string-array name="instruments_array">
         <item>- Select instrument -</item>
