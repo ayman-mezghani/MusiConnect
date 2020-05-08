@@ -18,6 +18,7 @@ import java.util.Objects;
 import java.util.TimeZone;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.ConnectionCheck;
 
 public class FirebaseCloudStorage implements CloudStorage {
 
@@ -70,20 +71,20 @@ public class FirebaseCloudStorage implements CloudStorage {
 
     public void download(FileType fileType, String username, CloudCallback cloudCallback) {
 
-        String cloudPath = username + "/" + fileType;
-        StorageReference fileRef = storageReference.child(cloudPath);
+        if (ConnectionCheck.checkConnection(context)) {
+            String cloudPath = username + "/" + fileType;
+            StorageReference fileRef = storageReference.child(cloudPath);
+            fileRef.getMetadata()
+                    .addOnSuccessListener(storageMetadata -> {
+                        String metadataTag = storageMetadata.getCustomMetadata(METADATA_DATE);
+                        String dirPath = cacheDirPath + "/" + fileType;
+                        String localFileNamePattern = username + "_" + fileType;
+                        String localFileName = localFileNamePattern + "_" + metadataTag;
 
-        fileRef.getMetadata()
-                .addOnSuccessListener(storageMetadata -> {
-                    String metadataTag = storageMetadata.getCustomMetadata(METADATA_DATE);
-                    String dirPath = cacheDirPath + "/" + fileType;
-                    String localFileNamePattern = username + "_" + fileType;
-                    String localFileName = localFileNamePattern + "_" + metadataTag;
+                        File cacheDirectory = new File(dirPath);
 
-                    File cacheDirectory = new File(dirPath);
-
-                    if (!cacheDirectory.exists())
-                        cacheDirectory.mkdir();
+                        if (!cacheDirectory.exists())
+                            cacheDirectory.mkdir();
 
 //                    Log.d(TAG, directory.exists() + "");
 //
@@ -92,24 +93,40 @@ public class FirebaseCloudStorage implements CloudStorage {
 //                    for (String p : paths)
 //                        Log.d(TAG, p);
 
-                    File localFile = new File(cacheDirectory, localFileName);
+                        File localFile = new File(cacheDirectory, localFileName);
 
-                    if (!localFile.exists()) {
-                        File[] matchingFiles = cacheDirectory.listFiles((dir, name) -> name.startsWith(localFileNamePattern));
+                        if (!localFile.exists()) {
+                            File[] matchingFiles = cacheDirectory.listFiles((dir, name) -> name.startsWith(localFileNamePattern));
 
-                        if (matchingFiles != null) {
-                            for (File f : matchingFiles)
-                                f.delete();
+                            if (matchingFiles != null) {
+                                for (File f : matchingFiles)
+                                    f.delete();
+                            }
+
+                            downloader(fileRef, localFile, cloudCallback);
+                        } else {
+                            cloudCallback.onSuccess(Uri.fromFile(localFile));
                         }
 
-                        downloader(fileRef, localFile, cloudCallback);
-                    } else {
-                        cloudCallback.onSuccess(Uri.fromFile(localFile));
-                    }
-
-                }).addOnFailureListener(e -> {
-            DownloadFailureRoutine(e, cloudCallback);
-        });
+                    }).addOnFailureListener(e -> {
+                DownloadFailureRoutine(e, cloudCallback);
+            });
+        } else {
+            Log.d(TAG, "no internet");
+            String localFileNamePattern = username + "_" + fileType;
+            String dirPath = cacheDirPath + "/" + fileType;
+            File cacheDirectory = new File(dirPath);
+            if (cacheDirectory.exists()) {
+                File[] matchingFiles = cacheDirectory.listFiles((dir, name) -> name.startsWith(localFileNamePattern));
+                if (matchingFiles != null && matchingFiles.length > 0) {
+                    cloudCallback.onSuccess(Uri.fromFile(matchingFiles[0]));
+                } else {
+                    cloudCallback.onFailure();
+                }
+            } else {
+                cloudCallback.onFailure();
+            }
+        }
     }
 
     public void delete(String cloudPath) {
