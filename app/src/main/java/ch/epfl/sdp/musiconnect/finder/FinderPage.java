@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.finder;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -10,6 +10,7 @@ import android.widget.Button;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.Page;
 
 /**
  * @author Manuel Pellegrini, EPFL

@@ -40,6 +40,11 @@ public class DbAdapter {
         }
     }
 
+    public void delete(DbUserType userType, Event event) {
+        db.deleteDoc(userType.toString(), event.getEid());
+    }
+
+
     public void update(DbUserType userType, User user) {
         if(userType.equals(DbUserType.Musician)) {
             Musician musician = (Musician) user;

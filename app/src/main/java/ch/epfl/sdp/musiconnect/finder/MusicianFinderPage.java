@@ -1,5 +1,6 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.finder;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -7,10 +8,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Spinner;
 import android.widget.Button;
+import android.widget.Toast;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.Page;
 
 /**
  * @author Manuel Pellegrini, EPFL
@@ -72,7 +79,31 @@ public class MusicianFinderPage extends Page implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        super.displayNotFinishedFunctionalityMessage();
+        Map<String, Object> searchMap = new HashMap<>();
+        boolean canSearch = false;
+        if(!isEmpty(musicianFirstName)) {
+            searchMap.put("firstName", musicianFirstName.getText().toString());
+            canSearch = true;
+        }
+        if(!isEmpty(musicianLastName)) {
+            searchMap.put("lastName", musicianLastName.getText().toString());
+            canSearch = true;
+        }
+        if(!isEmpty(musicianUserName)) {
+            searchMap.put("username", musicianUserName.getText().toString());
+            canSearch = true;
+        }
+        if(canSearch) {
+            Intent i = new Intent(this, MusicianFinderResult.class);
+            i.putExtra("searchMap", (Serializable) searchMap);
+            startActivity(i);
+        } else {
+            Toast.makeText(this, R.string.you_must_fill_at_least_one_field, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean isEmpty(EditText e) {
+        return e.getText().toString().equals("");
     }
 
 }

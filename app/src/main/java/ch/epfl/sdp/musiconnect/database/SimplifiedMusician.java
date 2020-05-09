@@ -100,6 +100,7 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
         return res;
     }
 
+    // TODO Those methods are also in SimplifiedEvent, may need to refactor
     private Date myDateToDate(MyDate myDate) {
         return new Date(myDate.getYear() - YEAR_BIAS, myDate.getMonth() - MONTH_BIAS, myDate.getDate(), myDate.getHours(), myDate.getMinutes());
     }

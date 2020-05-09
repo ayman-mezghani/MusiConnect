@@ -170,7 +170,7 @@ public class StartPage extends Page {
     }
 
     protected void button1Click() {
-       runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             public void run() {
                 Toast.makeText(getApplicationContext(), CurrentUser.getInstance(getApplicationContext()).email, Toast.LENGTH_SHORT).show();
             }
@@ -195,7 +195,6 @@ public class StartPage extends Page {
 
             fab_button_2.setFocusable(false);
             fab_button_1.setFocusable(false);
-
         } else {
             fab_button_2.startAnimation(fabOpen);
             fabTv2.startAnimation(fabOpen);

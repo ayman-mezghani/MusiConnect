@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.events.Event;
 
@@ -28,6 +29,9 @@ public class SimplifiedEvent {
     static final String TITLE = "title";
     static final String DESCRIPTION = "description";
 
+    private static final int YEAR_BIAS = 1900;
+    private static final int MONTH_BIAS = 1;
+
     public SimplifiedEvent() {
     }
 
@@ -40,7 +44,7 @@ public class SimplifiedEvent {
         }
         this.adress = e.getAddress();
         this.loc = e.getGeoPoint();
-        this.dateTime = e.getDateTime().toDate();
+        this.dateTime = myDateToDate(e.getDateTime());
         this.title = e.getTitle();
         this.description = e.getDescription();
     }
@@ -101,6 +105,17 @@ public class SimplifiedEvent {
         this.description = description;
     }
 
+
+    private Date myDateToDate(MyDate myDate) {
+        return new Date(myDate.getYear() - YEAR_BIAS, myDate.getMonth() - MONTH_BIAS, myDate.getDate(), myDate.getHours(), myDate.getMinutes());
+    }
+
+    /*
+    private MyDate dateToMyDate(Date date) {
+        return new MyDate(date.getYear() + YEAR_BIAS, date.getMonth() + MONTH_BIAS, date.getDate(), date.getHours(), date.getMinutes());
+    }
+
+     */
 
     public Map<String, Object> toMap() {
         Map<String, Object> res = new HashMap<>();

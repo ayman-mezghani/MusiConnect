@@ -584,8 +584,8 @@ public class EventManagerClassUnitTests {
         ArrayList<String> as = new ArrayList<>();
         Event e = new Event(john, "1");
 
-        as.add(e.getEid());
-        john.addEvent(e.getEid());
+            as.add(e.getEid());
+            john.addEvent(e.getEid());
 
         assertEquals(as, john.getEvents());
 

@@ -19,15 +19,25 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.events.EventListPage;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
 
 
 @RunWith(AndroidJUnit4.class)
 public class VisitorProfileTest {
+
+    private static MockDatabase md;
+
 
     @Rule
     public final ActivityTestRule<VisitorProfilePage> visitorActivityTestRule = new ActivityTestRule<>(VisitorProfilePage.class,
@@ -39,7 +49,8 @@ public class VisitorProfileTest {
 
     @BeforeClass
     public static void setMocks() {
-        DbGenerator.setDatabase(new MockDatabase());
+        md = new MockDatabase();
+        DbGenerator.setDatabase(md);
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
 
@@ -50,6 +61,20 @@ public class VisitorProfileTest {
 
     @After
     public void releaseIntents() { Intents.release(); }
+
+
+    @Test
+    public void testSeeTheEventsClick() {
+        Musician m = md.getDummyMusician(1);
+
+        Intent intent = new Intent();
+        intent.putExtra("UserEmail", m.getEmailAddress());
+        visitorActivityTestRule.launchActivity(intent);
+
+        onView(withId(R.id.btnVisitorEventList)).perform(scrollTo(), click());
+
+        intended(hasComponent(EventListPage.class.getName()));
+    }
 
     @Test
     public void testNoMarkerTransitionToProfile() {
@@ -99,5 +124,40 @@ public class VisitorProfileTest {
         visitorActivityTestRule.launchActivity(intent);
 
         onView(withId(R.id.visitorProfileTitle)).check(matches(withText("Profile not found...")));
+    }
+
+    @Test
+    public void testChangeTextOfContactButton() {
+        Musician m = new Musician(
+                "Bob",
+                "Mallet",
+                "Bob",
+                "bob@gmail.com",
+                new MyDate(2000, 1, 1)
+        );
+
+        Intent intent = new Intent();
+        intent.putExtra("UserEmail", m.getEmailAddress());
+        visitorActivityTestRule.launchActivity(intent);
+
+        onView(allOf(withText("Contact" + m.getFirstName()), withParent(withId(R.id.btnContactMusician))));
+
+        visitorActivityTestRule.finishActivity();
+    }
+
+    @Test
+    public void testContactButtonClickShouldDisplayMessage() {
+        Musician m = new Musician(
+                "Julien",
+                "Dore",
+                "ilestpasbeau",
+                "jdore@gmail.com",
+                new MyDate(1950, 12, 31)
+        );
+
+        Intent intent = new Intent();
+        intent.putExtra("UserEmail", m.getEmailAddress());
+        visitorActivityTestRule.launchActivity(intent);
+        onView(withId(R.id.btnContactMusician)).perform(scrollTo(), click());
     }
 }

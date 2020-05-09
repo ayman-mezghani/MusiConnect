@@ -48,6 +48,10 @@ public abstract class User {
 
     public void addEvent(String eventId) { this.events.add(eventId); }
 
+    public void removeEvent(String eventId) {
+        events.remove(eventId);
+    }
+
     public List<String> getEvents() { return this.events; }
 
     public void setEvents(List<String> e) {
