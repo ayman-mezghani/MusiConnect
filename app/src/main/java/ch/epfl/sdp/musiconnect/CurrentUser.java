@@ -83,6 +83,7 @@ public class CurrentUser {
 
     public void setMusician(Musician m) {
         this.musician = m;
+        this.type = m.getTypeOfUser();
     }
 
     public Musician getMusician() {

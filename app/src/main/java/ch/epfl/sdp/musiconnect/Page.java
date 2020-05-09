@@ -6,13 +6,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
-
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -24,9 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import androidx.core.app.NotificationCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
@@ -89,12 +89,10 @@ public abstract class Page extends AppCompatActivity {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter("GPSLocationUpdates"));
 
-        Context ctx = this;
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if (!test)
-            updateCurrentUserBand(this);
+        updateCurrentUser(this);
     }
 
     @Override
@@ -208,14 +206,24 @@ public abstract class Page extends AppCompatActivity {
                 });
     }
 
-    public static void updateCurrentUserBand(Context ctx) {
-        if(CurrentUser.getInstance(ctx).getTypeOfUser() == TypeOfUser.Band) {
-            DbGenerator.getDbInstance().read(DbUserType.Band, CurrentUser.getInstance(ctx).email, new DbCallback() {
-                @Override
-                public void readCallback(User u) {
+    public void updateCurrentUser(Context ctx) {
+        DbAdapter db = DbGenerator.getDbInstance();
+        db.read(DbUserType.Musician, CurrentUser.getInstance(ctx).email, new DbCallback() {
+            @Override
+            public void readCallback(User user) {
+            CurrentUser.getInstance(ctx).setMusician((Musician) user);
+            if(((Musician) user).getTypeOfUser() == TypeOfUser.Band) {
+                db.read(DbUserType.Band, CurrentUser.getInstance(ctx).email, new DbCallback() {
+                    @Override
+                    public void readCallback(User u) {
                     CurrentUser.getInstance(ctx).setBand((Band) u);
-                }
-            });
-        }
+                    }
+                });
+            }
+            MenuItem bandItem = findViewById(R.id.my_profileBand);
+            bandItem.setVisible(true);
+            }
+        });
+
     }
 }

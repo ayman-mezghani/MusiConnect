@@ -17,6 +17,11 @@
         android:title="@string/my_profile"
         app:showAsAction="never"/>
 
+    <item  android:id="@+id/my_profileBand"
+        android:title="@string/my_profile"
+        android:visible="false"
+        app:showAsAction="never"/>
+
     <item android:id="@+id/my_events"
         android:title="@string/my_events"
         app:showAsAction="never"/>

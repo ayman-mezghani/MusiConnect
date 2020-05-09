@@ -68,7 +68,7 @@ public class StartPage extends Page {
         fab_button_1.setOnClickListener(v -> button1Click());
 
         fab_button_2.setOnClickListener(v -> {
-            updateCurrentUserBand(this);
+            updateCurrentUser(this);
             Context ctx = this;
             ListView lv = findViewById(R.id.LvEvent);
             ArrayList<String> events = new ArrayList<>();
@@ -93,7 +93,7 @@ public class StartPage extends Page {
 
 
         if(!test) {
-            updateCurrentUserBand(this);
+            updateCurrentUser(this);
         }
     }
 
@@ -168,7 +168,7 @@ public class StartPage extends Page {
                 Toast.makeText(getApplicationContext(), CurrentUser.getInstance(getApplicationContext()).email, Toast.LENGTH_SHORT).show();
             }
         });
-        updateCurrentUserBand(this);
+        updateCurrentUser(this);
 
         CurrentUser.getInstance(this).getBand().addMember("aymanmezghani97@gmail.com");
         CurrentUser.getInstance(this).getBand().addMember("seboll13@gmail.com");
