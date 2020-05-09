@@ -33,6 +33,7 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
+import static junit.framework.TestCase.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class EventPageTests {
@@ -49,7 +50,6 @@ public class EventPageTests {
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
 
-
     @Before
     public void initIntents() {
         Intents.init();
@@ -57,9 +57,6 @@ public class EventPageTests {
 
     @After
     public void releaseIntents() { Intents.release(); }
-
-
-
 
     @Test
     public void loadPageShouldShowCorrectEvent() {
@@ -106,12 +103,9 @@ public class EventPageTests {
     private void clickOnAlert(String text) {
         UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
         try {
-            UiObject alert = device.findObject(new UiSelector().className("android.widget.Button")
-                    .text(text));
-
-            if (alert.exists()) {
+            UiObject alert = device.findObject(new UiSelector().className("android.widget.Button").text(text));
+            if (alert.exists())
                 alert.clickAndWaitForNewWindow();
-            }
         } catch (UiObjectNotFoundException e) {
             System.out.println("There is no permissions dialog to interact with");
         }
@@ -150,6 +144,5 @@ public class EventPageTests {
         }
 
         m = (Musician)e.getCreator();
-        // assertTrue(m.getEvents().isEmpty());
     }
 }

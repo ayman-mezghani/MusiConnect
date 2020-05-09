@@ -28,6 +28,7 @@ import ch.epfl.sdp.musiconnect.location.MapsLocationFunctions;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -80,7 +81,7 @@ public class MenuTests {
 
         Intent eventIntent = new Intent();
         startPageRule.launchActivity(eventIntent);
-        intended(hasComponent(EventCreation.class.getName()));
+        intended(hasComponent(EventCreationPage.class.getName()));
     }
 
     @Test
@@ -101,14 +102,18 @@ public class MenuTests {
         intended(hasComponent(GoogleLogin.class.getName()));
     }
 
+    private void clickOnMenuId(int id) {
+        onView(withId(id)).perform(click());
+    }
+
     @Test
     public void testHomeClickFromBottomMenuShouldDoNothing() {
-        onView(withId(R.id.home)).perform(click());
+        clickOnMenuId(R.id.home);
     }
 
     @Test
     public void testMyProfileClickFromBottomMenuShouldStartNewIntent() {
-        onView(withId(R.id.my_profile)).perform(click());
+        clickOnMenuId(R.id.my_profile);
 
         Intent profileIntent = new Intent();
         startPageRule.launchActivity(profileIntent);
@@ -116,17 +121,8 @@ public class MenuTests {
     }
 
     @Test
-    public void testMyEventsClickFromBottomMenuShouldStartNewIntent() {
-        onView(withId(R.id.my_events)).perform(click());
-
-        Intent eventIntent = new Intent();
-        startPageRule.launchActivity(eventIntent);
-        intended(hasComponent(EventListPage.class.getName()));
-    }
-
-    @Test
     public void testMapClickFromBottomMenuShouldStartNewIntent() {
-        onView(withId(R.id.map)).perform(click());
+        clickOnMenuId(R.id.map);
 
         Intent mapIntent = new Intent();
         startPageRule.launchActivity(mapIntent);
@@ -135,7 +131,7 @@ public class MenuTests {
 
     @Test
     public void testSearchClickFromBottomMenuShouldStartNewIntent() {
-        onView(withId(R.id.search)).perform(click());
+        clickOnMenuId(R.id.search);
 
         Intent searchIntent = new Intent();
         startPageRule.launchActivity(searchIntent);

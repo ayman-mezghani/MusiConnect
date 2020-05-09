@@ -143,7 +143,7 @@
 
 
     <!-- FINDER related strings -->
-    <string name="finderTitle">Finder</string>
+    <string name="finderTitle">Finder Page</string>
     <string name="findMusicianButton">Find Musician</string>
     <string name="findBandButton">Find Band</string>
 

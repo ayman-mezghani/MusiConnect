@@ -18,6 +18,10 @@
     <color name="purple">#800080</color>
     <color name="teal">#008080</color>
     <color name="navy">#000080</color>
+    <color name="maintheme_blue">#364F6B</color>
+    <color name="maintheme_darkblue">#112D4E</color>
+    <color name="accent_red">#FC5185</color>
+    <color name="text_grey">#F5F5F5</color>
 
     <color name="background">#F5F5F5</color>
 

@@ -24,6 +24,8 @@ import org.junit.runner.RunWith;
 import java.util.Calendar;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.TypeOfUser;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
@@ -44,7 +46,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.sdp.musiconnect.testsFunctions.getCurrentActivity;
-import static ch.epfl.sdp.musiconnect.testsFunctions.waitALittle;
+import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -101,17 +103,6 @@ public class EventCreationTests {
         clickButtonWithText(R.string.save);
         //assertTrue(eventCreationRule.getActivity().isFinishing());
     }
-
-    /**
-    @Test
-    public void testHelpClickShouldStartNewIntent() {
-        onView(withId(R.id.help)).perform(click());
-
-        Intent helpIntent = new Intent();
-        eventCreationRule.launchActivity(helpIntent);
-        intended(hasComponent(HelpPage.class.getName()));
-    }
-     */
 
 
     @Test
@@ -245,7 +236,7 @@ public class EventCreationTests {
         closeSoftKeyboard();
 
         testSetDefaultCalendar();
-        waitALittle(2);
+        waitSeconds(2);
         checkIfFinishing();
     }
 
