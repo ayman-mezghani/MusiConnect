@@ -1,6 +1,5 @@
 package ch.epfl.sdp.musiconnect;
 
-
 import android.content.Intent;
 
 import androidx.test.espresso.intent.Intents;
@@ -44,10 +43,6 @@ public class MenuTests {
     public GrantPermissionRule mRuntimePermissionRule =
             GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
-    // private static boolean setUpIsDone = false;
-
-
-
     @BeforeClass
     public static void setMocks() {
         DbGenerator.setDatabase(new MockDatabase());
@@ -65,28 +60,6 @@ public class MenuTests {
     public void releaseIntents() { Intents.release(); }
 
     /**
-    @Test
-    public void testHelpClickShouldStartNewIntent() {
-        onView(withId(R.id.help)).perform(click());
-
-        Intent helpIntent = new Intent();
-        startPageRule.launchActivity(helpIntent);
-        intended(hasComponent(HelpPage.class.getName()));
-    }
-     */
-
-    /**
-    @Test
-    public void testSearchClickShouldStartNewIntent() {
-        onView(withId(R.id.search)).perform(click());
-
-        Intent searchIntent = new Intent();
-        startPageRule.launchActivity(searchIntent);
-        intended(hasComponent(FinderPage.class.getName()));
-    }
-     */
-
-    /**
      * Helper method to avoid duplicate code
      * @param stringId
      */
@@ -95,50 +68,13 @@ public class MenuTests {
         onView(withText(stringId)).perform(click());
     }
 
-    /**
     @Test
-    public void testMyProfileClickShouldStartNewIntent() {
-        openActionsMenu(R.string.my_profile);
-
-        Intent profileIntent = new Intent();
-        startPageRule.launchActivity(profileIntent);
-        intended(hasComponent(MyProfilePage.class.getName()));
-    }
-     */
-
-    @Test
-    public void testSettingsClickShouldStartNewIntent() {
-        openActionsMenu(R.string.settings);
-
-        Intent settingsIntent = new Intent();
-        startPageRule.launchActivity(settingsIntent);
-        intended(hasComponent(SettingsPage.class.getName()));
+    public void testHomeClickFromMenuShouldDoNothing() {
+        openActionsMenu(R.string.navigation_home);
     }
 
-    /**
     @Test
-    public void testMapClickShouldStartNewIntent() {
-        openActionsMenu(R.string.map);
-
-        Intent mapIntent = new Intent();
-        startPageRule.launchActivity(mapIntent);
-        intended(hasComponent(MapsActivity.class.getName()));
-    }
-     */
-
-    /**
-    @Test
-    public void testMyEventsClickShouldStartNewIntent() {
-        openActionsMenu(R.string.my_events);
-
-        Intent eventIntent = new Intent();
-        startPageRule.launchActivity(eventIntent);
-        intended(hasComponent(EventListPage.class.getName()));
-    }
-     */
-
-    @Test
-    public void testCreateEventClickShouldStartNewIntent() {
+    public void testCreateEventClickFromMenuShouldStartNewIntent() {
         openActionsMenu(R.string.create_an_event);
 
         Intent eventIntent = new Intent();
@@ -146,10 +82,62 @@ public class MenuTests {
         intended(hasComponent(EventCreation.class.getName()));
     }
 
+    @Test
+    public void testHelpClickFromMenuShouldStartNewIntent() {
+        openActionsMenu(R.string.help);
+
+        Intent helpIntent = new Intent();
+        startPageRule.launchActivity(helpIntent);
+        intended(hasComponent(HelpPage.class.getName()));
+    }
 
     @Test
-    public void testLogOut() {
-        //openActionsMenu(R.string.signout);
-        //intended(hasComponent(GoogleLogin.class.getName()));
+    public void testSignOutClickFromMenuShouldLogOutCorrectly() {
+        openActionsMenu(R.string.signout);
+
+        Intent signoutIntent = new Intent();
+        startPageRule.launchActivity(signoutIntent);
+        intended(hasComponent(GoogleLogin.class.getName()));
+    }
+
+    @Test
+    public void testHomeClickFromBottomMenuShouldDoNothing() {
+        onView(withId(R.id.home)).perform(click());
+    }
+
+    @Test
+    public void testMyProfileClickFromBottomMenuShouldStartNewIntent() {
+        onView(withId(R.id.my_profile)).perform(click());
+
+        Intent profileIntent = new Intent();
+        startPageRule.launchActivity(profileIntent);
+        intended(hasComponent(MyProfilePage.class.getName()));
+    }
+
+    @Test
+    public void testMyEventsClickFromBottomMenuShouldStartNewIntent() {
+        onView(withId(R.id.my_events)).perform(click());
+
+        Intent eventIntent = new Intent();
+        startPageRule.launchActivity(eventIntent);
+        intended(hasComponent(EventListPage.class.getName()));
+    }
+
+    @Test
+    public void testMapClickFromBottomMenuShouldStartNewIntent() {
+        onView(withId(R.id.map)).perform(click());
+
+        Intent mapIntent = new Intent();
+        startPageRule.launchActivity(mapIntent);
+        intended(hasComponent(MapsActivity.class.getName()));
+    }
+
+    @Test
+    public void testSearchClickFromBottomMenuShouldStartNewIntent() {
+        onView(withId(R.id.search)).perform(click());
+
+        Intent searchIntent = new Intent();
+        startPageRule.launchActivity(searchIntent);
+        intended(hasComponent(FinderPage.class.getName()));
     }
 }

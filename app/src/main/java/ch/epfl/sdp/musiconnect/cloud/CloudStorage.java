@@ -5,7 +5,7 @@ import android.net.Uri;
 import java.io.IOException;
 
 public interface CloudStorage {
-    public enum FileType {
+    enum FileType {
         profile_image, video
     }
 

@@ -26,7 +26,7 @@ import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 import ch.epfl.sdp.musiconnect.roomdatabase.MyDateConverter;
 import ch.epfl.sdp.musiconnect.roomdatabase.MyLocationConverter;
 
-import static ch.epfl.sdp.musiconnect.testsFunctions.waitALittle;
+import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -56,7 +56,7 @@ public class RoomDatabaseTest {
         mExecutor.execute(() -> {
             musicianDao.nukeTable();
         });
-        waitALittle(1);
+        waitSeconds(1);
     }
 
 
@@ -65,7 +65,7 @@ public class RoomDatabaseTest {
         mExecutor.execute(() -> {
             musicianDao.nukeTable();
         });
-        waitALittle(1);
+        waitSeconds(1);
     }
 
 
@@ -74,7 +74,7 @@ public class RoomDatabaseTest {
         mExecutor.execute(() -> {
             users = musicianDao.getAll();
         });
-        waitALittle(5);
+        waitSeconds(5);
         assertTrue(users.isEmpty());
     }
 
@@ -91,7 +91,7 @@ public class RoomDatabaseTest {
         mExecutor.execute(() -> {
             users = musicianDao.getAll();
         });
-        waitALittle(5);
+        waitSeconds(5);
         assertEquals(1,users.size());
         Musician user1 = users.get(0);
         //assertEquals(person1.toString(),user1.toString());
@@ -117,7 +117,7 @@ public class RoomDatabaseTest {
         mExecutor.execute(() -> {
             users = musicianDao.getAll();
         });
-        waitALittle(5);
+        waitSeconds(5);
         assertEquals(2,users.size());
 
         mExecutor.execute(() -> {
@@ -126,7 +126,7 @@ public class RoomDatabaseTest {
         mExecutor.execute(() -> {
             users = musicianDao.getAll();
         });
-        waitALittle(5);
+        waitSeconds(5);
         assertEquals(1,users.size());
         Musician user1 = users.get(0);
         assertEquals(person1.getFirstName()+person1.getLastName()+person1.getEmailAddress()+person1.getUserName()+person1.getAge()+person1.getVideoURL(),
@@ -144,11 +144,11 @@ public class RoomDatabaseTest {
             musicianDao.insertAll(person1);
             musicianDao.insertAll(person2);
         });
-        waitALittle(5);
+        waitSeconds(5);
         mExecutor.execute(() -> {
             users = musicianDao.loadAllByIds(new String[]{"sauce@gmail.com"});
         });
-        waitALittle(5);
+        waitSeconds(5);
         assertEquals(1,users.size());
         Musician user1 = users.get(0);
         assertEquals(person1.getFirstName()+person1.getLastName()+person1.getEmailAddress()+person1.getUserName()+person1.getAge()+person1.getVideoURL(),
@@ -163,20 +163,19 @@ public class RoomDatabaseTest {
         mExecutor.execute(() -> {
             musicianDao.insertAll(person1);
         });
-        waitALittle(2);
+        waitSeconds(2);
         mExecutor.execute(() -> {
             users = musicianDao.loadAllByIds(new String[]{"callmecarson41@gmail.com"});
         });
-        waitALittle(2);
+        waitSeconds(2);
         assertTrue(users.isEmpty());
     }
 
     @Test
     public void instrumentConverterTest(){
         HashMap<Instrument,Level> map = new HashMap<>();
-        for(Instrument i:Instrument.values()){
-            for(Level l:Level.values()){
-
+        for (Instrument i:Instrument.values()){
+            for (Level l:Level.values()){
                 map.put(i,l);
             }
         }
@@ -203,8 +202,5 @@ public class RoomDatabaseTest {
         assertEquals(loc2, (MyLocationConverter.strToMyLocation(MyLocationConverter.myLocationToString(loc2))));
         assertEquals(loc3,MyLocationConverter.myLocationToString(MyLocationConverter.strToMyLocation(loc3)));
         assertEquals(loc4,MyLocationConverter.myLocationToString(MyLocationConverter.strToMyLocation(loc4)));
-
     }
-
-
 }

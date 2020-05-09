@@ -12,14 +12,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -165,10 +163,6 @@ public abstract class Page extends AppCompatActivity {
             case R.id.my_profile:
                 Intent profileIntent = new Intent(this, MyProfilePage.class);
                 this.startActivity(profileIntent);
-                break;
-            case R.id.settings:
-                Intent settingsIntent = new Intent(this, SettingsPage.class);
-                this.startActivity(settingsIntent);
                 break;
             case R.id.help:
                 Intent helpIntent = new Intent(this, HelpPage.class);

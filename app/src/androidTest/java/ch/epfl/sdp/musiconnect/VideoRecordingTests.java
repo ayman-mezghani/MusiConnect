@@ -24,8 +24,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.musiconnect.testsFunctions.childAtPosition;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.is;
 
 @LargeTest
 public class VideoRecordingTests {
@@ -38,7 +38,7 @@ public class VideoRecordingTests {
 
     private static boolean setUpIsDone = false;
 
-    public void clickAlerts() {
+    private void clickAlerts() {
         if (setUpIsDone) {
             return;
         }
@@ -57,10 +57,9 @@ public class VideoRecordingTests {
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
 
-    /**
     @Test
     public void videoRecordingTests() {
-        VideoPlayingTests.goToMyProfilePage();
+        onView(withId(R.id.my_profile)).perform(click());
 
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.btnEditProfile), withText("Edit profile"),
@@ -73,5 +72,4 @@ public class VideoRecordingTests {
                         childAtPosition(childAtPosition(withClassName(is("android.widget.LinearLayout")),0),2)));
         appCompatButton2.perform(scrollTo(), click());
     }
-     */
 }

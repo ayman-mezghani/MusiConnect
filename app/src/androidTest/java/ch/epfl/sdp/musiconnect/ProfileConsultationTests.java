@@ -30,7 +30,7 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.musiconnect.testsFunctions.waitALittle;
+import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
@@ -62,7 +62,7 @@ public class ProfileConsultationTests {
 
     @Test
     public void profileShowsDefaultUser(){
-        waitALittle(2);
+        waitSeconds(2);
         onView(withId(R.id.myFirstname)).check(matches(withText("bob")));
         onView(withId(R.id.myLastname)).check(matches(withText("minion")));
         onView(withId(R.id.myUsername)).check(matches(withText("bobminion")));
@@ -72,14 +72,14 @@ public class ProfileConsultationTests {
 
     @Test
     public void profileIsCachedOnLoading(){
-        waitALittle(2);
+        waitSeconds(2);
         Executor mExecutor = Executors.newSingleThreadExecutor();
         AppDatabase localDb = AppDatabase.getInstance(profilePageRule.getActivity().getApplicationContext());
         MusicianDao mdao = localDb.musicianDao();
         mExecutor.execute(() -> {
             result = mdao.loadAllByIds(new String[]{"bobminion@gmail.com"});
         });
-        waitALittle(2);
+        waitSeconds(2);
         assertEquals(1,result.size());
         assertEquals("bobminion",result.get(0).getUserName());
     }

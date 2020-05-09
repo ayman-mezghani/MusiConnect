@@ -5,7 +5,9 @@ import org.junit.Test;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Manuel Pellegrini, EPFL
@@ -97,13 +99,13 @@ public class MyDateClassUnitTests {
         int date = 15;
         MyDate day = new MyDate(year, month, date);
 
-        assertEquals(true, day.isLeapYear());
+        assertTrue(day.isLeapYear());
         day.setYear(2000);
-        assertEquals(true, day.isLeapYear());
+        assertTrue(day.isLeapYear());
         day.setYear(1900);
-        assertEquals(false, day.isLeapYear());
+        assertFalse(day.isLeapYear());
         day.setYear(2019);
-        assertEquals(false, day.isLeapYear());
+        assertFalse(day.isLeapYear());
     }
 
     @Test
@@ -266,17 +268,17 @@ public class MyDateClassUnitTests {
         int secondHours = 19;
         int secondMinutes = 19;
 
-        assertEquals(false, firstDay.after(secondDay));
+        assertFalse(firstDay.after(secondDay));
         secondDay.setMinutes(secondMinutes);
-        assertEquals(true, firstDay.after(secondDay));
+        assertTrue(firstDay.after(secondDay));
         secondDay.setHours(secondHours);
-        assertEquals(true, firstDay.after(secondDay));
+        assertTrue(firstDay.after(secondDay));
         secondDay.setDate(secondDate);
-        assertEquals(true, firstDay.after(secondDay));
+        assertTrue(firstDay.after(secondDay));
         secondDay.setMonth(secondMonth);
-        assertEquals(true, firstDay.after(secondDay));
+        assertTrue(firstDay.after(secondDay));
         secondDay.setYear(secondYear);
-        assertEquals(true, firstDay.after(secondDay));
+        assertTrue(firstDay.after(secondDay));
     }
 
     @Test
@@ -295,17 +297,17 @@ public class MyDateClassUnitTests {
         int secondHours = 19;
         int secondMinutes = 19;
 
-        assertEquals(false, secondDay.before(firstDay));
+        assertFalse(secondDay.before(firstDay));
         secondDay.setMinutes(secondMinutes);
-        assertEquals(true, secondDay.before(firstDay));
+        assertTrue(secondDay.before(firstDay));
         secondDay.setHours(secondHours);
-        assertEquals(true, secondDay.before(firstDay));
+        assertTrue(secondDay.before(firstDay));
         secondDay.setDate(secondDate);
-        assertEquals(true, secondDay.before(firstDay));
+        assertTrue(secondDay.before(firstDay));
         secondDay.setMonth(secondMonth);
-        assertEquals(true, secondDay.before(firstDay));
+        assertTrue(secondDay.before(firstDay));
         secondDay.setYear(secondYear);
-        assertEquals(true, secondDay.before(firstDay));
+        assertTrue(secondDay.before(firstDay));
     }
 
     @Test
@@ -317,7 +319,7 @@ public class MyDateClassUnitTests {
         int minutes = 20;
         MyDate day = new MyDate(year, month, date, hours, minutes);
 
-        assertEquals(true, day.equals(day));
+        assertTrue(day.equals(day));
     }
 
     @Test
@@ -331,7 +333,7 @@ public class MyDateClassUnitTests {
 
         MyDate thatDay = new MyDate(day);
 
-        assertEquals(true, day.equals(thatDay));
+        assertTrue(day.equals(thatDay));
     }
 
     @Test
@@ -350,7 +352,7 @@ public class MyDateClassUnitTests {
         int secondMinutes = 19;
         MyDate secondDay = new MyDate(secondYear, secondMonth, secondDate, secondHours, secondMinutes);
 
-        assertEquals(false, firstDay.equals(secondDay));
+        assertFalse(firstDay.equals(secondDay));
     }
 
     @Test
@@ -366,7 +368,7 @@ public class MyDateClassUnitTests {
         double longitude = 0.0;
         MyLocation location = new MyLocation(latitude, longitude);
 
-        assertEquals(false, day.equals(location));
+        assertFalse(day.equals(location));
     }
 
     @Test

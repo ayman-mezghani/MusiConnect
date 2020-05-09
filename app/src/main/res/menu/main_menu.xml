@@ -15,11 +15,6 @@
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/settings"
-        android:title="@string/settings"
-        app:showAsAction="never"/>
-
-    <item
         android:id="@+id/help"
         android:icon="@android:drawable/ic_menu_help"
         android:title="@string/help"

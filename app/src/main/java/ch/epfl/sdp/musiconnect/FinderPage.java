@@ -7,19 +7,15 @@ import android.content.Intent;
 import android.widget.TextView;
 import android.widget.Button;
 
-import androidx.annotation.NonNull;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.events.EventListPage;
 
 /**
  * @author Manuel Pellegrini, EPFL
  */
 public class FinderPage extends Page implements View.OnClickListener {
 
-    private TextView title;
     private Button findMusician;
     private Button findBand;
 
@@ -28,7 +24,7 @@ public class FinderPage extends Page implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finder_page);
 
-        title = findViewById(R.id.finderTitleID);
+        TextView title = findViewById(R.id.finderTitleID);
 
         // If the button findMusician is pressed, then the method openMusicianFinderPage() is executed
         findMusician = findViewById(R.id.findMusicianButtonID);
@@ -40,7 +36,14 @@ public class FinderPage extends Page implements View.OnClickListener {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
         bottomNavigationView.setSelectedItemId(R.id.search);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> super.onOptionsItemSelected(item));
+        bottomNavigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == R.id.search)
+            return true;
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -63,5 +66,4 @@ public class FinderPage extends Page implements View.OnClickListener {
     public void onClick(View view) {
         // This method does nothing
     }
-
 }

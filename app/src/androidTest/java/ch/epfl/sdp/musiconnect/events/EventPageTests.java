@@ -20,20 +20,15 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
-import ch.epfl.sdp.musiconnect.events.Event;
-import ch.epfl.sdp.musiconnect.events.EventEdition;
-import ch.epfl.sdp.musiconnect.events.EventPage;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static ch.epfl.sdp.musiconnect.testsFunctions.waitALittle;
+import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 
 @RunWith(AndroidJUnit4.class)
 public class EventPageTests {
@@ -81,7 +76,7 @@ public class EventPageTests {
         intent.putExtra("eid", "1");
         eventPageRule.launchActivity(intent);
 
-        waitALittle(3);
+        waitSeconds(3);
 
         onView(withId(R.id.eventTitle)).check(matches(withText(event.getTitle())));
         onView(withId(R.id.eventCreatorField)).check(matches(withText(event.getCreator().getName())));

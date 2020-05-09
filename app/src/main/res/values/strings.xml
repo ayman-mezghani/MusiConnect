@@ -93,18 +93,18 @@
     <string name="musicianFinderUserName">Username</string>
     <string name="myMusicianFinderUserName">Username</string>
     <string name="musicianFinderInstruments">Instrument</string>
-    <string name="myMusicianFinderInstruments"></string>
+    <string name="myMusicianFinderInstruments" />
     <string name="musicianFinderLevels">Level</string>
-    <string name="myMusicianFinderLevels"></string>
+    <string name="myMusicianFinderLevels" />
     <string name="musicianFinderButton">Find musician</string>
 
     <string name="bandFinderTitle">Band finder</string>
     <string name="bandFinderBandName">Band name</string>
     <string name="myBandFinderBandName">Band name</string>
     <string name="bandFinderInstruments">Instrument</string>
-    <string name="myBandFinderInstruments"></string>
+    <string name="myBandFinderInstruments" />
     <string name="bandFinderLevels">Level</string>
-    <string name="myBandFinderLevels"></string>
+    <string name="myBandFinderLevels" />
     <string name="bandFinderButton">Find band</string>
 
     <string-array name="instruments_array">

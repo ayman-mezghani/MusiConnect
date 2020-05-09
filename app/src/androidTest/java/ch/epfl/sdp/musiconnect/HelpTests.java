@@ -18,12 +18,17 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.events.EventCreation;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 @RunWith(AndroidJUnit4.class)
 public class HelpTests {
@@ -49,21 +54,25 @@ public class HelpTests {
     }
 
     /**
+     * Helper method to avoid duplicate code
+     * @param stringId
+     */
+    private void openActionsMenu(int stringId) {
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(stringId)).perform(click());
+    }
+
     @Test
     public void testHelpClickShouldDoNothing() {
-        onView(withId(R.id.help)).perform(click());
-        assert(true);
+        openActionsMenu(R.string.help);
     }
-    */
 
-    /**
     @Test
-    public void testSearchClickFromHelpShouldDisplayMessage() {
-        onView(withId(R.id.search)).perform(click());
+    public void testCreateEventClickFromHelpShouldOpenIntent() {
+        openActionsMenu(R.string.create_an_event);
 
-        Intent searchIntent = new Intent();
-        helpPageRule.launchActivity(searchIntent);
-        intended(hasComponent(FinderPage.class.getName()));
+        Intent eventIntent = new Intent();
+        helpPageRule.launchActivity(eventIntent);
+        intended(hasComponent(EventCreation.class.getName()));
     }
-    */
 }

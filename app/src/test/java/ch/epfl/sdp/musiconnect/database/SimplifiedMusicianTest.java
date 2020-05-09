@@ -5,7 +5,6 @@ import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Test;
 
-import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +16,7 @@ import ch.epfl.sdp.musiconnect.TypeOfUser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -137,7 +137,7 @@ public class SimplifiedMusicianTest {
         SimplifiedMusician sm = new SimplifiedMusician();
         Map<String, Object> m = sm.toMap();
         for (String key : m.keySet()) {
-            assertNull(m.get(key));;
+            assertNull(m.get(key));
         }
     }
 
@@ -146,9 +146,9 @@ public class SimplifiedMusicianTest {
         Musician m1 = testMusician1();
         Musician m2 = testMusician2();
 
-        assertFalse(m1.equals(m2));
+        assertNotEquals(m1, m2);
 
-        assertTrue(m1.equals(m1));
+        assertEquals(m1, m1);
     }
 
     static Musician testMusician1() {

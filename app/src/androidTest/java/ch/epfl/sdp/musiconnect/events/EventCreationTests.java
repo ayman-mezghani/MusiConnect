@@ -24,7 +24,6 @@ import org.junit.runner.RunWith;
 import java.util.Calendar;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.HelpPage;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;

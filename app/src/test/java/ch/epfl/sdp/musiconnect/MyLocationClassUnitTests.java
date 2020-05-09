@@ -3,7 +3,9 @@ package ch.epfl.sdp.musiconnect;
 import org.junit.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -96,7 +98,7 @@ public class MyLocationClassUnitTests {
         double longitude = 0.0;
         MyLocation location = new MyLocation(latitude, longitude);
 
-        assertEquals(true, location.equals(location));
+        assertTrue(location.equals(location));
     }
 
     @Test
@@ -107,7 +109,7 @@ public class MyLocationClassUnitTests {
 
         MyLocation thatLocation = new MyLocation(location);
 
-        assertEquals(true, location.equals(thatLocation));
+        assertTrue(location.equals(thatLocation));
     }
 
     @Test
@@ -118,7 +120,7 @@ public class MyLocationClassUnitTests {
         MyLocation firstLocation = new MyLocation(firstLatitude, longitude);
         MyLocation secondLocation = new MyLocation(secondLatitude, longitude);
 
-        assertEquals(false, firstLocation.equals(secondLocation));
+        assertFalse(firstLocation.equals(secondLocation));
     }
 
     @Test
@@ -129,7 +131,7 @@ public class MyLocationClassUnitTests {
         MyLocation firstLocation = new MyLocation(latitude, firstLongitude);
         MyLocation secondLocation = new MyLocation(latitude, secondLongitude);
 
-        assertEquals(false, firstLocation.equals(secondLocation));
+        assertFalse(firstLocation.equals(secondLocation));
     }
 
     @Test
@@ -142,7 +144,7 @@ public class MyLocationClassUnitTests {
         double secondLongitude = 100.0;
         MyLocation secondLocation = new MyLocation(secondLatitude, secondLongitude);
 
-        assertEquals(false, firstLocation.equals(secondLocation));
+        assertFalse(firstLocation.equals(secondLocation));
     }
 
     @Test
@@ -158,7 +160,7 @@ public class MyLocationClassUnitTests {
         int minutes = 20;
         MyDate day = new MyDate(year, month, date, hours, minutes);
 
-        assertEquals(false, location.equals(day));
+        assertFalse(location.equals(day));
     }
 
     @Test

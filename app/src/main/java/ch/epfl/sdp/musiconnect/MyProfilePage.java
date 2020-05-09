@@ -33,7 +33,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
 
     private Musician currentCachedUser;
 
-
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +43,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         setContentView(R.layout.activity_profile_page);
 
         mVideoView = findViewById(R.id.videoView);
-
-
         imgVw = findViewById(R.id.imgView);
         firstNameView = findViewById(R.id.myFirstname);
         lastNameView = findViewById(R.id.myLastname);
@@ -67,7 +64,14 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
         bottomNavigationView.setSelectedItemId(R.id.my_profile);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> super.onOptionsItemSelected(item));
+        bottomNavigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == R.id.my_profile)
+            return true;
+        return super.onOptionsItemSelected(item);
     }
 
     private void loadProfileContent() {
@@ -75,19 +79,20 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         AppDatabase localDb = AppDatabase.getInstance(this);
         MusicianDao mdao = localDb.musicianDao();
         userEmail = CurrentUser.getInstance(this).email;
-
       
         //fetches the current user's profile
         mExecutor.execute(() -> {
             List<Musician> result = mdao.loadAllByIds(new String[]{userEmail});
             currentCachedUser = result.isEmpty() ? null : result.get(0);
         });
-        try {                                           //wait for async thread to fetch cached profile
+
+        try { // wait for async thread to fetch cached profile
             TimeUnit.MILLISECONDS.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if (checkConnection(MyProfilePage.this)) {              //gets profile info from database
+        // gets profile info from database
+        if (checkConnection(MyProfilePage.this)) {
             dbAdapter.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
@@ -99,7 +104,8 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
                     MyDate date = m.getBirthday();
                     String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
                     birthdayView.setText(s);
-                    if (currentCachedUser == null || !ProfileModification.changeStaged) {            //if user profile isn't cached,cache it
+                    // if user profile isn't cached,cache it
+                    if (currentCachedUser == null || !ProfileModification.changeStaged) {
                         mExecutor.execute(() -> {
                             mdao.insertAll(m);
                         });
@@ -110,7 +116,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         } else {
             if (currentCachedUser == null) {
                 Toast.makeText(this, "Unable to fetch profile information; please connect to internet", Toast.LENGTH_LONG).show();
-            } else {                                        //set profile info based on cache
+            } else { // set profile info based on cache
                 firstNameView.setText(currentCachedUser.getFirstName());
                 lastNameView.setText(currentCachedUser.getLastName());
                 usernameView.setText(currentCachedUser.getUserName());
@@ -124,19 +130,9 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
 
     }
 
-    /*
-    public void captureVideo(View view) {
-        Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-
-        if (videoIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(videoIntent, VIDEO_REQUEST);
-        }
-    }*/
-
     @Override
     public void onStart() {
         super.onStart();
-        //        getVideoUri(userEmail);
     }
 
     @SuppressLint("MissingSuperCall")
@@ -160,21 +156,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
                 getVideoUri(userEmail);
             }
         }
-
-//        TODO: refresh the intent, may be useful after video change
-//        finish();
-//        overridePendingTransition( 0, 0);
-//        startActivity(getIntent());
-//        overridePendingTransition( 0, 0);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == R.id.my_profile)
-            return true;
-        else
-            super.onOptionsItemSelected(item);
-        return true;
     }
 
     public void onClick(View view) {

@@ -82,8 +82,14 @@ public class EventListPage extends Page {
         });
     }
 
-    private void loadIds(List<String> eventIds) {
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == R.id.my_events)
+            return true;
+        return super.onOptionsItemSelected(item);
+    }
 
+    private void loadIds(List<String> eventIds) {
         for (String eid: eventIds) {
             dbAdapter.read(DbUserType.Events, eid, new DbCallback() {
                 @Override
@@ -94,7 +100,6 @@ public class EventListPage extends Page {
         }
     }
 
-
     private void showEvent(Event e) {
         if (!events.contains(e)) {
             events.add(e);
@@ -102,15 +107,6 @@ public class EventListPage extends Page {
             ids.put(e.getTitle(), e.getEid());
 
             adapter.notifyDataSetChanged();
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == R.id.my_events) {
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
         }
     }
 

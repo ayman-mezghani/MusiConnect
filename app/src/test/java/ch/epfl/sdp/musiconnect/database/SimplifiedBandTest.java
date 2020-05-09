@@ -70,8 +70,8 @@ public class SimplifiedBandTest {
 
         assertEquals("", sb.getLeader());
         assertEquals("", sb.getBandName());
-        assertEquals(null, sb.getMembers());
-        assertEquals(null, sb.getEvents());
+        assertNull(sb.getMembers());
+        assertNull(sb.getEvents());
     }
 
     @Test

@@ -10,7 +10,9 @@ import java.util.Set;
 import ch.epfl.sdp.musiconnect.events.Event;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Manuel Pellegrini, EPFL
@@ -162,15 +164,15 @@ public class MusicianClassUnitTests {
         MyDate birthday = new MyDate(1940, 10, 9);
         Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
-        assertEquals(false, john.containsAnyInstrument());
+        assertFalse(john.containsAnyInstrument());
         john.addInstrument(Instrument.VOICE, Level.PROFESSIONAL);
-        assertEquals(true, john.containsAnyInstrument());
+        assertTrue(john.containsAnyInstrument());
         john.addInstrument(Instrument.PIANO, Level.ADVANCED);
-        assertEquals(true, john.containsAnyInstrument());
+        assertTrue(john.containsAnyInstrument());
         john.removeInstrument(Instrument.PIANO);
-        assertEquals(true, john.containsAnyInstrument());
+        assertTrue(john.containsAnyInstrument());
         john.removeInstrument(Instrument.VOICE);
-        assertEquals(false, john.containsAnyInstrument());
+        assertFalse(john.containsAnyInstrument());
     }
 
     @Test
@@ -202,20 +204,20 @@ public class MusicianClassUnitTests {
         MyDate birthday = new MyDate(1940, 10, 9);
         Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
-        assertEquals(false, john.containsInstrument(Instrument.VOICE));
-        assertEquals(false, john.containsInstrument(Instrument.PIANO));
+        assertFalse(john.containsInstrument(Instrument.VOICE));
+        assertFalse(john.containsInstrument(Instrument.PIANO));
         john.addInstrument(Instrument.VOICE, Level.PROFESSIONAL);
-        assertEquals(true, john.containsInstrument(Instrument.VOICE));
-        assertEquals(false, john.containsInstrument(Instrument.PIANO));
+        assertTrue(john.containsInstrument(Instrument.VOICE));
+        assertFalse(john.containsInstrument(Instrument.PIANO));
         john.addInstrument(Instrument.PIANO, Level.ADVANCED);
-        assertEquals(true, john.containsInstrument(Instrument.VOICE));
-        assertEquals(true, john.containsInstrument(Instrument.PIANO));
+        assertTrue(john.containsInstrument(Instrument.VOICE));
+        assertTrue(john.containsInstrument(Instrument.PIANO));
         john.removeInstrument(Instrument.VOICE);
-        assertEquals(false, john.containsInstrument(Instrument.VOICE));
-        assertEquals(true, john.containsInstrument(Instrument.PIANO));
+        assertFalse(john.containsInstrument(Instrument.VOICE));
+        assertTrue(john.containsInstrument(Instrument.PIANO));
         john.removeInstrument(Instrument.PIANO);
-        assertEquals(false, john.containsInstrument(Instrument.VOICE));
-        assertEquals(false, john.containsInstrument(Instrument.PIANO));
+        assertFalse(john.containsInstrument(Instrument.VOICE));
+        assertFalse(john.containsInstrument(Instrument.PIANO));
     }
 
     @Test
