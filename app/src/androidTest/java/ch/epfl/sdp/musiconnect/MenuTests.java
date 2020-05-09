@@ -93,15 +93,6 @@ public class MenuTests {
         intended(hasComponent(HelpPage.class.getName()));
     }
 
-    @Test
-    public void testSignOutClickFromMenuShouldLogOutCorrectly() {
-        openActionsMenu(R.string.signout);
-
-        Intent signoutIntent = new Intent();
-        startPageRule.launchActivity(signoutIntent);
-        intended(hasComponent(GoogleLogin.class.getName()));
-    }
-
     private void clickOnMenuId(int id) {
         onView(withId(id)).perform(click());
     }
