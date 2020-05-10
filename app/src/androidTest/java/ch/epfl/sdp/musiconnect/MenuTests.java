@@ -94,11 +94,6 @@ public class MenuTests {
         intended(hasComponent(HelpPage.class.getName()));
     }
 
-    @Test
-    public void testSignOutClickFromMenuShouldDoSo() {
-        openActionsMenu(R.string.signout);
-    }
-
     private void clickOnMenuId(int id) {
         onView(withId(id)).perform(click());
     }
