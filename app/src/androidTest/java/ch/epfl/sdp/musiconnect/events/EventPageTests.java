@@ -59,6 +59,13 @@ public class EventPageTests {
     public void releaseIntents() { Intents.release(); }
 
     @Test
+    public void loadDefaultPageShouldShowDefaultEvent() {
+        // Launch page with default empty constructor
+        Intent intent = new Intent();
+        eventPageRule.launchActivity(intent);
+    }
+
+    @Test
     public void loadPageShouldShowCorrectEvent() {
         Musician m1 = md.getDummyMusician(1);
         Musician m2 = md.getDummyMusician(3);

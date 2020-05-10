@@ -34,6 +34,7 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class MenuTests {
@@ -91,6 +92,12 @@ public class MenuTests {
         Intent helpIntent = new Intent();
         startPageRule.launchActivity(helpIntent);
         intended(hasComponent(HelpPage.class.getName()));
+    }
+
+    @Test
+    public void testSignOutClickShouldLeaveStartPage() {
+        openActionsMenu(R.string.signout);
+        assertTrue(startPageRule.getActivity().isFinishing());
     }
 
     private void clickOnMenuId(int id) {
