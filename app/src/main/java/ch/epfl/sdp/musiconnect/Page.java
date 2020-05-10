@@ -188,9 +188,6 @@ public abstract class Page extends AppCompatActivity {
             case R.id.signout:
                 signOut();
                 break;
-            default:
-                displayNotFinishedFunctionalityMessage();
-                return false;
         }
         return true;
     }
@@ -203,7 +200,8 @@ public abstract class Page extends AppCompatActivity {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, task -> {
                     CurrentUser.flush();
-                    startActivity(new Intent(Page.this, GoogleLogin.class));
+                    Intent loginIntent = new Intent(this, GoogleLogin.class);
+                    this.startActivity(loginIntent);
                     finish();
                 });
     }

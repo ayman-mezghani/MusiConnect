@@ -95,8 +95,12 @@ public class MenuTests {
     }
 
     @Test
-    public void testSignOutClickShouldLeaveStartPage() {
+    public void testSignOutClickFromMenuShouldBringToLoginPage() {
         openActionsMenu(R.string.signout);
+
+        Intent loginIntent = new Intent();
+        startPageRule.launchActivity(loginIntent);
+        intended(hasComponent(GoogleLogin.class.getName()));
     }
 
     private void clickOnMenuId(int id) {
