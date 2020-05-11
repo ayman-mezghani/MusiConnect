@@ -14,6 +14,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.Page;
 
@@ -68,7 +70,11 @@ public class MusicianFinderPage extends Page implements View.OnClickListener {
 
         // If the button findMusician is pressed, then the method onClick(view) is executed
         findMusician = findViewById(R.id.musicianFinderButtonID);
-        findMusician.setOnClickListener(this);
+        findMusician.setOnClickListener(view -> onClick(view));
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
+        bottomNavigationView.setSelectedItemId(R.id.search);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> super.onOptionsItemSelected(item));
     }
 
     @Override

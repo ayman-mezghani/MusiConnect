@@ -67,7 +67,7 @@ public class EventListTests {
         onView(withText(stringId)).perform(click());
     }
 
-
+    /**
     @Test
     public void testMyEventClickShouldDoNothing() {
         Intent intent = new Intent();
@@ -76,7 +76,7 @@ public class EventListTests {
 
         intended(hasComponent(EventListPage.class.getName()));
     }
-
+     */
 
     @Test
     public void testEventListTitle() {

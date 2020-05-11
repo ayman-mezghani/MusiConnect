@@ -2,26 +2,16 @@ package ch.epfl.sdp.musiconnect;
 
 import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
-import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
-import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
-import ch.epfl.sdp.musiconnect.cloud.FirebaseCloudStorage;
 import ch.epfl.sdp.musiconnect.events.Event;
 
 public class CustomInfoWindowGoogleMap implements GoogleMap.InfoWindowAdapter {

@@ -13,7 +13,6 @@ import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
-import ch.epfl.sdp.musiconnect.database.FirebaseDatabase;
 
 public class HelpPage extends Page {
 
@@ -27,7 +26,6 @@ public class HelpPage extends Page {
         DbAdapter db = DbGenerator.getDbInstance();
 
         m.put("firstName", "MusiConnect");
-        //m.put("username", "Booba");
 
         db.query(DbUserType.Musician, m, new DbCallback() {
             @Override
@@ -46,8 +44,6 @@ public class HelpPage extends Page {
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == R.id.help)
             return true;
-        else
-            super.onOptionsItemSelected(item);
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 }

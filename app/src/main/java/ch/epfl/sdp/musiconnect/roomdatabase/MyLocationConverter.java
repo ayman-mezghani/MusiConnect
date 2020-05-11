@@ -7,7 +7,7 @@ import ch.epfl.sdp.musiconnect.MyLocation;
 public class MyLocationConverter {
     @TypeConverter
     public static String myLocationToString(MyLocation location){
-        return Double.toString(location.getLatitude()) + "," + Double.toString(location.getLongitude());
+        return location.getLatitude() + "," + location.getLongitude();
     }
 
     @TypeConverter

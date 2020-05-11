@@ -9,7 +9,9 @@ import java.util.Set;
 import ch.epfl.sdp.musiconnect.events.Event;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Manuel Pellegrini, EPFL
@@ -223,15 +225,15 @@ public class EventManagerClassUnitTests {
         MyDate paulBirthday = new MyDate(1942, 6, 18);
         Musician paul = new Musician(paulFirstName, paulLastName, paulUserName, paulEmailAddress, paulBirthday);
 
-        assertEquals(false, brian.containsAnyMusician());
+        assertFalse(brian.containsAnyMusician());
         brian.addMusician(john);
-        assertEquals(true, brian.containsAnyMusician());
+        assertTrue(brian.containsAnyMusician());
         brian.addMusician(paul);
-        assertEquals(true, brian.containsAnyMusician());
+        assertTrue(brian.containsAnyMusician());
         brian.removeMusician(john);
-        assertEquals(true, brian.containsAnyMusician());
+        assertTrue(brian.containsAnyMusician());
         brian.removeMusician(paul);
-        assertEquals(false, brian.containsAnyMusician());
+        assertFalse(brian.containsAnyMusician());
     }
 
     @Test
@@ -291,20 +293,20 @@ public class EventManagerClassUnitTests {
         MyDate paulBirthday = new MyDate(1942, 6, 18);
         Musician paul = new Musician(paulFirstName, paulLastName, paulUserName, paulEmailAddress, paulBirthday);
 
-        assertEquals(false, brian.containsMusician(john));
-        assertEquals(false, brian.containsMusician(paul));
+        assertFalse(brian.containsMusician(john));
+        assertFalse(brian.containsMusician(paul));
         brian.addMusician(john);
-        assertEquals(true, brian.containsMusician(john));
-        assertEquals(false, brian.containsMusician(paul));
+        assertTrue(brian.containsMusician(john));
+        assertFalse(brian.containsMusician(paul));
         brian.addMusician(paul);
-        assertEquals(true, brian.containsMusician(john));
-        assertEquals(true, brian.containsMusician(paul));
+        assertTrue(brian.containsMusician(john));
+        assertTrue(brian.containsMusician(paul));
         brian.removeMusician(john);
-        assertEquals(false, brian.containsMusician(john));
-        assertEquals(true, brian.containsMusician(paul));
+        assertFalse(brian.containsMusician(john));
+        assertTrue(brian.containsMusician(paul));
         brian.removeMusician(paul);
-        assertEquals(false, brian.containsMusician(john));
-        assertEquals(false, brian.containsMusician(paul));
+        assertFalse(brian.containsMusician(john));
+        assertFalse(brian.containsMusician(paul));
     }
 
     @Test
@@ -472,11 +474,11 @@ public class EventManagerClassUnitTests {
         String bandName = "The Beatles";
         Band beatles = new Band(bandName, john.getEmailAddress());
 
-        assertEquals(false, brian.containsAnyBand());
+        assertFalse(brian.containsAnyBand());
         brian.addBand(beatles);
-        assertEquals(true, brian.containsAnyBand());
+        assertTrue(brian.containsAnyBand());
         brian.removeBand(beatles);
-        assertEquals(false, brian.containsAnyBand());
+        assertFalse(brian.containsAnyBand());
     }
 
     @Test
@@ -524,11 +526,11 @@ public class EventManagerClassUnitTests {
         String bandName = "The Beatles";
         Band beatles = new Band(bandName, john.getEmailAddress());
 
-        assertEquals(false, brian.containsBand(beatles));
+        assertFalse(brian.containsBand(beatles));
         brian.addBand(beatles);
-        assertEquals(true, brian.containsBand(beatles));
+        assertTrue(brian.containsBand(beatles));
         brian.removeBand(beatles);
-        assertEquals(false, brian.containsBand(beatles));
+        assertFalse(brian.containsBand(beatles));
     }
 
     @Test

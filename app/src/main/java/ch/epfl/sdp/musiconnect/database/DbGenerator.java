@@ -1,7 +1,5 @@
 package ch.epfl.sdp.musiconnect.database;
 
-import android.util.Log;
-
 
 public class DbGenerator {
     // static variable single_instance of type Singleton

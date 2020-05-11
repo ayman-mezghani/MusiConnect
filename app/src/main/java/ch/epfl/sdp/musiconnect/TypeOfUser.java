@@ -1,7 +1,5 @@
 package ch.epfl.sdp.musiconnect;
 
-import androidx.room.Entity;
-
 public enum TypeOfUser {
     Band("Band"),
     Musician("Musician"),

@@ -62,8 +62,6 @@ public class EventEditionTests {
         onView(withText(text)).perform(ViewActions.scrollTo()).perform(click());
     }
 
-
-
     @Test
     public void testDontSave() {
         Intent intent = new Intent();

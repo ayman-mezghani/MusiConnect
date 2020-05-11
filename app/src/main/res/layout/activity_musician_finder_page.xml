@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".musiconnect.ProfilePage"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".musiconnect.finder.MusicianFinderPage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
@@ -22,42 +22,39 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/musicianFinderTitleID"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="0dp"
+                    android:layout_marginStart="10dp"
                     android:text="@string/musicianFinderTitle"
+                    android:layout_gravity="center"
                     android:textAlignment="center"
                     android:textSize="30sp"
                     android:textStyle="bold" />
             </LinearLayout>
-
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_weight="1">
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/musicianFinderFirstNameID"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.2"
+                    android:layout_weight="2"
                     android:text="@string/musicianFinderFirstName"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -74,14 +71,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_weight="1">
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/musicianFinderLastNameID"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.2"
+                    android:layout_weight="2"
                     android:text="@string/musicianFinderLastName"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -98,14 +94,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_weight="1">
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/musicianFinderUserNameID"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.2"
+                    android:layout_weight="2"
                     android:text="@string/musicianFinderUserName"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -122,14 +117,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_weight="1">
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/musicianFinderInstrumentsID"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.2"
+                    android:layout_weight="2"
                     android:text="@string/musicianFinderInstruments"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -139,21 +135,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/myMusicianFinderInstruments"
                     android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_weight="1">
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/musicianFinderLevelsID"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.2"
+                    android:layout_weight="2"
                     android:text="@string/musicianFinderLevels"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -163,7 +158,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/myMusicianFinderLevels"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -186,10 +180,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/musicianFinderButton"
-                    android:textSize="24sp" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
         </LinearLayout>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/bottom_navigation_menu"
+            app:menu="@menu/bottom_navigation_menu"/>
 
     </LinearLayout>
 

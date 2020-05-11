@@ -1,6 +1,5 @@
 package ch.epfl.sdp.musiconnect;
 
-
 import android.content.Intent;
 
 import androidx.test.espresso.intent.Intents;
@@ -29,11 +28,13 @@ import ch.epfl.sdp.musiconnect.location.MapsLocationFunctions;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class MenuTests {
@@ -44,10 +45,6 @@ public class MenuTests {
     @Rule
     public GrantPermissionRule mRuntimePermissionRule =
             GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
-
-    // private static boolean setUpIsDone = false;
-
-
 
     @BeforeClass
     public static void setMocks() {
@@ -65,25 +62,6 @@ public class MenuTests {
     @After
     public void releaseIntents() { Intents.release(); }
 
-
-    @Test
-    public void testHelpClickShouldStartNewIntent() {
-        onView(withId(R.id.help)).perform(click());
-
-        Intent helpIntent = new Intent();
-        startPageRule.launchActivity(helpIntent);
-        intended(hasComponent(HelpPage.class.getName()));
-    }
-
-    @Test
-    public void testSearchClickShouldStartNewIntent() {
-        onView(withId(R.id.search)).perform(click());
-
-        Intent searchIntent = new Intent();
-        startPageRule.launchActivity(searchIntent);
-        intended(hasComponent(FinderPage.class.getName()));
-    }
-
     /**
      * Helper method to avoid duplicate code
      * @param stringId
@@ -94,43 +72,12 @@ public class MenuTests {
     }
 
     @Test
-    public void testMyProfileClickShouldStartNewIntent() {
-        openActionsMenu(R.string.my_profile);
-
-        Intent profileIntent = new Intent();
-        startPageRule.launchActivity(profileIntent);
-        intended(hasComponent(MyProfilePage.class.getName()));
+    public void testHomeClickFromMenuShouldDoNothing() {
+        openActionsMenu(R.string.navigation_home);
     }
 
     @Test
-    public void testSettingsClickShouldStartNewIntent() {
-        openActionsMenu(R.string.settings);
-
-        Intent settingsIntent = new Intent();
-        startPageRule.launchActivity(settingsIntent);
-        intended(hasComponent(SettingsPage.class.getName()));
-    }
-
-    @Test
-    public void testMapClickShouldStartNewIntent() {
-        openActionsMenu(R.string.map);
-
-        Intent mapIntent = new Intent();
-        startPageRule.launchActivity(mapIntent);
-        intended(hasComponent(MapsActivity.class.getName()));
-    }
-
-    @Test
-    public void testMyEventsClickShouldStartNewIntent() {
-        openActionsMenu(R.string.my_events);
-
-        Intent eventIntent = new Intent();
-        startPageRule.launchActivity(eventIntent);
-        intended(hasComponent(EventListPage.class.getName()));
-    }
-
-    @Test
-    public void testCreateEventClickShouldStartNewIntent() {
+    public void testCreateEventClickFromMenuShouldStartNewIntent() {
         openActionsMenu(R.string.create_an_event);
 
         Intent eventIntent = new Intent();
@@ -138,10 +85,48 @@ public class MenuTests {
         intended(hasComponent(EventCreationPage.class.getName()));
     }
 
+    @Test
+    public void testHelpClickFromMenuShouldStartNewIntent() {
+        openActionsMenu(R.string.help);
+
+        Intent helpIntent = new Intent();
+        startPageRule.launchActivity(helpIntent);
+        intended(hasComponent(HelpPage.class.getName()));
+    }
+
+    private void clickOnMenuId(int id) {
+        onView(withId(id)).perform(click());
+    }
 
     @Test
-    public void testLogOut() {
-        //openActionsMenu(R.string.signout);
-        //intended(hasComponent(GoogleLogin.class.getName()));
+    public void testHomeClickFromBottomMenuShouldDoNothing() {
+        clickOnMenuId(R.id.home);
+    }
+
+    @Test
+    public void testMyProfileClickFromBottomMenuShouldStartNewIntent() {
+        clickOnMenuId(R.id.my_profile);
+
+        Intent profileIntent = new Intent();
+        startPageRule.launchActivity(profileIntent);
+        intended(hasComponent(MyProfilePage.class.getName()));
+    }
+
+    @Test
+    public void testMapClickFromBottomMenuShouldStartNewIntent() {
+        clickOnMenuId(R.id.map);
+
+        Intent mapIntent = new Intent();
+        startPageRule.launchActivity(mapIntent);
+        intended(hasComponent(MapsActivity.class.getName()));
+    }
+
+    @Test
+    public void testSearchClickFromBottomMenuShouldStartNewIntent() {
+        clickOnMenuId(R.id.search);
+
+        Intent searchIntent = new Intent();
+        startPageRule.launchActivity(searchIntent);
+        intended(hasComponent(FinderPage.class.getName()));
     }
 }

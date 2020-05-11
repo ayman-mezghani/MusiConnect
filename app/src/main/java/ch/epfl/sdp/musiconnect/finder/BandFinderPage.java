@@ -14,6 +14,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Page;
@@ -62,6 +64,10 @@ public class BandFinderPage extends Page implements View.OnClickListener {
         // If the button findBand is pressed, then the method onClick(view) is executed
         findBand = findViewById(R.id.bandFinderButtonID);
         findBand.setOnClickListener(view -> onClick(view));
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
+        bottomNavigationView.setSelectedItemId(R.id.search);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> super.onOptionsItemSelected(item));
     }
 
     @Override

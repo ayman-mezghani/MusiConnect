@@ -5,8 +5,6 @@ import androidx.room.Ignore;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.epfl.sdp.musiconnect.database.DbAdapter;
-
 /**
  * @author Manuel Pellegrini, EPFL
  */
