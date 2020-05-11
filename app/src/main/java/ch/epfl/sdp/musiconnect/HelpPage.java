@@ -26,7 +26,6 @@ public class HelpPage extends Page {
         DbAdapter db = DbGenerator.getDbInstance();
 
         m.put("firstName", "MusiConnect");
-        //m.put("username", "Booba");
 
         db.query(DbUserType.Musician, m, new DbCallback() {
             @Override
@@ -39,9 +38,6 @@ public class HelpPage extends Page {
                     Log.d("checkcheck", user.getClass().getName()+" " +  user.toString());
             }
         });
-
-        // BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
-        // bottomNavigationView.setOnNavigationItemSelectedListener(item -> super.onOptionsItemSelected(item));
     }
 
     @Override
