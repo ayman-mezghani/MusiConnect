@@ -191,6 +191,9 @@ public abstract class Page extends AppCompatActivity {
             case R.id.signout:
                 signOut();
                 break;
+            case R.id.my_profileBand:
+                this.startActivity(new Intent(this, BandProfile.class));
+                break;
             default:
                 displayNotFinishedFunctionalityMessage();
                 return false;

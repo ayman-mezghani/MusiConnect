@@ -111,6 +111,17 @@ public class MenuTests {
         intended(hasComponent(SettingsPage.class.getName()));
     }
 
+    //@Test
+    public void testBandProfileClickShouldStartNewIntent() {
+        CurrentUser.getInstance(startPageRule.getActivity()).email = "musiconnectsdp@gmail.com";
+        CurrentUser.getInstance(startPageRule.getActivity()).setTypeOfUser(TypeOfUser.Band);
+        openActionsMenu(R.string.my_bands);
+
+        Intent settingsIntent = new Intent();
+        startPageRule.launchActivity(settingsIntent);
+        intended(hasComponent(BandProfile.class.getName()));
+    }
+
     @Test
     public void testMapClickShouldStartNewIntent() {
         openActionsMenu(R.string.map);
