@@ -25,6 +25,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
@@ -163,16 +165,14 @@ public class StartPage extends Page {
     }
 
     protected void button1Click() {
-        runOnUiThread(new Runnable() {
-            public void run() {
-                Toast.makeText(getApplicationContext(), CurrentUser.getInstance(getApplicationContext()).email, Toast.LENGTH_SHORT).show();
+        HashMap<String, Object> h = new HashMap<>();
+        h.put("members", "Bob@gmail.com");
+        DbGenerator.getDbInstance().query(DbUserType.Band, h, new DbCallback() {
+            @Override
+            public void queryCallback(List<User> userList) {
+                Toast.makeText(StartPage.this, ((Band) userList.get(0)).getName(), Toast.LENGTH_SHORT).show();
             }
         });
-        updateCurrentUser(this);
-
-        CurrentUser.getInstance(this).getBand().addMember("aymanmezghani97@gmail.com");
-        CurrentUser.getInstance(this).getBand().addMember("seboll13@gmail.com");
-        (DbGenerator.getDbInstance()).add(DbUserType.Band, CurrentUser.getInstance(this).getBand());
     }
 
     protected void fabMenuClick() {

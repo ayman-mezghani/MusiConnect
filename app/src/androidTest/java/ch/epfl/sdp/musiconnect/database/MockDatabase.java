@@ -8,6 +8,7 @@ import java.util.Map;
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
+import ch.epfl.sdp.musiconnect.TypeOfUser;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.events.Event;
 
@@ -27,7 +28,7 @@ public class MockDatabase extends Database {
 
 
 
-    private Band b = new Band("totofire", "musiconnectsdp@gmail.com");
+    private Band b;
 
     public MockDatabase() {
         this.content = new HashMap<>();
@@ -39,6 +40,12 @@ public class MockDatabase extends Database {
         defaultSm = new SimplifiedMusician(m);
         listOfMusicians.add(defaultSm);
 
+        Musician musiConnect = new Musician("MusiConnect", "SDP", "musiConnect", "musiconnectsdp@gmail.com", new MyDate(1992, 9, 20));
+        musiConnect.setTypeOfUser(TypeOfUser.Band);
+
+        b = new Band("totofire", musiConnect.getEmailAddress());
+        b.addMember(m.getEmailAddress());
+
         Musician m1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
         m1.addEvent("1");
 
@@ -48,6 +55,7 @@ public class MockDatabase extends Database {
         listOfMusicians.add(new SimplifiedMusician(m1));
         listOfMusicians.add(new SimplifiedMusician(m2));
         listOfMusicians.add(new SimplifiedMusician(new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1))));
+        listOfMusicians.add(new SimplifiedMusician(musiConnect));
 
         listOfEvent.add(createEvent(getDummyMusician(1), "1"));
         listOfEvent.add(createEvent(getDummyMusician(2), "2"));

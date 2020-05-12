@@ -70,7 +70,7 @@ public class GoogleLogin extends AppCompatActivity {
                 @Override
                 public void readCallback(User user) {
                     CurrentUser.getInstance(ctx).setTypeOfUser(((Musician) user).getTypeOfUser());
-                    StartPage.updateCurrentUser(ctx);
+                    (new StartPage()).updateCurrentUser(ctx);
                     }
                 });
 

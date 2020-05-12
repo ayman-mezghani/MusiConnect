@@ -211,19 +211,25 @@ public abstract class Page extends AppCompatActivity {
         db.read(DbUserType.Musician, CurrentUser.getInstance(ctx).email, new DbCallback() {
             @Override
             public void readCallback(User user) {
-            CurrentUser.getInstance(ctx).setMusician((Musician) user);
-            if(((Musician) user).getTypeOfUser() == TypeOfUser.Band) {
-                db.read(DbUserType.Band, CurrentUser.getInstance(ctx).email, new DbCallback() {
-                    @Override
-                    public void readCallback(User u) {
-                    CurrentUser.getInstance(ctx).setBand((Band) u);
-                    }
-                });
-            }
-            MenuItem bandItem = findViewById(R.id.my_profileBand);
-            bandItem.setVisible(true);
+                CurrentUser.getInstance(ctx).setMusician((Musician) user);
+                if(((Musician) user).getTypeOfUser() == TypeOfUser.Band) {
+                    db.read(DbUserType.Band, CurrentUser.getInstance(ctx).email, new DbCallback() {
+                        @Override
+                        public void readCallback(User u) {
+                        CurrentUser.getInstance(ctx).setBand((Band) u);
+                        }
+                    });
+                }
+                if(!test) {
+                    MenuItem bandItem = findViewById(R.id.my_profileBand);
+                    bandItem.setVisible(true);
+                }
             }
         });
+
+    }
+
+    public void getBandIfMember() {
 
     }
 }
