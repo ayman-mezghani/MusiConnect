@@ -20,9 +20,7 @@ import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertTrue;
 
 @LargeTest
@@ -47,11 +45,13 @@ public class BandAddUsersTests {
     }
 
     @Test
-    public void testNoMarkerTransitionToProfile() {
+    public void addUUserToBandTest() {
         CurrentUser.getInstance(mActivityTestRule.getActivity()).setTypeOfUser(TypeOfUser.Band);
-        CurrentUser.getInstance(mActivityTestRule.getActivity()).setBand(md.getBand());
 
         Musician m = new Musician("Alice", "Bardon", "Alyx", "aymanmezghani97@gmail.com", new MyDate(1992, 9, 20));
+        m.setTypeOfUser(TypeOfUser.Band);
+        CurrentUser.getInstance(mActivityTestRule.getActivity()).setBand(md.getBand());
+        CurrentUser.getInstance(mActivityTestRule.getActivity()).email = "musiconnectsdp@gmail.com";
         Intent intent = new Intent();
         intent.putExtra("UserEmail", m.getEmailAddress());
         mActivityTestRule.launchActivity(intent);
