@@ -60,7 +60,7 @@ public class DatabaseQueryHelpersTest {
 
     @Test
     public void singleQueryWhereArrayContainsTest() {
-        map.put("", "toto");
+        map.put("members", "toto");
         ArrayDeque<Map.Entry<String, Object>> argEntries = new ArrayDeque<>(map.entrySet());
         Map.Entry<String, Object> entry = argEntries.poll();
 
@@ -71,13 +71,13 @@ public class DatabaseQueryHelpersTest {
 
     @Test
     public void unpackTest() {
-        map.put("", "toto");
+        map.put("members", "toto");
         map.put("toto", "toto");
         map.put("alice", "alice");
         map.put("null", null);
 
         assertEquals(query, DatabaseQueryHelpers.unpack(query, map));
-        verify(query, times(1)).whereArrayContains("", "toto");
+        verify(query, times(1)).whereArrayContains("members", "toto");
         verify(query, times(1)).whereEqualTo("toto", "toto");
         verify(query, times(1)).whereEqualTo("alice", "alice");
         verifyNoMoreInteractions(query);
