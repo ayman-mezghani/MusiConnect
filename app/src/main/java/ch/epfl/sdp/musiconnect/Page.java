@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,6 +50,7 @@ public abstract class Page extends AppCompatActivity {
     protected Map<String, Location> userLocations;
     public static List<String> notificationMessages;
     Location l1, l2;
+    Menu main_menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,8 @@ public abstract class Page extends AppCompatActivity {
         notificationMessage = "A musician is within " + DISTANCE_LIMIT + " meters";
         notificationMessages = new ArrayList<>();
         userLocations = new HashMap<>();
+
+        updateCurrentUser(this);
     }
 
     @Override
@@ -149,6 +153,7 @@ public abstract class Page extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
+        main_menu = menu;
         return true;
     }
 
@@ -193,6 +198,19 @@ public abstract class Page extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(Build.VERSION.SDK_INT > 11) {
+            invalidateOptionsMenu();
+            if(CurrentUser.getInstance(this).getBands() != null) {      // if user is member of a band
+                MenuItem bandItem = menu.findItem(R.id.my_profileBand); // then show a menu item to bands profile
+                if(bandItem != null)
+                    bandItem.setVisible(true);
+            }
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
     protected void displayNotFinishedFunctionalityMessage() {
         Toast.makeText(this, getString(R.string.not_yet_done), Toast.LENGTH_SHORT).show();
     }
@@ -220,16 +238,23 @@ public abstract class Page extends AppCompatActivity {
                         }
                     });
                 }
-                if(!test) {
-                    MenuItem bandItem = findViewById(R.id.my_profileBand);
-                    bandItem.setVisible(true);
-                }
+                getBandIfMember();
             }
         });
-
     }
 
     public void getBandIfMember() {
-
+        HashMap<String, Object> h = new HashMap<>();
+        h.put("members", CurrentUser.getInstance(this).getMusician().getEmailAddress());
+        DbGenerator.getDbInstance().query(DbUserType.Band, h, new DbCallback() {
+            @Override
+            public void queryCallback(List<User> userList) {
+                List<Band> b = new ArrayList<>();
+                for (User u: userList) {
+                    b.add((Band) u);
+                }
+                CurrentUser.getInstance(Page.this).setBands(b);
+            }
+        });
     }
 }

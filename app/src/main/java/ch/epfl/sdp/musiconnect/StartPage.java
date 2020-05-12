@@ -14,7 +14,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -25,8 +24,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
@@ -91,8 +88,6 @@ public class StartPage extends Page {
                 });
             }
         });
-
-
 
         if(!test) {
             updateCurrentUser(this);
@@ -165,14 +160,10 @@ public class StartPage extends Page {
     }
 
     protected void button1Click() {
-        HashMap<String, Object> h = new HashMap<>();
-        h.put("members", "Bob@gmail.com");
-        DbGenerator.getDbInstance().query(DbUserType.Band, h, new DbCallback() {
-            @Override
-            public void queryCallback(List<User> userList) {
-                Toast.makeText(StartPage.this, ((Band) userList.get(0)).getName(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        getBandIfMember();
+
+
+
     }
 
     protected void fabMenuClick() {

@@ -173,7 +173,7 @@
     <string name="bandFinderInstruments">Instrument</string>
     <string name="bandFinderLevels">Level</string>
     <string name="bandFinderButton">Find band</string>
-
+    <string name="my_bands">My bands</string>
 
 
     <string-array name="instruments_array">
