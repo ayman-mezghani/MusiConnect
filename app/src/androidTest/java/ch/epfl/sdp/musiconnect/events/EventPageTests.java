@@ -34,6 +34,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class EventPageTests {
@@ -138,11 +139,12 @@ public class EventPageTests {
         clickOnAlert("YES");
 
         try {
-            Thread.sleep(2000);
+            Thread.sleep(3000);
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
 
         m = (Musician)e.getCreator();
+        assertTrue(m.getEvents().isEmpty());
     }
 }
