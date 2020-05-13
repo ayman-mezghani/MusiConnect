@@ -6,11 +6,19 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
+import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.sdp.musiconnect.testsFunctions.getCurrentActivity;
 import static org.junit.Assert.assertTrue;
 
@@ -33,5 +41,15 @@ public class StartPageTests {
         CurrentUser.getInstance(activityRule.getActivity()).setMusician(musiConnect);
         ((StartPage) getCurrentActivity()).updateCurrentUser(activityRule.getActivity());
         assertTrue(CurrentUser.getInstance(activityRule.getActivity()).getBand().getName().equals(md.getBand().getName()));
+    }
+
+    @Test
+    public void testBandProfileClickShouldStartNewIntent() {
+        CurrentUser.getInstance(activityRule.getActivity()).email = "musiconnectsdp@gmail.com";
+        CurrentUser.getInstance(activityRule.getActivity()).setTypeOfUser(TypeOfUser.Band);
+        CurrentUser.getInstance(activityRule.getActivity()).setBand(md.getBand());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText(R.string.my_bands)).perform(click());
+        intended(hasComponent(BandProfile.class.getName()));
     }
 }
