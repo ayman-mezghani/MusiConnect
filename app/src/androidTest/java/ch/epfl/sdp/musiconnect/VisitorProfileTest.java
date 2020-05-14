@@ -95,7 +95,9 @@ public class VisitorProfileTest {
         onView(withId(R.id.visitorProfileLastname)).check(matches(withText(m.getLastName())));
         onView(withId(R.id.visitorProfileUsername)).check(matches(withText(m.getUserName())));
         onView(withId(R.id.visitorProfileEmail)).check(matches(withText(m.getEmailAddress())));
-        onView(withId(R.id.visitorProfileBirthday)).check(matches(withText(m.getBirthday().toString())));
+        MyDate date = m.getBirthday();
+        String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
+        onView(withId(R.id.visitorProfileBirthday)).check(matches(withText(s)));
 
         visitorActivityTestRule.finishActivity();
     }
