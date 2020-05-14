@@ -40,7 +40,7 @@ public class BandAddUsersTests {
 
     @BeforeClass
     public static void setMocks() {
-        md = new MockDatabase();
+        md = new MockDatabase(true);
         DbGenerator.setDatabase(md);
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
@@ -51,7 +51,7 @@ public class BandAddUsersTests {
     }
 
     @Test
-    public void addUUserToBandTest() {
+    public void addUserToBandTest() {
         CurrentUser.getInstance(mActivityTestRule.getActivity()).setTypeOfUser(TypeOfUser.Band);
 
         Musician m = new Musician("Alice", "Bardon", "Alyx", "aymanmezghani97@gmail.com", new MyDate(1992, 9, 20));

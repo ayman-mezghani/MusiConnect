@@ -46,7 +46,7 @@ public class EventListTests {
 
     @BeforeClass
     public static void setMocks() {
-        md = new MockDatabase();
+        md = new MockDatabase(false);
         DbGenerator.setDatabase(md);
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }

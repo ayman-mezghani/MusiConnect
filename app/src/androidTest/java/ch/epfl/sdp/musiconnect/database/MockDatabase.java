@@ -26,18 +26,17 @@ public class MockDatabase extends Database {
     private List<Event> listOfEvent;
     private Map<String, SimplifiedMusician> content;
 
-
-
     private Band b;
 
-    public MockDatabase() {
+    public MockDatabase(boolean addBandUser) {
         this.content = new HashMap<>();
         listOfMusicians = new ArrayList<>();
         listOfEvent = new ArrayList<>();
 
         Musician m = new Musician(firstName, lastName, username, email, birthday);
         m.addEvent("1");
-        m.setTypeOfUser(TypeOfUser.Band);
+        if(addBandUser)
+            m.setTypeOfUser(TypeOfUser.Band);
         defaultSm = new SimplifiedMusician(m);
         listOfMusicians.add(defaultSm);
 
@@ -60,6 +59,7 @@ public class MockDatabase extends Database {
 
         listOfEvent.add(createEvent(getDummyMusician(1), "1"));
         listOfEvent.add(createEvent(getDummyMusician(2), "2"));
+
     }
 
     public Musician getDummyMusician(int index) {
