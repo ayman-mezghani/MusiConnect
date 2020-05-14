@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -32,6 +33,11 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
     private DbAdapter dbAdapter;
 
     private Musician currentCachedUser;
+
+    private TextView instrument;
+    private TextView selectedInstrument;
+    private TextView level;
+    private TextView selectedLevel;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -65,6 +71,11 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
         bottomNavigationView.setSelectedItemId(R.id.my_profile);
         bottomNavigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
+
+        instrument = findViewById(R.id.myProfileInstrument);
+        selectedInstrument = findViewById(R.id.myProfileSelectedInstrument);
+        level = findViewById(R.id.myProfileLevel);
+        selectedLevel = findViewById(R.id.myProfileSelectedLevel);
     }
 
     @Override

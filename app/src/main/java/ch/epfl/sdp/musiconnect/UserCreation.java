@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +39,11 @@ public class UserCreation extends Page {
     Calendar calendar;
     protected EditText etFirstName, etLastName, etUserName, etMail;
     private RadioGroup rdg;
+
+    private TextView instrument;
+    private Spinner selectedInstrument;
+    private TextView level;
+    private Spinner selectedLevel;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -129,6 +136,24 @@ public class UserCreation extends Page {
             etLastName.setText(account.getFamilyName());
             etMail.setText(account.getEmail());
         }
+
+        instrument = findViewById(R.id.newProfileInstrument);
+        selectedInstrument = findViewById(R.id.newProfileSelectedInstrument);
+        // Create an ArrayAdapter using the string array instruments_array and a default spinner layout
+        ArrayAdapter<CharSequence> instrumentsAdapter = ArrayAdapter.createFromResource(this, R.array.instruments_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        instrumentsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the musicianInstruments spinner
+        selectedInstrument.setAdapter(instrumentsAdapter);
+
+        level = findViewById(R.id.newProfileLevel);
+        selectedLevel = findViewById(R.id.newProfileSelectedLevel);
+        // Create an ArrayAdapter using the string array levels_array and a default spinner layout
+        ArrayAdapter<CharSequence> levelsAdapter = ArrayAdapter.createFromResource(this, R.array.levels_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        levelsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the musicianLevels spinner
+        selectedLevel.setAdapter(levelsAdapter);
     }
 
     @Override
