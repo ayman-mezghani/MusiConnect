@@ -22,7 +22,7 @@ public class MockDatabase extends Database {
 
     private SimplifiedMusician defaultSm;
 
-    private List<SimplifiedMusician> listOfMusicians;
+    private List<SimplifiedMusician> listOfMusicians; // index 0
     private List<Event> listOfEvent;
     private Map<String, SimplifiedMusician> content;
 
@@ -49,20 +49,35 @@ public class MockDatabase extends Database {
         b = new Band("totofire", m.getEmailAddress());
         b.addMember(musiConnect .getEmailAddress());
 
+        createAndAddDummyMusicians();
+        listOfMusicians.add(new SimplifiedMusician(musiConnect));
+
+        createAndAddDummyEvents();
+
+        Event privateEventAndParticipant = createEvent(getDummyMusician(2), "5", "Private but visible event at Big Ben!", false);
+        privateEventAndParticipant.register(m);
+        listOfEvent.add(privateEventAndParticipant);
+    }
+
+    private void createAndAddDummyMusicians() {
         Musician m1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
-        m1.addEvent("1");
+        m1.addEvent("2");
 
         Musician m2 = new Musician("Alice", "Bardon", "Alyx", "aymanmezghani97@gmail.com", new MyDate(1992, 9, 20));
-        m2.addEvent("2");
+        m2.addEvent("3");
+        m2.addEvent("4");
+        m2.addEvent("5");
 
         listOfMusicians.add(new SimplifiedMusician(m1));
         listOfMusicians.add(new SimplifiedMusician(m2));
         listOfMusicians.add(new SimplifiedMusician(new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1))));
-        listOfMusicians.add(new SimplifiedMusician(musiConnect));
+    }
 
-        listOfEvent.add(createEvent(getDummyMusician(1), "1"));
-        listOfEvent.add(createEvent(getDummyMusician(2), "2"));
-
+    private void createAndAddDummyEvents() {
+        listOfEvent.add(createEvent(getDummyMusician(0), "1", "Event at Big Ben!", true));
+        listOfEvent.add(createEvent(getDummyMusician(1), "2", "Event at Big Ben!", true));
+        listOfEvent.add(createEvent(getDummyMusician(2), "3", "Public Event at Big Ben!", true));
+        listOfEvent.add(createEvent(getDummyMusician(2), "4", "Private event at Big Ben!", false));
     }
 
     public Musician getDummyMusician(int index) {
@@ -73,15 +88,16 @@ public class MockDatabase extends Database {
         return listOfEvent.get(index);
     }
 
-    private Event createEvent(User user, String eid) {
+    private Event createEvent(User user, String eid, String title, boolean visible) {
         Musician m2 = getDummyMusician(3);
 
         Event event = new Event(user, eid);
         event.setAddress("Westminster, London, England");
         event.setLocation(51.5007, 0.1245);
         event.setDateTime(new MyDate(2020, 9, 21, 14, 30));
-        event.setTitle("Event at Big Ben!");
+        event.setTitle(title);
         event.setDescription("Playing at Big Ben, come watch us play!");
+        event.setVisible(visible);
         event.register(m2);
 
         return event;
@@ -106,9 +122,12 @@ public class MockDatabase extends Database {
     @Override
     void updateDoc(String collection, String docName, Map<String, Object> newValueMap) {
         Object value = newValueMap.get(SimplifiedMusician.EVENTS);
+        Musician m = getDummyMusician(1);
 
-        if (collection.equals(DbUserType.Musician.toString()) && docName.equals(getDummyMusician(1).getEmailAddress()) && value != null) {
-            getDummyMusician(1).setEvents((List<String>) value);
+        if (collection.equals(DbUserType.Musician.toString()) && docName.equals(m.getEmailAddress()) && value != null) {
+            listOfMusicians.remove(1);
+            m.setEvents((List<String>) value);
+            listOfMusicians.add(1, new SimplifiedMusician(m));
         }
 
 

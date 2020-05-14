@@ -31,7 +31,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 
-public class bandProfileTests {
+public class BandProfileTests {
     @Rule
     public IntentsTestRule<BandProfile> activityRule = new IntentsTestRule<>(BandProfile.class);
 

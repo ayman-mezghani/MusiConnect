@@ -121,6 +121,13 @@ public class FirebaseDatabase extends Database {
                                     e.setDescription((String) data.get("description"));
                                     e.setTitle((String) data.get("title"));
 
+                                    Object o = data.get("visible"); // Here, Map.getOrDefault requires min API level 24, however our min is 21
+                                    if (o != null) {
+                                        e.setVisible((boolean) o);
+                                    } else {
+                                        e.setVisible(false);
+                                    }
+
                                     for (String me : (List<String>) data.get("participants")) {
                                         da.read(DbUserType.Musician, me, new DbCallback() {
                                             @Override

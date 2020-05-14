@@ -3,6 +3,7 @@ package ch.epfl.sdp.musiconnect.events;
 import android.os.Bundle;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.CurrentUser;
 
 public class VisitorEventPage extends EventPage {
 
@@ -20,5 +21,18 @@ public class VisitorEventPage extends EventPage {
 
         String eid = getIntent().getStringExtra("eid");
         retrieveEventInfo(eid);
+    }
+
+    @Override
+    protected void loadEventInfo(Event event) {
+        if (event == null || event.isVisible() || event.containsParticipant(CurrentUser.getInstance(this).email)) {
+            super.loadEventInfo(event);
+        } else {
+            loadPrivateEventPage();
+        }
+    }
+
+    private void loadPrivateEventPage() {
+        setContentView(R.layout.activity_event_page_private);
     }
 }

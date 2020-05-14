@@ -41,7 +41,7 @@ public abstract class EventPage extends Page {
         }
     }
 
-    private void loadEventInfo(Event event) {
+    protected void loadEventInfo(Event event) {
         if (event == null) {
             loadNullEvent();
             return;             // Return statement to address cognitive "complexity" "issue" from code clmate

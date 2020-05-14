@@ -100,6 +100,15 @@ public class Event {
         participants.remove(user);
     }
 
+    public boolean containsParticipant(String email) {
+        for (User participant: participants) {
+            if (participant.getEmailAddress().equals(email)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public List<User> getParticipants() {
         return participants;
     }

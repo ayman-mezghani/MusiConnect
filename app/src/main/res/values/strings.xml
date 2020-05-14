@@ -179,6 +179,10 @@
     <string name="bandFinderInstruments">Instrument</string>
     <string name="bandFinderLevels">Level</string>
     <string name="bandFinderButton">Find band</string>
+
+    <string name="event_is_private">This event is private and you are not a participant</string>
+    <string name="no_events_to_show">This user has no events to show...</string>
+
     <string name="my_bands">My bands</string>
 
     <string-array name="instruments_array">
