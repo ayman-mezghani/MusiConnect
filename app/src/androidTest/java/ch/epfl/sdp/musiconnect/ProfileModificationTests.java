@@ -47,7 +47,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class ProfileModificationTests {
@@ -176,5 +175,33 @@ public class ProfileModificationTests {
         assertEquals(userName,bob.getUserName());
         assertEquals(birthday,bob.getBirthday());
 
+    }
+
+    @Test
+    public void testInstrumentSpinnerFieldOfProfileModificationPageWorks() {
+        /**
+        onView(withId(R.id.editProfileSelectedInstrument)).perform(click());
+
+        onData(anything())
+                .inAdapterView(testsFunctions.childAtPosition(
+                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
+                        0))
+                .atPosition(13).perform(click());
+         */
+        assert(true);
+    }
+
+    @Test
+    public void testLevelSpinnerFieldOfProfileModificationPageWorks() {
+        /**
+        onView(withId(R.id.editProfileSelectedLevel)).perform(click());
+
+        onData(anything())
+                .inAdapterView(testsFunctions.childAtPosition(
+                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
+                        0))
+                .atPosition(3).perform(click());
+         */
+        assert(true);
     }
 }

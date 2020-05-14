@@ -8,7 +8,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -50,6 +53,11 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
     private List<Musician> result; //used to fetch from room database
     public static boolean changeStaged = false;    //indicates if there are changes not commited to online database yet
 
+    private TextView instrument;
+    private Spinner selectedInstrument;
+    private TextView level;
+    private Spinner selectedLevel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +79,24 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
 
         userEmail = CurrentUser.getInstance(this).email;
         getVideoUri(userEmail);
+
+        instrument = findViewById(R.id.editProfileInstrument);
+        selectedInstrument = findViewById(R.id.editProfileSelectedInstrument);
+        // Create an ArrayAdapter using the string array instruments_array and a default spinner layout
+        ArrayAdapter<CharSequence> instrumentsAdapter = ArrayAdapter.createFromResource(this, R.array.instruments_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        instrumentsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the musicianInstruments spinner
+        selectedInstrument.setAdapter(instrumentsAdapter);
+
+        level = findViewById(R.id.editProfileLevel);
+        selectedLevel = findViewById(R.id.editProfileSelectedLevel);
+        // Create an ArrayAdapter using the string array levels_array and a default spinner layout
+        ArrayAdapter<CharSequence> levelsAdapter = ArrayAdapter.createFromResource(this, R.array.levels_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        levelsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the musicianLevels spinner
+        selectedLevel.setAdapter(levelsAdapter);
     }
 
     private void onCreateGetIntentsFields() {

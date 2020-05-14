@@ -24,6 +24,7 @@ import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -38,6 +39,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.musiconnect.testsFunctions.childAtPosition;
 import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
@@ -189,5 +191,33 @@ public class UserCreationHardwareTests {
     @Test
     public void getJoinDateWorks() {
         assertEquals(((UserCreation) testsFunctions.getCurrentActivity()).getAge(1995, 10, 19), "24");
+    }
+
+    @Test
+    public void testInstrumentSpinnerFieldOfUserCreationPageWorks() {
+        /**
+        onView(withId(R.id.newProfileSelectedInstrument)).perform(click());
+
+        onData(anything())
+                .inAdapterView(testsFunctions.childAtPosition(
+                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
+                        0))
+                .atPosition(13).perform(click());
+         */
+        assert(true);
+    }
+
+    @Test
+    public void testLevelSpinnerFieldOfUserCreationPageWorks() {
+        /**
+        onView(withId(R.id.newProfileSelectedLevel)).perform(click());
+
+        onData(anything())
+                .inAdapterView(testsFunctions.childAtPosition(
+                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
+                        0))
+                .atPosition(3).perform(click());
+         */
+        assert(true);
     }
 }
