@@ -145,7 +145,7 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
     private Map<Instrument, Level> instrumentListToMap(List<Map<String, String>> l) {
         Map<Instrument, Level> res = new HashMap<>();
         for (Map<String, String> m : l) {
-            res.put(Instrument.valueOf(m.get(INSTRUMENT).toUpperCase()), Level.valueOf(m.get(LEVEL).toUpperCase()));
+            res.put(Instrument.getInstrumentFromValue(m.get(INSTRUMENT)), Level.getLevelFromValue(m.get(LEVEL)));
         }
         return res;
     }

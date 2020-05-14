@@ -1,5 +1,7 @@
 package ch.epfl.sdp.musiconnect;
 
+import androidx.annotation.Nullable;
+
 /**
  * @author Manuel Pellegrini, EPFL
  */
@@ -28,6 +30,10 @@ public enum Instrument {
     VIOLIN,
     VOICE,
     XYLOPHONE;
+
+    public static Instrument getInstrumentFromValue(@Nullable String s) {
+        return valueOf(s.toUpperCase());
+    }
 
     @Override
     public String toString() {
