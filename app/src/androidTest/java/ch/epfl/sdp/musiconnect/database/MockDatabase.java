@@ -35,8 +35,6 @@ public class MockDatabase extends Database {
 
         Musician m = new Musician(firstName, lastName, username, email, birthday);
         m.addEvent("1");
-        if(addBandUser)
-            m.setTypeOfUser(TypeOfUser.Band);
         defaultSm = new SimplifiedMusician(m);
         listOfMusicians.add(defaultSm);
 

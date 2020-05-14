@@ -56,6 +56,7 @@ public class EventListTests {
     @Before
     public void initIntents() {
         Intents.init();
+        CurrentUser.getInstance(eventListRule.getActivity()).setTypeOfUser(TypeOfUser.Musician);
     }
 
     @After
@@ -102,7 +103,6 @@ public class EventListTests {
 
     @Test
     public void testClickEventShouldLoadPage() {
-        CurrentUser.getInstance(eventListRule.getActivity()).setTypeOfUser(TypeOfUser.Musician);
 
         Event e = md.getDummyEvent(0);
 
