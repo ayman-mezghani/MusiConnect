@@ -10,6 +10,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -42,7 +44,9 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.firestore.GeoPoint;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -66,6 +70,7 @@ import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
 import ch.epfl.sdp.musiconnect.events.Event;
+import ch.epfl.sdp.musiconnect.events.EventCreationPage;
 import ch.epfl.sdp.musiconnect.events.MyEventPage;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.EventDao;
@@ -511,7 +516,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @VisibleForTesting
     protected void createEvent(LatLng latlng){
+        Intent eventIntent = new Intent(MapsActivity.this, EventCreationPage.class);
+        Geocoder coder = new Geocoder(this);
+        List<Address> address = null;
 
+        try {
+            try {
+                address = coder.getFromLocation(latlng.latitude,latlng.longitude,5);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (address!=null && !address.isEmpty()) {
+                Address addr  = address.get(0);
+                eventIntent.putExtra("Address",addr.getAddressLine(0));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.startActivity(eventIntent);
     }
 
     @VisibleForTesting

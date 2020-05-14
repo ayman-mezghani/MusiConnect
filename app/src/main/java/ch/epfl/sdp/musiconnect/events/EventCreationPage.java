@@ -19,6 +19,9 @@ public class EventCreationPage extends EventModificationPage {
 
         eventTitleView = findViewById(R.id.eventCreationNewEventTitle);
         eventAddressView = findViewById(R.id.eventCreationNewEventAddress);
+        if(getIntent().getExtras().getString("Address") != null){
+            eventAddressView.setText(getIntent().getExtras().getString("Address"));
+        }
         eventDescriptionView = findViewById(R.id.eventCreationNewEventDescription);
         eventParticipantView = findViewById(R.id.eventCreationNewParticipant);
 
