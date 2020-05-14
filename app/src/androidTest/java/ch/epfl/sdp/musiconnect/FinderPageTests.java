@@ -33,7 +33,6 @@ public class FinderPageTests {
     @Rule
     public final ActivityTestRule<FinderPage> finderPageRule = new ActivityTestRule<>(FinderPage.class);
 
-
     // Before and after methods are used in order to accept tests with intents
     @Before
     public void initIntents() {
@@ -42,6 +41,20 @@ public class FinderPageTests {
 
     @After
     public void releaseIntents() { Intents.release(); }
+
+    @Test
+    public void testSearchClickShouldDoNothing() {
+        onView(withId(R.id.search)).perform(click());
+    }
+
+    @Test
+    public void testHomeClickShouldStartNewIntent() {
+        onView(withId(R.id.home)).perform(click());
+
+        Intent homeIntent = new Intent();
+        finderPageRule.launchActivity(homeIntent);
+        intended(hasComponent(StartPage.class.getName()));
+    }
 
     @Test
     public void testClickOnFindMusicianButtonStartsNewIntent() {
@@ -60,5 +73,4 @@ public class FinderPageTests {
         finderPageRule.launchActivity(bandFinderIntent);
         intended(hasComponent(BandFinderPage.class.getName()));
     }
-
 }

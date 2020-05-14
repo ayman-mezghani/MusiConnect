@@ -20,6 +20,7 @@ import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 @RunWith(AndroidJUnit4.class)
 @SdkSuppress(minSdkVersion = 18)
@@ -43,6 +44,6 @@ public class CustomInfoWindowGoogleMapTest {
     @Test
     public void getInfoWindowIsNull(){
         CustomInfoWindowGoogleMap g = new CustomInfoWindowGoogleMap(startRule.getActivity().getApplicationContext());
-        assertEquals(null,g.getInfoWindow(null));
+        assertNull(g.getInfoWindow(null));
     }
 }

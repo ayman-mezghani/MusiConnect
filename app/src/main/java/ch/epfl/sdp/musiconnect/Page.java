@@ -160,13 +160,13 @@ public abstract class Page extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.home:
+                Intent homeIntent = new Intent(this, StartPage.class);
+                this.startActivity(homeIntent);
+                break;
             case R.id.my_profile:
                 Intent profileIntent = new Intent(this, MyProfilePage.class);
                 this.startActivity(profileIntent);
-                break;
-            case R.id.settings:
-                Intent settingsIntent = new Intent(this, SettingsPage.class);
-                this.startActivity(settingsIntent);
                 break;
             case R.id.help:
                 Intent helpIntent = new Intent(this, HelpPage.class);
@@ -194,9 +194,6 @@ public abstract class Page extends AppCompatActivity {
             case R.id.my_profileBand:
                 this.startActivity(new Intent(this, BandProfile.class));
                 break;
-            default:
-                displayNotFinishedFunctionalityMessage();
-                return false;
         }
         return true;
     }
@@ -222,7 +219,8 @@ public abstract class Page extends AppCompatActivity {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, task -> {
                     CurrentUser.flush();
-                    startActivity(new Intent(Page.this, GoogleLogin.class));
+                    Intent loginIntent = new Intent(this, GoogleLogin.class);
+                    this.startActivity(loginIntent);
                     finish();
                 });
     }

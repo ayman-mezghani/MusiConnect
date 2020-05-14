@@ -2,46 +2,30 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_menu"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/search"
-        android:icon="@android:drawable/ic_menu_search"
-        android:title="@string/search"
-        app:showAsAction="always" />
-
-    <item
-        android:id="@+id/help"
-        android:icon="@android:drawable/ic_menu_help"
-        android:title="@string/help"
-        app:showAsAction="always" />
-
-    <item  android:id="@+id/my_profile"
-        android:title="@string/my_profile"
-        app:showAsAction="never"/>
-
+    
     <item  android:id="@+id/my_profileBand"
         android:title="@string/my_bands"
         android:visible="false"
         app:showAsAction="never"/>
 
-    <item android:id="@+id/my_events"
-        android:title="@string/my_events"
+    <item android:id="@+id/home"
+        android:title="@string/navigation_home"
         app:showAsAction="never"/>
 
-    <item android:id="@+id/create_event"
+    <item
+        android:id="@+id/create_event"
         android:title="@string/create_an_event"
         app:showAsAction="never"/>
 
-    <item android:id="@+id/map"
-        android:title="@string/map"
-        app:showAsAction="never" />
+    <item
+        android:id="@+id/help"
+        android:icon="@android:drawable/ic_menu_help"
+        android:title="@string/help"
+        app:showAsAction="never"/>
 
-    <item android:id="@+id/settings"
-        android:title="@string/settings"
-        app:showAsAction="never" />
-
-    <item android:id="@+id/signout"
+    <item
+        android:id="@+id/signout"
         android:title="@string/signout"
-        app:showAsAction="never" />
-
+        app:showAsAction="never"/>
 
 </menu>

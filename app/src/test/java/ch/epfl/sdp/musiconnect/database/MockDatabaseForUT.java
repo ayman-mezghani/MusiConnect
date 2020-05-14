@@ -29,7 +29,7 @@ public class MockDatabaseForUT extends Database {
     @Override
     void addDoc(String collection, String docName, SimplifiedDbEntry entry) {
         assertEquals(expectedDocName, docName);
-        assertTrue(expectedEntry.equals(expectedEntry));
+        assertEquals(expectedEntry, expectedEntry);
     }
 
     @Override

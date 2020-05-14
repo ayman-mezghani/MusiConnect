@@ -1,10 +1,13 @@
 package ch.epfl.sdp.musiconnect.finder;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.content.Intent;
 import android.widget.TextView;
 import android.widget.Button;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.Page;
@@ -14,7 +17,6 @@ import ch.epfl.sdp.musiconnect.Page;
  */
 public class FinderPage extends Page implements View.OnClickListener {
 
-    private TextView title;
     private Button findMusician;
     private Button findBand;
 
@@ -23,7 +25,7 @@ public class FinderPage extends Page implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finder_page);
 
-        title = findViewById(R.id.finderTitleID);
+        TextView title = findViewById(R.id.finderTitleID);
 
         // If the button findMusician is pressed, then the method openMusicianFinderPage() is executed
         findMusician = findViewById(R.id.findMusicianButtonID);
@@ -32,6 +34,17 @@ public class FinderPage extends Page implements View.OnClickListener {
         // If the button findBand is pressed, then the method openBandFinderPage() is executed
         findBand = findViewById(R.id.findBandButtonID);
         findBand.setOnClickListener(view -> openBandFinderPage());
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
+        bottomNavigationView.setSelectedItemId(R.id.search);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == R.id.search)
+            return true;
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -54,5 +67,4 @@ public class FinderPage extends Page implements View.OnClickListener {
     public void onClick(View view) {
         // This method does nothing
     }
-
 }

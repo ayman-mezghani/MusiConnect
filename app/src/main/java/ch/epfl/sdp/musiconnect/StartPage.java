@@ -9,22 +9,23 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
@@ -40,7 +41,6 @@ public class StartPage extends Page {
     private Animation fabOpen, fabClose, fabClockWise, fabAntiClockWise;
     private TextView fabTv1, fabTv2;
     private boolean isOpen = false;
-    private Band b;
     public static boolean test = true;
 
     @Override
@@ -89,9 +89,12 @@ public class StartPage extends Page {
             }
         });
 
-        if(!test) {
-            updateCurrentUser(this);
-        }
+        if (!test)
+            updateCurrentUserBand(this);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
+        bottomNavigationView.setSelectedItemId(R.id.home);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
     }
 
     @Override
@@ -104,6 +107,13 @@ public class StartPage extends Page {
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter("GPSLocationUpdates"));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.home)
+            return true;
+        return super.onOptionsItemSelected(item);
     }
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
@@ -121,7 +131,7 @@ public class StartPage extends Page {
     };
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (LocationPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults)) {
             getLastLocation();
         }

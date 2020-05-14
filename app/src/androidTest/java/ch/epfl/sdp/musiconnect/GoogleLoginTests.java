@@ -10,8 +10,6 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.concurrent.TimeUnit;
-
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
@@ -26,7 +24,7 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sdp.musiconnect.testsFunctions.getCurrentActivity;
-import static ch.epfl.sdp.musiconnect.testsFunctions.waitALittle;
+import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static junit.framework.TestCase.assertTrue;
 
 public class GoogleLoginTests {
@@ -44,7 +42,7 @@ public class GoogleLoginTests {
     public void signInButtonClick() {
         onView(withId(R.id.sign_in_button)).check(matches(isDisplayed()));
         onView(withId(R.id.sign_in_button)).perform(click());
-        waitALittle(3);
+        waitSeconds(3);
     }
 
     @Test

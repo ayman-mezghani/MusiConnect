@@ -115,14 +115,11 @@ public class EventListPage extends Page {
         });
     }
 
-
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == R.id.my_events && !isVisitor) {
+        if (item.getItemId() == R.id.my_events)
             return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void loadIds(List<String> eventIds) {
@@ -147,7 +144,6 @@ public class EventListPage extends Page {
         }
     }
 
-
     private void showEvent(Event e) {
         String eid = e.getEid();
         String title = e.getTitle();
@@ -160,11 +156,9 @@ public class EventListPage extends Page {
         }
     }
 
-
     private void updateListInDatabase() {
         if (counter == 0) {
             List<String> ids = new ArrayList<>(titleToIds.values());
-
 
             dbAdapter.read(dbUserType, userEmail, new DbCallback() {
                 @Override
@@ -175,7 +169,6 @@ public class EventListPage extends Page {
             });
         }
     }
-
 
     private void loadEventPage(String eid) {
         if (!isVisitor) {

@@ -41,11 +41,12 @@ import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.musiconnect.testsFunctions.childAtPosition;
-import static ch.epfl.sdp.musiconnect.testsFunctions.waitALittle;
+import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -67,7 +68,7 @@ public class ProfileModificationTests {
         musicianDao = roomDb.musicianDao();
         mExecutor.execute(() -> {
             musicianDao.nukeTable();
-            musicianDao.insertAll(new Musician[]{defuser});
+            musicianDao.insertAll(defuser);
         });
     }
 
@@ -94,12 +95,12 @@ public class ProfileModificationTests {
 
     @Test
     public void testEditProfileAndDoNotSaveShouldDoNothing() {
-        assertTrue(!ProfileModification.changeStaged);
+        assertFalse(ProfileModification.changeStaged);
         clickButtonWithText(R.string.edit_profile_button_text);
         onView(withId(R.id.newFirstName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Damien"));
         clickButtonWithText(R.string.do_not_save);
         onView(withId(R.id.myFirstname)).check(matches(not(withText("Damien"))));
-        assertTrue(!ProfileModification.changeStaged);
+        assertFalse(ProfileModification.changeStaged);
     }
 
     @Test
@@ -161,14 +162,14 @@ public class ProfileModificationTests {
 
         clickButtonWithText(R.string.save);
 
-        waitALittle(2);
+        waitSeconds(2);
 
         mExecutor.execute(() -> {
             result = musicianDao.loadAllByIds(new String[]{"bobminion@gmail.com"});
         });
 
-        waitALittle(2);
-        assertTrue(!result.isEmpty());
+        waitSeconds(2);
+        assertFalse(result.isEmpty());
         Musician bob = result.get(0);
         assertEquals(firstName,bob.getFirstName());
         assertEquals(lastName,bob.getLastName());

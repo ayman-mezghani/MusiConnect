@@ -1,7 +1,5 @@
 package ch.epfl.sdp.musiconnect;
 
-import android.location.Location;
-
 import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Test;

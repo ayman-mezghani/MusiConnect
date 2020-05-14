@@ -17,8 +17,6 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.concurrent.TimeUnit;
-
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
@@ -38,7 +36,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.musiconnect.testsFunctions.childAtPosition;
-import static ch.epfl.sdp.musiconnect.testsFunctions.waitALittle;
+import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -56,7 +54,7 @@ public class UserCreationHardwareTests {
 
     @After
     public void bePatient() {
-        waitALittle(3);
+        waitSeconds(3);
     }
 
     @Test
@@ -67,7 +65,7 @@ public class UserCreationHardwareTests {
     @Test
     public void AllEmptyInputTest() {
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
-        waitALittle(1);
+        waitSeconds(1);
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(activityRule.getActivity().getApplicationContext());
         if (account != null) {
             onView(withText("Fill Username field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
@@ -86,7 +84,7 @@ public class UserCreationHardwareTests {
         closeSoftKeyboard();
 
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
-        waitALittle(1);
+        waitSeconds(1);
         onView(withText("Fill Username field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
@@ -100,7 +98,7 @@ public class UserCreationHardwareTests {
         closeSoftKeyboard();
 
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
-        waitALittle(1);
+        waitSeconds(1);
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(activityRule.getActivity().getApplicationContext());
         if (account != null) {
             onView(withText("Select a date of birth")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
@@ -115,7 +113,7 @@ public class UserCreationHardwareTests {
         closeSoftKeyboard();
 
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
-        waitALittle(1);
+        waitSeconds(1);
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(activityRule.getActivity().getApplicationContext());
         if (account != null) {
             onView(withText("Fill Username field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
@@ -136,7 +134,7 @@ public class UserCreationHardwareTests {
         closeSoftKeyboard();
 
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
-        waitALittle(1);
+        waitSeconds(1);
         onView(withText("Select a date of birth")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
@@ -157,38 +155,6 @@ public class UserCreationHardwareTests {
 
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
     }
-
-    /*@Test
-    public void createBand() {
-        ViewInteraction appCompatRadioButton = onView(allOf(withId(R.id.rbBand), withText("Band"),
-                childAtPosition(allOf(withId(R.id.rdg), childAtPosition(
-                                withClassName(is("android.widget.LinearLayout")),0)),1)));
-        appCompatRadioButton.perform(ViewActions.scrollTo(), click());
-
-        onView(withId(R.id.etFirstname)).perform(ViewActions.scrollTo(), clearText(), typeText("Bob"));
-        closeSoftKeyboard();
-        onView(withId(R.id.etLastName)).perform(ViewActions.scrollTo(), clearText(), typeText("bernard"));
-        closeSoftKeyboard();
-        onView(withId(R.id.etUsername)).perform(ViewActions.scrollTo(), clearText(), typeText("Bobbeber"));
-        closeSoftKeyboard();
-        onView(withId(R.id.etMail)).perform(ViewActions.scrollTo(), clearText(), typeText("Bob@gmail.com"));
-        closeSoftKeyboard();
-        onView(withId(R.id.etDate)).perform(ViewActions.scrollTo()).perform(click());
-        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2000, 1, 1));
-        onView(withText("OK")).perform(click());
-
-        onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo(), click());
-
-        ViewInteraction appCompatEditText3 = onView(
-                allOf(withId(R.id.etBandName),childAtPosition(childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),0),1)));
-        appCompatEditText3.perform(scrollTo(), replaceText("Test band"), ViewActions.closeSoftKeyboard());
-
-        ViewInteraction appCompatButton3 = onView(
-                allOf(withId(R.id.btnBandCreationCreate), withText("Start using application"),childAtPosition(childAtPosition(
-                                withClassName(is("android.widget.LinearLayout")),0),1)));
-        appCompatButton3.perform(scrollTo(), click());
-    }*/
 
     @Test
     public void createBandFails() {
@@ -223,11 +189,5 @@ public class UserCreationHardwareTests {
     @Test
     public void getJoinDateWorks() {
         assertEquals(((UserCreation) testsFunctions.getCurrentActivity()).getAge(1995, 10, 19), "24");
-    }
-
-    @Test
-    public void testHelpClickFromProfileShouldStartNewIntent() {
-        MenuTests m = new MenuTests();
-        m.testHelpClickShouldStartNewIntent();
     }
 }

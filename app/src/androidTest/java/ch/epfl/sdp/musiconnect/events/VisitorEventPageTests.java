@@ -25,7 +25,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.musiconnect.testsFunctions.waitALittle;
+import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 
 @RunWith(AndroidJUnit4.class)
 public class VisitorEventPageTests {
@@ -64,7 +64,7 @@ public class VisitorEventPageTests {
 
         String s = m1.getName() + System.lineSeparator() + m2.getName() + System.lineSeparator();
 
-        waitALittle(3);
+        waitSeconds(3);
 
         onView(withId(R.id.eventTitle)).check(matches(withText(event.getTitle())));
         onView(withId(R.id.eventCreatorField)).check(matches(withText(event.getCreator().getName())));

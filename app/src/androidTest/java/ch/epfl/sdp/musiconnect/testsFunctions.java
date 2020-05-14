@@ -78,14 +78,11 @@ public class testsFunctions {
         };
     }
 
-    public static void waitALittle(int t) {
+    public static void waitSeconds(int t) {
         try {
             TimeUnit.SECONDS.sleep(t);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
-
-    // Asserting Toast
-    //onView(withText("Fill Username field")).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
 }

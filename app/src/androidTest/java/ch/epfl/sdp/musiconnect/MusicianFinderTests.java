@@ -1,5 +1,6 @@
 package ch.epfl.sdp.musiconnect;
 import androidx.test.espresso.DataInteraction;
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -54,29 +55,26 @@ public class MusicianFinderTests {
 
     @Test
     public void mustEnterAtLeastOneField() {
-        onView(withId(R.id.musicianFinderButtonID)).perform(scrollTo(), click());
+        onView(withId(R.id.musicianFinderButtonID)).perform(ViewActions.scrollTo(), click());
         onView(withText(R.string.you_must_fill_at_least_one_field)).inRoot(withDecorView(not(activityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
     @Test
-    public void testSearchShoulWork() {
-        onView(withId(R.id.myMusicianFinderFirstNameID)).perform(scrollTo(), typeText("Bob"));
-        onView(withId(R.id.myMusicianFinderLastNameID)).perform(scrollTo(), typeText("Minion"));
-        onView(withId(R.id.myMusicianFinderUserNameID)).perform(scrollTo(), typeText("bobminion"));
+    public void testSearchShouldWork() {
+        onView(withId(R.id.myMusicianFinderFirstNameID)).perform(ViewActions.scrollTo(), typeText("Bob"));
+        onView(withId(R.id.myMusicianFinderLastNameID)).perform(ViewActions.scrollTo(), typeText("Minion"));
+        onView(withId(R.id.myMusicianFinderUserNameID)).perform(ViewActions.scrollTo(), typeText("bobminion"));
         onView(withId(R.id.musicianFinderButtonID)).perform(scrollTo(), click());
         intended(hasComponent(MusicianFinderResult.class.getName()));
 
         String minionMail = ((Musician)(new MockDatabase()).getDummyMusician(0)).getEmailAddress();
         onView(allOf(withText(minionMail), withParent(withId(R.id.LvMusicianResult))));
-
     }
 
     @Test
-    public void testSearchShoulOpenProfilePage() {
-        onView(withId(R.id.myMusicianFinderFirstNameID)).perform(scrollTo(), typeText("Bob"));
-        /*onView(withId(R.id.myMusicianFinderLastNameID)).perform(scrollTo(), typeText("Minion"));
-        onView(withId(R.id.myMusicianFinderUserNameID)).perform(scrollTo(), typeText("bobminion"));*/
-        onView(withId(R.id.musicianFinderButtonID)).perform(scrollTo(), click());
+    public void testSearchShouldOpenProfilePage() {
+        onView(withId(R.id.myMusicianFinderFirstNameID)).perform(ViewActions.scrollTo(), typeText("Bob"));
+        onView(withId(R.id.musicianFinderButtonID)).perform(ViewActions.scrollTo(), click());
         intended(hasComponent(MusicianFinderResult.class.getName()));
 
         String minionMail = ((Musician)(new MockDatabase()).getDummyMusician(0)).getEmailAddress();

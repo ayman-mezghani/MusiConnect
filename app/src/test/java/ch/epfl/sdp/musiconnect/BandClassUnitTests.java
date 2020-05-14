@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import ch.epfl.sdp.musiconnect.events.Event;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Manuel Pellegrini, EPFL
@@ -100,18 +102,18 @@ public class BandClassUnitTests {
         String bandName = "The Beatles";
         Band beatles = new Band(bandName, john.getEmailAddress());
 
-        assertEquals(true, beatles.isLeader(john.getEmailAddress()));
-        assertEquals(false, beatles.isLeader(paul.getEmailAddress()));
+        assertTrue(beatles.isLeader(john.getEmailAddress()));
+        assertFalse(beatles.isLeader(paul.getEmailAddress()));
 
         beatles.addMember(paul.getEmailAddress());
 
-        assertEquals(true, beatles.isLeader(john.getEmailAddress()));
-        assertEquals(false, beatles.isLeader(paul.getEmailAddress()));
+        assertTrue(beatles.isLeader(john.getEmailAddress()));
+        assertFalse(beatles.isLeader(paul.getEmailAddress()));
 
         beatles.setLeader(paul.getEmailAddress());
 
-        assertEquals(false, beatles.isLeader(john.getEmailAddress()));
-        assertEquals(true, beatles.isLeader(paul.getEmailAddress()));
+        assertFalse(beatles.isLeader(john.getEmailAddress()));
+        assertTrue(beatles.isLeader(paul.getEmailAddress()));
     }
 
     @Test
@@ -170,13 +172,13 @@ public class BandClassUnitTests {
         String bandName = "The Beatles";
         Band beatles = new Band(bandName, john.getEmailAddress());
 
-        assertEquals(true, beatles.isLeader(john.getEmailAddress()));
-        assertEquals(false, beatles.isLeader(paul.getEmailAddress()));
+        assertTrue(beatles.isLeader(john.getEmailAddress()));
+        assertFalse(beatles.isLeader(paul.getEmailAddress()));
 
         beatles.addMember(paul.getEmailAddress());
 
-        assertEquals(true, beatles.isLeader(john.getEmailAddress()));
-        assertEquals(false, beatles.isLeader(paul.getEmailAddress()));
+        assertTrue(beatles.isLeader(john.getEmailAddress()));
+        assertFalse(beatles.isLeader(paul.getEmailAddress()));
     }
 
     @Test
@@ -353,14 +355,14 @@ public class BandClassUnitTests {
         String bandName = "The Beatles";
         Band beatles = new Band(bandName, john.getEmailAddress());
 
-        assertEquals(true, beatles.containsMember(john));
-        assertEquals(false, beatles.containsMember(paul));
+        assertTrue(beatles.containsMember(john));
+        assertFalse(beatles.containsMember(paul));
         beatles.addMember(paul.getEmailAddress());
-        assertEquals(true, beatles.containsMember(john));
-        assertEquals(true, beatles.containsMember(paul));
+        assertTrue(beatles.containsMember(john));
+        assertTrue(beatles.containsMember(paul));
         beatles.removeMember(paul.getEmailAddress());
-        assertEquals(true, beatles.containsMember(john));
-        assertEquals(false, beatles.containsMember(paul));
+        assertTrue(beatles.containsMember(john));
+        assertFalse(beatles.containsMember(paul));
     }
 
     @Test
