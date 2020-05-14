@@ -66,6 +66,7 @@ public class MockDatabase extends Database {
         Musician m2 = new Musician("Alice", "Bardon", "Alyx", "aymanmezghani97@gmail.com", new MyDate(1992, 9, 20));
         m2.addEvent("3");
         m2.addEvent("4");
+        m2.addEvent("5");
 
         listOfMusicians.add(new SimplifiedMusician(m1));
         listOfMusicians.add(new SimplifiedMusician(m2));
@@ -75,7 +76,7 @@ public class MockDatabase extends Database {
     private void createAndAddDummyEvents() {
         listOfEvent.add(createEvent(getDummyMusician(0), "1", "Event at Big Ben!", true));
         listOfEvent.add(createEvent(getDummyMusician(1), "2", "Event at Big Ben!", true));
-        listOfEvent.add(createEvent(getDummyMusician(2), "3", "Event at Big Ben!", true));
+        listOfEvent.add(createEvent(getDummyMusician(2), "3", "Public Event at Big Ben!", true));
         listOfEvent.add(createEvent(getDummyMusician(2), "4", "Private event at Big Ben!", false));
     }
 

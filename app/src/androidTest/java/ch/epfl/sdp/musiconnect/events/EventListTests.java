@@ -30,6 +30,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
@@ -132,8 +133,6 @@ public class EventListTests {
     }
 
 
-    // DO NOT DELETE THIS TESTS, it will test a feature that may be added
-    /*
     @Test
     public void testListShouldOnlyShowPublicOrParticipant() {
         Event e3 = md.getDummyEvent(2);
@@ -148,5 +147,5 @@ public class EventListTests {
 
         onView(withText(e3.getTitle())).check(matches(isDisplayed()));
         onView(withText(e5.getTitle())).check(matches(isDisplayed()));
-    }*/
+    }
 }

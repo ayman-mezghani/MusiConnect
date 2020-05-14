@@ -145,8 +145,9 @@ public class EventListPage extends Page {
             eventTitles.add(title);
             titleToIds.put(title, eid);
 
-            // Show only events that are public or belong to "this" user
-            if ((e.isVisible() || e.getCreator().getEmailAddress().equals(CurrentUser.getInstance(this).email))) {
+            // Show only events that are public or belong to this user or this user is a participant
+            if ((e.isVisible() || e.containsParticipant(CurrentUser.getInstance(this).email)
+                    || e.getCreator().getEmailAddress().equals(CurrentUser.getInstance(this).email))) {
                 eventTitlesToShow.add(title);
                 EventListPage.this.runOnUiThread(() -> adapter.notifyDataSetChanged());
             }
