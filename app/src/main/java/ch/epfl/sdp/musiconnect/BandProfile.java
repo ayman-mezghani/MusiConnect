@@ -11,9 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
@@ -55,16 +53,13 @@ public class BandProfile extends Page {
                 String selected = bandSpinner.getSelectedItem().toString();
                 Toast.makeText(BandProfile.this, selected, Toast.LENGTH_SHORT).show();
 
-                Map<String, Object> m = new HashMap<>();
-                m.put("bandName", selected);
-
-                DbGenerator.getDbInstance().query(DbUserType.Band, m, new DbCallback() {
-                    @Override
-                    public void queryCallback(List<User> userList) {
-                        Band b = (Band) userList.get(0);
-                        displayBandInfo(b);
-                    }
-                });
+                DbGenerator.getDbInstance().read(DbUserType.Band,
+                        getBandFromName(CurrentUser.getInstance(BandProfile.this).getBands(), selected).getEmailAddress(), new DbCallback() {
+                            @Override
+                            public void readCallback(User user) {
+                                displayBandInfo((Band) user);
+                            }
+                        });
             }
 
             @Override
@@ -89,5 +84,13 @@ public class BandProfile extends Page {
         final ArrayAdapter<String> adapter2 = new ArrayAdapter<>
                 (BandProfile.this, android.R.layout.simple_list_item_1, listEvent);
         lvBandEvent.setAdapter(adapter2);
+    }
+
+    private Band getBandFromName(List<Band> lb, String bandName) {
+        for(Band b: lb) {
+            if(b.getName().equals(bandName))
+                return b;
+        }
+        return null;
     }
 }

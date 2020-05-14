@@ -136,7 +136,10 @@ public class MockDatabase extends Database {
         }
 
         if(collection.equals(DbUserType.Band.toString())) {
-            dbCallback.readCallback(b);
+            if(docName.equals("espresso@gmail.com"))
+                dbCallback.readCallback(new Band("testBand", "espresso@gmail.com"));
+            else
+                dbCallback.readCallback(b);
             return;
         }
 
@@ -155,8 +158,11 @@ public class MockDatabase extends Database {
             l.add(defaultSm.toMusician());
             dbCallback.queryCallback(l);
         } else if(collection.equals(DbUserType.Band.toString())) {
+
             Band b = new Band("totofire" ,defaultSm.getEmail());
             l.add(b);
+            Band b2 = new Band("testBand", "espresso@gmail.com");
+            l.add(b2);
             dbCallback.queryCallback(l);
         }
     }
