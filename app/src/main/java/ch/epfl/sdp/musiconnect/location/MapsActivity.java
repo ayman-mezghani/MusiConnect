@@ -1,13 +1,17 @@
 package ch.epfl.sdp.musiconnect.location;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -16,6 +20,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import androidx.annotation.VisibleForTesting;
@@ -39,7 +44,9 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.firestore.GeoPoint;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -63,6 +70,7 @@ import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
 import ch.epfl.sdp.musiconnect.events.Event;
+import ch.epfl.sdp.musiconnect.events.EventCreationPage;
 import ch.epfl.sdp.musiconnect.events.MyEventPage;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.EventDao;
@@ -258,8 +266,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         updateEvents();
         loadEventMarkers();
 
-        //sets listeners on map markers
+        //sets listeners on map markers and user click
         mMap.setOnInfoWindowClickListener(this);
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener(){
+            @Override
+            public void onMapLongClick(LatLng latlng){
+                createAlert(latlng);
+            }
+        });
 
         //Handler that updates users list
         Handler handler = new Handler();
@@ -517,6 +531,46 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             this.startActivity(eventPageIntent);
         }
+    }
+
+    @VisibleForTesting
+    protected void createEvent(LatLng latlng){
+        Intent eventIntent = new Intent(MapsActivity.this, EventCreationPage.class);
+        Geocoder coder = new Geocoder(this);
+        List<Address> address = null;
+
+        try {
+            try {
+                address = coder.getFromLocation(latlng.latitude,latlng.longitude,5);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (address!=null && !address.isEmpty()) {
+                Address addr  = address.get(0);
+                eventIntent.putExtra("Address",addr.getAddressLine(0));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.startActivity(eventIntent);
+    }
+
+    @VisibleForTesting
+    protected void createAlert(LatLng latLng){
+        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+        adb.setTitle("Do you want to create an event?");
+        adb.setIcon(android.R.drawable.ic_dialog_alert);
+        adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                createEvent(latLng);
+            }
+        });
+        adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        adb.show();
     }
 
     protected boolean checkLocationServices() {

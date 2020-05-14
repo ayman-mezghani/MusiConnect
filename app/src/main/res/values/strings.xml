@@ -3,16 +3,16 @@
     <string name="title_activity_main_page">MainPage</string>
 
     <!-- Basic user information fields -->
-    <string name="email_address">Email address :</string>
+    <string name="email_address">Email address</string>
     <string name="new_email_address">New email address</string>
-    <string name="date_of_birth">Date of birth :</string>
+    <string name="date_of_birth">Date of birth</string>
     <string name="new_birthday">New birthday</string>
-    <string name="first_name">First name :</string>
+    <string name="first_name">First name</string>
     <string name="new_first_name">New first name</string>
-    <string name="last_name">Last name :</string>
+    <string name="last_name">Last name</string>
     <string name="new_last_name">New last name</string>
     <string name="username">Username</string>
-    <string name="username_field">Username :</string>
+    <string name="username_field">Username</string>
     <string name="new_username">New username</string>
     <string name="musician">Musician</string>
     <string name="band">Band</string>
