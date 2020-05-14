@@ -251,4 +251,13 @@ public class EventCreationTests {
 
         //onView(withText("Unable to resolve address")).inRoot(withDecorView(Matchers.not(eventCreationRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
+
+    @Test
+    public void testExtraAddressIsDisplayed(){
+        Intent eventIntent = new Intent(eventCreationRule.getActivity(), EventCreationPage.class);
+        eventIntent.putExtra("Address","Place du Motty 10, 1024 Ecublens, Switzerland");
+        eventCreationRule.getActivity().startActivity(eventIntent);
+        onView(withId(R.id.eventCreationNewEventAddress)).check(matches(withText("Place du Motty 10, 1024 Ecublens, Switzerland")));
+
+    }
 }
