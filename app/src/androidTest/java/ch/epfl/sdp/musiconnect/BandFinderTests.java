@@ -56,6 +56,5 @@ public class BandFinderTests {
 
         String minionMail = ((Musician)(new MockDatabase()).getDummyMusician(0)).getEmailAddress();
         onView(allOf(withText(minionMail), withParent(withId(R.id.LvBandResult))));
-
     }
 }
