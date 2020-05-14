@@ -64,12 +64,12 @@ public class MyEventPageTests {
         Musician m1 = md.getDummyMusician(1);
         Musician m2 = md.getDummyMusician(3);
 
-        Event event = md.getDummyEvent(0);
+        Event event = md.getDummyEvent(1);
 
         String s = m1.getName() + System.lineSeparator() + m2.getName() + System.lineSeparator();
 
         Intent intent = new Intent();
-        intent.putExtra("eid", "1");
+        intent.putExtra("eid", event.getEid());
         eventPageRule.launchActivity(intent);
 
         waitSeconds(3);
@@ -121,7 +121,7 @@ public class MyEventPageTests {
     @Test
     public void testDeleteYesButtonClick() {
         Musician m = md.getDummyMusician(1);
-        Event e = md.getDummyEvent(0);
+        Event e = md.getDummyEvent(1);
         assertEquals(e.getEid(), m.getEvents().get(0));
 
         Intent intent = new Intent();
@@ -131,13 +131,6 @@ public class MyEventPageTests {
 
         clickOnAlert("YES");
 
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
-
-        m = md.getDummyMusician(1);
-        assertTrue(m.getEvents().isEmpty());
+        assertTrue(eventPageRule.getActivity().isFinishing());
     }
 }

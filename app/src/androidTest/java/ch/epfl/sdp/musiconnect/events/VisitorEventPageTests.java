@@ -57,7 +57,7 @@ public class VisitorEventPageTests {
         Musician m1 = md.getDummyMusician(1);
         Musician m2 = md.getDummyMusician(3);
         String s = m1.getName() + System.lineSeparator() + m2.getName() + System.lineSeparator();
-        Event event = md.getDummyEvent(0);
+        Event event = md.getDummyEvent(1);
 
         testMatchInfoOnView(event, s);
     }
@@ -68,7 +68,7 @@ public class VisitorEventPageTests {
         Musician m1 = md.getDummyMusician(2);
         Musician m2 = md.getDummyMusician(3);
         String s = m1.getName() + System.lineSeparator() + m2.getName() + System.lineSeparator() + current.getName() + System.lineSeparator();
-        Event event = md.getDummyEvent(3);
+        Event event = md.getDummyEvent(4);
 
         testMatchInfoOnView(event, s);
     }
@@ -93,7 +93,7 @@ public class VisitorEventPageTests {
     @Test
     public void loadPrivateEvent() {
         Intent intent = new Intent();
-        Event event = md.getDummyEvent(2);
+        Event event = md.getDummyEvent(3);
         intent.putExtra("eid", event.getEid());
         eventPageRule.launchActivity(intent);
 
