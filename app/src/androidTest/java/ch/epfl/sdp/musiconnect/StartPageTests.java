@@ -55,7 +55,7 @@ public class StartPageTests {
         assertTrue(CurrentUser.getInstance(activityRule.getActivity()).getBand().getName().equals(md.getBand().getName()));
     }
 
-    @Test
+    //@Test
     public void testBandProfileClickShouldStartNewIntent() {
         /*
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
