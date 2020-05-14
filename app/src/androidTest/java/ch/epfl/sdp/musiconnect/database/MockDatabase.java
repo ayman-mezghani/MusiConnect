@@ -60,7 +60,7 @@ public class MockDatabase extends Database {
         listOfMusicians.add(new SimplifiedMusician(new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1))));
         listOfMusicians.add(new SimplifiedMusician(musiConnect));
 
-        listOfEvent.add(createEvent(getDummyMusician(0), "1"));
+        listOfEvent.add(createEvent(getDummyMusician(1), "1"));
         listOfEvent.add(createEvent(getDummyMusician(2), "2"));
 
     }
