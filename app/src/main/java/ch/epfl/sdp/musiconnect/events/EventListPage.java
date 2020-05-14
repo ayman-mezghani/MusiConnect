@@ -27,7 +27,6 @@ public class EventListPage extends Page {
     private DbAdapter dbAdapter;
     private String userEmail;
     private String visitorName;
-    private DbUserType dbUserType;
 
 
     private List<String> eventTitles;
@@ -56,7 +55,6 @@ public class EventListPage extends Page {
         adapter = new ArrayAdapter<>(EventListPage.this, android.R.layout.simple_list_item_1, eventTitlesToShow);
         lv.setAdapter(adapter);
         lv.setOnItemClickListener((parent, view, position, id) -> loadEventPage(titleToIds.get(lv.getItemAtPosition(position))));
-
     }
 
     private void setupListTitle() {
@@ -68,7 +66,6 @@ public class EventListPage extends Page {
             userEmail = intent.getStringExtra("UserEmail");
 
             // TODO get actual usertype from user
-            dbUserType = DbUserType.Musician;
             dbAdapter.read(DbUserType.Musician, userEmail, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
@@ -78,13 +75,6 @@ public class EventListPage extends Page {
             });
         } else {
             userEmail = CurrentUser.getInstance(this).email;
-
-            if (CurrentUser.getInstance(this).getTypeOfUser().toString().equals("Musician")) {
-                dbUserType = DbUserType.Musician;
-            } else {
-                dbUserType = DbUserType.Band;
-            }
-
             eventListTitle.setText(R.string.your_events);
         }
     }
@@ -100,13 +90,8 @@ public class EventListPage extends Page {
             titleToIds.clear();
             adapter.notifyDataSetChanged();
 
-            if (!isVisitor) {
-                readFromDbAndLoadEvents(dbUserType);
-            } else {
-                readFromDbAndLoadEvents(DbUserType.Musician);
-                readFromDbAndLoadEvents(DbUserType.Band);
-            }
 
+            readFromDbAndLoadEvents(DbUserType.Musician);
         }, 500);
     }
 
@@ -114,7 +99,7 @@ public class EventListPage extends Page {
         dbAdapter.read(dbUserType, userEmail, new DbCallback() {
             @Override
             public void readCallback(User user) {
-                loadIds(user.getEvents());
+                loadIds(user.getEvents(), dbUserType);
             }
         });
     }
@@ -126,19 +111,8 @@ public class EventListPage extends Page {
         return super.onOptionsItemSelected(item);
     }
 
-    private void loadIds(List<String> eventIds) {
-        if (eventIds.isEmpty()) {
-            setContentView(R.layout.activity_event_list_page_none);
-            TextView eventListTitle = findViewById(R.id.eventListTitle);
 
-            if (isVisitor) {
-                eventListTitle.setText(String.format("%s's events", visitorName));
-            } else {
-                eventListTitle.setText(R.string.your_events);
-            }
-        }
-
-
+    private void loadIds(List<String> eventIds, DbUserType dbUserType) {
         final int[] counter = {0};
         final boolean[] needUpdate = {false};
 
@@ -148,9 +122,7 @@ public class EventListPage extends Page {
                 public void readCallback(Event e) {
                     counter[0]++;
                     showEvent(e);
-                    if (counter[0] == eventIds.size() && needUpdate[0]) {
-                        updateListInDatabase();
-                    }
+                    checkIfAllEventsAreLoaded(counter[0], eventIds.size(), needUpdate[0], dbUserType);
                 }
 
                 @Override
@@ -159,9 +131,7 @@ public class EventListPage extends Page {
                     needUpdate[0] = true;
                     // error: the event does not exist, so the entry in the database should be deleted
                     // Update only if user is on his own list (and after all callbacks have returned)
-                    if (counter[0] == eventIds.size()) {
-                        updateListInDatabase();
-                    }
+                    checkIfAllEventsAreLoaded(counter[0], eventIds.size(), true, dbUserType);
                 }
             });
         }
@@ -183,7 +153,24 @@ public class EventListPage extends Page {
         }
     }
 
-    private void updateListInDatabase() {
+    private void checkIfAllEventsAreLoaded(int counter, int listSize, boolean update, DbUserType dbUserType) {
+        if (counter == listSize) {
+            if (update) {
+                updateListInDatabase(dbUserType);
+            }
+
+            if (dbUserType.toString().equals("Musician")) {
+                // If we have loaded all events of the musician, we now need to load the events of his band
+                readFromDbAndLoadEvents(DbUserType.Band);
+            } else if (dbUserType.toString().equals("Band")) {
+                // After loading all possible events, check if any events is shown.
+                // If not, tell the user no events can be shown
+                setNoEventsToShowPage();
+            }
+        }
+    }
+
+    private void updateListInDatabase(DbUserType dbUserType) {
         List<String> ids = new ArrayList<>(titleToIds.values());
 
         dbAdapter.read(dbUserType, userEmail, new DbCallback() {
@@ -193,6 +180,22 @@ public class EventListPage extends Page {
                 dbAdapter.update(dbUserType, user); }
         });
     }
+
+    private void setNoEventsToShowPage() {
+        if (eventTitlesToShow.isEmpty()) {
+            setContentView(R.layout.activity_event_list_page_none);
+            TextView eventListTitle = findViewById(R.id.eventListTitle);
+
+            if (isVisitor) {
+                eventListTitle.setText(String.format("%s's events", visitorName));
+            } else {
+                eventListTitle.setText(R.string.your_events);
+            }
+        }
+    }
+
+
+
 
     private void loadEventPage(String eid) {
         if (!isVisitor) {

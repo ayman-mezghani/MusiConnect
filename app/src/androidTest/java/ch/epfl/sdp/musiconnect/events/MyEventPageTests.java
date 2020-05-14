@@ -37,7 +37,7 @@ import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
-public class EventPageTests {
+public class MyEventPageTests {
     @Rule
     public final ActivityTestRule<MyEventPage> eventPageRule =
             new ActivityTestRule<>(MyEventPage.class, true, false);
@@ -82,13 +82,6 @@ public class EventPageTests {
         onView(withId(R.id.eventDescriptionField)).check(matches(withText(event.getDescription())));
     }
 
-    @Test
-    public void loadNullEvent() {
-        Intent intent = new Intent();
-        eventPageRule.launchActivity(intent);
-
-        onView(withId(R.id.title)).check(matches(withText(R.string.event_not_found)));
-    }
 
     @Test
     public void testEditButtonClick() {

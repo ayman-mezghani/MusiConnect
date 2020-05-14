@@ -142,15 +142,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         createNotificationChannel();
         notificationManager = NotificationManagerCompat.from(MapsActivity.this);
 
-        if(CurrentUser.getInstance(this).getBand() != null) {
-            for (String se: CurrentUser.getInstance(this).getBand().getEvents()) {
-                DbGenerator.getDbInstance().read(DbUserType.Events, se, new DbCallback() {
-                    @Override
-                    public void readCallback(Event e) {
-                        events.add(e);
-                    }
-                });
-            }
+        setupEventList(CurrentUser.getInstance(this).getMusician().getEvents());
+        if (CurrentUser.getInstance(this).getBand() != null) {
+            setupEventList(CurrentUser.getInstance(this).getBand().getEvents());
         }
     }
 
@@ -210,6 +204,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
         spinner.setSelection(2);
+    }
+
+    private void setupEventList(List<String> list) {
+        for (String se: list) {
+            DbGenerator.getDbInstance().read(DbUserType.Events, se, new DbCallback() {
+                @Override
+                public void readCallback(Event e) {
+                    events.add(e);
+                }
+            });
+        }
     }
 
     /**
@@ -294,7 +299,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     //========================================================================
-
+    // Location functions
 
     private void getLastLocation() {
         if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -518,19 +523,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         try {
             gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch (Exception ex) {
-        }
+        } catch (Exception ignored) {}
 
         try {
             network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch (Exception ex) {
-        }
+        } catch (Exception ignored) {}
 
-        if (!gps_enabled && !network_enabled) {
-            return false;
-        } else {
-            return true;
-        }
+        return gps_enabled || network_enabled;
 
     }
 
@@ -574,7 +573,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    //Should be replaced by a function that fetch user from the database; right now it generates 3 fixed users
+    // TODO Should be replaced by a function that fetch user from the database; right now it generates 3 fixed users
     private void createPlaceHolderUsers() {
         Random random = new Random();
 

@@ -30,9 +30,11 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 
 @RunWith(AndroidJUnit4.class)
 public class EventListTests {
@@ -109,11 +111,8 @@ public class EventListTests {
         Intent intent = new Intent();
         eventListRule.launchActivity(intent);
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
+        waitSeconds(3);
+
 
         onView(withText(e.getTitle())).perform(ViewActions.scrollTo()).perform(click());
         intended(hasComponent(MyEventPage.class.getName()));
@@ -128,13 +127,28 @@ public class EventListTests {
         intent.putExtra("UserEmail", m.getEmailAddress());
         eventListRule.launchActivity(intent);
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
+        waitSeconds(3);
 
         onView(withText(e.getTitle())).perform(ViewActions.scrollTo()).perform(click());
         intended(hasComponent(VisitorEventPage.class.getName()));
     }
+
+
+    // DO NOT DELETE THIS TESTS, it will test a feature that may be added
+    /*
+    @Test
+    public void testListShouldOnlyShowPublicOrParticipant() {
+        Event e3 = md.getDummyEvent(2);
+        Event e5 = md.getDummyEvent(4);
+        Musician m = md.getDummyMusician(2);
+
+        Intent intent = new Intent();
+        intent.putExtra("UserEmail", m.getEmailAddress());
+        eventListRule.launchActivity(intent);
+
+        waitSeconds(3);
+
+        onView(withText(e3.getTitle())).check(matches(isDisplayed()));
+        onView(withText(e5.getTitle())).check(matches(isDisplayed()));
+    }*/
 }
