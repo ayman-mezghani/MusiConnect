@@ -50,7 +50,6 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
     private List<Musician> result; //used to fetch from room database
     public static boolean changeStaged = false;    //indicates if there are changes not commited to online database yet
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -271,5 +270,10 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
             mVideoView.start();
             mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
         }
+    }
+
+    @Override
+    protected void loadUserProfile(User user) {
+
     }
 }
