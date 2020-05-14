@@ -52,6 +52,7 @@ public class UserCreationHardwareTests {
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
 
+
     @After
     public void bePatient() {
         waitSeconds(3);
