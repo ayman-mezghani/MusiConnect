@@ -154,19 +154,21 @@ public class EventListPage extends Page {
     }
 
     private void checkIfAllEventsAreLoaded(int counter, int listSize, boolean update, DbUserType dbUserType) {
-        if (counter == listSize) {
-            if (update) {
-                updateListInDatabase(dbUserType);
-            }
+        if (counter != listSize) {
+            return;
+        }
 
-            if (dbUserType.toString().equals("Musician")) {
-                // If we have loaded all events of the musician, we now need to load the events of his band
-                readFromDbAndLoadEvents(DbUserType.Band);
-            } else if (dbUserType.toString().equals("Band")) {
-                // After loading all possible events, check if any events is shown.
-                // If not, tell the user no events can be shown
-                setNoEventsToShowPage();
-            }
+        if (update) {
+            updateListInDatabase(dbUserType);
+        }
+
+        if (dbUserType.toString().equals("Musician")) {
+            // If we have loaded all events of the musician, we now need to load the events of his band
+            readFromDbAndLoadEvents(DbUserType.Band);
+        } else if (dbUserType.toString().equals("Band")) {
+            // After loading all possible events, check if any events is shown.
+            // If not, tell the user no events can be shown
+            setNoEventsToShowPage();
         }
     }
 

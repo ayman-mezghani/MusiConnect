@@ -25,12 +25,10 @@ public class VisitorEventPage extends EventPage {
 
     @Override
     protected void loadEventInfo(Event event) {
-        if (event == null) {
+        if (event == null || event.isVisible() || event.containsParticipant(CurrentUser.getInstance(this).email)) {
             super.loadEventInfo(event);
-        } else if (!event.isVisible() && !event.containsParticipant(CurrentUser.getInstance(this).email)) {
-            loadPrivateEventPage();
         } else {
-            super.loadEventInfo(event);
+            loadPrivateEventPage();
         }
     }
 
