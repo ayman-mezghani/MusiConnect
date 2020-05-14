@@ -74,7 +74,6 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
         this.location = myLocationToGeoPoint(musician.getLocation());
         this.events = musician.getEvents();
         this.instruments = instrumentMapToList(musician.getInstruments());
-        Log.d("checkcheck", instruments.toString());
     }
 
     public SimplifiedMusician(Map<String, Object> map) {
