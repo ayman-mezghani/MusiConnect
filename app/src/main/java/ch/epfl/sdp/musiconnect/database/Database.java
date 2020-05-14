@@ -20,5 +20,5 @@ abstract class Database {
 
     abstract void docExists(String collection, String docName, DbCallback dbCallback);
 
-    public abstract void finderQuery(String collection, Map<String, Object> arguments, DbCallback dbCallback);
+    abstract void finderQuery(String collection, Map<String, Object> arguments, DbCallback dbCallback);
 }

@@ -66,11 +66,11 @@ public class GoogleLogin extends AppCompatActivity {
             db.exists(DbUserType.Musician, account.getEmail(), new DbCallback() {
                 @Override
                 public void existsCallback(boolean exists) {
-                    db.read(DbUserType.Musician, account.getEmail(), new DbCallback() {
-                    @Override
-                    public void readCallback(User user) {
-                        CurrentUser.getInstance(ctx).setTypeOfUser(((Musician) user).getTypeOfUser());
-                        StartPage.updateCurrentUserBand(ctx);
+                db.read(DbUserType.Musician, account.getEmail(), new DbCallback() {
+                @Override
+                public void readCallback(User user) {
+                    CurrentUser.getInstance(ctx).setTypeOfUser(((Musician) user).getTypeOfUser());
+                    (new StartPage()).updateCurrentUser(ctx);
                     }
                 });
 

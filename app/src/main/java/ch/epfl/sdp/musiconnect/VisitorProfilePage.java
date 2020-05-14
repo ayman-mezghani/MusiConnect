@@ -9,18 +9,15 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
 import ch.epfl.sdp.musiconnect.events.EventListPage;
 
 public class VisitorProfilePage extends ProfilePage implements DbCallback {
-    private DbAdapter dbAdapter;
 
     private Button contactButton;
     private Button eventListButton;
-    private String emailAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +37,16 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         emailView = findViewById(R.id.visitorProfileEmail);
         birthdayView = findViewById(R.id.visitorProfileBirthday);
 
+        Intent intent = getIntent();
+        if (intent.hasExtra("UserEmail")) {
+            userEmail = intent.getStringExtra("UserEmail");
+        }
+
         eventListButton = findViewById(R.id.btnVisitorEventList);
         contactButton = findViewById(R.id.btnContactMusician);
 
         Button addUserToBand = findViewById(R.id.add_user_to_band);
-        if(CurrentUser.getInstance(this).getTypeOfUser() == TypeOfUser.Band) {
+        if (CurrentUser.getInstance(this).getTypeOfUser() == TypeOfUser.Band) {
             addUserToBand.setVisibility(View.VISIBLE);
             addUserToBand.setFocusable(true);
             addUserToBand.setClickable(true);
@@ -52,12 +54,11 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
 
         addUserToBand.setOnClickListener(v -> addUserToBand());
 
-
         loadProfileContent();
         getVideoUri(userEmail);
         setupEventListButton();
 
-        contactButton.setOnClickListener(view -> sendEmail(emailAddress, getResources().getString(R.string.musiconnect_contact_mail)));
+        contactButton.setOnClickListener(view -> sendEmail(userEmail, getResources().getString(R.string.musiconnect_contact_mail)));
     }
 
     // Some of this method code is inspired from stackoverflow.com
@@ -67,7 +68,6 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setData(Uri.parse("mailto:"));
         emailIntent.setType("text/plain");
-
 
         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
@@ -80,40 +80,16 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         }
     }
 
-    private void addUserToBand () {
+    private void addUserToBand() {
         Band b = CurrentUser.getInstance(this).getBand();
-        if(b!=null && !b.containsMember(userEmail)) {
+        if (b != null && !b.containsMember(userEmail)) {
             b.addMember(userEmail);
         }
         (DbGenerator.getDbInstance()).add(DbUserType.Band, b);
     }
 
-
-    private void loadProfileContent() {
-        Intent intent = getIntent();
-        if (!intent.hasExtra("UserEmail")) {
-            loadNullProfile();
-        } else {
-            userEmail = intent.getStringExtra("UserEmail");
-            dbAdapter.read(DbUserType.Musician, userEmail, new DbCallback() {
-                @Override
-                public void readCallback(User user) {
-                    loadUserProfile(user);
-                }
-
-                @Override
-                public void readFailCallback() {
-                    loadNullProfile();
-                }
-            });
-        }
-    }
-
-    private void loadNullProfile() {
-        setContentView(R.layout.activity_visitor_profile_page_null);
-    }
-
-    private void loadUserProfile(User user) {
+    @Override
+    protected void loadUserProfile(User user) {
         Musician m = (Musician) user;
         String sTitle = m.getUserName() + "'s profile";
         titleView.setText(sTitle);
@@ -121,10 +97,13 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         firstNameView.setText(m.getFirstName());
         lastNameView.setText(m.getLastName());
         usernameView.setText(m.getUserName());
-        emailView.setText(m.getEmailAddress());
-        birthdayView.setText(m.getBirthday().toString());
 
-        emailAddress = m.getEmailAddress();
+        MyDate date = m.getBirthday();
+        String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
+        birthdayView.setText(s);
+
+        emailView.setText(userEmail);
+
         addFirstNameToContactButtonText(m.getFirstName());
     }
 

@@ -70,6 +70,10 @@ public class FirebaseCloudStorage implements CloudStorage {
     }
 
     public void download(FileType fileType, String username, CloudCallback cloudCallback) {
+        if(username == null || username.isEmpty()) {
+            cloudCallback.onFailure();
+            return;
+        }
 
         if (ConnectionCheck.checkConnection(context)) {
             String cloudPath = username + "/" + fileType;
@@ -85,13 +89,6 @@ public class FirebaseCloudStorage implements CloudStorage {
 
                         if (!cacheDirectory.exists())
                             cacheDirectory.mkdir();
-
-//                    Log.d(TAG, directory.exists() + "");
-//
-//                    String[] paths = directory.list();
-//
-//                    for (String p : paths)
-//                        Log.d(TAG, p);
 
                         File localFile = new File(cacheDirectory, localFileName);
 

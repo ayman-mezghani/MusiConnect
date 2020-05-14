@@ -3,7 +3,6 @@ package ch.epfl.sdp.musiconnect;
 import android.net.Uri;
 import android.widget.VideoView;
 
-import androidx.test.espresso.ViewInteraction;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
@@ -26,9 +25,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
-import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.musiconnect.testsFunctions.childAtPosition;
 import static ch.epfl.sdp.musiconnect.testsFunctions.getCurrentActivity;
 import static junit.framework.TestCase.assertTrue;
@@ -61,7 +58,7 @@ public class VideoPlayingTests {
 
     @BeforeClass
     public static void setMocks() {
-        DbGenerator.setDatabase(new MockDatabase());
+        DbGenerator.setDatabase(new MockDatabase(false));
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
 

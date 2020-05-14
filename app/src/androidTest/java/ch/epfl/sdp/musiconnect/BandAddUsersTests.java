@@ -7,6 +7,7 @@ import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,9 +21,7 @@ import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertTrue;
 
 @LargeTest
@@ -41,17 +40,21 @@ public class BandAddUsersTests {
 
     @BeforeClass
     public static void setMocks() {
-        md = new MockDatabase();
+        md = new MockDatabase(true);
         DbGenerator.setDatabase(md);
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
 
-    @Test
-    public void testNoMarkerTransitionToProfile() {
+    @Before
+    public void setCurrentUser() {
         CurrentUser.getInstance(mActivityTestRule.getActivity()).setTypeOfUser(TypeOfUser.Band);
         CurrentUser.getInstance(mActivityTestRule.getActivity()).setBand(md.getBand());
+    }
 
+    @Test
+    public void addUserToBandTest() {
         Musician m = new Musician("Alice", "Bardon", "Alyx", "aymanmezghani97@gmail.com", new MyDate(1992, 9, 20));
+        m.setTypeOfUser(TypeOfUser.Band);
         Intent intent = new Intent();
         intent.putExtra("UserEmail", m.getEmailAddress());
         mActivityTestRule.launchActivity(intent);
@@ -59,7 +62,7 @@ public class BandAddUsersTests {
         onView(withId(R.id.add_user_to_band)).perform(scrollTo(), click());
         assertTrue(md.getBand().containsMember(m.getEmailAddress()));
 
-        mActivityTestRule.finishActivity();;
+        mActivityTestRule.finishActivity();
     }
 }
 

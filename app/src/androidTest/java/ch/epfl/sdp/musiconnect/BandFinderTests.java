@@ -38,7 +38,7 @@ public class BandFinderTests {
 
     @BeforeClass
     public static void setMocks() {
-        DbGenerator.setDatabase(new MockDatabase());
+        DbGenerator.setDatabase(new MockDatabase(false));
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
 
@@ -54,8 +54,7 @@ public class BandFinderTests {
         onView(withId(R.id.bandFinderButtonID)).perform(scrollTo(), click());
         intended(hasComponent(BandFinderResult.class.getName()));
 
-        String minionMail = ((Musician)(new MockDatabase()).getDummyMusician(0)).getEmailAddress();
+        String minionMail = ((Musician)(new MockDatabase(false)).getDummyMusician(0)).getEmailAddress();
         onView(allOf(withText(minionMail), withParent(withId(R.id.LvBandResult))));
-
     }
 }
