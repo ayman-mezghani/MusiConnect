@@ -13,26 +13,11 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DbAdapter;
-import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
-import ch.epfl.sdp.musiconnect.database.DbUserType;
-import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
-import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
-
-import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
 
 public class MyProfilePage extends ProfilePage implements View.OnClickListener {
     private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
-    private DbAdapter dbAdapter;
-
-    private Musician currentCachedUser;
 
     private TextView instrument;
     private TextView selectedInstrument;
@@ -55,13 +40,14 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         usernameView = findViewById(R.id.myUsername);
         emailView = findViewById(R.id.myMail);
         birthdayView = findViewById(R.id.myBirthday);
+        userEmail = CurrentUser.getInstance(this).email;
 
         Button editProfile = findViewById(R.id.btnEditProfile);
         editProfile.setOnClickListener(v -> {
-                Intent profileModificationIntent = new Intent(this, ProfileModification.class);
-                sendInformation(profileModificationIntent);
-                // Permits sending information from child to parent activity
-                startActivityForResult(profileModificationIntent, LAUNCH_PROFILE_MODIF_INTENT);
+            Intent profileModificationIntent = new Intent(this, ProfileModification.class);
+            sendInformation(profileModificationIntent);
+            // Permits sending information from child to parent activity
+            startActivityForResult(profileModificationIntent, LAUNCH_PROFILE_MODIF_INTENT);
 
         });
 
@@ -85,60 +71,19 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         return super.onOptionsItemSelected(item);
     }
 
-    private void loadProfileContent() {
-        Executor mExecutor = Executors.newSingleThreadExecutor();
-        AppDatabase localDb = AppDatabase.getInstance(this);
-        MusicianDao mdao = localDb.musicianDao();
-        userEmail = CurrentUser.getInstance(this).email;
-      
-        //fetches the current user's profile
-        mExecutor.execute(() -> {
-            List<Musician> result = mdao.loadAllByIds(new String[]{userEmail});
-            currentCachedUser = result.isEmpty() ? null : result.get(0);
-        });
+    @Override
+    protected void loadUserProfile(User user) {
+        Musician m = (Musician) user;
 
-        try { // wait for async thread to fetch cached profile
-            TimeUnit.MILLISECONDS.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        // gets profile info from database
-        if (checkConnection(MyProfilePage.this)) {
-            dbAdapter.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
-                @Override
-                public void readCallback(User user) {
-                    Musician m = (Musician) user;
-                    firstNameView.setText(m.getFirstName());
-                    lastNameView.setText(m.getLastName());
-                    usernameView.setText(m.getUserName());
-                    emailView.setText(m.getEmailAddress());
-                    MyDate date = m.getBirthday();
-                    String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
-                    birthdayView.setText(s);
-                    // if user profile isn't cached,cache it
-                    if (currentCachedUser == null || !ProfileModification.changeStaged) {
-                        mExecutor.execute(() -> {
-                            mdao.insertAll(m);
-                        });
-                    }
-                }
-            });
+        firstNameView.setText(m.getFirstName());
+        lastNameView.setText(m.getLastName());
+        usernameView.setText(m.getUserName());
 
-        } else {
-            if (currentCachedUser == null) {
-                Toast.makeText(this, "Unable to fetch profile information; please connect to internet", Toast.LENGTH_LONG).show();
-            } else { // set profile info based on cache
-                firstNameView.setText(currentCachedUser.getFirstName());
-                lastNameView.setText(currentCachedUser.getLastName());
-                usernameView.setText(currentCachedUser.getUserName());
-                emailView.setText(currentCachedUser.getEmailAddress());
-                MyDate date = currentCachedUser.getBirthday();
+        MyDate date = m.getBirthday();
+        String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
+        birthdayView.setText(s);
 
-                String s = date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
-                birthdayView.setText(s);
-            }
-        }
-
+        emailView.setText(m.getEmailAddress());
     }
 
     @Override

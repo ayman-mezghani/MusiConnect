@@ -46,7 +46,7 @@ public class EventListTests {
 
     @BeforeClass
     public static void setMocks() {
-        md = new MockDatabase();
+        md = new MockDatabase(false);
         DbGenerator.setDatabase(md);
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
@@ -56,6 +56,7 @@ public class EventListTests {
     @Before
     public void initIntents() {
         Intents.init();
+        CurrentUser.getInstance(eventListRule.getActivity()).setTypeOfUser(TypeOfUser.Musician);
     }
 
     @After
@@ -100,24 +101,7 @@ public class EventListTests {
     }
 
 
-    @Test
-    public void testClickEventShouldLoadPage() {
-        CurrentUser.getInstance(eventListRule.getActivity()).setTypeOfUser(TypeOfUser.Musician);
 
-        Event e = md.getDummyEvent(0);
-
-        Intent intent = new Intent();
-        eventListRule.launchActivity(intent);
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
-
-        onView(withText(e.getTitle())).perform(ViewActions.scrollTo()).perform(click());
-        intended(hasComponent(MyEventPage.class.getName()));
-    }
 
     @Test
     public void testClickOthersEventShouldLoadPage() {

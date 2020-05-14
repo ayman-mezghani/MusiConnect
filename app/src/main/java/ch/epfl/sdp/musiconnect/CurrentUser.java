@@ -6,6 +6,9 @@ import android.location.Location;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
@@ -18,7 +21,7 @@ public class CurrentUser {
     private boolean createdFlag = false;
     private String bandName;
     private Musician musician;
-    private Band band;
+    private List<Band> band;
     private GoogleSignInAccount acct;
     private TypeOfUser type;
 
@@ -83,6 +86,7 @@ public class CurrentUser {
 
     public void setMusician(Musician m) {
         this.musician = m;
+        this.type = m.getTypeOfUser();
     }
 
     public Musician getMusician() {
@@ -107,11 +111,22 @@ public class CurrentUser {
 
 
     public Band getBand() {
-        return this.band;
+        if(this.getTypeOfUser() == TypeOfUser.Band) return this.band.get(0);
+        return null;
     }
 
     public void setBand(Band b) {
-        this.band = b;
+        this.band = new ArrayList<>();
+        this.band.add(b);
+    }
+
+    public List<Band> getBands() {
+        return this.band;
+    }
+
+    public void setBands(List<Band> b) {
+        if(b != null && b.size() > 0)
+            this.band = b;
     }
 
     public TypeOfUser getTypeOfUser() {

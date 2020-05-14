@@ -26,6 +26,14 @@
                 android:textAlignment="center"
                 android:textSize="30sp"
                 android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spinnerBands"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1" />
         </LinearLayout>
 
         <LinearLayout
@@ -49,7 +57,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/myFirstname"
+                    android:id="@+id/etLeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -70,7 +78,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/myLastname"
+                    android:id="@+id/etBandName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -127,9 +135,10 @@
             android:layout_weight="1">
 
             <Button
-                android:id="@+id/btnEditProfile"
+                android:id="@+id/btnEditBandProfile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="invisible"
                 android:text="@string/edit_profile_button_text" />
         </LinearLayout>
     </LinearLayout>

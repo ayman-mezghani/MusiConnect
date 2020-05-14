@@ -197,7 +197,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
             }
         }
         if (result.isEmpty()) {
-            Toast.makeText(ProfileModification.this, "Error: couldn't update profile", Toast.LENGTH_LONG);
+            Toast.makeText(ProfileModification.this, "Error: couldn't update profile", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -215,7 +215,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
             cUserBirthday = dateToMyDate(d);
 
         } catch (ParseException e) {
-            Toast.makeText(ProfileModification.this, "Error: couldn't update profile", Toast.LENGTH_LONG);
+            Toast.makeText(ProfileModification.this, "Error: couldn't update profile", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -296,5 +296,10 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
             mVideoView.start();
             mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
         }
+    }
+
+    @Override
+    protected void loadUserProfile(User user) {
+
     }
 }
