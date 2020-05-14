@@ -33,21 +33,16 @@ public class BandFinderResult extends AppCompatActivity {
 
         ListView lvMusicianResult = findViewById(R.id.LvBandResult);
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>
-                (BandFinderResult.this, android.R.layout.simple_list_item_1, listBandShow);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(BandFinderResult.this, android.R.layout.simple_list_item_1, listBandShow);
         lvMusicianResult.setAdapter(adapter);
 
         listViewAddOnItemClickListner(lvMusicianResult);
 
-        Intent intent = getIntent();
-        Map<String, Object> searchMap = (HashMap<String, Object>)intent.getSerializableExtra("searchMap");
+        Map<String, Object> searchMap = (HashMap<String, Object>)getIntent().getSerializableExtra("searchMap");
 
         for(Map.Entry<String, Object> entry : searchMap.entrySet()) {
-            String key = entry.getKey();
-            String value = (String) entry.getValue();
-
             HashMap<String, Object> innerMap = new HashMap<>();
-            innerMap.put(key, value);
+            innerMap.put(entry.getKey(), (String) entry.getValue());
 
             DbGenerator.getDbInstance().query(DbUserType.Band, innerMap, new DbCallback() {
                 @Override
