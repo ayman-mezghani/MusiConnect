@@ -103,6 +103,7 @@ public class MapsActivityTest {
         }
         onView(withId(android.R.id.button1)).perform(click());
         intended(hasComponent(EventCreationPage.class.getName()));
+        waitSeconds(2);
         onView(withId(R.id.eventCreationNewEventAddress)).check(matches(withText("Place du Motty 10, 1024 Ecublens, Switzerland")));
     }
 
