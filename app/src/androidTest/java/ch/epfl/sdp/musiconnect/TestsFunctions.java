@@ -14,7 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class testsFunctions {
+public class TestsFunctions {
     public static boolean test=true;
     /**
      * Function used to get an instance of an activity

@@ -13,5 +13,8 @@ public interface DbCallback {
     default void readFailCallback() {}
 
     default void existsCallback(boolean exists) {}
+
     default void queryCallback(List<User> userList) {}
+
+    default void queryBandIfMemberCallback(List<User> userList) {}
 }

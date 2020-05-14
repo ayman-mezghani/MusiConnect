@@ -15,7 +15,10 @@ import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -24,9 +27,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
@@ -67,7 +67,8 @@ public class StartPage extends Page {
         fab_button_1.setOnClickListener(v -> button1Click());
 
         fab_button_2.setOnClickListener(v -> {
-            updateCurrentUserBand(this);
+            updateCurrentUser(this);
+            Context ctx = this;
             ListView lv = findViewById(R.id.LvEvent);
             ArrayList<String> events = new ArrayList<>();
 
@@ -88,8 +89,7 @@ public class StartPage extends Page {
             }
         });
 
-        if (!test)
-            updateCurrentUserBand(this);
+        updateCurrentUser(this);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
         bottomNavigationView.setSelectedItemId(R.id.home);
@@ -175,16 +175,10 @@ public class StartPage extends Page {
 
 
     protected void button1Click() {
-        runOnUiThread(new Runnable() {
-            public void run() {
-                Toast.makeText(getApplicationContext(), CurrentUser.getInstance(getApplicationContext()).email, Toast.LENGTH_SHORT).show();
-            }
-        });
-        updateCurrentUserBand(this);
+        getBandIfMember();
 
-        CurrentUser.getInstance(this).getBand().addMember("aymanmezghani97@gmail.com");
-        CurrentUser.getInstance(this).getBand().addMember("seboll13@gmail.com");
-        (DbGenerator.getDbInstance()).add(DbUserType.Band, CurrentUser.getInstance(this).getBand());
+
+
     }
 
     protected void fabMenuClick() {

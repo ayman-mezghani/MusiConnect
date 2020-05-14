@@ -32,7 +32,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.musiconnect.testsFunctions.childAtPosition;
+import static ch.epfl.sdp.musiconnect.TestsFunctions.childAtPosition;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
@@ -48,7 +48,7 @@ public class MusicianFinderTests {
 
     @BeforeClass
     public static void setMocks() {
-        md = new MockDatabase();
+        md = new MockDatabase(false);
         DbGenerator.setDatabase(md);
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
@@ -67,7 +67,7 @@ public class MusicianFinderTests {
         onView(withId(R.id.musicianFinderButtonID)).perform(scrollTo(), click());
         intended(hasComponent(MusicianFinderResult.class.getName()));
 
-        String minionMail = ((Musician)(new MockDatabase()).getDummyMusician(0)).getEmailAddress();
+        String minionMail = ((Musician)(new MockDatabase(false)).getDummyMusician(0)).getEmailAddress();
         onView(allOf(withText(minionMail), withParent(withId(R.id.LvMusicianResult))));
     }
 
@@ -77,7 +77,7 @@ public class MusicianFinderTests {
         onView(withId(R.id.musicianFinderButtonID)).perform(ViewActions.scrollTo(), click());
         intended(hasComponent(MusicianFinderResult.class.getName()));
 
-        String minionMail = ((Musician)(new MockDatabase()).getDummyMusician(0)).getEmailAddress();
+        String minionMail = ((Musician)(new MockDatabase(false)).getDummyMusician(0)).getEmailAddress();
         onView(allOf(withText(minionMail), withParent(withId(R.id.LvMusicianResult))));
 
         DataInteraction appCompatTextView = onData(anything())

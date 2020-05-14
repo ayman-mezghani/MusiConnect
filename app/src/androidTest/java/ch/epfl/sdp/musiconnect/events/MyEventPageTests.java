@@ -32,7 +32,7 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
+import static ch.epfl.sdp.musiconnect.TestsFunctions.waitSeconds;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -46,7 +46,7 @@ public class MyEventPageTests {
 
     @BeforeClass
     public static void setMocks() {
-        md = new MockDatabase();
+        md = new MockDatabase(false);
         DbGenerator.setDatabase(md);
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }

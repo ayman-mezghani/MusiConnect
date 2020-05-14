@@ -45,8 +45,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static ch.epfl.sdp.musiconnect.testsFunctions.getCurrentActivity;
-import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
+import static ch.epfl.sdp.musiconnect.TestsFunctions.getCurrentActivity;
+import static ch.epfl.sdp.musiconnect.TestsFunctions.waitSeconds;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -66,7 +66,7 @@ public class EventCreationTests {
 
     @BeforeClass
     public static void setMocks() {
-        DbGenerator.setDatabase(new MockDatabase());
+        DbGenerator.setDatabase(new MockDatabase(false));
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
 

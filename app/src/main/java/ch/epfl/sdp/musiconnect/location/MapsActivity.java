@@ -439,21 +439,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //From the events around the area, picks the ones that are within the threshold distance.
     private void updateEvents() {
-        if (setLoc == null) {             //Might be called before we get the first update to the location;
+        if (setLoc == null) {            //Might be called before we get the first update to the location;
             return;
         }
 
         eventNear.clear();
         for (Event e : events) {
-            Location l = new Location("");
-            l.setLatitude(e.getLocation().getLatitude());
-            l.setLongitude(e.getLocation().getLongitude());
+            MyLocation ml = e.getLocation();
+            if (ml != null || (ml.getLatitude() != 0 && ml.getLongitude() != 0)) {
+                Location l = new Location("");
+                l.setLatitude(e.getLocation().getLatitude());
+                l.setLongitude(e.getLocation().getLongitude());
 
-            // Show event if event is in threshold, public or created by "this" user
-            // TODO check the 2 last conditions when fetching from database directly
-            if (setLoc.distanceTo(l) <= threshold && (e.isVisible()
-                    || e.getCreator().getEmailAddress().equals(CurrentUser.getInstance(this).email))) {
-                eventNear.add(e);
+                // Show event if event is in threshold, public or created by "this" user
+                // TODO check the 2 last conditions when fetching from database directly
+                if (setLoc.distanceTo(l) <= threshold && (e.isVisible()
+                        || e.getCreator().getEmailAddress().equals(CurrentUser.getInstance(this).email))) {
+                    eventNear.add(e);
+                }
             }
         }
 

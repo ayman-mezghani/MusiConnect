@@ -30,11 +30,10 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
+import static ch.epfl.sdp.musiconnect.TestsFunctions.waitSeconds;
 
 @RunWith(AndroidJUnit4.class)
 public class EventListTests {
@@ -48,7 +47,7 @@ public class EventListTests {
 
     @BeforeClass
     public static void setMocks() {
-        md = new MockDatabase();
+        md = new MockDatabase(false);
         DbGenerator.setDatabase(md);
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
@@ -58,6 +57,7 @@ public class EventListTests {
     @Before
     public void initIntents() {
         Intents.init();
+        CurrentUser.getInstance(eventListRule.getActivity()).setTypeOfUser(TypeOfUser.Musician);
     }
 
     @After
@@ -101,7 +101,6 @@ public class EventListTests {
         onView(withId(R.id.eventListTitle)).check(matches(withText(m.getName() + "'s events")));
     }
 
-
     @Test
     public void testClickEventShouldLoadPage() {
         CurrentUser.getInstance(eventListRule.getActivity()).setTypeOfUser(TypeOfUser.Musician);
@@ -112,7 +111,6 @@ public class EventListTests {
         eventListRule.launchActivity(intent);
 
         waitSeconds(3);
-
 
         onView(withText(e.getTitle())).perform(ViewActions.scrollTo()).perform(click());
         intended(hasComponent(MyEventPage.class.getName()));

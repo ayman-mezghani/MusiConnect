@@ -30,7 +30,7 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
+import static ch.epfl.sdp.musiconnect.TestsFunctions.waitSeconds;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
@@ -43,7 +43,7 @@ public class ProfileConsultationTests {
 
     @BeforeClass
     public static void setMocks() {
-        DbGenerator.setDatabase(new MockDatabase());
+        DbGenerator.setDatabase(new MockDatabase(false));
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
 

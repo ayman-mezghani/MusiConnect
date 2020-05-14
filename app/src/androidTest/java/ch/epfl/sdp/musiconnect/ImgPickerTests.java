@@ -17,7 +17,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
-public class imgPickerTests {
+public class ImgPickerTests {
 
     @Rule
     public final ActivityTestRule<UserCreation> activityRule =
@@ -25,7 +25,7 @@ public class imgPickerTests {
 
     @BeforeClass
     public static void setMocks() {
-        DbGenerator.setDatabase(new MockDatabase());
+        DbGenerator.setDatabase(new MockDatabase(false));
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
 

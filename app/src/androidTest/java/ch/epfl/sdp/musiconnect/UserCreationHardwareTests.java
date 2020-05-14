@@ -35,8 +35,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.musiconnect.testsFunctions.childAtPosition;
-import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
+import static ch.epfl.sdp.musiconnect.TestsFunctions.childAtPosition;
+import static ch.epfl.sdp.musiconnect.TestsFunctions.waitSeconds;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -48,7 +48,7 @@ public class UserCreationHardwareTests {
 
     @BeforeClass
     public static void setMocks() {
-        DbGenerator.setDatabase(new MockDatabase());
+        DbGenerator.setDatabase(new MockDatabase(false));
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
 
@@ -59,7 +59,7 @@ public class UserCreationHardwareTests {
 
     @Test
     public void singleInputEmptyTest() {
-        Assert.assertTrue(((UserCreation) testsFunctions.getCurrentActivity()).isEmpty(((UserCreation) testsFunctions.getCurrentActivity()).etUserName));
+        Assert.assertTrue(((UserCreation) TestsFunctions.getCurrentActivity()).isEmpty(((UserCreation) TestsFunctions.getCurrentActivity()).etUserName));
     }
 
     @Test
@@ -188,6 +188,6 @@ public class UserCreationHardwareTests {
 
     @Test
     public void getJoinDateWorks() {
-        assertEquals(((UserCreation) testsFunctions.getCurrentActivity()).getAge(1995, 10, 19), "24");
+        assertEquals(((UserCreation) TestsFunctions.getCurrentActivity()).getAge(1995, 10, 19), "24");
     }
 }

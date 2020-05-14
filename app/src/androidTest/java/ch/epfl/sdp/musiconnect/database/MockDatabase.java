@@ -8,6 +8,7 @@ import java.util.Map;
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
+import ch.epfl.sdp.musiconnect.TypeOfUser;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.events.Event;
 
@@ -21,25 +22,44 @@ public class MockDatabase extends Database {
 
     private SimplifiedMusician defaultSm;
 
-    private List<SimplifiedMusician> listOfMusicians;
+    private List<SimplifiedMusician> listOfMusicians; // index 0
     private List<Event> listOfEvent;
     private Map<String, SimplifiedMusician> content;
 
+    private Band b;
 
-
-    private Band b = new Band("totofire", "musiconnectsdp@gmail.com");
-
-    public MockDatabase() {
+    public MockDatabase(boolean addBandUser) {
         this.content = new HashMap<>();
         listOfMusicians = new ArrayList<>();
         listOfEvent = new ArrayList<>();
 
         Musician m = new Musician(firstName, lastName, username, email, birthday);
         m.addEvent("1");
+        if(addBandUser) {
+            m.setTypeOfUser(TypeOfUser.Band);
+        } else {
+            m.setTypeOfUser(TypeOfUser.Musician);
+        }
         defaultSm = new SimplifiedMusician(m);
         listOfMusicians.add(defaultSm);
 
+        Musician musiConnect = new Musician("MusiConnect", "SDP", "musiConnect", "musiconnectsdp@gmail.com", new MyDate(1992, 9, 20));
+        musiConnect.setTypeOfUser(TypeOfUser.Band);
 
+        b = new Band("totofire", m.getEmailAddress());
+        b.addMember(musiConnect .getEmailAddress());
+
+        createAndAddDummyMusicians();
+        listOfMusicians.add(new SimplifiedMusician(musiConnect));
+
+        createAndAddDummyEvents();
+
+        Event privateEventAndParticipant = createEvent(getDummyMusician(2), "5", "Private but visible event at Big Ben!", false);
+        privateEventAndParticipant.register(m);
+        listOfEvent.add(privateEventAndParticipant);
+    }
+
+    private void createAndAddDummyMusicians() {
         Musician m1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
         m1.addEvent("2");
 
@@ -50,15 +70,13 @@ public class MockDatabase extends Database {
         listOfMusicians.add(new SimplifiedMusician(m1));
         listOfMusicians.add(new SimplifiedMusician(m2));
         listOfMusicians.add(new SimplifiedMusician(new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1))));
+    }
 
+    private void createAndAddDummyEvents() {
         listOfEvent.add(createEvent(getDummyMusician(0), "1", "Event at Big Ben!", true));
         listOfEvent.add(createEvent(getDummyMusician(1), "2", "Event at Big Ben!", true));
         listOfEvent.add(createEvent(getDummyMusician(2), "3", "Event at Big Ben!", true));
         listOfEvent.add(createEvent(getDummyMusician(2), "4", "Private event at Big Ben!", false));
-
-        Event privateEventAndParticipant = createEvent(getDummyMusician(2), "5", "Private but visible event at Big Ben!", false);
-        privateEventAndParticipant.register(m);
-        listOfEvent.add(privateEventAndParticipant);
     }
 
     public Musician getDummyMusician(int index) {
@@ -140,7 +158,10 @@ public class MockDatabase extends Database {
         }
 
         if(collection.equals(DbUserType.Band.toString())) {
-            dbCallback.readCallback(b);
+            if(docName.equals("espresso@gmail.com"))
+                dbCallback.readCallback(new Band("testBand", "espresso@gmail.com"));
+            else
+                dbCallback.readCallback(b);
             return;
         }
 
@@ -159,8 +180,11 @@ public class MockDatabase extends Database {
             l.add(defaultSm.toMusician());
             dbCallback.queryCallback(l);
         } else if(collection.equals(DbUserType.Band.toString())) {
+
             Band b = new Band("totofire" ,defaultSm.getEmail());
             l.add(b);
+            Band b2 = new Band("testBand", "espresso@gmail.com");
+            l.add(b2);
             dbCallback.queryCallback(l);
         }
     }
