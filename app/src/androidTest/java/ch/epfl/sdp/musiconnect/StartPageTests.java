@@ -42,7 +42,6 @@ public class StartPageTests {
 
     @Before
     public void setCurrentUser() {
-        CurrentUser.getInstance(activityRule.getActivity()).email = "musiconnectsdp@gmail.com";
         CurrentUser.getInstance(activityRule.getActivity()).setTypeOfUser(TypeOfUser.Band);
         CurrentUser.getInstance(activityRule.getActivity()).setBand(md.getBand());
     }

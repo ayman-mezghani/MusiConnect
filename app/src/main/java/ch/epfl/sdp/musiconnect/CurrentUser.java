@@ -16,7 +16,7 @@ import ch.epfl.sdp.musiconnect.database.DbUserType;
 public class CurrentUser {
     // static variable single_instance of type Singleton
     private static CurrentUser single_instance = null;
-    public String email;
+    public final String email;
 
     private boolean createdFlag = false;
     private String bandName;
@@ -87,7 +87,6 @@ public class CurrentUser {
     public void setMusician(Musician m) {
         this.musician = m;
         this.type = m.getTypeOfUser();
-        this.email = m.getEmailAddress();
     }
 
     public Musician getMusician() {

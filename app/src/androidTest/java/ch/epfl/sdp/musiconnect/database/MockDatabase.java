@@ -37,14 +37,15 @@ public class MockDatabase extends Database {
 
         Musician m = new Musician(firstName, lastName, username, email, birthday);
         m.addEvent("1");
+        m.setTypeOfUser(TypeOfUser.Band);
         defaultSm = new SimplifiedMusician(m);
         listOfMusicians.add(defaultSm);
 
         Musician musiConnect = new Musician("MusiConnect", "SDP", "musiConnect", "musiconnectsdp@gmail.com", new MyDate(1992, 9, 20));
         musiConnect.setTypeOfUser(TypeOfUser.Band);
 
-        b = new Band("totofire", musiConnect.getEmailAddress());
-        b.addMember(m.getEmailAddress());
+        b = new Band("totofire", m.getEmailAddress());
+        b.addMember(musiConnect .getEmailAddress());
 
         Musician m1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
         m1.addEvent("1");

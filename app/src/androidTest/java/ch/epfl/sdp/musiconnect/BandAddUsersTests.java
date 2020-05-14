@@ -7,6 +7,7 @@ import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,14 +45,17 @@ public class BandAddUsersTests {
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
 
+    @Before
+    public void setCurrentUser() {
+        CurrentUser.getInstance(mActivityTestRule.getActivity()).setBand(md.getBand());
+    }
+
     @Test
     public void addUUserToBandTest() {
         CurrentUser.getInstance(mActivityTestRule.getActivity()).setTypeOfUser(TypeOfUser.Band);
 
         Musician m = new Musician("Alice", "Bardon", "Alyx", "aymanmezghani97@gmail.com", new MyDate(1992, 9, 20));
         m.setTypeOfUser(TypeOfUser.Band);
-        CurrentUser.getInstance(mActivityTestRule.getActivity()).setBand(md.getBand());
-        CurrentUser.getInstance(mActivityTestRule.getActivity()).email = "musiconnectsdp@gmail.com";
         Intent intent = new Intent();
         intent.putExtra("UserEmail", m.getEmailAddress());
         mActivityTestRule.launchActivity(intent);
