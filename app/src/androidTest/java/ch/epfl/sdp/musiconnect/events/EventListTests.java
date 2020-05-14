@@ -101,23 +101,7 @@ public class EventListTests {
     }
 
 
-    @Test
-    public void testClickEventShouldLoadPage() {
 
-        Event e = md.getDummyEvent(0);
-
-        Intent intent = new Intent();
-        eventListRule.launchActivity(intent);
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
-
-        onView(withText(e.getTitle())).perform(ViewActions.scrollTo()).perform(click());
-        intended(hasComponent(MyEventPage.class.getName()));
-    }
 
     @Test
     public void testClickOthersEventShouldLoadPage() {

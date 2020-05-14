@@ -35,6 +35,11 @@ public class MockDatabase extends Database {
 
         Musician m = new Musician(firstName, lastName, username, email, birthday);
         m.addEvent("1");
+        if(addBandUser) {
+            m.setTypeOfUser(TypeOfUser.Band);
+        } else {
+            m.setTypeOfUser(TypeOfUser.Musician);
+        }
         defaultSm = new SimplifiedMusician(m);
         listOfMusicians.add(defaultSm);
 
@@ -55,7 +60,7 @@ public class MockDatabase extends Database {
         listOfMusicians.add(new SimplifiedMusician(new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1))));
         listOfMusicians.add(new SimplifiedMusician(musiConnect));
 
-        listOfEvent.add(createEvent(getDummyMusician(1), "1"));
+        listOfEvent.add(createEvent(getDummyMusician(0), "1"));
         listOfEvent.add(createEvent(getDummyMusician(2), "2"));
 
     }

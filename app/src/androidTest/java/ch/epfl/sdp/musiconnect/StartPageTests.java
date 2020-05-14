@@ -35,7 +35,7 @@ public class StartPageTests {
 
     @BeforeClass
     public static void setMocks() {
-        md = new MockDatabase(false);
+        md = new MockDatabase(true);
         DbGenerator.setDatabase(md);
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }

@@ -47,13 +47,12 @@ public class BandAddUsersTests {
 
     @Before
     public void setCurrentUser() {
+        CurrentUser.getInstance(mActivityTestRule.getActivity()).setTypeOfUser(TypeOfUser.Band);
         CurrentUser.getInstance(mActivityTestRule.getActivity()).setBand(md.getBand());
     }
 
     @Test
     public void addUserToBandTest() {
-        CurrentUser.getInstance(mActivityTestRule.getActivity()).setTypeOfUser(TypeOfUser.Band);
-
         Musician m = new Musician("Alice", "Bardon", "Alyx", "aymanmezghani97@gmail.com", new MyDate(1992, 9, 20));
         m.setTypeOfUser(TypeOfUser.Band);
         Intent intent = new Intent();
@@ -63,7 +62,7 @@ public class BandAddUsersTests {
         onView(withId(R.id.add_user_to_band)).perform(scrollTo(), click());
         assertTrue(md.getBand().containsMember(m.getEmailAddress()));
 
-        mActivityTestRule.finishActivity();;
+        mActivityTestRule.finishActivity();
     }
 }
 
