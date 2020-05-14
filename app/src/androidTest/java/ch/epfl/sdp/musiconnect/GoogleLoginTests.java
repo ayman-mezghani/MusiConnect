@@ -23,8 +23,8 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static ch.epfl.sdp.musiconnect.TestsFunctions.getCurrentActivity;
-import static ch.epfl.sdp.musiconnect.TestsFunctions.waitSeconds;
+import static ch.epfl.sdp.musiconnect.testsFunctions.getCurrentActivity;
+import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static junit.framework.TestCase.assertTrue;
 
 public class GoogleLoginTests {

@@ -25,7 +25,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.musiconnect.TestsFunctions.waitSeconds;
+import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 
 @RunWith(AndroidJUnit4.class)
 public class VisitorEventPageTests {

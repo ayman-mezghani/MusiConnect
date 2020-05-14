@@ -72,7 +72,7 @@ public class MusicianFinderPageTests {
         onView(withId(R.id.myMusicianFinderInstrumentsID)).perform(click());
 
         onData(anything())
-                .inAdapterView(TestsFunctions.childAtPosition(
+                .inAdapterView(testsFunctions.childAtPosition(
                         withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
                         0))
                 .atPosition(13).perform(click());
@@ -83,7 +83,7 @@ public class MusicianFinderPageTests {
         onView(withId(R.id.myMusicianFinderLevelsID)).perform(click());
 
         onData(anything())
-                .inAdapterView(TestsFunctions.childAtPosition(
+                .inAdapterView(testsFunctions.childAtPosition(
                         withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
                         0))
                 .atPosition(3).perform(click());

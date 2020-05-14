@@ -17,7 +17,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
-public class ImgPickerTests {
+public class imgPickerTests {
 
     @Rule
     public final ActivityTestRule<UserCreation> activityRule =

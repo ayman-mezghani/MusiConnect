@@ -22,8 +22,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.musiconnect.TestsFunctions.childAtPosition;
-import static ch.epfl.sdp.musiconnect.TestsFunctions.getCurrentActivity;
+import static ch.epfl.sdp.musiconnect.testsFunctions.childAtPosition;
+import static ch.epfl.sdp.musiconnect.testsFunctions.getCurrentActivity;
 import static org.hamcrest.Matchers.allOf;
 import static org.junit.Assert.assertTrue;
 

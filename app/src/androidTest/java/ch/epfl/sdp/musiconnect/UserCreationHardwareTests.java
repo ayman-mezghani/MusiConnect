@@ -27,7 +27,6 @@ import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.location.MapsLocationFunctions;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -39,8 +38,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static ch.epfl.sdp.musiconnect.TestsFunctions.childAtPosition;
-import static ch.epfl.sdp.musiconnect.TestsFunctions.waitSeconds;
+import static ch.epfl.sdp.musiconnect.testsFunctions.childAtPosition;
+import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
@@ -74,7 +73,7 @@ public class UserCreationHardwareTests {
 
     @Test
     public void singleInputEmptyTest() {
-        Assert.assertTrue(((UserCreation) TestsFunctions.getCurrentActivity()).isEmpty(((UserCreation) TestsFunctions.getCurrentActivity()).etUserName));
+        Assert.assertTrue(((UserCreation) testsFunctions.getCurrentActivity()).isEmpty(((UserCreation) testsFunctions.getCurrentActivity()).etUserName));
     }
 
     @Test
@@ -203,7 +202,7 @@ public class UserCreationHardwareTests {
 
     @Test
     public void getJoinDateWorks() {
-        assertEquals(((UserCreation) TestsFunctions.getCurrentActivity()).getAge(1995, 10, 19), "24");
+        assertEquals(((UserCreation) testsFunctions.getCurrentActivity()).getAge(1995, 10, 19), "24");
     }
 
     @Test
