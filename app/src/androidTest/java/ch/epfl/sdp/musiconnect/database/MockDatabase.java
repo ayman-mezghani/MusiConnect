@@ -62,7 +62,6 @@ public class MockDatabase extends Database {
 
         listOfEvent.add(createEvent(getDummyMusician(1), "1"));
         listOfEvent.add(createEvent(getDummyMusician(2), "2"));
-
     }
 
     public Musician getDummyMusician(int index) {
@@ -110,8 +109,6 @@ public class MockDatabase extends Database {
         if (collection.equals(DbUserType.Musician.toString()) && docName.equals(getDummyMusician(1).getEmailAddress()) && value != null) {
             getDummyMusician(1).setEvents((List<String>) value);
         }
-
-
     }
 
     @Override
