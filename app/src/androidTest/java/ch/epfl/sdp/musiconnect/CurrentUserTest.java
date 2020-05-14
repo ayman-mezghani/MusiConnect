@@ -26,7 +26,7 @@ public class CurrentUserTest {
 
     @BeforeClass
     public static void setMocks() {
-        DbGenerator.setDatabase(new MockDatabase());
+        DbGenerator.setDatabase(new MockDatabase(false));
         CloudStorageGenerator.setStorage((new MockCloudStorage()));
     }
 
@@ -116,7 +116,7 @@ public class CurrentUserTest {
         CurrentUser.getInstance(pageRule.getActivity()).setMusician(john);
         Band b = new Band("bandName", john.getEmailAddress());
         CurrentUser.getInstance(pageRule.getActivity()).setBand(b);
-        assertEquals(b, CurrentUser.getInstance(pageRule.getActivity()).getBand());
+        assertEquals(b, CurrentUser.getInstance(pageRule.getActivity()).getBands().get(0));
     }
 
     @Test
