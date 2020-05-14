@@ -1,5 +1,7 @@
 package ch.epfl.sdp.musiconnect.database;
 
+import android.util.Log;
+
 import androidx.annotation.Nullable;
 
 import com.google.firebase.Timestamp;
@@ -39,8 +41,6 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
     private Date joinDate;
     private GeoPoint location;
     private List<String> events;
-
-
     private List<Map<String, String>> instruments;
 
     static final String USERNAME = "username";
@@ -74,6 +74,7 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
         this.location = myLocationToGeoPoint(musician.getLocation());
         this.events = musician.getEvents();
         this.instruments = instrumentMapToList(musician.getInstruments());
+        Log.d("checkcheck", instruments.toString());
     }
 
     public SimplifiedMusician(Map<String, Object> map) {
@@ -94,7 +95,8 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
         musician.setLocation(geoPointToMyLocation(location));
         musician.setTypeOfUser(TypeOfUser.valueOf(typeOfUser));
         musician.setEvents(events);
-        musician.setInstruments(instrumentListToMap(instruments));
+        if (instruments != null)
+            musician.setInstruments(instrumentListToMap(instruments));
         return musician;
     }
 
