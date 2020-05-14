@@ -41,14 +41,14 @@ public class FirebaseDatabase extends Database {
 
 
     @Override
-    public void addDoc(String collection, String docName, SimplifiedDbEntry entry) {
+    void addDoc(String collection, String docName, SimplifiedDbEntry entry) {
         db.collection(collection).document(docName).set(entry, SetOptions.merge())
                 .addOnSuccessListener(bVoid -> Log.d(TAG, "DocumentSnapshot successfully added!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
     }
 
     @Override
-    public void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType) {
+    void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType) {
         db.collection("events").add(simplifiedEvent)
                 .addOnSuccessListener(documentReference -> {
                     if (userType == DbUserType.Band) {
@@ -78,21 +78,21 @@ public class FirebaseDatabase extends Database {
 
 
     @Override
-    public void deleteDoc(String collection, String docName) {
+    void deleteDoc(String collection, String docName) {
         db.collection(collection).document(docName).delete()
                 .addOnSuccessListener(bVoid -> Log.d(TAG, "DocumentSnapshot successfully deleted!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));
     }
 
     @Override
-    public void updateDoc(String collection, String docName, Map<String, Object> newValueMap) {
+    void updateDoc(String collection, String docName, Map<String, Object> newValueMap) {
         db.collection(collection).document(docName).update(newValueMap)
                 .addOnSuccessListener(cVoid -> Log.d(TAG, "DocumentSnapshot successfully updated!"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
     }
 
     @Override
-    public void deleteFieldsInDoc(String collection, String docName, List<String> fields) {
+    void deleteFieldsInDoc(String collection, String docName, List<String> fields) {
         Map<String, Object> updates = new HashMap<>();
         for (String str : fields) {
             updates.put(str, FieldValue.delete());
@@ -101,7 +101,7 @@ public class FirebaseDatabase extends Database {
     }
 
     @Override
-    public void readDoc(String collection, String docName, DbCallback dbCallback) {
+    void readDoc(String collection, String docName, DbCallback dbCallback) {
         db.collection(collection).document(docName).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     Map<String, Object> data = documentSnapshot.getData();
@@ -159,7 +159,7 @@ public class FirebaseDatabase extends Database {
     }
 
     @Override
-    public void docExists(String collection, String docName, DbCallback dbCallback) {
+    void docExists(String collection, String docName, DbCallback dbCallback) {
         db.collection(collection).document(docName).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -175,7 +175,7 @@ public class FirebaseDatabase extends Database {
     }
 
     @Override
-    public void finderQuery(String collection, Map<String, Object> arguments, DbCallback dbCallback) {
+    void finderQuery(String collection, Map<String, Object> arguments, DbCallback dbCallback) {
         CollectionReference ref = db.collection(collection);
         Task<QuerySnapshot> t = DatabaseQueryHelpers.unpack(ref, arguments).get();
         t.addOnCompleteListener(task -> {
