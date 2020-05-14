@@ -137,7 +137,7 @@ public class MyEventPageTests {
             ex.printStackTrace();
         }
 
-        m = (Musician)e.getCreator();
+        m = md.getDummyMusician(1);
         assertTrue(m.getEvents().isEmpty());
     }
 }
