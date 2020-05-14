@@ -27,5 +27,10 @@ public enum Instrument {
     VIOLA,
     VIOLIN,
     VOICE,
-    XYLOPHONE
+    XYLOPHONE;
+
+    @Override
+    public String toString() {
+        return super.toString().toLowerCase();
+    }
 }

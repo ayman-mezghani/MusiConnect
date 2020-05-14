@@ -7,5 +7,10 @@ public enum Level {
     BEGINNER,
     INTERMEDIATE,
     ADVANCED,
-    PROFESSIONAL
+    PROFESSIONAL;
+
+    @Override
+    public String toString() {
+        return super.toString().toLowerCase();
+    }
 }

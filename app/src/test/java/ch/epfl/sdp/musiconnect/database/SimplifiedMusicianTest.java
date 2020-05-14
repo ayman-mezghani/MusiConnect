@@ -5,10 +5,14 @@ import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import ch.epfl.sdp.musiconnect.Instrument;
+import ch.epfl.sdp.musiconnect.Level;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.MyLocation;
@@ -149,6 +153,30 @@ public class SimplifiedMusicianTest {
         assertNotEquals(m1, m2);
 
         assertEquals(m1, m1);
+    }
+
+    @Test
+    public void instrumentsTest() {
+        Map<Instrument, Level> m = new HashMap<>();
+        m.put(Instrument.GUITAR, Level.BEGINNER);
+
+        List<Map<String, String>> l = new ArrayList<>();
+        Map<String, String> m2 = new HashMap<>();
+        m2.put(SimplifiedMusician.INSTRUMENT, Instrument.GUITAR.toString());
+        m2.put(SimplifiedMusician.LEVEL, Level.BEGINNER.toString());
+        l.add(m2);
+
+        Musician musician = testMusician1();
+        musician.setInstruments(m);
+        SimplifiedMusician sm = new SimplifiedMusician(musician);
+
+        assertEquals(l, sm.getInstruments());
+
+        m.put(Instrument.ACCORDION, Level.ADVANCED);
+        musician.setInstruments(m);
+        sm = new SimplifiedMusician(musician);
+        Musician musician2 = sm.toMusician();
+        assertEquals(m, musician2.getInstruments());
     }
 
     static Musician testMusician1() {
