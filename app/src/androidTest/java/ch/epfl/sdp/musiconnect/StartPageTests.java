@@ -43,7 +43,7 @@ public class StartPageTests {
         assertTrue(CurrentUser.getInstance(activityRule.getActivity()).getBand().getName().equals(md.getBand().getName()));
     }
 
-    @Test
+    //@Test
     public void testBandProfileClickShouldStartNewIntent() {
         CurrentUser.getInstance(activityRule.getActivity()).email = "musiconnectsdp@gmail.com";
         CurrentUser.getInstance(activityRule.getActivity()).setTypeOfUser(TypeOfUser.Band);
