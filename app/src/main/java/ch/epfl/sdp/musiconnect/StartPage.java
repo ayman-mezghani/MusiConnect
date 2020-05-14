@@ -37,7 +37,6 @@ import ch.epfl.sdp.musiconnect.location.LocationPermission;
 public class StartPage extends Page {
     private static final String TAG = "MainActivity";
     private FusedLocationProviderClient fusedLocationClient;
-    private Location userLocation;
     private FloatingActionButton fab_menu, fab_button_1, fab_button_2;
     private Animation fabOpen, fabClose, fabClockWise, fabAntiClockWise;
     private TextView fabTv1, fabTv2;
@@ -124,7 +123,7 @@ public class StartPage extends Page {
             if (b != null) {
                 location = b.getParcelable("Location");
                 if (location != null) {
-                    userLocation = location;
+                    sendToDatabase(location);
                 }
             }
         }
@@ -149,10 +148,8 @@ public class StartPage extends Page {
         } else {
             fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
                 if (location != null) {
-                    // simply store value right now, may need to
-                    // store in user information
-
-                    userLocation = location;
+                    // Store the position we got to database
+                    sendToDatabase(location);
                     startLocationService();
                 }
             });
@@ -168,6 +165,14 @@ public class StartPage extends Page {
             getLastLocation();
         }
     }
+
+    private void sendToDatabase(Location location) {
+        User user = CurrentUser.getInstance(this).getMusician();
+
+        user.setLocation(new MyLocation(location.getLatitude(), location.getLongitude()));
+        DbGenerator.getDbInstance().update(DbUserType.Musician, user);
+    }
+
 
     protected void button1Click() {
         runOnUiThread(new Runnable() {

@@ -39,9 +39,11 @@ public class EventTest {
 
         e.register(n);
         assertTrue(e.getParticipants().contains(n));
+        assertTrue(e.containsParticipant(n.getEmailAddress()));
 
         e.unregister(n);
         assertFalse(e.getParticipants().contains(n));
+        assertFalse(e.containsParticipant(n.getEmailAddress()));
 
         e.setLocation(0, 0);
         assertEquals(0.0, e.getGeoPoint().getLatitude());

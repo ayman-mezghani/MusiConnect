@@ -26,11 +26,12 @@ public class EventListPage extends Page {
 
     private DbAdapter dbAdapter;
     private String userEmail;
+    private String visitorName;
     private DbUserType dbUserType;
 
-    private int counter = 0; // counter to keep track of the number of callbacks called
 
     private List<String> eventTitles;
+    private List<String> eventTitlesToShow;
     private Map<String, String> titleToIds;
     private boolean isVisitor;
 
@@ -48,10 +49,11 @@ public class EventListPage extends Page {
 
         ListView lv = findViewById(R.id.eventListView);
         eventTitles = new ArrayList<>();
+        eventTitlesToShow = new ArrayList<>();
         titleToIds = new HashMap<>();
 
 
-        adapter = new ArrayAdapter<>(EventListPage.this, android.R.layout.simple_list_item_1, eventTitles);
+        adapter = new ArrayAdapter<>(EventListPage.this, android.R.layout.simple_list_item_1, eventTitlesToShow);
         lv.setAdapter(adapter);
         lv.setOnItemClickListener((parent, view, position, id) -> loadEventPage(titleToIds.get(lv.getItemAtPosition(position))));
 
@@ -70,7 +72,8 @@ public class EventListPage extends Page {
             dbAdapter.read(DbUserType.Musician, userEmail, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
-                    eventListTitle.setText(String.format("%s's events", user.getName()));
+                    visitorName = user.getName();
+                    eventListTitle.setText(String.format("%s's events", visitorName));
                 }
             });
         } else {
@@ -93,6 +96,7 @@ public class EventListPage extends Page {
         Handler handler = new Handler();
         handler.postDelayed(() -> {
             eventTitles.clear();
+            eventTitlesToShow.clear();
             titleToIds.clear();
             adapter.notifyDataSetChanged();
 
@@ -123,22 +127,41 @@ public class EventListPage extends Page {
     }
 
     private void loadIds(List<String> eventIds) {
+        if (eventIds.isEmpty()) {
+            setContentView(R.layout.activity_event_list_page_none);
+            TextView eventListTitle = findViewById(R.id.eventListTitle);
+
+            if (isVisitor) {
+                eventListTitle.setText(String.format("%s's events", visitorName));
+            } else {
+                eventListTitle.setText(R.string.your_events);
+            }
+        }
+
+
+        final int[] counter = {0};
+        final boolean[] needUpdate = {false};
+
         for (String eid: eventIds) {
-            counter += 1;
             dbAdapter.read(DbUserType.Events, eid, new DbCallback() {
                 @Override
                 public void readCallback(Event e) {
+                    counter[0]++;
                     showEvent(e);
-                    counter -= 1;
-                    updateListInDatabase();
+                    if (counter[0] == eventIds.size() && needUpdate[0]) {
+                        updateListInDatabase();
+                    }
                 }
 
                 @Override
                 public void readFailCallback() {
+                    counter[0]++;
+                    needUpdate[0] = true;
                     // error: the event does not exist, so the entry in the database should be deleted
-                    // Update only if user is on his own list
-                    counter -= 1;
-                    updateListInDatabase();
+                    // Update only if user is on his own list (and after all callbacks have returned)
+                    if (counter[0] == eventIds.size()) {
+                        updateListInDatabase();
+                    }
                 }
             });
         }
@@ -152,22 +175,23 @@ public class EventListPage extends Page {
             eventTitles.add(title);
             titleToIds.put(title, eid);
 
-            EventListPage.this.runOnUiThread(() -> adapter.notifyDataSetChanged());
+            // Show only events that are public or belong to "this" user
+            if ((e.isVisible() || e.getCreator().getEmailAddress().equals(CurrentUser.getInstance(this).email))) {
+                eventTitlesToShow.add(title);
+                EventListPage.this.runOnUiThread(() -> adapter.notifyDataSetChanged());
+            }
         }
     }
 
     private void updateListInDatabase() {
-        if (counter == 0) {
-            List<String> ids = new ArrayList<>(titleToIds.values());
+        List<String> ids = new ArrayList<>(titleToIds.values());
 
-            dbAdapter.read(dbUserType, userEmail, new DbCallback() {
-                @Override
-                public void readCallback(User user) {
-                    user.setEvents(ids);
-                    dbAdapter.update(dbUserType, user);
-                }
-            });
-        }
+        dbAdapter.read(dbUserType, userEmail, new DbCallback() {
+            @Override
+            public void readCallback(User user) {
+                user.setEvents(ids);
+                dbAdapter.update(dbUserType, user); }
+        });
     }
 
     private void loadEventPage(String eid) {

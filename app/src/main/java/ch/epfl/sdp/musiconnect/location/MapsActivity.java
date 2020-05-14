@@ -332,6 +332,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             marker.remove();
         }
 
+        sendToDatabase(location);
         setLoc = location;
         if (mMap != null) {
             String markerName = "You";
@@ -361,6 +362,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LocationPermission.startLocationService(this);
     }
 
+    private void sendToDatabase(Location location) {
+        User user = CurrentUser.getInstance(this).getMusician();
+
+        user.setLocation(new MyLocation(location.getLatitude(), location.getLongitude()));
+        DbGenerator.getDbInstance().update(DbUserType.Musician, user);
+    }
 
     private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -436,7 +443,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Location l = new Location("");
             l.setLatitude(e.getLocation().getLatitude());
             l.setLongitude(e.getLocation().getLongitude());
-            if (setLoc.distanceTo(l) <= threshold) {
+
+            // Show event if event is in threshold, public or created by "this" user
+            // TODO check the 2 last conditions when fetching from database directly
+            if (setLoc.distanceTo(l) <= threshold && (e.isVisible()
+                    || e.getCreator().getEmailAddress().equals(CurrentUser.getInstance(this).email))) {
                 eventNear.add(e);
             }
         }

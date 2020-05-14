@@ -56,13 +56,28 @@ public class VisitorEventPageTests {
     public void testLoadOtherEvent() {
         Musician m1 = md.getDummyMusician(1);
         Musician m2 = md.getDummyMusician(3);
+        String s = m1.getName() + System.lineSeparator() + m2.getName() + System.lineSeparator();
         Event event = md.getDummyEvent(0);
 
+        testMatchInfoOnView(event, s);
+    }
+
+    @Test
+    public void testLoadOtherEventParticipating() {
+        Musician current = md.getDummyMusician(0);
+        Musician m1 = md.getDummyMusician(2);
+        Musician m2 = md.getDummyMusician(3);
+        String s = m1.getName() + System.lineSeparator() + m2.getName() + System.lineSeparator() + current.getName() + System.lineSeparator();
+        Event event = md.getDummyEvent(3);
+
+        testMatchInfoOnView(event, s);
+    }
+
+    private void testMatchInfoOnView(Event event, String s) {
         Intent intent = new Intent();
         intent.putExtra("eid", event.getEid());
         eventPageRule.launchActivity(intent);
 
-        String s = m1.getName() + System.lineSeparator() + m2.getName() + System.lineSeparator();
 
         waitSeconds(3);
 
@@ -74,5 +89,24 @@ public class VisitorEventPageTests {
         onView(withId(R.id.eventDescriptionField)).check(matches(withText(event.getDescription())));
     }
 
+
+    @Test
+    public void loadPrivateEvent() {
+        Intent intent = new Intent();
+        Event event = md.getDummyEvent(2);
+        intent.putExtra("eid", event.getEid());
+        eventPageRule.launchActivity(intent);
+
+        onView(withId(R.id.title)).check(matches(withText(R.string.event_is_private)));
+    }
+
+
+    @Test
+    public void loadNullEvent() {
+        Intent intent = new Intent();
+        eventPageRule.launchActivity(intent);
+
+        onView(withId(R.id.title)).check(matches(withText(R.string.event_not_found)));
+    }
 
 }

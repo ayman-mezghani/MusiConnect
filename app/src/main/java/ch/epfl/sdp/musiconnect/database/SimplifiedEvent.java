@@ -20,6 +20,7 @@ public class SimplifiedEvent {
     private Date dateTime;
     private String title;
     private String description;
+    private boolean visible;
 
     static final String CREATORMAIL = "creatorMail";
     static final String PARTICIPANTS = "participants";
@@ -28,6 +29,7 @@ public class SimplifiedEvent {
     static final String DATETIME = "dateTime";
     static final String TITLE = "title";
     static final String DESCRIPTION = "description";
+    static final String VISIBLE = "visible";
 
     private static final int YEAR_BIAS = 1900;
     private static final int MONTH_BIAS = 1;
@@ -47,6 +49,7 @@ public class SimplifiedEvent {
         this.dateTime = myDateToDate(e.getDateTime());
         this.title = e.getTitle();
         this.description = e.getDescription();
+        this.visible = e.isVisible();
     }
 
     public String getCreatorMail() {
@@ -105,6 +108,13 @@ public class SimplifiedEvent {
         this.description = description;
     }
 
+    public boolean getVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
 
     private Date myDateToDate(MyDate myDate) {
         return new Date(myDate.getYear() - YEAR_BIAS, myDate.getMonth() - MONTH_BIAS, myDate.getDate(), myDate.getHours(), myDate.getMinutes());
@@ -126,6 +136,7 @@ public class SimplifiedEvent {
         res.put(DATETIME, dateTime);
         res.put(TITLE, title);
         res.put(DESCRIPTION, description);
+        res.put(VISIBLE, visible);
         return res;
     }
 }
