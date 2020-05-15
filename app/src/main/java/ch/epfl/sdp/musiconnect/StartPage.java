@@ -11,9 +11,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
@@ -25,13 +22,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
-
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DbCallback;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
-import ch.epfl.sdp.musiconnect.database.DbUserType;
-import ch.epfl.sdp.musiconnect.events.Event;
 import ch.epfl.sdp.musiconnect.location.LocationPermission;
 
 public class StartPage extends Page {
@@ -51,44 +42,6 @@ public class StartPage extends Page {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         checkLocationPermission();
-
-        fab_menu = findViewById(R.id.fab_menu);
-        fab_button_1 = findViewById(R.id.fab_button_1);
-        fab_button_2 = findViewById(R.id.fab_button_2);
-
-        fabTv1 = findViewById(R.id.fab_tv_1);
-        fabTv2 = findViewById(R.id.fab_tv_2);
-
-        fabOpen = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
-        fabClose = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
-        fabClockWise = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_clockwise);
-        fabAntiClockWise = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_anti_clockwise);
-
-        fab_menu.setOnClickListener(v -> fabMenuClick());
-        fab_button_1.setOnClickListener(v -> button1Click());
-
-        fab_button_2.setOnClickListener(v -> {
-            updateCurrentUser(this);
-            Context ctx = this;
-            ListView lv = findViewById(R.id.LvEvent);
-            ArrayList<String> events = new ArrayList<>();
-
-
-            final ArrayAdapter<String> adapter = new ArrayAdapter<>
-                    (StartPage.this, android.R.layout.simple_list_item_1, events);
-            lv.setAdapter(adapter);
-
-
-            for(String e : CurrentUser.getInstance(this).getBand().getEvents()) {
-                DbGenerator.getDbInstance().read(DbUserType.Events, e.trim(), new DbCallback() {
-                    @Override
-                    public void readCallback(Event u) {
-                        events.add(u.getTitle());
-                        adapter.notifyDataSetChanged();
-                    }
-                });
-            }
-        });
 
         updateCurrentUser(this);
 
@@ -167,42 +120,5 @@ public class StartPage extends Page {
         else {
             getLastLocation();
         }
-    }
-
-    protected void button1Click() {
-        getBandIfMember();
-
-
-
-    }
-
-    protected void fabMenuClick() {
-        if(isOpen){
-            fab_button_2.startAnimation(fabClose);
-            fabTv2.startAnimation(fabClose);
-            fab_button_1.startAnimation(fabClose);
-            fabTv1.startAnimation(fabClose);
-            fab_menu.startAnimation(fabAntiClockWise);
-
-            fab_button_2.setClickable(false);
-            fab_button_1.setClickable(false);
-
-            fab_button_2.setFocusable(false);
-            fab_button_1.setFocusable(false);
-        } else {
-            fab_button_2.startAnimation(fabOpen);
-            fabTv2.startAnimation(fabOpen);
-            fab_button_1.startAnimation(fabOpen);
-            fabTv1.startAnimation(fabOpen);
-            fab_menu.startAnimation(fabClockWise);
-
-            fab_button_2.setClickable(true);
-            fab_button_1.setClickable(true);
-
-            fab_button_2.setFocusable(true);
-            fab_button_1.setFocusable(true);
-        }
-
-        isOpen = !isOpen;
     }
 }
