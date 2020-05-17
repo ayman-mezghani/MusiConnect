@@ -38,8 +38,18 @@ public class EventCreationPage extends EventModificationPage {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
         bottomNavigationView.setSelectedItemId(R.id.my_events);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> super.onOptionsItemSelected(item));
+        bottomNavigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
     }
+
+    /**
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
+        bottomNavigationView.setSelectedItemId(R.id.my_events);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
+    }
+     */
 
     @Override
     void setupSaveButton() {

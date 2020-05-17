@@ -74,8 +74,18 @@ public class MusicianFinderPage extends Page implements View.OnClickListener {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
         bottomNavigationView.setSelectedItemId(R.id.search);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> super.onOptionsItemSelected(item));
+        bottomNavigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
     }
+
+    /**
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
+        bottomNavigationView.setSelectedItemId(R.id.search);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
+    }
+     */
 
     @Override
     public void onClick(View view) {
