@@ -17,6 +17,7 @@ public class Musician extends Person {
     private Map<Instrument, Level> instruments;
     @Ignore
     private TypeOfUser typeOfUser = TypeOfUser.Musician;
+    private Float distanceToCurrentUser = null;
 
     private static final int MAX_VIDEO_URL_LENGTH = 2048;
 
@@ -116,4 +117,11 @@ public class Musician extends Person {
         return tmp;
     }
 
+    public Float getDistanceToCurrentUser() {
+        return distanceToCurrentUser;
+    }
+
+    public void setDistanceToCurrentUser(Float distanceToCurrentUser) {
+        this.distanceToCurrentUser = distanceToCurrentUser;
+    }
 }
