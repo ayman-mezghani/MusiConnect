@@ -38,12 +38,10 @@ public class MusicianFinderResult extends AppCompatActivity {
 
         listViewAddOnItemClickListner(lvMusicianResult);
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>
-                (MusicianFinderResult.this, android.R.layout.simple_list_item_1, listMusiciaEmails);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(MusicianFinderResult.this, android.R.layout.simple_list_item_1, listMusiciaEmails);
         lvMusicianResult.setAdapter(adapter);
 
-        Intent intent = getIntent();
-        Map<String, Object> searchMap = (HashMap<String, Object>)intent.getSerializableExtra("searchMap");
+        Map<String, Object> searchMap = (HashMap<String, Object>)getIntent().getSerializableExtra("searchMap");
 
         for(Map.Entry<String, Object> entry : searchMap.entrySet()) {
             HashMap<String, Object> innerMap = new HashMap<>();
@@ -52,29 +50,7 @@ public class MusicianFinderResult extends AppCompatActivity {
             DbGenerator.getDbInstance().query(DbUserType.Musician, innerMap, new DbCallback() {
                 @Override
                 public void queryCallback(List<User> userList) {
-                    Location userLoc = CurrentUser.getInstance(MusicianFinderResult.this).getLocation();
-                    for (User u: userList) {
-                        if(!listMusiciaEmails.contains((String) u.getEmailAddress())) {
-                            listMusiciaEmails.add(u.getEmailAddress());
-                            Location uLoc = new Location("");
-                            uLoc.setLatitude(u.getLocation().getLatitude());
-                            uLoc.setLongitude(u.getLocation().getLongitude());
-                            ((Musician) u).setDistanceToCurrentUser(userLoc.distanceTo(uLoc));
-                            listMusician.add((Musician) u);
-                        }
-                    }
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        listMusician.sort(Comparator.comparingDouble(Musician::getDistanceToCurrentUser));
-                    }
-
-                    listMusiciaEmails.clear();
-                    for(Musician m: listMusician) {
-                        String s = m.getName() + "\n" + m.getEmailAddress() + "\n" + String.valueOf(Math.round(m.getDistanceToCurrentUser())) + " m";
-                        listMusiciaEmails.add(s);
-                    }
-                
-                    adapter.notifyDataSetChanged();
+                    queryFunction(userList, (ArrayList<Musician>) listMusician, (ArrayList<String>) listMusiciaEmails, adapter);
                 }
             });
         }
@@ -90,5 +66,32 @@ public class MusicianFinderResult extends AppCompatActivity {
 
     private String getMusicianEmailFromList(String listViewItem) {
         return listViewItem.split("\n")[1].trim();
+    }
+
+    private void queryFunction(List<User> userList, ArrayList<Musician> lm, ArrayList<String> lme, ArrayAdapter<String> adapter) {
+
+        Location userLoc = CurrentUser.getInstance(MusicianFinderResult.this).getLocation();
+        for (User u: userList) {
+            if(!lme.contains((String) u.getEmailAddress())) {
+                lme.add(u.getEmailAddress());
+                Location uLoc = new Location("");
+                uLoc.setLatitude(u.getLocation().getLatitude());
+                uLoc.setLongitude(u.getLocation().getLongitude());
+                ((Musician) u).setDistanceToCurrentUser(userLoc.distanceTo(uLoc));
+                lm.add((Musician) u);
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            lm.sort(Comparator.comparingDouble(Musician::getDistanceToCurrentUser));
+        }
+
+        lme.clear();
+        for(Musician m: lm) {
+            String s = m.getName() + "\n" + m.getEmailAddress() + "\n" + String.valueOf(Math.round(m.getDistanceToCurrentUser())) + " m";
+            lme.add(s);
+        }
+
+        adapter.notifyDataSetChanged();
     }
 }
