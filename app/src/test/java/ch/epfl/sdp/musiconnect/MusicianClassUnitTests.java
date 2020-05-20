@@ -329,4 +329,11 @@ public class MusicianClassUnitTests {
         assertEquals(as, john.getEvents());
     }
 
+    @Test
+    public void musicianGetterAndSetterForDistanceToCurrentUser() {
+        Musician john = new Musician("John", "Lennon", "JohnLennon", "john.lennon@gmail.com", new MyDate(1940, 10, 9));
+        john.setDistanceToCurrentUser(10.0f);
+        assertEquals((float) john.getDistanceToCurrentUser(), 10.0f);
+    }
+
 }

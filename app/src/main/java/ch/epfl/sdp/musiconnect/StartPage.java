@@ -172,9 +172,10 @@ public class StartPage extends Page {
 
     private void sendToDatabase(Location location) {
         User user = CurrentUser.getInstance(this).getMusician();
-
-        user.setLocation(new MyLocation(location.getLatitude(), location.getLongitude()));
-        DbGenerator.getDbInstance().update(DbUserType.Musician, user);
+        if(user != null) {
+            user.setLocation(new MyLocation(location.getLatitude(), location.getLongitude()));
+            DbGenerator.getDbInstance().update(DbUserType.Musician, user);
+        }
     }
 
 
