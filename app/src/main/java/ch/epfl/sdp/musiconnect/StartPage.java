@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -61,6 +60,23 @@ public class StartPage extends Page {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         checkLocationPermission();
 
+        // Dark mode part
+        sharedPreferences = getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
+        darkModeSwitch = findViewById(R.id.darkModeSwitch);
+        checkIfNightModeIsActivated();
+
+        darkModeSwitch.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            if (isChecked) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                saveNightModeState(true);
+                recreate();
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                saveNightModeState(false);
+                recreate();
+            }
+        });
+
         fab_menu = findViewById(R.id.fab_menu);
         fab_button_1 = findViewById(R.id.fab_button_1);
         fab_button_2 = findViewById(R.id.fab_button_2);
@@ -102,27 +118,11 @@ public class StartPage extends Page {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
         bottomNavigationView.setSelectedItemId(R.id.home);
         bottomNavigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
-
-        sharedPreferences = getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
-        darkModeSwitch = findViewById(R.id.darkModeSwitch);
-        checkIfNightModeIsActivated();
-
-        darkModeSwitch.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            if (isChecked) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                saveNightModeState(true);
-                recreate();
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                saveNightModeState(false);
-                recreate();
-            }
-        });
     }
 
     /**
-     * Save the preferences when on a new switch toggle
-     * @param nightMode: is night mode activated
+     * Save the preferences when restarting the app
+     * @param nightMode: on or off
      */
     private void saveNightModeState(boolean nightMode) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
