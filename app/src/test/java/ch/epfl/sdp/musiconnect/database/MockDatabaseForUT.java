@@ -41,7 +41,6 @@ public class MockDatabaseForUT extends Database {
     @Override
     void deleteDoc(String collection, String docName) {
         assertEquals(expectedDocName, docName);
-
     }
 
     @Override
@@ -80,6 +79,9 @@ public class MockDatabaseForUT extends Database {
 
     @Override
     void locQuery(String collection, GeoPoint currentLocation, double distance, DbCallback dbCallback) {
-
+        assertEquals(expectedCollection, collection);
+        List<User> l = new ArrayList<>();
+        l.add(((SimplifiedMusician) expectedEntry).toMusician());
+        dbCallback.queryCallback(l);
     }
 }

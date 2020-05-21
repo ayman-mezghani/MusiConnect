@@ -14,7 +14,6 @@ import ch.epfl.sdp.musiconnect.TypeOfUser;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbDataType;
 
-
 public class MyEventPage extends EventPage {
     private static int LAUNCH_EVENT_EDIT_INTENT = 105;
 
@@ -38,6 +37,8 @@ public class MyEventPage extends EventPage {
 
         String eid = getIntent().getStringExtra("eid");
         retrieveEventInfo(eid);
+
+        setupMapButton();
     }
 
     @Override
@@ -93,4 +94,6 @@ public class MyEventPage extends EventPage {
                 .create()
                 .show());
     }
+
+
 }

@@ -1,6 +1,5 @@
 package ch.epfl.sdp.musiconnect.events;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +8,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,10 +34,12 @@ public class EventListPage extends Page {
 
 
     private List<String> eventTitlesToShow;
-    private List<Pair<String, String>> titleToIds; // [(EID, TITLE)]
+    // List to link eid to titles, just in case
+    // [(EID, TITLE)]
+    private List<Pair<String, String>> eidAndTitles;
     private boolean isVisitor;
 
-    private ArrayAdapter<Pair<String, String>> adapter;
+    private ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +53,18 @@ public class EventListPage extends Page {
 
         ListView lv = findViewById(R.id.eventListView);
         eventTitlesToShow = new ArrayList<>();
-        titleToIds = new ArrayList<>();
+        eidAndTitles = new ArrayList<>();
 
-
-        adapter = new ArrayAdapter<>(EventListPage.this, android.R.layout.simple_list_item_1, titleToIds);
+        adapter = new ArrayAdapter<>(EventListPage.this, android.R.layout.simple_list_item_1, eventTitlesToShow);
         lv.setAdapter(adapter);
-        lv.setOnItemClickListener((parent, view, position, id) -> loadEventPage(((Pair<String, String>)lv.getItemAtPosition(position)).first));
+        lv.setOnItemClickListener((parent, view, position, id) -> {
+            if (lv.getItemAtPosition(position).equals(eidAndTitles.get(position).second)) {
+                String eid = eidAndTitles.get(position).first;
+                loadEventPage(eid);
+            } else {
+                Toast.makeText(getApplicationContext(), "An error has occurred, please reload the page", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setupListTitle() {
@@ -89,7 +97,7 @@ public class EventListPage extends Page {
         Handler handler = new Handler();
         handler.postDelayed(() -> {
             eventTitlesToShow.clear();
-            titleToIds.clear();
+            eidAndTitles.clear();
             adapter.notifyDataSetChanged();
 
 
@@ -152,13 +160,13 @@ public class EventListPage extends Page {
                 (e.isVisible() || e.containsParticipant(CurrentUser.getInstance(this).email)
                 || e.getHostEmailAddress().equals(CurrentUser.getInstance(this).email))) {
             eventTitlesToShow.add(title);
-            titleToIds.add(new Pair<>(eid, title));
+            eidAndTitles.add(new Pair<>(eid, title));
             EventListPage.this.runOnUiThread(() -> adapter.notifyDataSetChanged());
         }
     }
 
     private boolean containsId(String eid) {
-        for (Pair<String, String> pair : titleToIds) {
+        for (Pair<String, String> pair : eidAndTitles) {
             if (pair.first.equals(eid)) {
                 return true;
             }

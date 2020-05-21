@@ -18,6 +18,7 @@ import java.util.Map;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.MyProfilePage;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.VisitorProfilePage;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
@@ -58,8 +59,14 @@ public class MusicianFinderResult extends AppCompatActivity {
 
     private void listViewAddOnItemClickListner(ListView l) {
         l.setOnItemClickListener((parent, view, position, id) -> {
-            Intent i = new Intent(MusicianFinderResult.this, VisitorProfilePage.class);
-            i.putExtra("UserEmail", getMusicianEmailFromList((String) l.getItemAtPosition(position)));
+            String musicianEmail = getMusicianEmailFromList((String) l.getItemAtPosition(position));
+            Intent i;
+            if(musicianEmail.equals(CurrentUser.getInstance(MusicianFinderResult.this).email)) {
+                i = new Intent(MusicianFinderResult.this, MyProfilePage.class);
+            } else {
+                i = new Intent(MusicianFinderResult.this, VisitorProfilePage.class);
+                i.putExtra("UserEmail", musicianEmail);
+            }
             startActivity(i);
         });
     }

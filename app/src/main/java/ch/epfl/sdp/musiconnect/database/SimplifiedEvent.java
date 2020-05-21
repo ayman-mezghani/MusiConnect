@@ -58,6 +58,7 @@ public class SimplifiedEvent extends SimplifiedDbEntry {
         event.setVisible(visible);
         for (String user : participants)
             event.register(user);
+
         if (location != null) {
             event.setLocation(geoPointToMyLocation(location));
         }

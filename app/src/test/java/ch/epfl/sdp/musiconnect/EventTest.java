@@ -30,8 +30,7 @@ public class EventTest {
         final String ADDRESS = "Lausanne";
 
         Event e = new Event(m.getEmailAddress(), "0");
-
-        assertEquals(m.getEmailAddress(), (e.getHostEmailAddress()));
+        assertEquals(m.getEmailAddress(), e.getHostEmailAddress());
 
         assertEquals("0", e.getEid());
         e.setEid("1");

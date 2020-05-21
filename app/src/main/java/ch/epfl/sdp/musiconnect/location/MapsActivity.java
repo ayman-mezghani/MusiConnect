@@ -47,7 +47,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
@@ -56,10 +55,7 @@ import java.util.regex.Pattern;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.CustomInfoWindowGoogleMap;
-import ch.epfl.sdp.musiconnect.Instrument;
-import ch.epfl.sdp.musiconnect.Level;
 import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.MyLocation;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.VisitorProfilePage;
@@ -109,6 +105,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private List<Event> events = new ArrayList<>();
     private List<Event> eventNear = new ArrayList<>();
     private List<Marker> eventMarkers = new ArrayList<>();           //markers on the map associated to events
+    private Event shownEvent = null;                                //event to be shown on map, when accessed from event pages
+
+    private boolean updateCamera = true;
 
     private Marker marker;                                      //main user's marker
 
@@ -239,7 +238,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //If there's a connection, fetch Users in the general area; else, load them from cache
         if (checkConnection(MapsActivity.this)) {
-            createPlaceHolderUsers();
+            fetchUsersFromDb();
             clearCache();
         } else {
             loadCache();
@@ -258,19 +257,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         CustomInfoWindowGoogleMap customInfoWindow = new CustomInfoWindowGoogleMap(this);
         mMap.setInfoWindowAdapter(customInfoWindow);
 
+        //check if there's an event to be shown to the user
+        if(getIntent().hasExtra("Event")){
+            getShownEvent(getIntent().getStringExtra("Event"));
+        }
         //place users' markers
 
-        updateEvents();
-        loadEventMarkers();
+        fetchEventsFromDb();
 
         //sets listeners on map markers and user click
         mMap.setOnInfoWindowClickListener(this);
-        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener(){
-            @Override
-            public void onMapLongClick(LatLng latlng){
-                createAlert(latlng);
-            }
-        });
+        mMap.setOnMapLongClickListener(this::createAlert);
 
         //Handler that updates users list
         Handler handler = new Handler();
@@ -357,8 +354,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .position(latLng)
                     .title(markerName)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
+            if(updateCamera) {
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
+            }
             circle.setCenter(latLng);
         }
 
@@ -434,6 +433,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         profiles.clear();
+
+        for (Musician m: allUsers) {
+            if (m.getEmailAddress().equals(CurrentUser.getInstance(getApplicationContext()).email)) {
+                allUsers.remove(m);
+                break;
+            }
+        }
+
+
         for (Musician m : allUsers) {
             Location l = new Location("");
             l.setLatitude(m.getLocation().getLatitude());
@@ -462,13 +470,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 l.setLatitude(e.getLocation().getLatitude());
                 l.setLongitude(e.getLocation().getLongitude());
 
-                // Show event if event is in threshold, public or created by "this" user
-                // TODO check the 2 last conditions when fetching from database directly
-                if (setLoc.distanceTo(l) <= threshold && (e.isVisible()
-                        || e.getHostEmailAddress().equals(CurrentUser.getInstance(this).email))) {
+                // Show event if event is in threshold, public, created by "this" user or participates in
+                if (setLoc.distanceTo(l) <= threshold) {
                     eventNear.add(e);
                 }
             }
+        }
+
+        if(shownEvent != null){
+            eventNear.add(shownEvent);
         }
 
         loadEventMarkers();
@@ -509,6 +519,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             marker.setTag(e);
             eventMarkers.add(marker);
         }
+    }
+
+    private void getShownEvent(String eid){
+        dbAdapter.read(DbDataType.Events, eid, new DbCallback() {
+            @Override
+            public void readCallback(Event e) {
+                shownEvent = e;
+                updateCamera = false;
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(shownEvent.getLocation().getLatitude(), shownEvent.getLocation().getLongitude())));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
+            }});
     }
 
     @Override
@@ -611,6 +632,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             List<Musician> currentUser = musicianDao.loadAllByIds(new String[]{CurrentUser.getInstance(MapsActivity.this).email});
             allUsers.removeAll(currentUser);
             events = eventDao.getAll();
+            updateProfileList();
+            loadProfilesMarker();
         });
 
 
@@ -628,13 +651,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     // TODO Should be replaced by a function that fetch user from the database; right now it generates 3 fixed users
-    private void createPlaceHolderUsers() {
+    private void fetchUsersFromDb() {
         dbAdapter.locationQuery(DbDataType.Musician, LocationConverter.locationToMyLocation(CurrentUser.getInstance(this).getLocation()), MAX_THRESHOLD / 1000,
                 new DbCallback() {
                     @Override
-                    public void queryCallback(List list) {
+                    public void locationQueryCallback(List list) {
                         for (Object m : list) {
                             allUsers.add((Musician) m);
+                        }
+                        updateProfileList();
+                        loadProfilesMarker();
+                    }
+                });
+    }
+
+
+    private void fetchEventsFromDb() {
+        dbAdapter.locationQuery(DbDataType.Events, LocationConverter.locationToMyLocation(CurrentUser.getInstance(getApplicationContext()).getLocation()), MAX_THRESHOLD / 1000,
+                new DbCallback() {
+                    @Override
+                    public void locationQueryCallback(List list) {
+                        for (Object e : list) {
+                            if (((Event) e).isVisible() || ((Event) e).containsParticipant(CurrentUser.getInstance(getApplicationContext()).email)
+                                    || ((Event) e).getHostEmailAddress().equals(CurrentUser.getInstance(getApplicationContext()).email)) {
+
+                                events.add((Event) e);
+                            }
                         }
                         updateProfileList();
                         loadProfilesMarker();

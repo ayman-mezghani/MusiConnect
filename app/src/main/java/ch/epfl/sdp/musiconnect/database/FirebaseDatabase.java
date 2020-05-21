@@ -63,7 +63,7 @@ public class FirebaseDatabase extends Database {
                             public void readCallback(User u) {
                                 Band b = (Band) u;
                                 b.addEvent(documentReference.getId());
-                                DbSingleton.getDbInstance().add(hostUserType, b);
+                                DbSingleton.getDbInstance().update(hostUserType, b);
                             }
                         });
                     } else if (hostUserType == DbDataType.Musician) {
@@ -72,7 +72,7 @@ public class FirebaseDatabase extends Database {
                             public void readCallback(User u) {
                                 Musician m = (Musician) u;
                                 m.addEvent(documentReference.getId());
-                                DbSingleton.getDbInstance().add(hostUserType, m);
+                                DbSingleton.getDbInstance().update(hostUserType, m);
                             }
                         });
                     }
