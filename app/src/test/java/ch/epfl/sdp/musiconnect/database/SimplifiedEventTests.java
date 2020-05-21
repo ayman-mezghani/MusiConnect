@@ -17,15 +17,15 @@ public class SimplifiedEventTests {
         Event e = testEvent();
         SimplifiedEvent se = new SimplifiedEvent(e);
 
-        assertEquals(e.getTitle(), se.getTitle());
+        assertEquals(e.getTitle(), se.getEventName());
         assertEquals(e.getDescription(), se.getDescription());
-        assertEquals(e.getAddress(), se.getAdress());
+        assertEquals(e.getAddress(), se.getAddress());
         assertEquals(e.getDateTime().toDate(), se.getDateTime());
-        assertEquals(e.getGeoPoint(), se.getLoc());
-        assertEquals(e.getCreator().getEmailAddress(), se.getCreatorMail());
+        assertEquals(e.getGeoPoint(), se.getLocation());
+        assertEquals(e.getHostEmailAddress().getEmailAddress(), se.getHost());
 
         ArrayList<String> am = new ArrayList<>();
-        for (User m: e.getParticipants())
+        for (User m : e.getParticipants())
             am.add(m.getEmailAddress());
 
         assertEquals(am, se.getParticipants());
@@ -36,19 +36,19 @@ public class SimplifiedEventTests {
         Event e = testEvent();
         SimplifiedEvent se = new SimplifiedEvent();
 
-        se.setTitle(e.getTitle());
-        se.setAdress(e.getAddress());
+        se.setEventName(e.getTitle());
+        se.setAddress(e.getAddress());
         se.setDescription(e.getDescription());
-        se.setCreatorMail(e.getCreator().getEmailAddress());
+        se.setHost(e.getHostEmailAddress().getEmailAddress());
         se.setDateTime(e.getDateTime().toDate());
-        se.setLoc(e.getGeoPoint());
+        se.setLocation(e.getGeoPoint());
 
-        assertEquals(e.getTitle(), se.getTitle());
+        assertEquals(e.getTitle(), se.getEventName());
         assertEquals(e.getDescription(), se.getDescription());
-        assertEquals(e.getAddress(), se.getAdress());
+        assertEquals(e.getAddress(), se.getAddress());
         assertEquals(e.getDateTime().toDate(), se.getDateTime());
-        assertEquals(e.getGeoPoint(), se.getLoc());
-        assertEquals(e.getCreator().getEmailAddress(), se.getCreatorMail());
+        assertEquals(e.getGeoPoint(), se.getLocation());
+        assertEquals(e.getHostEmailAddress().getEmailAddress(), se.getHost());
 
         ArrayList<String> am = new ArrayList<>();
         am.add("mail1@gmail.com");

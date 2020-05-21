@@ -8,7 +8,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
-import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.database.DbDataType;
 
 public class EventCreationPage extends EventModificationPage {
 
@@ -65,6 +65,6 @@ public class EventCreationPage extends EventModificationPage {
 
     @Override
     void updateDatabase(Event event) {
-        dbAdapter.add(event, DbUserType.valueOf(CurrentUser.getInstance(this).getTypeOfUser().toString()));
+        dbAdapter.add(DbDataType.valueOf(CurrentUser.getInstance(this).getTypeOfUser().toString()), event);
     }
 }

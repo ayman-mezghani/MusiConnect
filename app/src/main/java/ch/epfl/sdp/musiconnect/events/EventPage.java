@@ -7,11 +7,10 @@ import java.util.ArrayList;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.Page;
-import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
-import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
+import ch.epfl.sdp.musiconnect.database.DbDataType;
 
 public abstract class EventPage extends Page {
     TextView titleView, creatorView, addressView, timeView, participantsView, descriptionView;
@@ -24,13 +23,13 @@ public abstract class EventPage extends Page {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dbAdapter = DbGenerator.getDbInstance();
+        dbAdapter = DbSingleton.getDbInstance();
         emails = new ArrayList<>();
     }
 
     void retrieveEventInfo(String eid) {
         if(eid != null) {
-            dbAdapter.read(DbUserType.Events, eid, new DbCallback() {
+            dbAdapter.read(DbDataType.Events, eid, new DbCallback() {
                 @Override
                 public void readCallback(Event e) {
                     loadEventInfo(e);
@@ -49,17 +48,17 @@ public abstract class EventPage extends Page {
 
         this.event = event;
         titleView.setText(event.getTitle());
-        creatorView.setText(event.getCreator().getName());
+        creatorView.setText(event.getHostEmailAddress());
         addressView.setText(event.getAddress());
         timeView.setText(event.getDateTime().toString());
 
 
         StringBuilder s = new StringBuilder();
-        for (User user : event.getParticipants()) {
-            if (!emails.contains(user.getEmailAddress())) {
-                emails.add(user.getEmailAddress());
+        for (String user : event.getParticipants()) {
+            if (!emails.contains(user)) {
+                emails.add(user);
             }
-            s.append(user.getName()).append(System.lineSeparator());
+            s.append(user).append(System.lineSeparator());
         }
 
         participantsView.setText(s.toString());

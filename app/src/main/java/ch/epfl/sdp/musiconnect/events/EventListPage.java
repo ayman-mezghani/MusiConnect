@@ -15,18 +15,21 @@ import java.util.Map;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.Page;
+import ch.epfl.sdp.musiconnect.TypeOfUser;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
-import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
+import ch.epfl.sdp.musiconnect.database.DbDataType;
 
 public class EventListPage extends Page {
 
     private DbAdapter dbAdapter;
     private String userEmail;
     private String visitorName;
+    private TypeOfUser typeOfUser;
 
 
     private List<String> eventTitles;
@@ -41,7 +44,7 @@ public class EventListPage extends Page {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_list_page);
 
-        dbAdapter = DbGenerator.getDbInstance();
+        dbAdapter = DbSingleton.getDbInstance();
 
         setupListTitle();
 
@@ -65,15 +68,17 @@ public class EventListPage extends Page {
         if (isVisitor) {
             userEmail = intent.getStringExtra("UserEmail");
 
-            dbAdapter.read(DbUserType.Musician, userEmail, new DbCallback() {
+            dbAdapter.read(DbDataType.Musician, userEmail, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
                     visitorName = user.getName();
+                    typeOfUser = ((Musician) user).getTypeOfUser();
                     eventListTitle.setText(String.format("%s's events", visitorName));
                 }
             });
         } else {
             userEmail = CurrentUser.getInstance(this).email;
+            typeOfUser = CurrentUser.getInstance(this).getTypeOfUser();
             eventListTitle.setText(R.string.your_events);
         }
     }
@@ -90,15 +95,17 @@ public class EventListPage extends Page {
             adapter.notifyDataSetChanged();
 
 
-            readFromDbAndLoadEvents(DbUserType.Musician);
+            readFromDbAndLoadEvents(DbDataType.Musician);
         }, 500);
     }
 
-    private void readFromDbAndLoadEvents(DbUserType dbUserType) {
-        dbAdapter.read(dbUserType, userEmail, new DbCallback() {
+    private void readFromDbAndLoadEvents(DbDataType dbDataType) {
+        dbAdapter.read(dbDataType, userEmail, new DbCallback() {
             @Override
             public void readCallback(User user) {
-                loadIds(user.getEvents(), dbUserType);
+                loadIds(user.getEvents(), dbDataType);
+
+                dbAdapter.query(DbDataType.Events, );
             }
         });
     }
@@ -111,17 +118,17 @@ public class EventListPage extends Page {
     }
 
 
-    private void loadIds(List<String> eventIds, DbUserType dbUserType) {
+    private void loadIds(List<String> eventIds, DbDataType dbDataType) {
         final int[] counter = {0};
         final boolean[] needUpdate = {false};
 
         for (String eid: eventIds) {
-            dbAdapter.read(DbUserType.Events, eid, new DbCallback() {
+            dbAdapter.read(DbDataType.Events, eid, new DbCallback() {
                 @Override
                 public void readCallback(Event e) {
                     counter[0]++;
                     showEvent(e);
-                    checkIfAllEventsAreLoaded(counter[0], eventIds.size(), needUpdate[0], dbUserType);
+                    checkIfAllEventsAreLoaded(counter[0], eventIds.size(), needUpdate[0], dbDataType);
                 }
 
                 @Override
@@ -130,7 +137,7 @@ public class EventListPage extends Page {
                     needUpdate[0] = true;
                     // error: the event does not exist, so the entry in the database should be deleted
                     // Update only if user is on his own list (and after all callbacks have returned)
-                    checkIfAllEventsAreLoaded(counter[0], eventIds.size(), true, dbUserType);
+                    checkIfAllEventsAreLoaded(counter[0], eventIds.size(), true, dbDataType);
                 }
             });
         }
@@ -145,41 +152,41 @@ public class EventListPage extends Page {
             titleToIds.put(title, eid);
 
             // Show only events that are public or belong to this user or this user is a participant
-            if ((e.isVisible() || e.containsParticipant(CurrentUser.getInstance(this).email)
-                    || e.getCreator().getEmailAddress().equals(CurrentUser.getInstance(this).email))) {
+            if (e.isVisible() || e.containsParticipant(CurrentUser.getInstance(this).email)
+                    || e.getHostEmailAddress().equals(CurrentUser.getInstance(this).email)) {
                 eventTitlesToShow.add(title);
                 EventListPage.this.runOnUiThread(() -> adapter.notifyDataSetChanged());
             }
         }
     }
 
-    private void checkIfAllEventsAreLoaded(int counter, int listSize, boolean update, DbUserType dbUserType) {
+    private void checkIfAllEventsAreLoaded(int counter, int listSize, boolean update, DbDataType dbDataType) {
         if (counter != listSize) {
             return;
         }
 
         if (update) {
-            updateListInDatabase(dbUserType);
+            updateListInDatabase(dbDataType);
         }
 
-        if (dbUserType.toString().equals("Musician")) {
+        if (dbDataType.toString().equals("Musician") && typeOfUser.toString().equals("Band")) {
             // If we have loaded all events of the musician, we now need to load the events of his band
-            readFromDbAndLoadEvents(DbUserType.Band);
-        } else if (dbUserType.toString().equals("Band")) {
+            readFromDbAndLoadEvents(DbDataType.Band);
+        } else {
             // After loading all possible events, check if any events is shown.
             // If not, tell the user no events can be shown
             setNoEventsToShowPage();
         }
     }
 
-    private void updateListInDatabase(DbUserType dbUserType) {
+    private void updateListInDatabase(DbDataType dbDataType) {
         List<String> ids = new ArrayList<>(titleToIds.values());
 
-        dbAdapter.read(dbUserType, userEmail, new DbCallback() {
+        dbAdapter.read(dbDataType, userEmail, new DbCallback() {
             @Override
             public void readCallback(User user) {
                 user.setEvents(ids);
-                dbAdapter.update(dbUserType, user); }
+                dbAdapter.update(dbDataType, user); }
         });
     }
 

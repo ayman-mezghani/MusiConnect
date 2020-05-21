@@ -1,5 +1,7 @@
 package ch.epfl.sdp.musiconnect.database;
 
+import com.google.firebase.firestore.GeoPoint;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -105,13 +107,13 @@ public class MockDatabase extends Database {
 
     @Override
     void addDoc(String collection, String docName, SimplifiedDbEntry entry) {
-        if(collection.equals(DbUserType.Band.toString())) {
+        if(collection.equals(DbDataType.Band.toString())) {
             this.b = ((SimplifiedBand)entry).toBand();
         }
     }
 
     @Override
-    void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType) {
+    void addDoc(SimplifiedEvent simplifiedEvent, DbDataType userType) {
 
     }
 
@@ -121,10 +123,10 @@ public class MockDatabase extends Database {
 
     @Override
     void updateDoc(String collection, String docName, Map<String, Object> newValueMap) {
-        Object value = newValueMap.get(SimplifiedMusician.EVENTS);
+        Object value = newValueMap.get(SimplifiedDbEntry.Fields.events.toString());
         Musician m = getDummyMusician(1);
 
-        if (collection.equals(DbUserType.Musician.toString()) && docName.equals(m.getEmailAddress()) && value != null) {
+        if (collection.equals(DbDataType.Musician.toString()) && docName.equals(m.getEmailAddress()) && value != null) {
             listOfMusicians.remove(1);
             m.setEvents((List<String>) value);
             listOfMusicians.add(1, new SimplifiedMusician(m));
@@ -139,7 +141,7 @@ public class MockDatabase extends Database {
 
     @Override
     void readDoc(String collection, String docName, DbCallback dbCallback) {
-        if(collection.equals(DbUserType.Events.toString())) {
+        if(collection.equals(DbDataType.Events.toString())) {
             for (Event e : listOfEvent) {
                 if (docName.equals(e.getEid())) {
                     dbCallback.readCallback(e);
@@ -149,7 +151,7 @@ public class MockDatabase extends Database {
 
         }
 
-        if (collection.equals(DbUserType.Musician.toString())) {
+        if (collection.equals(DbDataType.Musician.toString())) {
             for (SimplifiedMusician sm : listOfMusicians) {
                 if (docName.equals(sm.getEmail())) {
                     dbCallback.readCallback(sm.toMusician());
@@ -158,7 +160,7 @@ public class MockDatabase extends Database {
             }
         }
 
-        if(collection.equals(DbUserType.Band.toString())) {
+        if(collection.equals(DbDataType.Band.toString())) {
             if(docName.equals("espresso@gmail.com"))
                 dbCallback.readCallback(new Band("testBand", "espresso@gmail.com"));
             else
@@ -177,10 +179,10 @@ public class MockDatabase extends Database {
     @Override
     public void finderQuery(String collection, Map<String, Object> arguments, DbCallback dbCallback) {
         List<User> l = new ArrayList<>();
-        if(collection.equals(DbUserType.Musician.toString())) {
+        if(collection.equals(DbDataType.Musician.toString())) {
             l.add(defaultSm.toMusician());
             dbCallback.queryCallback(l);
-        } else if(collection.equals(DbUserType.Band.toString())) {
+        } else if(collection.equals(DbDataType.Band.toString())) {
 
             Band b = new Band("totofire" ,defaultSm.getEmail());
             l.add(b);
@@ -188,6 +190,11 @@ public class MockDatabase extends Database {
             l.add(b2);
             dbCallback.queryCallback(l);
         }
+    }
+
+    @Override
+    void locQuery(String collection, GeoPoint currentLocation, double distance, DbCallback dbCallback) {
+
     }
 
     public Band getBand() {
