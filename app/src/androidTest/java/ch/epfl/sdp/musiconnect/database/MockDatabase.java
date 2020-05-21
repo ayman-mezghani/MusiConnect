@@ -178,7 +178,11 @@ public class MockDatabase extends Database {
     public void finderQuery(String collection, Map<String, Object> arguments, DbCallback dbCallback) {
         List<User> l = new ArrayList<>();
         if(collection.equals(DbUserType.Musician.toString())) {
-            l.add(defaultSm.toMusician());
+                if(((String)arguments.get("firstName")) != null && ((String)arguments.get("firstName")).equals("musicConnect")) {
+                l.add(this.getDummyMusician(1));
+            } else {
+                l.add(defaultSm.toMusician());
+            }
             dbCallback.queryCallback(l);
         } else if(collection.equals(DbUserType.Band.toString())) {
 
