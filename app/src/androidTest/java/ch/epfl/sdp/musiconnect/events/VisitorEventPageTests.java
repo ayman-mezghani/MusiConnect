@@ -56,7 +56,7 @@ public class VisitorEventPageTests {
     public void testLoadOtherEvent() {
         Musician m1 = md.getDummyMusician(1);
         Musician m2 = md.getDummyMusician(3);
-        String s = m1.getName() + System.lineSeparator() + m2.getName() + System.lineSeparator();
+        String s = m1.getEmailAddress() + System.lineSeparator() + m2.getEmailAddress() + System.lineSeparator();
         Event event = md.getDummyEvent(1);
 
         testMatchInfoOnView(event, s);
@@ -67,7 +67,7 @@ public class VisitorEventPageTests {
         Musician current = md.getDummyMusician(0);
         Musician m1 = md.getDummyMusician(2);
         Musician m2 = md.getDummyMusician(3);
-        String s = m1.getName() + System.lineSeparator() + m2.getName() + System.lineSeparator() + current.getName() + System.lineSeparator();
+        String s = m1.getEmailAddress() + System.lineSeparator() + m2.getEmailAddress() + System.lineSeparator() + current.getEmailAddress() + System.lineSeparator();
         Event event = md.getDummyEvent(4);
 
         testMatchInfoOnView(event, s);
@@ -82,7 +82,7 @@ public class VisitorEventPageTests {
         waitSeconds(3);
 
         onView(withId(R.id.eventTitle)).check(matches(withText(event.getTitle())));
-        onView(withId(R.id.eventCreatorField)).check(matches(withText(event.getHostEmailAddress().getName())));
+        onView(withId(R.id.eventCreatorField)).check(matches(withText(event.getHostEmailAddress())));
         onView(withId(R.id.eventAddressField)).check(matches(withText(event.getAddress())));
         onView(withId(R.id.eventTimeField)).check(matches(withText(event.getDateTime().toString())));
         onView(withId(R.id.eventParticipantsField)).check(matches(withText(s)));

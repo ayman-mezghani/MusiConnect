@@ -66,7 +66,7 @@ public class MyEventPageTests {
 
         Event event = md.getDummyEvent(1);
 
-        String s = m1.getName() + System.lineSeparator() + m2.getName() + System.lineSeparator();
+        String s = m1.getEmailAddress() + System.lineSeparator() + m2.getEmailAddress() + System.lineSeparator();
 
         Intent intent = new Intent();
         intent.putExtra("eid", event.getEid());
@@ -75,7 +75,7 @@ public class MyEventPageTests {
         waitSeconds(3);
 
         onView(withId(R.id.eventTitle)).check(matches(withText(event.getTitle())));
-        onView(withId(R.id.eventCreatorField)).check(matches(withText(event.getHostEmailAddress().getName())));
+        onView(withId(R.id.eventCreatorField)).check(matches(withText(event.getHostEmailAddress())));
         onView(withId(R.id.eventAddressField)).check(matches(withText(event.getAddress())));
         onView(withId(R.id.eventTimeField)).check(matches(withText(event.getDateTime().toString())));
         onView(withId(R.id.eventParticipantsField)).check(matches(withText(s)));
