@@ -41,10 +41,14 @@ public class DarkModeTests {
     public void releaseIntents() { Intents.release(); }
 
     @Test
-    public void testDefaultStartThemeIsDark() {
+    public void testDefaultStartThemeIsLight() {
+        Switch darkModeSwitch = startPageRule.getActivity().findViewById(R.id.darkModeSwitch);
         TextView title = startPageRule.getActivity().findViewById(R.id.welcomeText);
 
-        assertThat(title.getCurrentTextColor(), is(ContextCompat.getColor(startPageRule.getActivity().getApplicationContext(), R.color.text_grey)));
+        if (darkModeSwitch.isChecked())
+            assertThat(title.getCurrentTextColor(), is(ContextCompat.getColor(startPageRule.getActivity().getApplicationContext(), R.color.text_grey)));
+        else
+            assertThat(title.getCurrentTextColor(), is(ContextCompat.getColor(startPageRule.getActivity().getApplicationContext(), R.color.text_black)));
     }
 
     @Test
