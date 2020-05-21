@@ -22,6 +22,7 @@ import androidx.test.uiautomator.UiObject2;
 import ch.epfl.sdp.R;
 
 import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -81,7 +82,7 @@ public class DarkModeTests {
         UiObject2 toggle = device.findObject(By.checked(false));
         toggle.click();
 
-        TextView title = startPageRule.getActivity().findViewById(R.id.welcomeText);
-        assertThat(title.getCurrentTextColor(), is(ContextCompat.getColor(startPageRule.getActivity().getApplicationContext(), R.color.text_grey)));
+        Switch darkModeSwitch = startPageRule.getActivity().findViewById(R.id.darkModeSwitch);
+        assertTrue(darkModeSwitch.isChecked());
     }
 }
