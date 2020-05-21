@@ -156,7 +156,7 @@ public class DbAdapterTest {
         dbAdapter = DbSingleton.getDbInstance();
         dbAdapter.locationQuery(DbDataType.Musician, new MyLocation(0,0), 5, new DbCallback() {
             @Override
-            public void queryCallback(List<User> userList) {
+            public void queryCallback(List userList) {
                 assertTrue(userList.size() > 0);
             }
         });

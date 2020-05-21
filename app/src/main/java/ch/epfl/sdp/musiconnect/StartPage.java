@@ -108,10 +108,6 @@ public class StartPage extends Page {
         });
 
         updateCurrentUser(this);
-
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
-        bottomNavigationView.setSelectedItemId(R.id.home);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
     }
 
 

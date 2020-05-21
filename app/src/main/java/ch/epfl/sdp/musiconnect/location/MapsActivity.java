@@ -443,10 +443,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         for (Musician m : allUsers) {
-            Location l = new Location("");
-            l.setLatitude(m.getLocation().getLatitude());
-            l.setLongitude(m.getLocation().getLongitude());
-            if (setLoc.distanceTo(l) <= threshold) {
+            if (setLoc.distanceTo(LocationConverter.myLocationToLocation(m.getLocation())) <= threshold) {
                 profiles.add(m);
             }
         }
@@ -466,12 +463,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         for (Event e : events) {
             MyLocation ml = e.getLocation();
             if (ml != null || (ml.getLatitude() != 0 && ml.getLongitude() != 0)) {
-                Location l = new Location("");
-                l.setLatitude(e.getLocation().getLatitude());
-                l.setLongitude(e.getLocation().getLongitude());
-
-                // Show event if event is in threshold, public, created by "this" user or participates in
-                if (setLoc.distanceTo(l) <= threshold) {
+                // Show event if event is in threshold, public or created by "this" user or participates in
+                if (setLoc.distanceTo(LocationConverter.myLocationToLocation(ml)) <= threshold) {
                     eventNear.add(e);
                 }
             }
