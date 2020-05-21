@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidx.core.content.ContextCompat;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -29,6 +32,15 @@ public class DarkModeTests {
     @Rule
     public final ActivityTestRule<StartPage> startPageRule =
             new ActivityTestRule<>(StartPage.class);
+
+    // Before and after methods are used in order to accept tests with intents
+    @Before
+    public void initIntents() {
+        Intents.init();
+    }
+
+    @After
+    public void releaseIntents() { Intents.release(); }
 
     /**
      * Get string value from strings.xml file
@@ -54,24 +66,22 @@ public class DarkModeTests {
     }
 
     @Test
-    public void checkColorChangeWhenSwitchButtonIsToggled() {
-        TextView title = startPageRule.getActivity().findViewById(R.id.welcomeText);
-        UiObject2 toggle = device.findObject(By.textStartsWith(getResourceString(R.string.dark_mode)));
-        toggle.click();
-
-        assertThat(title.getCurrentTextColor(), is(ContextCompat.getColor(startPageRule.getActivity().getApplicationContext(), R.color.text_grey)));
-    }
-
-    @Test
     public void checkThemeStaysTheSameWhenAppIsRestarted() {
-        UiObject2 toggle = device.findObject(By.textStartsWith(getResourceString(R.string.dark_mode)));
-        toggle.click();
         startPageRule.finishActivity();
 
         Intent startPageIntent = new Intent();
         startPageRule.launchActivity(startPageIntent);
 
         TextView title = startPageRule.getActivity().findViewById(R.id.welcomeText);
+        assertThat(title.getCurrentTextColor(), is(ContextCompat.getColor(startPageRule.getActivity().getApplicationContext(), R.color.text_black)));
+    }
+
+    @Test
+    public void checkColorChangeWhenSwitchButtonIsToggled() {
+        TextView title = startPageRule.getActivity().findViewById(R.id.welcomeText);
+        UiObject2 toggle = device.findObject(By.checked(false));
+        toggle.click();
+
         assertThat(title.getCurrentTextColor(), is(ContextCompat.getColor(startPageRule.getActivity().getApplicationContext(), R.color.text_grey)));
     }
 }
