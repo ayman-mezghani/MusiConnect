@@ -23,6 +23,7 @@ import ch.epfl.sdp.musiconnect.location.MapsLocationFunctions;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -67,7 +68,7 @@ public class VideoPlayingTests {
         String packageName = mActivityTestRule.getActivity().getPackageName();
         String videoSource = "android.resource://"+packageName+"/"+ R.raw.minion;
 
-        onView(withId(R.id.my_profile)).perform(click());
+        onView(withId(R.id.my_profile)).perform(scrollTo(), click());
 
         ((MyProfilePage) Objects.requireNonNull(getCurrentActivity())).videoUri = Uri.parse(videoSource);
 
@@ -75,7 +76,7 @@ public class VideoPlayingTests {
                 2),0),isDisplayed()));
 
         VideoView v = getCurrentActivity().findViewById(R.id.videoView);
-        Thread.sleep(1000); // waiting util the vidéo is loaded from internet
+        Thread.sleep(1000); // waiting util the video is loaded from internet
         assertTrue(v.getDuration() > -1); // test if the video is loaded
     }
 }

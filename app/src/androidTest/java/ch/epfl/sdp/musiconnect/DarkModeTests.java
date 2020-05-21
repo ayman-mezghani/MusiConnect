@@ -20,6 +20,7 @@ import ch.epfl.sdp.R;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isA;
 import static org.junit.Assert.assertThat;
@@ -70,7 +71,7 @@ public class DarkModeTests {
     @Test
     public void checkThatThemeChangesWhenSwitchIsToggled() {
         TextView title = startPageRule.getActivity().findViewById(R.id.welcomeText);
-        onView(withId(R.id.darkModeSwitch)).perform(scrollTo(), setChecked(true));
+        onView(withText(R.string.dark_mode)).perform(scrollTo(), setChecked(true));
         assertThat(title.getCurrentTextColor(), is(ContextCompat.getColor(startPageRule.getActivity().getApplicationContext(), R.color.text_grey)));
     }
 }
