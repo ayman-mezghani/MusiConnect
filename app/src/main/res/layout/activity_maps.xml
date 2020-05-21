@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:textColor="@color/text_black"
     tools:context=".musiconnect.location.MapsActivity">
 
 
@@ -27,7 +26,7 @@
         android:layout_width="70dp"
         android:layout_height="25dp"
         android:layout_marginTop="16dp"
-        android:textColor="@color/text_black"
+        android:background="@color/maintheme_light"
         app:layout_constraintBottom_toBottomOf="@+id/distanceView"
         app:layout_constraintStart_toEndOf="@+id/distanceView"
         app:layout_constraintTop_toTopOf="parent" />
