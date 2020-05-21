@@ -1,9 +1,13 @@
 package ch.epfl.sdp.musiconnect.events;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.location.MapsActivity;
 
 public class VisitorEventPage extends EventPage {
 
@@ -21,6 +25,8 @@ public class VisitorEventPage extends EventPage {
 
         String eid = getIntent().getStringExtra("eid");
         retrieveEventInfo(eid);
+
+        setupMapButton();
     }
 
     @Override
@@ -31,6 +37,8 @@ public class VisitorEventPage extends EventPage {
             loadPrivateEventPage();
         }
     }
+
+
 
     private void loadPrivateEventPage() {
         setContentView(R.layout.activity_event_page_private);

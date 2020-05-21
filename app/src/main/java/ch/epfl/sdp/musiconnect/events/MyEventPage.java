@@ -14,6 +14,7 @@ import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.TypeOfUser;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.location.MapsActivity;
 
 
 public class MyEventPage extends EventPage {
@@ -39,6 +40,8 @@ public class MyEventPage extends EventPage {
 
         String eid = getIntent().getStringExtra("eid");
         retrieveEventInfo(eid);
+
+        setupMapButton();
     }
 
     @Override
@@ -96,4 +99,6 @@ public class MyEventPage extends EventPage {
                 .create()
                 .show());
     }
+
+
 }
