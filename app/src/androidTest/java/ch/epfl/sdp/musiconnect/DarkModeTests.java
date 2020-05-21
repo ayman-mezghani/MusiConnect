@@ -22,7 +22,6 @@ import ch.epfl.sdp.R;
 import static ch.epfl.sdp.musiconnect.StartPage.KEY_ISNIGHTMODE;
 import static ch.epfl.sdp.musiconnect.StartPage.MY_PREFERENCES;
 import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
