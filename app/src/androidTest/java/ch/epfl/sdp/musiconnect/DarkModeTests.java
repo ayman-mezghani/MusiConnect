@@ -22,6 +22,7 @@ import ch.epfl.sdp.R;
 import static ch.epfl.sdp.musiconnect.StartPage.KEY_ISNIGHTMODE;
 import static ch.epfl.sdp.musiconnect.StartPage.MY_PREFERENCES;
 import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -54,18 +55,24 @@ public class DarkModeTests {
         Intent startPageIntent = new Intent();
         startPageRule.launchActivity(startPageIntent);
 
-        sp.edit().putBoolean(KEY_ISNIGHTMODE, false).apply();
-
         Switch darkModeSwitch = startPageRule.getActivity().findViewById(R.id.darkModeSwitch);
         assertFalse(darkModeSwitch.isChecked());
+        assertFalse(sp.getBoolean(KEY_ISNIGHTMODE, false));
     }
 
     @Test
-    public void testThemeGoesFromLightToDark() {
+    public void testPreferencesCanChange() {
         SharedPreferences sp = startPageRule.getActivity().getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        sp.edit().putBoolean(KEY_ISNIGHTMODE, false).apply();
+        sp.edit().putBoolean(KEY_ISNIGHTMODE, true).apply();
 
-        assertFalse(sp.getBoolean(KEY_ISNIGHTMODE, false));
+        assertTrue(sp.getBoolean(KEY_ISNIGHTMODE, false));
+    }
+
+    @Test
+    public void saveNightModeState() {
+        SharedPreferences sp = startPageRule.getActivity().getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        sp.edit().putBoolean(KEY_ISNIGHTMODE, true).apply();
     }
 }
