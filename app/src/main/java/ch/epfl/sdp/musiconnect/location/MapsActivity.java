@@ -526,7 +526,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void getShownEvent(String eid){
-        Adb.read(DbUserType.Events, eid, new DbCallback() {
+        Adb.read(DbDataType.Events, eid, new DbCallback() {
             @Override
             public void readCallback(Event e) {
                 shownEvent = e;
