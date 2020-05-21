@@ -75,7 +75,7 @@ public class MyEventPageTests {
         waitSeconds(3);
 
         onView(withId(R.id.eventTitle)).check(matches(withText(event.getTitle())));
-        onView(withId(R.id.eventCreatorField)).check(matches(withText(event.getHostEmailAddress().getName())));
+        onView(withId(R.id.eventCreatorField)).check(matches(withText(event.getHostEmailAddress())));
         onView(withId(R.id.eventAddressField)).check(matches(withText(event.getAddress())));
         onView(withId(R.id.eventTimeField)).check(matches(withText(event.getDateTime().toString())));
         onView(withId(R.id.eventParticipantsField)).check(matches(withText(s)));

@@ -41,7 +41,7 @@ public class EventTest {
         assertTrue(e.getParticipants().contains(n.getEmailAddress()));
         assertTrue(e.containsParticipant(n.getEmailAddress()));
 
-        e.unregister(n);
+        e.unregister(n.getEmailAddress());
         assertFalse(e.getParticipants().contains(n.getEmailAddress()));
         assertFalse(e.containsParticipant(n.getEmailAddress()));
 
@@ -123,8 +123,8 @@ public class EventTest {
         e.register(m2.getEmailAddress());
         assertEquals(e.getParticipants(), lu);
 
-        lu.remove(m2);
-        e.unregister(m2);
+        lu.remove(m2.getEmailAddress());
+        e.unregister(m2.getEmailAddress());
         assertEquals(e.getParticipants(), lu);
 
         /*

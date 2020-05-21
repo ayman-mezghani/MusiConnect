@@ -14,7 +14,6 @@ import java.util.List;
 
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.MyLocation;
-import ch.epfl.sdp.musiconnect.User;
 
 @Entity
 public class Event {
@@ -91,13 +90,12 @@ public class Event {
         }
     }
 
-    public void unregister(User user) {
+    public void unregister(String user) {
         if (user == null) {
             throw new IllegalArgumentException();
         }
 
         participants.remove(user);
-        emails
     }
 
     public boolean containsParticipant(String email) {
