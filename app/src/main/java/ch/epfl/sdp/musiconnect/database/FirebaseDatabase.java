@@ -1,5 +1,6 @@
 package ch.epfl.sdp.musiconnect.database;
 
+import android.location.Location;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -8,6 +9,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
@@ -22,10 +24,11 @@ import java.util.Map;
 import java.util.Objects;
 
 import ch.epfl.sdp.musiconnect.Band;
+import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.User;
-import ch.epfl.sdp.musiconnect.events.Event;
 
+import static android.location.Location.distanceBetween;
 import static ch.epfl.sdp.musiconnect.database.SimplifiedDbEntry.Fields;
 
 public class FirebaseDatabase extends Database {
@@ -154,39 +157,21 @@ public class FirebaseDatabase extends Database {
     void finderQuery(String collection, Map<String, Object> arguments, DbCallback dbCallback) {
         CollectionReference ref = db.collection(collection);
         Task<QuerySnapshot> t = DatabaseQueryHelpers.unpack(ref, arguments).get();
-
         t.addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                if (collection.equals(DbDataType.Events.toString())) {
-                    List<Event> queryResult = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Map<String, Object> data = document.getData();
-                        Log.d("checkcheck", document.getId() + " => " + data);
-
-                        SimplifiedEvent se = new SimplifiedEvent(document.getData());
-                        queryResult.add(se.toEvent(document.getId()));
+                List<User> queryResult = new ArrayList<>();
+                for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                    Map<String, Object> data = document.getData();
+                    if (collection.equals(DbDataType.Musician.toString())) {
+                        SimplifiedMusician m = new SimplifiedMusician(data);
+                        queryResult.add(m.toMusician());
+                    } else if (collection.equals((DbDataType.Band.toString()))) {
+                        SimplifiedBand sb = new SimplifiedBand(data);
+                        queryResult.add(sb.toBand());
                     }
-
-                    dbCallback.queryCallback(queryResult);
                 }
-
-                else {
-                    List<User> queryResult = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Map<String, Object> data = document.getData();
-                        Log.d("checkcheck", document.getId() + " => " + data);
-                        if (collection.equals(DbDataType.Musician.toString())) {
-                            SimplifiedMusician m = new SimplifiedMusician(document.getData());
-                            queryResult.add(m.toMusician());
-                        } else if (collection.equals((DbDataType.Band.toString()))) {
-                            SimplifiedBand sb = new SimplifiedBand(document.getData());
-                            queryResult.add(sb.toBand());
-                        }
-                    }
-                    dbCallback.queryCallback(queryResult);
-                }
+                dbCallback.queryCallback(queryResult);
             } else {
-                dbCallback.queryFailCallback();
                 Log.d(TAG, "Failed with: ", task.getException());
             }
         });
@@ -198,8 +183,9 @@ public class FirebaseDatabase extends Database {
         double minLat = currentLocation.getLatitude() - distanceInKm / LAT_TO_KM;
 
         db.collection(collection)
-                .whereGreaterThanOrEqualTo(Fields.location.toString(), minLat)
-                .whereLessThanOrEqualTo(Fields.location.toString(), maxLat)
+                // Firestore supports queries only on latitude and only this way
+                .whereGreaterThanOrEqualTo("location", new GeoPoint(minLat, 0))
+                .whereLessThanOrEqualTo("location", new GeoPoint(maxLat, 0))
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -208,15 +194,28 @@ public class FirebaseDatabase extends Database {
                             Map<String, Object> data = document.getData();
                             if (collection.equals(DbDataType.Musician.toString())) {
                                 SimplifiedMusician m = new SimplifiedMusician(data);
-                                queryResult.add(m.toMusician());
+                                if (isWithin(currentLocation, m.getLocation(), distanceInKm))
+                                    queryResult.add(m.toMusician());
                             } else if (collection.equals((DbDataType.Events.toString()))) {
-
+                                SimplifiedEvent e = new SimplifiedEvent(data);
+                                if (isWithin(currentLocation, e.getLocation(), distanceInKm))
+                                    queryResult.add(e.toEvent(document.getId()));
                             }
                         }
-                        dbCallback.queryCallback(queryResult);
+                        dbCallback.locationQueryCallback(queryResult);
                     } else {
                         Log.d(TAG, "Failed with: ", task.getException());
                     }
                 });
+    }
+
+    private boolean isWithin(GeoPoint currentLocation, GeoPoint resultLocation, double distance) {
+        Location start =  new Location("");
+        start.setLongitude(currentLocation.getLongitude());
+        start.setLatitude(currentLocation.getLatitude());
+        Location dest =  new Location("");
+        dest.setLongitude(resultLocation.getLongitude());
+        dest.setLatitude(resultLocation.getLatitude());
+        return start.distanceTo(dest) / 1000f <= distance;
     }
 }
