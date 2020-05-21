@@ -51,10 +51,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         loadProfileContent();
         getVideoUri(userEmail);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
-        bottomNavigationView.setSelectedItemId(R.id.my_profile);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
-
         instrument = findViewById(R.id.myProfileInstrument);
         selectedInstrument = findViewById(R.id.myProfileSelectedInstrument);
         level = findViewById(R.id.myProfileLevel);

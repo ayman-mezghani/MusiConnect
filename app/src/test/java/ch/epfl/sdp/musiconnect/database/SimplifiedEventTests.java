@@ -32,10 +32,8 @@ public class SimplifiedEventTests {
         assertEquals(e.getGeoPoint(), se.getLocation());
         assertEquals(e.getHostEmailAddress(), se.getHost());
 
-        ArrayList<String> am = new ArrayList<>();
-        for (String m : e.getParticipants())
-            am.add(m);
 
+        ArrayList<String> am = new ArrayList<>(e.getParticipants());
         assertEquals(am, se.getParticipants());
     }
 
@@ -59,6 +57,7 @@ public class SimplifiedEventTests {
         assertEquals(e.getGeoPoint(), se.getLocation());
         assertEquals(e.getHostEmailAddress(), se.getHost());
         assertEquals(e.isVisible(), se.getVisible());
+
 
         ArrayList<String> am = new ArrayList<>();
         am.add("mail1@gmail.com");
