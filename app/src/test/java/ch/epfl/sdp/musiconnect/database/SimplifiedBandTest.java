@@ -4,18 +4,17 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 
-import static ch.epfl.sdp.musiconnect.database.SimplifiedBand.BANDNAME;
-import static ch.epfl.sdp.musiconnect.database.SimplifiedBand.LEADER;
-import static ch.epfl.sdp.musiconnect.database.SimplifiedBand.MEMBERS;
 import static ch.epfl.sdp.musiconnect.database.SimplifiedMusicianTest.testMusician1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static ch.epfl.sdp.musiconnect.database.SimplifiedDbEntry.Fields;
 
 public class SimplifiedBandTest {
     @Test
@@ -29,11 +28,11 @@ public class SimplifiedBandTest {
 
         b.addMember(musician2.getEmailAddress());
         b.addMember(musician3.getEmailAddress());
-        ArrayList<String> emailsAdress = new ArrayList<String>();
-        emailsAdress.add("email@gmail.com");
-        emailsAdress.add("email3@gmail.com");
-        emailsAdress.add("email2@gmail.com");
-        sb.setMembers(emailsAdress);
+        ArrayList<String> emailAddresses = new ArrayList<String>();
+        emailAddresses.add("email@gmail.com");
+        emailAddresses.add("email3@gmail.com");
+        emailAddresses.add("email2@gmail.com");
+        sb.setMembers(emailAddresses);
 
         assertEquals(b.getName(), sb.getBandName());
         assertEquals(b.getEmailAddress(), sb.getLeader());
@@ -58,9 +57,9 @@ public class SimplifiedBandTest {
 
         SimplifiedBand sb = new SimplifiedBand(map);
 
-        assertEquals((String) map.get(LEADER), sb.getLeader());
-        assertEquals((String) map.get(BANDNAME), sb.getBandName());
-        assertEquals(map.get(MEMBERS), sb.getMembers());
+        assertEquals((String) map.get(Fields.leader.toString()), sb.getLeader());
+        assertEquals((String) map.get(Fields.bandName.toString()), sb.getBandName());
+        assertEquals(map.get(Fields.members.toString()), sb.getMembers());
     }
 
     @Test
@@ -79,10 +78,22 @@ public class SimplifiedBandTest {
         Map<String, Object> map = testMap();
         Map<String, Object> mapClone = (new SimplifiedBand(map)).toMap();
 
-        assertEquals((String) map.get(LEADER), (String) mapClone.get(LEADER));
-        assertEquals((String) map.get(BANDNAME), (String) mapClone.get(BANDNAME));
-        assertEquals(map.get(MEMBERS), mapClone.get(MEMBERS));
-        assertEquals(map.get("events"), mapClone.get("events"));
+        assertEquals((String) map.get(Fields.leader.toString()), (String) mapClone.get(Fields.leader.toString()));
+        assertEquals((String) map.get(Fields.bandName.toString()), (String) mapClone.get(Fields.bandName.toString()));
+        assertEquals(map.get(Fields.members.toString()), mapClone.get(Fields.members.toString()));
+        assertEquals(map.get(Fields.events.toString()), mapClone.get(Fields.events.toString()));
+    }
+
+    @Test
+    public void toBandTest() {
+        Map<String, Object> map = testMap();
+
+        Band b = (new SimplifiedBand(map)).toBand();
+
+        assertEquals((String) map.get(Fields.leader.toString()), b.getEmailAddress());
+        assertEquals((String) map.get(Fields.bandName.toString()), b.getName());
+        assertEquals((List<String>) map.get(Fields.members.toString()), b.getMusiciansEmailsAdress());
+        assertEquals((List<String>) map.get(Fields.events.toString()), b.getEvents());
     }
 
     @Test
@@ -106,19 +117,19 @@ public class SimplifiedBandTest {
         el.add("3");
 
         Map<String, Object> map = new HashMap<>();
-        map.put(LEADER, "email@gmail.com");
-        map.put(BANDNAME, "BandName");
-        map.put(MEMBERS, al);
-        map.put("events", el);
+        map.put(Fields.leader.toString(), "email@gmail.com");
+        map.put(Fields.bandName.toString(), "BandName");
+        map.put(Fields.members.toString(), al);
+        map.put(Fields.events.toString(), el);
         return map;
     }
 
     private Map<String, Object> ghostMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put(LEADER, null);
-        map.put(BANDNAME, null);
-        map.put(MEMBERS, null);
-        map.put("events", null);
+        map.put(Fields.leader.toString(), null);
+        map.put(Fields.bandName.toString(), null);
+        map.put(Fields.members.toString(), null);
+        map.put(Fields.events.toString(), null);
         return map;
     }
 }

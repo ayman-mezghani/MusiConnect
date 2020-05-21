@@ -1,5 +1,7 @@
 package ch.epfl.sdp.musiconnect.database;
 
+import com.google.firebase.firestore.GeoPoint;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -7,7 +9,6 @@ import java.util.Map;
 import ch.epfl.sdp.musiconnect.User;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class MockDatabaseForUT extends Database {
 
@@ -33,14 +34,13 @@ public class MockDatabaseForUT extends Database {
     }
 
     @Override
-    public void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType) {
+    public void addDoc(SimplifiedEvent simplifiedEvent, DbDataType userType) {
 
     }
 
     @Override
     void deleteDoc(String collection, String docName) {
         assertEquals(expectedDocName, docName);
-
     }
 
     @Override
@@ -57,7 +57,7 @@ public class MockDatabaseForUT extends Database {
     @Override
     void readDoc(String collection, String docName, DbCallback dbCallback) {
         assertEquals(expectedDocName, docName);
-        if(collection == DbUserType.Musician.toString()) {
+        if (collection == DbDataType.Musician.toString()) {
             dbCallback.readCallback(((SimplifiedMusician) expectedEntry).toMusician());
         }
     }
@@ -72,6 +72,14 @@ public class MockDatabaseForUT extends Database {
     public void finderQuery(String collection, Map<String, Object> arguments, DbCallback dbCallback) {
         assertEquals(expectedCollection, collection);
         assertEquals(expectedMap, arguments);
+        List<User> l = new ArrayList<>();
+        l.add(((SimplifiedMusician) expectedEntry).toMusician());
+        dbCallback.queryCallback(l);
+    }
+
+    @Override
+    void locQuery(String collection, GeoPoint currentLocation, double distance, DbCallback dbCallback) {
+        assertEquals(expectedCollection, collection);
         List<User> l = new ArrayList<>();
         l.add(((SimplifiedMusician) expectedEntry).toMusician());
         dbCallback.queryCallback(l);

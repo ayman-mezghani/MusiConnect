@@ -1,7 +1,7 @@
 package ch.epfl.sdp.musiconnect.database;
 
 
-public class DbGenerator {
+public class DbSingleton {
     // static variable single_instance of type Singleton
     private static DbAdapter single_instance = null;
     private static Database database;
@@ -9,17 +9,17 @@ public class DbGenerator {
     // static method to create instance of Singleton class
     public static DbAdapter getDbInstance() {
         if (single_instance == null)
-            new DbGenerator();
+            new DbSingleton();
 
         return single_instance;
     }
 
     public static void setDatabase(Database database) {
-        DbGenerator.database = database;
+        DbSingleton.database = database;
     }
 
     // private constructor restricted to this class itself
-    private DbGenerator() {
+    private DbSingleton() {
         if(database == null) database = new FirebaseDatabase();
         single_instance = new DbAdapter(database);
     }
