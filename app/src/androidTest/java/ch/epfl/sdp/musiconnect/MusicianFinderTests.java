@@ -85,6 +85,25 @@ public class MusicianFinderTests {
                                 2)))
                 .atPosition(0);
         appCompatTextView.perform(click());
+        intended(hasComponent(VisitorProfilePage.class.getName()));
+    }
+
+    @Test
+    public void testSearchShouldOpenMyProfilePage() {
+        onView(withId(R.id.myMusicianFinderFirstNameID)).perform(ViewActions.scrollTo(), typeText("bob"));
+        onView(withId(R.id.musicianFinderButtonID)).perform(ViewActions.scrollTo(), click());
+        intended(hasComponent(MusicianFinderResult.class.getName()));
+
+        String minionMail = ((Musician)(new MockDatabase(false)).getDummyMusician(0)).getEmailAddress();
+        onView(allOf(withText(minionMail), withParent(withId(R.id.LvMusicianResult))));
+
+        DataInteraction appCompatTextView = onData(anything())
+                .inAdapterView(allOf(withId(R.id.LvMusicianResult),
+                        childAtPosition(
+                                withClassName(is("android.widget.LinearLayout")),
+                                2)))
+                .atPosition(0);
+        appCompatTextView.perform(click());
         intended(hasComponent(MyProfilePage.class.getName()));
     }
 }
