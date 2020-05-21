@@ -81,7 +81,7 @@ public class EventCreationTests {
 
 
     private void clickButtonWithText(int text) {
-        onView(withText(text)).perform(ViewActions.scrollTo()).perform(click());
+        onView(withText(text)).perform(ViewActions.scrollTo(), click());
     }
 
 
