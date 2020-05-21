@@ -10,7 +10,7 @@ abstract class Database {
 
     abstract void addDoc(String collection, String docName, SimplifiedDbEntry entry);
 
-    abstract void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType);
+    abstract void addDoc(SimplifiedEvent simplifiedEvent, DbDataType userType);
 
     abstract void deleteDoc(String collection, String docName);
 

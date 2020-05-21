@@ -8,7 +8,7 @@ import android.widget.Button;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
-import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.database.DbDataType;
 
 public class EventEditionPage extends EventModificationPage {
     private String eventTitle, eventAddress, eventDescription;
@@ -69,7 +69,7 @@ public class EventEditionPage extends EventModificationPage {
 
     private void retrieveParticipantsFromEmails() {
         for (String email: emails) {
-            dbAdapter.read(DbUserType.Musician, email, new DbCallback() {
+            dbAdapter.read(DbDataType.Musician, email, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
                     participants.add(user);
@@ -135,6 +135,6 @@ public class EventEditionPage extends EventModificationPage {
     @Override
     void updateDatabase(Event event) {
         event.setEid(getIntent().getStringExtra("eid"));
-        dbAdapter.update(DbUserType.Events, event);
+        dbAdapter.update(DbDataType.Events, event);
     }
 }

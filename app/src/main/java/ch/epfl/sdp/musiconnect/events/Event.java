@@ -22,10 +22,10 @@ public class Event {
     @NonNull
     private String eid;
     @Ignore
-    private User creator;
+    private String hostEmailAddress;
 
     @Ignore
-    private List<User> participants;
+    private List<String> participants;
 
     private MyLocation location;
     private String address;
@@ -40,16 +40,16 @@ public class Event {
     private static final double MAX_LATITUDE = 90;
     private static final double MAX_LONGITUDE = 180;
 
-    public Event(User creator, String eid) {
-        if (creator == null) {
+    public Event(String hostEmailAddress, String eid) {
+        if (hostEmailAddress == null) {
             throw new IllegalArgumentException();
         }
 
         this.eid = eid;
-        this.creator = creator;
+        this.hostEmailAddress = hostEmailAddress;
 
         participants = new ArrayList<>();
-        participants.add(creator);
+        participants.add(hostEmailAddress);
 
         location = new MyLocation(0,0);
         dateTime = new MyDate();
@@ -57,7 +57,6 @@ public class Event {
         title = DEFAULT_TITLE;
         description = DEFAULT_MESSAGE;
         address = "";
-
     }
 
     //this constructor should only be used with room database caching
@@ -78,11 +77,11 @@ public class Event {
         return eid;
     }
 
-    public User getCreator() {
-        return creator;
+    public String getHostEmailAddress() {
+        return hostEmailAddress;
     }
 
-    public void register(User user) {
+    public void register(String user) {
         if (user == null) {
             throw new IllegalArgumentException();
         }
@@ -101,15 +100,15 @@ public class Event {
     }
 
     public boolean containsParticipant(String email) {
-        for (User participant: participants) {
-            if (participant.getEmailAddress().equals(email)) {
+        for (String participant: participants) {
+            if (participant.equals(email)) {
                 return true;
             }
         }
         return false;
     }
 
-    public List<User> getParticipants() {
+    public List<String> getParticipants() {
         return participants;
     }
 

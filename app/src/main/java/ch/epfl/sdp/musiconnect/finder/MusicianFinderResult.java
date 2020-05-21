@@ -21,8 +21,8 @@ import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.VisitorProfilePage;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
-import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
+import ch.epfl.sdp.musiconnect.database.DbDataType;
 
 public class MusicianFinderResult extends AppCompatActivity {
 
@@ -47,7 +47,7 @@ public class MusicianFinderResult extends AppCompatActivity {
             HashMap<String, Object> innerMap = new HashMap<>();
             innerMap.put(entry.getKey(), (String) entry.getValue());
 
-            DbGenerator.getDbInstance().query(DbUserType.Musician, innerMap, new DbCallback() {
+            DbSingleton.getDbInstance().query(DbDataType.Musician, innerMap, new DbCallback() {
                 @Override
                 public void queryCallback(List<User> userList) {
                     queryFunction(userList, (ArrayList<Musician>) listMusician, (ArrayList<String>) listMusiciaEmails, adapter);

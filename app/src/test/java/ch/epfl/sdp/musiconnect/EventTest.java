@@ -31,7 +31,7 @@ public class EventTest {
 
         Event e = new Event(m, "0");
 
-        assertEquals(m.getFirstName(), ((Musician)e.getCreator()).getFirstName());
+        assertEquals(m.getFirstName(), ((Musician)e.getHostEmailAddress()).getFirstName());
 
         assertEquals("0", e.getEid());
         e.setEid("1");
@@ -75,7 +75,7 @@ public class EventTest {
         Band b1 = new Band("Another test", m.getEmailAddress());
         Event e = new Event(b, "0");
 
-        assertEquals(b.getName(), e.getCreator().getName());
+        assertEquals(b.getName(), e.getHostEmailAddress().getName());
         assertEquals(b.getName(), e.getParticipants().get(0).getName());
 
         e.register(b1);

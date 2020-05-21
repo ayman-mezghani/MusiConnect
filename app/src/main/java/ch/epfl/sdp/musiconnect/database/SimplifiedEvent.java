@@ -1,16 +1,17 @@
 package ch.epfl.sdp.musiconnect.database;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.events.Event;
 
+import static ch.epfl.sdp.musiconnect.database.TypeConverters.dateToMyDate;
+import static ch.epfl.sdp.musiconnect.database.TypeConverters.geoPointToMyLocation;
 import static ch.epfl.sdp.musiconnect.database.TypeConverters.myDateToDate;
 
 public class SimplifiedEvent extends SimplifiedDbEntry {
@@ -27,17 +28,38 @@ public class SimplifiedEvent extends SimplifiedDbEntry {
     }
 
     public SimplifiedEvent(Event e) {
-        this.host = e.getCreator().getEmailAddress();
-        this.participants = new ArrayList<>();
-        for (User m : e.getParticipants()) {
-            this.participants.add(m.getEmailAddress());
-        }
+        this.host = e.getHostEmailAddress();
+        this.participants = e.getParticipants();
         this.address = e.getAddress();
         this.location = e.getGeoPoint();
         this.dateTime = myDateToDate(e.getDateTime());
         this.eventName = e.getTitle();
         this.description = e.getDescription();
         this.visible = e.isVisible();
+    }
+
+    public SimplifiedEvent(Map<String, Object> map) {
+        this.host = map.get(Fields.host.toString()) == null ? "" : (String) map.get(Fields.host.toString());
+        this.participants = map.get(Fields.participants.toString()) == null ? null : (List<String>) map.get(Fields.participants.toString());
+        this.address = map.get(Fields.address.toString()) == null ? "" : (String) map.get(Fields.address.toString());
+        this.location = map.get(Fields.location.toString()) == null ? null : (GeoPoint) map.get(Fields.location.toString());
+        this.dateTime = map.get(Fields.dateTime.toString()) == null ? null : ((Timestamp) map.get(Fields.dateTime.toString())).toDate();
+        this.eventName = map.get(Fields.eventName.toString()) == null ? "" : (String) map.get(Fields.eventName.toString());
+        this.description = map.get(Fields.description.toString()) == null ? "" : (String) map.get(Fields.description.toString());
+        this.visible = map.get(Fields.visible.toString()) != null && (boolean) map.get(Fields.visible.toString());
+    }
+
+    public Event toEvent(String eid) {
+        Event event = new Event(host, eid);
+        event.setAddress(address);
+        event.setDateTime(dateToMyDate(dateTime));
+        event.setDescription(description);
+        event.setTitle(eventName);
+        event.setVisible(visible);
+        for (String user : participants)
+            event.register(user);
+        event.setLocation(geoPointToMyLocation(location));
+        return event;
     }
 
     public String getHost() {

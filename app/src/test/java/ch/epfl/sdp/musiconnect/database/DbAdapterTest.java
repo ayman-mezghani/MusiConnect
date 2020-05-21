@@ -39,56 +39,56 @@ public class DbAdapterTest {
         sm = new SimplifiedMusician(musician);
         sb = new SimplifiedBand(band);
         queryMap = new HashMap<>();
-        DbGenerator.flush();
+        DbSingleton.flush();
     }
 
     @Test
     public void addMusicianTest() {
-        DbGenerator.setDatabase(new MockDatabaseForUT(DbUserType.Musician.toString(), emailAddress, sm, sm.toMap()));
-        dbAdapter = DbGenerator.getDbInstance();
-        dbAdapter.add(DbUserType.Musician, musician);
+        DbSingleton.setDatabase(new MockDatabaseForUT(DbDataType.Musician.toString(), emailAddress, sm, sm.toMap()));
+        dbAdapter = DbSingleton.getDbInstance();
+        dbAdapter.add(DbDataType.Musician, musician);
     }
 
     @Test
     public void addBandTest() {
-        DbGenerator.setDatabase(new MockDatabaseForUT(DbUserType.Musician.toString(), emailAddress, sb, sb.toMap()));
-        dbAdapter = DbGenerator.getDbInstance();
-        dbAdapter.add(DbUserType.Band, band);
+        DbSingleton.setDatabase(new MockDatabaseForUT(DbDataType.Musician.toString(), emailAddress, sb, sb.toMap()));
+        dbAdapter = DbSingleton.getDbInstance();
+        dbAdapter.add(DbDataType.Band, band);
     }
 
     @Test
     public void deleteMusicianTest() {
-        DbGenerator.setDatabase(new MockDatabaseForUT(DbUserType.Musician.toString(), emailAddress, sm, sm.toMap()));
-        dbAdapter = DbGenerator.getDbInstance();
-        dbAdapter.delete(DbUserType.Musician, musician);
+        DbSingleton.setDatabase(new MockDatabaseForUT(DbDataType.Musician.toString(), emailAddress, sm, sm.toMap()));
+        dbAdapter = DbSingleton.getDbInstance();
+        dbAdapter.delete(DbDataType.Musician, musician);
     }
 
     @Test
     public void deleteBandTest() {
-        DbGenerator.setDatabase(new MockDatabaseForUT(DbUserType.Musician.toString(), emailAddress, sb, sb.toMap()));
-        dbAdapter = DbGenerator.getDbInstance();
-        dbAdapter.delete(DbUserType.Band, band);
+        DbSingleton.setDatabase(new MockDatabaseForUT(DbDataType.Musician.toString(), emailAddress, sb, sb.toMap()));
+        dbAdapter = DbSingleton.getDbInstance();
+        dbAdapter.delete(DbDataType.Band, band);
     }
 
     @Test
     public void updateMusicianTest() {
-        DbGenerator.setDatabase(new MockDatabaseForUT(DbUserType.Musician.toString(), emailAddress, sm, sm.toMap()));
-        dbAdapter = DbGenerator.getDbInstance();
-        dbAdapter.update(DbUserType.Musician, musician);
+        DbSingleton.setDatabase(new MockDatabaseForUT(DbDataType.Musician.toString(), emailAddress, sm, sm.toMap()));
+        dbAdapter = DbSingleton.getDbInstance();
+        dbAdapter.update(DbDataType.Musician, musician);
     }
 
     @Test
     public void updateBandTest() {
-        DbGenerator.setDatabase(new MockDatabaseForUT(DbUserType.Musician.toString(), emailAddress, sb, sb.toMap()));
-        dbAdapter = DbGenerator.getDbInstance();
-        dbAdapter.update(DbUserType.Band, band);
+        DbSingleton.setDatabase(new MockDatabaseForUT(DbDataType.Musician.toString(), emailAddress, sb, sb.toMap()));
+        dbAdapter = DbSingleton.getDbInstance();
+        dbAdapter.update(DbDataType.Band, band);
     }
 
     @Test
     public void readTest() {
-        DbGenerator.setDatabase(new MockDatabaseForUT(DbUserType.Musician.toString(), emailAddress, sm, sm.toMap()));
-        dbAdapter = DbGenerator.getDbInstance();
-        dbAdapter.read(DbUserType.Musician, musician.getEmailAddress(), new DbCallback() {
+        DbSingleton.setDatabase(new MockDatabaseForUT(DbDataType.Musician.toString(), emailAddress, sm, sm.toMap()));
+        dbAdapter = DbSingleton.getDbInstance();
+        dbAdapter.read(DbDataType.Musician, musician.getEmailAddress(), new DbCallback() {
             @Override
             public void readCallback(User user) {
                 assertEquals(new SimplifiedMusician((Musician) user), new SimplifiedMusician(musician));
@@ -98,9 +98,9 @@ public class DbAdapterTest {
 
     @Test
     public void existsTest() {
-        DbGenerator.setDatabase(new MockDatabaseForUT(DbUserType.Musician.toString(), emailAddress, sm, sm.toMap()));
-        dbAdapter = DbGenerator.getDbInstance();
-        dbAdapter.exists(DbUserType.Musician, musician.getEmailAddress(), new DbCallback() {
+        DbSingleton.setDatabase(new MockDatabaseForUT(DbDataType.Musician.toString(), emailAddress, sm, sm.toMap()));
+        dbAdapter = DbSingleton.getDbInstance();
+        dbAdapter.exists(DbDataType.Musician, musician.getEmailAddress(), new DbCallback() {
             @Override
             public void existsCallback(boolean exists) {
                 assertFalse(exists);
@@ -111,9 +111,9 @@ public class DbAdapterTest {
     @Test
     public void queryTest() {
         queryMap.put("firstName", "test");
-        DbGenerator.setDatabase(new MockDatabaseForUT(DbUserType.Musician.toString(), emailAddress, sm, queryMap));
-        dbAdapter = DbGenerator.getDbInstance();
-        dbAdapter.query(DbUserType.Musician, queryMap, new DbCallback() {
+        DbSingleton.setDatabase(new MockDatabaseForUT(DbDataType.Musician.toString(), emailAddress, sm, queryMap));
+        dbAdapter = DbSingleton.getDbInstance();
+        dbAdapter.query(DbDataType.Musician, queryMap, new DbCallback() {
             @Override
             public void queryCallback(List<User> userList) {
                 assertTrue(userList.size() > 0);

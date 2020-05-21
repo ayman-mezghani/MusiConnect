@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -20,12 +19,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.User;
-import ch.epfl.sdp.musiconnect.events.Event;
 
 import static ch.epfl.sdp.musiconnect.database.SimplifiedDbEntry.Fields;
 
@@ -52,25 +50,25 @@ public class FirebaseDatabase extends Database {
     }
 
     @Override
-    void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType) {
+    void addDoc(SimplifiedEvent simplifiedEvent, DbDataType hostUserType) {
         db.collection("events").add(simplifiedEvent)
                 .addOnSuccessListener(documentReference -> {
-                    if (userType == DbUserType.Band) {
-                        DbGenerator.getDbInstance().read(DbUserType.Band, simplifiedEvent.getHost(), new DbCallback() {
+                    if (hostUserType == DbDataType.Band) {
+                        DbSingleton.getDbInstance().read(DbDataType.Band, simplifiedEvent.getHost(), new DbCallback() {
                             @Override
                             public void readCallback(User u) {
                                 Band b = (Band) u;
                                 b.addEvent(documentReference.getId());
-                                DbGenerator.getDbInstance().add(userType, b);
+                                DbSingleton.getDbInstance().add(hostUserType, b);
                             }
                         });
-                    } else if (userType == DbUserType.Musician) {
-                        DbGenerator.getDbInstance().read(DbUserType.Musician, simplifiedEvent.getHost(), new DbCallback() {
+                    } else if (hostUserType == DbDataType.Musician) {
+                        DbSingleton.getDbInstance().read(DbDataType.Musician, simplifiedEvent.getHost(), new DbCallback() {
                             @Override
                             public void readCallback(User u) {
                                 Musician m = (Musician) u;
                                 m.addEvent(documentReference.getId());
-                                DbGenerator.getDbInstance().add(userType, m);
+                                DbSingleton.getDbInstance().add(hostUserType, m);
                             }
                         });
                     }
@@ -111,44 +109,12 @@ public class FirebaseDatabase extends Database {
                     Map<String, Object> data = documentSnapshot.getData();
 
                     if (data != null && data.size() > 0) {
-                        if (collection.equals((DbUserType.Band.toString()))) {
+                        if (collection.equals((DbDataType.Band.toString()))) {
                             SimplifiedBand sb = new SimplifiedBand(data);
                             dbCallback.readCallback(sb.toBand());
-                        } else if (collection.equals(DbUserType.Events.toString())) {
-                            DbAdapter da = new DbAdapter(this);
-                            da.read(DbUserType.Musician, (String) data.get("creatorMail"), new DbCallback() {
-                                @Override
-                                public void readCallback(User user) {
-                                    Event e = new Event((Musician) user, docName);
-                                    e.setAddress((String) data.get("adress"));
-                                    e.setDateTime(new MyDate(((Timestamp) data.get("dateTime")).toDate()));
-                                    e.setDescription((String) data.get("description"));
-                                    e.setTitle((String) data.get("title"));
-
-                                    Object o = data.get("visible"); // Here, Map.getOrDefault requires min API level 24, however our min is 21
-                                    if (o != null) {
-                                        e.setVisible((boolean) o);
-                                    } else {
-                                        e.setVisible(false);
-                                    }
-
-                                    for (String me : (List<String>) data.get("participants")) {
-                                        da.read(DbUserType.Musician, me, new DbCallback() {
-                                            @Override
-                                            public void readCallback(User user) {
-                                                try {
-                                                    e.register((Musician) user);
-                                                } catch (IllegalArgumentException e) {
-                                                }
-                                            }
-                                        });
-                                    }
-
-                                    GeoPoint loca = (GeoPoint) data.get("loc");
-                                    e.setLocation(loca.getLatitude(), loca.getLongitude());
-                                    dbCallback.readCallback(e);
-                                }
-                            });
+                        } else if (collection.equals(DbDataType.Events.toString())) {
+                            SimplifiedEvent se = new SimplifiedEvent(data);
+                            dbCallback.readCallback(se.toEvent(docName));
                         } else {
                             SimplifiedMusician m = new SimplifiedMusician(data);
                             dbCallback.readCallback(m.toMusician());
@@ -190,12 +156,12 @@ public class FirebaseDatabase extends Database {
         t.addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 List<User> queryResult = new ArrayList<>();
-                for (QueryDocumentSnapshot document : task.getResult()) {
+                for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                     Map<String, Object> data = document.getData();
-                    if (collection.equals(DbUserType.Musician.toString())) {
+                    if (collection.equals(DbDataType.Musician.toString())) {
                         SimplifiedMusician m = new SimplifiedMusician(document.getData());
                         queryResult.add(m.toMusician());
-                    } else if (collection.equals((DbUserType.Band.toString()))) {
+                    } else if (collection.equals((DbDataType.Band.toString()))) {
                         SimplifiedBand sb = new SimplifiedBand(document.getData());
                         queryResult.add(sb.toBand());
                     }
@@ -209,6 +175,29 @@ public class FirebaseDatabase extends Database {
 
     @Override
     void locQuery(String collection, GeoPoint currentLocation, double distanceInKm, DbCallback dbCallback) {
-        db.collection(collection).whereGreaterThanOrEqualTo(Fields.location.toString(), 10);
+        double maxLat = currentLocation.getLatitude() + distanceInKm / LAT_TO_KM;
+        double minLat = currentLocation.getLatitude() - distanceInKm / LAT_TO_KM;
+
+        db.collection(collection)
+                .whereGreaterThanOrEqualTo(Fields.location.toString(), minLat)
+                .whereLessThanOrEqualTo(Fields.location.toString(), maxLat)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List queryResult = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                            Map<String, Object> data = document.getData();
+                            if (collection.equals(DbDataType.Musician.toString())) {
+                                SimplifiedMusician m = new SimplifiedMusician(document.getData());
+                                queryResult.add(m.toMusician());
+                            } else if (collection.equals((DbDataType.Events.toString()))) {
+
+                            }
+                        }
+                        dbCallback.queryCallback(queryResult);
+                    } else {
+                        Log.d(TAG, "Failed with: ", task.getException());
+                    }
+                });
     }
 }

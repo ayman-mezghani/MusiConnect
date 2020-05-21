@@ -34,7 +34,7 @@ public class MockDatabaseForUT extends Database {
     }
 
     @Override
-    public void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType) {
+    public void addDoc(SimplifiedEvent simplifiedEvent, DbDataType userType) {
 
     }
 
@@ -58,7 +58,7 @@ public class MockDatabaseForUT extends Database {
     @Override
     void readDoc(String collection, String docName, DbCallback dbCallback) {
         assertEquals(expectedDocName, docName);
-        if (collection == DbUserType.Musician.toString()) {
+        if (collection == DbDataType.Musician.toString()) {
             dbCallback.readCallback(((SimplifiedMusician) expectedEntry).toMusician());
         }
     }

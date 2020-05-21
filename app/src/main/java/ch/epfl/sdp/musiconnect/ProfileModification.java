@@ -28,10 +28,10 @@ import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
-import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
-import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
+import ch.epfl.sdp.musiconnect.database.DbDataType;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
@@ -163,10 +163,10 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
                 e.printStackTrace();
             }
         }
-        DbAdapter adapter = DbGenerator.getDbInstance();
-        adapter.update(DbUserType.Musician, modCurrent);
+        DbAdapter adapter = DbSingleton.getDbInstance();
+        adapter.update(DbDataType.Musician, modCurrent);
         if (videoRecorded) {
-            storage = CloudStorageGenerator.getCloudInstance(this);
+            storage = CloudStorageSingleton.getCloudInstance(this);
             try {
                 storage.upload(CloudStorage.FileType.video, userEmail, videoUri);
             } catch (IOException e) {

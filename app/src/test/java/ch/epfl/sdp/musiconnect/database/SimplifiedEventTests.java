@@ -22,7 +22,7 @@ public class SimplifiedEventTests {
         assertEquals(e.getAddress(), se.getAddress());
         assertEquals(e.getDateTime().toDate(), se.getDateTime());
         assertEquals(e.getGeoPoint(), se.getLocation());
-        assertEquals(e.getCreator().getEmailAddress(), se.getHost());
+        assertEquals(e.getHostEmailAddress().getEmailAddress(), se.getHost());
 
         ArrayList<String> am = new ArrayList<>();
         for (User m : e.getParticipants())
@@ -39,7 +39,7 @@ public class SimplifiedEventTests {
         se.setEventName(e.getTitle());
         se.setAddress(e.getAddress());
         se.setDescription(e.getDescription());
-        se.setHost(e.getCreator().getEmailAddress());
+        se.setHost(e.getHostEmailAddress().getEmailAddress());
         se.setDateTime(e.getDateTime().toDate());
         se.setLocation(e.getGeoPoint());
 
@@ -48,7 +48,7 @@ public class SimplifiedEventTests {
         assertEquals(e.getAddress(), se.getAddress());
         assertEquals(e.getDateTime().toDate(), se.getDateTime());
         assertEquals(e.getGeoPoint(), se.getLocation());
-        assertEquals(e.getCreator().getEmailAddress(), se.getHost());
+        assertEquals(e.getHostEmailAddress().getEmailAddress(), se.getHost());
 
         ArrayList<String> am = new ArrayList<>();
         am.add("mail1@gmail.com");
