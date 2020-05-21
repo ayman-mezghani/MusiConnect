@@ -113,12 +113,19 @@ public abstract class Page extends AppCompatActivity {
             if (b != null) {
                 location = b.getParcelable("Location");
                 if (location != null) {
+                    sendToDatabase(location);
                     if (!test && isUserClose(location))
                         sendNotificationToMusician(Notifications.MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT);
                 }
             }
         }
     };
+
+    protected void sendToDatabase(Location location) {
+        CurrentUser.getInstance(getApplicationContext()).setLocation(location);
+        DbSingleton.getDbInstance().update(DbDataType.Musician, CurrentUser.getInstance(getApplicationContext()).getMusician());
+    }
+
 
     public boolean isUserClose(Location loc) {
         helper();

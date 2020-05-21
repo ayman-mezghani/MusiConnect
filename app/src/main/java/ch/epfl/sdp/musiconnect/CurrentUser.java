@@ -99,7 +99,9 @@ public class CurrentUser {
 
 
     public void setLocation(Location location) {
-        musician.setLocation(new MyLocation(location.getLatitude(), location.getLongitude()));
+        if (musician != null) {
+            musician.setLocation(new MyLocation(location.getLatitude(), location.getLongitude()));
+        }
     }
 
     public Location getLocation() {

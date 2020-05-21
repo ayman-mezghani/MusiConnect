@@ -1,10 +1,7 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -18,7 +15,6 @@ import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -29,8 +25,8 @@ import java.util.ArrayList;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
-import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.DbDataType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.events.Event;
 import ch.epfl.sdp.musiconnect.location.LocationPermission;
 
@@ -96,16 +92,10 @@ public class StartPage extends Page {
         bottomNavigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter("GPSLocationUpdates"));
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
         bottomNavigationView.setSelectedItemId(R.id.home);
@@ -119,19 +109,6 @@ public class StartPage extends Page {
         return super.onOptionsItemSelected(item);
     }
 
-    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Bundle b = intent.getBundleExtra("Location");
-            Location location;
-            if (b != null) {
-                location = b.getParcelable("Location");
-                if (location != null) {
-                    sendToDatabase(location);
-                }
-            }
-        }
-    };
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -170,13 +147,7 @@ public class StartPage extends Page {
         }
     }
 
-    private void sendToDatabase(Location location) {
-        User user = CurrentUser.getInstance(this).getMusician();
-        if(user != null) {
-            user.setLocation(new MyLocation(location.getLatitude(), location.getLongitude()));
-            DbSingleton.getDbInstance().update(DbDataType.Musician, user);
-        }
-    }
+
 
 
     protected void button1Click() {

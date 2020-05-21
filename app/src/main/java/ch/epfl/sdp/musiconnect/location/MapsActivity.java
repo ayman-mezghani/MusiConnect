@@ -115,6 +115,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Circle circle;
 
     private int threshold = 50; // meters
+    private static final int MAX_THRESHOLD = 10000; // 10km
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
@@ -258,8 +259,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setInfoWindowAdapter(customInfoWindow);
 
         //place users' markers
-        updateProfileList();
-        loadProfilesMarker();
 
         updateEvents();
         loadEventMarkers();
@@ -630,38 +629,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     // TODO Should be replaced by a function that fetch user from the database; right now it generates 3 fixed users
     private void createPlaceHolderUsers() {
-        //dbAdapter.locationQuery(DbDataType.Musician, CurrentUser.getInstance(this).getLocation());
-
-
-
-        Random random = new Random();
-
-        double r1 = ((double) random.nextInt(5) - 2.5) / 200;
-        double r2 = ((double) random.nextInt(5) - 2.5) / 200;
-        double r3 = ((double) random.nextInt(5) - 2.5) / 200;
-
-
-        Musician person1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
-        Musician person2 = new Musician("Alice", "Bardon", "Alyx", "aymanmezghani97@gmail.com", new MyDate(1992, 9, 20));
-        Musician person3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
-
-        person3.addInstrument(Instrument.BANJO, Level.PROFESSIONAL);
-        person3.addInstrument(Instrument.CLARINET,Level.BEGINNER);
-
-        person1.setLocation(new MyLocation(46.52 + r1, 6.52 + r1));
-        person2.setLocation(new MyLocation(46.51 + r2, 6.45 + r2));
-        person3.setLocation(new MyLocation(46.519 + r3, 6.57 + r3));
-
-        allUsers.add(person1);
-        allUsers.add(person2);
-        allUsers.add(person3);
-
-
-        /*
-        Adb.add(DbUserType.Musician, person1);
-        Adb.add(DbUserType.Musician, person2);
-        Adb.add(DbUserType.Musician, person3);
-         */
+        dbAdapter.locationQuery(DbDataType.Musician, LocationConverter.locationToMyLocation(CurrentUser.getInstance(this).getLocation()), MAX_THRESHOLD / 1000,
+                new DbCallback() {
+                    @Override
+                    public void queryCallback(List list) {
+                        for (Object m : list) {
+                            allUsers.add((Musician) m);
+                        }
+                        updateProfileList();
+                        loadProfilesMarker();
+                    }
+                });
     }
 
     //==============================================================================================
