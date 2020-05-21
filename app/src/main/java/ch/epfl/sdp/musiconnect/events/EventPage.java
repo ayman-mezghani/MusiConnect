@@ -1,6 +1,9 @@
 package ch.epfl.sdp.musiconnect.events;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -12,6 +15,7 @@ import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.location.MapsActivity;
 
 public abstract class EventPage extends Page {
     TextView titleView, creatorView, addressView, timeView, participantsView, descriptionView;
@@ -64,6 +68,24 @@ public abstract class EventPage extends Page {
 
         participantsView.setText(s.toString());
         descriptionView.setText(event.getDescription());
+    }
+
+    protected void setupMapButton(){
+        if(event != null && event.getLocation() != null) {
+            Button toMap = findViewById(R.id.toMap);
+            toMap.setOnClickListener(v -> new AlertDialog.Builder(EventPage.this)
+                    .setMessage("Show the event's location on the map?")
+                    .setPositiveButton("Yes", (dialogInterface, i) -> {
+                        Intent mapIntent = new Intent(EventPage.this, MapsActivity.class);
+                        mapIntent.putExtra("Event", event.getEid());
+                        this.startActivity(mapIntent);
+                    })
+                    .setNegativeButton("Cancel", (dialog, which) -> {
+                        dialog.dismiss();
+                    })
+                    .create()
+                    .show());
+        }
     }
 
     private void loadNullEvent() {
