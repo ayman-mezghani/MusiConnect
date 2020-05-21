@@ -115,7 +115,7 @@ public class DbAdapterTest {
         dbAdapter = DbSingleton.getDbInstance();
         dbAdapter.query(DbDataType.Musician, queryMap, new DbCallback() {
             @Override
-            public void queryCallback(List<User> userList) {
+            public void queryCallback(List userList) {
                 assertTrue(userList.size() > 0);
             }
         });

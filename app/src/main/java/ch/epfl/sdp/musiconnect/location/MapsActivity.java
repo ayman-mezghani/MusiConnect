@@ -88,7 +88,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private NotificationManagerCompat notificationManager;
 
 
-    private DbAdapter Adb = DbSingleton.getDbInstance();
+    private DbAdapter dbAdapter = DbSingleton.getDbInstance();
 
     private AppDatabase localDb;
     private Executor mExecutor = Executors.newSingleThreadExecutor();
@@ -414,7 +414,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         for (Musician m : allUsers) {
-            Adb.read(DbDataType.Musician, m.getEmailAddress(), new DbCallback() {
+            dbAdapter.read(DbDataType.Musician, m.getEmailAddress(), new DbCallback() {
                 @Override
                 public void readCallback(User user) {
                     MyLocation l = user.getLocation();
@@ -630,6 +630,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     // TODO Should be replaced by a function that fetch user from the database; right now it generates 3 fixed users
     private void createPlaceHolderUsers() {
+        //dbAdapter.locationQuery(DbDataType.Musician, CurrentUser.getInstance(this).getLocation());
+
+
+
         Random random = new Random();
 
         double r1 = ((double) random.nextInt(5) - 2.5) / 200;

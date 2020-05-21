@@ -1,8 +1,10 @@
 package ch.epfl.sdp.musiconnect.events;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Pair;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -11,7 +13,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
@@ -21,8 +22,8 @@ import ch.epfl.sdp.musiconnect.TypeOfUser;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
-import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.DbDataType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
 
 public class EventListPage extends Page {
 
@@ -32,12 +33,11 @@ public class EventListPage extends Page {
     private TypeOfUser typeOfUser;
 
 
-    private List<String> eventTitles;
     private List<String> eventTitlesToShow;
-    private Map<String, String> titleToIds;
+    private List<Pair<String, String>> titleToIds; // [(EID, TITLE)]
     private boolean isVisitor;
 
-    private ArrayAdapter<String> adapter;
+    private ArrayAdapter<Pair<String, String>> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,14 +50,13 @@ public class EventListPage extends Page {
 
 
         ListView lv = findViewById(R.id.eventListView);
-        eventTitles = new ArrayList<>();
         eventTitlesToShow = new ArrayList<>();
-        titleToIds = new HashMap<>();
+        titleToIds = new ArrayList<>();
 
 
-        adapter = new ArrayAdapter<>(EventListPage.this, android.R.layout.simple_list_item_1, eventTitlesToShow);
+        adapter = new ArrayAdapter<>(EventListPage.this, android.R.layout.simple_list_item_1, titleToIds);
         lv.setAdapter(adapter);
-        lv.setOnItemClickListener((parent, view, position, id) -> loadEventPage(titleToIds.get(lv.getItemAtPosition(position))));
+        lv.setOnItemClickListener((parent, view, position, id) -> loadEventPage(((Pair<String, String>)lv.getItemAtPosition(position)).first));
     }
 
     private void setupListTitle() {
@@ -89,7 +88,6 @@ public class EventListPage extends Page {
 
         Handler handler = new Handler();
         handler.postDelayed(() -> {
-            eventTitles.clear();
             eventTitlesToShow.clear();
             titleToIds.clear();
             adapter.notifyDataSetChanged();
@@ -105,7 +103,6 @@ public class EventListPage extends Page {
             public void readCallback(User user) {
                 loadIds(user.getEvents(), dbDataType);
 
-
             }
         });
     }
@@ -120,77 +117,89 @@ public class EventListPage extends Page {
 
     private void loadIds(List<String> eventIds, DbDataType dbDataType) {
         final int[] counter = {0};
-        final boolean[] needUpdate = {false};
+        if (eventIds.isEmpty()) {
+            checkIfAllEventsAreLoaded(counter[0], 0, dbDataType);
+        } else {
+            for (String eid: eventIds) {
+                dbAdapter.read(DbDataType.Events, eid, new DbCallback() {
+                    @Override
+                    public void readCallback(Event e) {
+                        counter[0]++;
+                        showEvent(e);
+                        checkIfAllEventsAreLoaded(counter[0], eventIds.size(), dbDataType);
+                    }
 
-        for (String eid: eventIds) {
-            dbAdapter.read(DbDataType.Events, eid, new DbCallback() {
-                @Override
-                public void readCallback(Event e) {
-                    counter[0]++;
-                    showEvent(e);
-                    checkIfAllEventsAreLoaded(counter[0], eventIds.size(), needUpdate[0], dbDataType);
-                }
+                    @Override
+                    public void readFailCallback() {
+                        counter[0]++;
+                        // error: the event does not exist, so the entry in the database should be deleted
+                        // Update only if user is on his own list (and after all callbacks have returned)
+                        checkIfAllEventsAreLoaded(counter[0], eventIds.size(), dbDataType);
+                    }
+                });
+            }
 
-                @Override
-                public void readFailCallback() {
-                    counter[0]++;
-                    needUpdate[0] = true;
-                    // error: the event does not exist, so the entry in the database should be deleted
-                    // Update only if user is on his own list (and after all callbacks have returned)
-                    checkIfAllEventsAreLoaded(counter[0], eventIds.size(), true, dbDataType);
-                }
-            });
         }
+
     }
 
     private void showEvent(Event e) {
         String eid = e.getEid();
         String title = e.getTitle();
 
-        if (!titleToIds.containsValue(eid)) {
-            eventTitles.add(title);
-            titleToIds.put(title, eid);
-
-            // Show only events that are public or belong to this user or this user is a participant
-            if (e.isVisible() || e.containsParticipant(CurrentUser.getInstance(this).email)
-                    || e.getHostEmailAddress().equals(CurrentUser.getInstance(this).email)) {
-                eventTitlesToShow.add(title);
-                EventListPage.this.runOnUiThread(() -> adapter.notifyDataSetChanged());
-            }
+        // Show only events that are public or belong to this user or this user is a participant
+        if (!containsId(eid) &&
+                (e.isVisible() || e.containsParticipant(CurrentUser.getInstance(this).email)
+                || e.getHostEmailAddress().equals(CurrentUser.getInstance(this).email))) {
+            eventTitlesToShow.add(title);
+            titleToIds.add(new Pair<>(eid, title));
+            EventListPage.this.runOnUiThread(() -> adapter.notifyDataSetChanged());
         }
     }
 
-    private void checkIfAllEventsAreLoaded(int counter, int listSize, boolean update, DbDataType dbDataType) {
+    private boolean containsId(String eid) {
+        for (Pair<String, String> pair : titleToIds) {
+            if (pair.first.equals(eid)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void checkIfAllEventsAreLoaded(int counter, int listSize, DbDataType dbDataType) {
         if (counter != listSize) {
             return;
         }
 
-        if (update) {
-            updateListInDatabase(dbDataType);
-        }
-
-        if (dbDataType.toString().equals("Musician") && typeOfUser.toString().equals("Band")) {
+        if (dbDataType.toString().equals("musician") && typeOfUser.toString().equals("Band")) {
             // If we have loaded all events of the musician, we now need to load the events of his band
             readFromDbAndLoadEvents(DbDataType.Band);
         } else {
-            // After loading all possible events, check if any events is shown.
-            // If not, tell the user no events can be shown
-            setNoEventsToShowPage();
+            // We have loaded everything from this user, now find all events he/she participates in
+            HashMap<String, Object> h = new HashMap<>();
+            h.put("participants", CurrentUser.getInstance(this).getMusician().getEmailAddress());
+            DbSingleton.getDbInstance().query(DbDataType.Events, h, new DbCallback() {
+                @Override
+                public void queryCallback(List eventList) {
+                    for (Object e: eventList) {
+                        showEvent((Event) e);
+                    }
+                    checkIfNoEventsToShowPage();
+                }
+
+                @Override
+                public void queryFailCallback() {
+                    checkIfNoEventsToShowPage();
+                }
+            });
+
+
         }
     }
 
-    private void updateListInDatabase(DbDataType dbDataType) {
-        List<String> ids = new ArrayList<>(titleToIds.values());
-
-        dbAdapter.read(dbDataType, userEmail, new DbCallback() {
-            @Override
-            public void readCallback(User user) {
-                user.setEvents(ids);
-                dbAdapter.update(dbDataType, user); }
-        });
-    }
-
-    private void setNoEventsToShowPage() {
+    private void checkIfNoEventsToShowPage() {
+        // After loading all possible events, check if any events is shown.
+        // If not, tell the user no events can be shown
         if (eventTitlesToShow.isEmpty()) {
             setContentView(R.layout.activity_event_list_page_none);
             TextView eventListTitle = findViewById(R.id.eventListTitle);
@@ -202,8 +211,6 @@ public class EventListPage extends Page {
             }
         }
     }
-
-
 
 
     private void loadEventPage(String eid) {

@@ -22,11 +22,9 @@ public class SimplifiedEventTests {
         assertEquals(e.getAddress(), se.getAddress());
         assertEquals(e.getDateTime().toDate(), se.getDateTime());
         assertEquals(e.getGeoPoint(), se.getLocation());
-        assertEquals(e.getHostEmailAddress().getEmailAddress(), se.getHost());
+        assertEquals(e.getHostEmailAddress(), se.getHost());
 
-        ArrayList<String> am = new ArrayList<>();
-        for (User m : e.getParticipants())
-            am.add(m.getEmailAddress());
+        ArrayList<String> am = new ArrayList<>(e.getParticipants());
 
         assertEquals(am, se.getParticipants());
     }
@@ -39,7 +37,7 @@ public class SimplifiedEventTests {
         se.setEventName(e.getTitle());
         se.setAddress(e.getAddress());
         se.setDescription(e.getDescription());
-        se.setHost(e.getHostEmailAddress().getEmailAddress());
+        se.setHost(e.getHostEmailAddress());
         se.setDateTime(e.getDateTime().toDate());
         se.setLocation(e.getGeoPoint());
 
@@ -48,7 +46,7 @@ public class SimplifiedEventTests {
         assertEquals(e.getAddress(), se.getAddress());
         assertEquals(e.getDateTime().toDate(), se.getDateTime());
         assertEquals(e.getGeoPoint(), se.getLocation());
-        assertEquals(e.getHostEmailAddress().getEmailAddress(), se.getHost());
+        assertEquals(e.getHostEmailAddress(), se.getHost());
 
         ArrayList<String> am = new ArrayList<>();
         am.add("mail1@gmail.com");
@@ -57,8 +55,8 @@ public class SimplifiedEventTests {
         assertEquals(am, se.getParticipants());
     }
 
-    static Event testEvent() {
+    private static Event testEvent() {
         Musician m = new Musician("firstName", "lastName", "username", "email@gmail.com", new MyDate(2000, 1, 1));
-        return new Event(m, "1");
+        return new Event(m.getEmailAddress(), "1");
     }
 }

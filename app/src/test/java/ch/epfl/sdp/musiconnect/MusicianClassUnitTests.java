@@ -61,11 +61,11 @@ public class MusicianClassUnitTests {
         MyDate birthday = new MyDate(1940, 10, 9);
         Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
-        String videoURL = "www.john-lennon.uk/MyVideo";
+        StringBuilder videoURL = new StringBuilder("www.john-lennon.uk/MyVideo");
         for (int i = 0; i < 255; ++i) {
-            videoURL += "/abcdefg";
+            videoURL.append("/abcdefg");
         }
-        String finalVideoURL = videoURL;
+        String finalVideoURL = videoURL.toString();
 
         assertThrows(IllegalArgumentException.class, () -> john.setVideoURL(finalVideoURL));
     }
@@ -79,7 +79,7 @@ public class MusicianClassUnitTests {
         MyDate birthday = new MyDate(1940, 10, 9);
         Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
 
-        Set<Instrument> instruments = new HashSet<Instrument>();
+        Set<Instrument> instruments = new HashSet<>();
 
         assertEquals(instruments, john.setOfInstruments());
 
@@ -114,7 +114,7 @@ public class MusicianClassUnitTests {
 
         john.addInstrument(Instrument.VOICE, Level.PROFESSIONAL);
 
-        Set<Instrument> instruments = new HashSet<Instrument>();
+        Set<Instrument> instruments = new HashSet<>();
         instruments.add(Instrument.VOICE);
 
         assertEquals(instruments, john.setOfInstruments());
@@ -149,7 +149,7 @@ public class MusicianClassUnitTests {
         john.addInstrument(Instrument.VOICE, Level.PROFESSIONAL);
         john.addInstrument(Instrument.PIANO, Level.ADVANCED);
 
-        Set<Instrument> instruments = new HashSet<Instrument>();
+        Set<Instrument> instruments = new HashSet<>();
 
         john.removeAllInstruments();
         assertEquals(instruments, john.setOfInstruments());
@@ -316,7 +316,7 @@ public class MusicianClassUnitTests {
 
 
         ArrayList<String> as = new ArrayList<>();
-        Event e = new Event(john, "1");
+        Event e = new Event(john.getEmailAddress(), "1");
 
         as.add(e.getEid());
         john.addEvent(e.getEid());

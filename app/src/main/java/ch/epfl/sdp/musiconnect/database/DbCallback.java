@@ -14,9 +14,9 @@ public interface DbCallback {
 
     default void existsCallback(boolean exists) {}
 
-    default void queryCallback(List<User> userList) {}
+    default void queryCallback(List list) {}
 
-    default void queryCallbackEvent(List<Event> eventList) {}
+    default void queryFailCallback() {}
 
     default void queryBandIfMemberCallback(List<User> userList) {}
 }

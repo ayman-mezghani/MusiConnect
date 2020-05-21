@@ -57,7 +57,7 @@ public class MockDatabase extends Database {
         createAndAddDummyEvents();
 
         Event privateEventAndParticipant = createEvent(getDummyMusician(2), "5", "Private but visible event at Big Ben!", false);
-        privateEventAndParticipant.register(m);
+        privateEventAndParticipant.register(m.getEmailAddress());
         listOfEvent.add(privateEventAndParticipant);
     }
 
@@ -93,14 +93,14 @@ public class MockDatabase extends Database {
     private Event createEvent(User user, String eid, String title, boolean visible) {
         Musician m2 = getDummyMusician(3);
 
-        Event event = new Event(user, eid);
+        Event event = new Event(user.getEmailAddress(), eid);
         event.setAddress("Westminster, London, England");
         event.setLocation(51.5007, 0.1245);
         event.setDateTime(new MyDate(2020, 9, 21, 14, 30));
         event.setTitle(title);
         event.setDescription("Playing at Big Ben, come watch us play!");
         event.setVisible(visible);
-        event.register(m2);
+        event.register(m2.getEmailAddress());
 
         return event;
     }

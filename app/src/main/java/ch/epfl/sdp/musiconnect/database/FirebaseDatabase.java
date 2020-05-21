@@ -186,6 +186,7 @@ public class FirebaseDatabase extends Database {
                     dbCallback.queryCallback(queryResult);
                 }
             } else {
+                dbCallback.queryFailCallback();
                 Log.d(TAG, "Failed with: ", task.getException());
             }
         });
@@ -206,7 +207,7 @@ public class FirebaseDatabase extends Database {
                         for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                             Map<String, Object> data = document.getData();
                             if (collection.equals(DbDataType.Musician.toString())) {
-                                SimplifiedMusician m = new SimplifiedMusician(document.getData());
+                                SimplifiedMusician m = new SimplifiedMusician(data);
                                 queryResult.add(m.toMusician());
                             } else if (collection.equals((DbDataType.Events.toString()))) {
 
