@@ -38,21 +38,7 @@ public class VisitorEventPage extends EventPage {
         }
     }
 
-    private void setupMapButton(){
-        Button toMap = findViewById(R.id.toMap);
-        toMap.setOnClickListener(v -> new AlertDialog.Builder(VisitorEventPage.this)
-                .setMessage("Show the event's location on the map?")
-                .setPositiveButton("Yes", (dialogInterface, i) -> {
-                    Intent mapIntent = new Intent(VisitorEventPage.this, MapsActivity.class);
-                    mapIntent.putExtra("Event",event.getEid());
-                    this.startActivity(mapIntent);
-                })
-                .setNegativeButton("Cancel", (dialog, which) -> {
-                    dialog.dismiss();
-                })
-                .create()
-                .show());
-    }
+
 
     private void loadPrivateEventPage() {
         setContentView(R.layout.activity_event_page_private);
