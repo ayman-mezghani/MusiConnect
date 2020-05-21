@@ -4,6 +4,7 @@ import java.util.Map;
 
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.MyLocation;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.events.Event;
 
@@ -78,5 +79,9 @@ public class DbAdapter {
 
     public void query(DbUserType collection, Map<String, Object> filters, DbCallback dbCallback) {
         db.finderQuery(collection.toString(), filters, dbCallback);
+    }
+
+    public void locationQuery(DbUserType collection, MyLocation currentLocation, double radius, DbCallback dbCallback) {
+        db.locQuery(collection.toString(), TypeConverters.myLocationToGeoPoint(currentLocation), radius, dbCallback);
     }
 }

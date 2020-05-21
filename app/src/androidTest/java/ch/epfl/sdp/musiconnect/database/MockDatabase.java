@@ -1,5 +1,7 @@
 package ch.epfl.sdp.musiconnect.database;
 
+import com.google.firebase.firestore.GeoPoint;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -121,7 +123,7 @@ public class MockDatabase extends Database {
 
     @Override
     void updateDoc(String collection, String docName, Map<String, Object> newValueMap) {
-        Object value = newValueMap.get(SimplifiedMusician.EVENTS);
+        Object value = newValueMap.get(SimplifiedDbEntry.Fields.events.toString());
         Musician m = getDummyMusician(1);
 
         if (collection.equals(DbUserType.Musician.toString()) && docName.equals(m.getEmailAddress()) && value != null) {
@@ -188,6 +190,11 @@ public class MockDatabase extends Database {
             l.add(b2);
             dbCallback.queryCallback(l);
         }
+    }
+
+    @Override
+    void locQuery(String collection, GeoPoint currentLocation, double distance, DbCallback dbCallback) {
+
     }
 
     public Band getBand() {

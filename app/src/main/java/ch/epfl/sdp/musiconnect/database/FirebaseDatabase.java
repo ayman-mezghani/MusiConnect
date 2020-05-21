@@ -6,14 +6,14 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
@@ -27,8 +27,12 @@ import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.events.Event;
 
+import static ch.epfl.sdp.musiconnect.database.SimplifiedDbEntry.Fields;
+
 public class FirebaseDatabase extends Database {
     private static final String TAG = "DataBase";
+    // Source : https://en.wikipedia.org/wiki/Latitude#Length_of_a_degree_of_latitude
+    private static final double LAT_TO_KM = 110.574;
     private FirebaseFirestore db;
 
     FirebaseDatabase() {
@@ -52,21 +56,21 @@ public class FirebaseDatabase extends Database {
         db.collection("events").add(simplifiedEvent)
                 .addOnSuccessListener(documentReference -> {
                     if (userType == DbUserType.Band) {
-                        DbGenerator.getDbInstance().read(DbUserType.Band, simplifiedEvent.getCreatorMail(), new DbCallback() {
+                        DbGenerator.getDbInstance().read(DbUserType.Band, simplifiedEvent.getHost(), new DbCallback() {
                             @Override
                             public void readCallback(User u) {
-                            Band b = (Band) u;
-                            b.addEvent(documentReference.getId());
-                            DbGenerator.getDbInstance().add(userType, b);
+                                Band b = (Band) u;
+                                b.addEvent(documentReference.getId());
+                                DbGenerator.getDbInstance().add(userType, b);
                             }
                         });
                     } else if (userType == DbUserType.Musician) {
-                        DbGenerator.getDbInstance().read(DbUserType.Musician, simplifiedEvent.getCreatorMail(), new DbCallback() {
+                        DbGenerator.getDbInstance().read(DbUserType.Musician, simplifiedEvent.getHost(), new DbCallback() {
                             @Override
                             public void readCallback(User u) {
-                            Musician m = (Musician) u;
-                            m.addEvent(documentReference.getId());
-                            DbGenerator.getDbInstance().add(userType, m);
+                                Musician m = (Musician) u;
+                                m.addEvent(documentReference.getId());
+                                DbGenerator.getDbInstance().add(userType, m);
                             }
                         });
                     }
@@ -145,9 +149,7 @@ public class FirebaseDatabase extends Database {
                                     dbCallback.readCallback(e);
                                 }
                             });
-                        }
-
-                        else {
+                        } else {
                             SimplifiedMusician m = new SimplifiedMusician(data);
                             dbCallback.readCallback(m.toMusician());
                         }
@@ -190,7 +192,6 @@ public class FirebaseDatabase extends Database {
                 List<User> queryResult = new ArrayList<>();
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     Map<String, Object> data = document.getData();
-                    Log.d("checkcheck", document.getId() + " => " + data);
                     if (collection.equals(DbUserType.Musician.toString())) {
                         SimplifiedMusician m = new SimplifiedMusician(document.getData());
                         queryResult.add(m.toMusician());
@@ -201,8 +202,13 @@ public class FirebaseDatabase extends Database {
                 }
                 dbCallback.queryCallback(queryResult);
             } else {
-                Log.d("checkcheck", "Error getting documents: ", task.getException());
+                Log.d(TAG, "Failed with: ", task.getException());
             }
         });
+    }
+
+    @Override
+    void locQuery(String collection, GeoPoint currentLocation, double distanceInKm, DbCallback dbCallback) {
+        db.collection(collection).whereGreaterThanOrEqualTo(Fields.location.toString(), 10);
     }
 }
