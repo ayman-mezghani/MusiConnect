@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
@@ -23,6 +24,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import ch.epfl.sdp.musiconnect.Band;
+import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.User;
 
@@ -181,8 +183,9 @@ public class FirebaseDatabase extends Database {
         double minLat = currentLocation.getLatitude() - distanceInKm / LAT_TO_KM;
 
         db.collection(collection)
-                .whereGreaterThanOrEqualTo(Fields.location.toString(), minLat)
-                .whereLessThanOrEqualTo(Fields.location.toString(), maxLat)
+                // Firestore supports queries only on latitude and only this way
+                .whereGreaterThanOrEqualTo("location", new GeoPoint(minLat, 0))
+                .whereLessThanOrEqualTo("location", new GeoPoint(maxLat, 0))
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -213,6 +216,6 @@ public class FirebaseDatabase extends Database {
         Location dest =  new Location("");
         dest.setLongitude(resultLocation.getLongitude());
         dest.setLatitude(resultLocation.getLatitude());
-        return start.distanceTo(dest) <= distance;
+        return start.distanceTo(dest) / 1000f <= distance;
     }
 }
