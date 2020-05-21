@@ -26,7 +26,6 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
-import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -37,7 +36,6 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class MusicianFinderTests {
@@ -73,7 +71,7 @@ public class MusicianFinderTests {
 
     @Test
     public void testSearchShouldOpenProfilePage() {
-        onView(withId(R.id.myMusicianFinderFirstNameID)).perform(ViewActions.scrollTo(), typeText("Bob"));
+        onView(withId(R.id.myMusicianFinderFirstNameID)).perform(ViewActions.scrollTo(), typeText("musicConnect"));
         onView(withId(R.id.musicianFinderButtonID)).perform(ViewActions.scrollTo(), click());
         intended(hasComponent(MusicianFinderResult.class.getName()));
 
@@ -88,5 +86,24 @@ public class MusicianFinderTests {
                 .atPosition(0);
         appCompatTextView.perform(click());
         intended(hasComponent(VisitorProfilePage.class.getName()));
+    }
+
+    @Test
+    public void testSearchShouldOpenMyProfilePage() {
+        onView(withId(R.id.myMusicianFinderFirstNameID)).perform(ViewActions.scrollTo(), typeText("bob"));
+        onView(withId(R.id.musicianFinderButtonID)).perform(ViewActions.scrollTo(), click());
+        intended(hasComponent(MusicianFinderResult.class.getName()));
+
+        String minionMail = ((Musician)(new MockDatabase(false)).getDummyMusician(0)).getEmailAddress();
+        onView(allOf(withText(minionMail), withParent(withId(R.id.LvMusicianResult))));
+
+        DataInteraction appCompatTextView = onData(anything())
+                .inAdapterView(allOf(withId(R.id.LvMusicianResult),
+                        childAtPosition(
+                                withClassName(is("android.widget.LinearLayout")),
+                                2)))
+                .atPosition(0);
+        appCompatTextView.perform(click());
+        intended(hasComponent(MyProfilePage.class.getName()));
     }
 }

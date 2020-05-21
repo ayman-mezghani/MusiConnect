@@ -59,7 +59,7 @@ public class VideoRecordingTests {
 
     @Test
     public void videoRecordingTests() {
-        onView(withId(R.id.my_profile)).perform(click());
+        onView(withId(R.id.my_profile)).perform(scrollTo(), click());
 
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.btnEditProfile), withText("Edit profile"),
