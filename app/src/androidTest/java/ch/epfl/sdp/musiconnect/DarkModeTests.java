@@ -41,10 +41,10 @@ public class DarkModeTests {
     public void releaseIntents() { Intents.release(); }
 
     @Test
-    public void testDefaultStartThemeIsLight() {
+    public void testDefaultStartThemeIsDark() {
         TextView title = startPageRule.getActivity().findViewById(R.id.welcomeText);
 
-        assertThat(title.getCurrentTextColor(), is(ContextCompat.getColor(startPageRule.getActivity().getApplicationContext(), R.color.text_black)));
+        assertThat(title.getCurrentTextColor(), is(ContextCompat.getColor(startPageRule.getActivity().getApplicationContext(), R.color.text_grey)));
     }
 
     @Test
