@@ -110,7 +110,11 @@ public class EventListPage extends Page {
             @Override
             public void readCallback(User user) {
                 loadIds(user.getEvents(), dbDataType);
+            }
 
+            @Override
+            public void readFailCallback() {
+                checkIfAllEventsAreLoaded(0, 0, DbDataType.Band); // This will trigger the "else" part
             }
         });
     }

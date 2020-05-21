@@ -113,7 +113,9 @@ public class CurrentUser {
 
 
     public Band getBand() {
-        if(this.getTypeOfUser() == TypeOfUser.Band) return this.band.get(0);
+        if(this.getTypeOfUser() == TypeOfUser.Band && band != null) {
+            return this.band.get(0);
+        }
         return null;
     }
 
