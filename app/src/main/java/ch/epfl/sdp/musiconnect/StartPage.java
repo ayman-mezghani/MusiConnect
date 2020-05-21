@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -13,9 +14,12 @@ import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -42,6 +46,12 @@ public class StartPage extends Page {
     private TextView fabTv1, fabTv2;
     private boolean isOpen = false;
     public static boolean test = true;
+
+    // All necessary for dark mode switch
+    private Switch darkModeSwitch;
+    public static final String MY_PREFERENCES = "nightModePrefs";
+    public static final String KEY_ISNIGHTMODE = "isNightMode";
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +82,9 @@ public class StartPage extends Page {
             ListView lv = findViewById(R.id.LvEvent);
             ArrayList<String> events = new ArrayList<>();
 
-
             final ArrayAdapter<String> adapter = new ArrayAdapter<>
                     (StartPage.this, android.R.layout.simple_list_item_1, events);
             lv.setAdapter(adapter);
-
 
             for(String e : CurrentUser.getInstance(this).getBand().getEvents()) {
                 DbGenerator.getDbInstance().read(DbUserType.Events, e.trim(), new DbCallback() {
@@ -94,6 +102,42 @@ public class StartPage extends Page {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
         bottomNavigationView.setSelectedItemId(R.id.home);
         bottomNavigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
+
+        sharedPreferences = getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
+        darkModeSwitch = findViewById(R.id.darkModeSwitch);
+        checkIfNightModeIsActivated();
+
+        darkModeSwitch.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            if (isChecked) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                saveNightModeState(true);
+                recreate();
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                saveNightModeState(false);
+                recreate();
+            }
+        });
+    }
+
+    /**
+     * Save the preferences when on a new switch toggle
+     * @param nightMode: is night mode activated
+     */
+    private void saveNightModeState(boolean nightMode) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(KEY_ISNIGHTMODE, nightMode);
+        editor.apply();
+    }
+
+    public void checkIfNightModeIsActivated() {
+        if (sharedPreferences.getBoolean(KEY_ISNIGHTMODE, false)) {
+            darkModeSwitch.setChecked(true);
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            darkModeSwitch.setChecked(false);
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
     }
 
     @Override
