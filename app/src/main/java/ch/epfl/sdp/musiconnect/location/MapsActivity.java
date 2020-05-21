@@ -531,12 +531,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Adb.read(DbUserType.Events, eid, new DbCallback() {
             @Override
             public void readCallback(Event e) {
-                if(e.getLocation() != null) {
-                    shownEvent = e;
-                    updateCamera = false;
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(shownEvent.getLocation().getLatitude(), shownEvent.getLocation().getLongitude())));
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
-                }
+                shownEvent = e;
+                updateCamera = false;
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(shownEvent.getLocation().getLatitude(), shownEvent.getLocation().getLongitude())));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
             }});
     }
 

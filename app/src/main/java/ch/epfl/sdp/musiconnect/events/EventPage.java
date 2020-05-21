@@ -71,7 +71,7 @@ public abstract class EventPage extends Page {
     }
 
     protected void setupMapButton(){
-        if(event != null) {
+        if(event != null && event.getLocation() != null) {
             Button toMap = findViewById(R.id.toMap);
             toMap.setOnClickListener(v -> new AlertDialog.Builder(EventPage.this)
                     .setMessage("Show the event's location on the map?")
