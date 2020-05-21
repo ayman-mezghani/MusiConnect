@@ -6,6 +6,7 @@ import com.google.firebase.firestore.GeoPoint;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,10 +20,10 @@ import ch.epfl.sdp.musiconnect.MyLocation;
 import ch.epfl.sdp.musiconnect.TypeOfUser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static ch.epfl.sdp.musiconnect.database.SimplifiedDbEntry.Fields;
+
 
 public class SimplifiedMusicianTest {
     @Test
@@ -72,27 +73,28 @@ public class SimplifiedMusicianTest {
 
         SimplifiedMusician sMusician = new SimplifiedMusician(map);
 
-        assertEquals((String) map.get(SimplifiedMusician.USERNAME), sMusician.getUsername());
-        assertEquals((String) map.get(SimplifiedMusician.FIRSTNAME), sMusician.getFirstName());
-        assertEquals((String) map.get(SimplifiedMusician.LASTNAME), sMusician.getLastName());
-        assertEquals((String) map.get(SimplifiedMusician.EMAIL), sMusician.getEmail());
-        assertEquals((String) map.get(SimplifiedMusician.TYPEOFUSER).toString(), sMusician.getTypeOfUser().toString());
-        assertEquals(((Timestamp) map.get(SimplifiedMusician.BIRTHDAY)).toDate(), sMusician.getBirthday());
-        assertEquals(((Timestamp) map.get(SimplifiedMusician.JOINDATE)).toDate(), sMusician.getJoinDate());
-        assertEquals((GeoPoint) map.get(SimplifiedMusician.LOCATION), sMusician.getLocation());
+        assertEquals((String) map.get(Fields.username.toString()), sMusician.getUsername());
+        assertEquals((String) map.get(Fields.firstName.toString()), sMusician.getFirstName());
+        assertEquals((String) map.get(Fields.lastName.toString()), sMusician.getLastName());
+        assertEquals((String) map.get(Fields.email.toString()), sMusician.getEmail());
+        assertEquals((String) map.get(Fields.typeOfUser.toString()).toString(), sMusician.getTypeOfUser().toString());
+        assertEquals(((Timestamp) map.get(Fields.birthday.toString())).toDate(), sMusician.getBirthday());
+        assertEquals(((Timestamp) map.get(Fields.joinDate.toString())).toDate(), sMusician.getJoinDate());
+        assertEquals((GeoPoint) map.get(Fields.location.toString()), sMusician.getLocation());
+        assertEquals((List<String>) map.get(Fields.events.toString()), sMusician.getEvents());
     }
 
     @Test
-    public void createInsanceWithMapContainingNulls() {
+    public void createInstanceWithMapContainingNulls() {
         Map<String, Object> map = new HashMap<>();
-        map.put(SimplifiedMusician.USERNAME, null);
-        map.put(SimplifiedMusician.FIRSTNAME, null);
-        map.put(SimplifiedMusician.LASTNAME, null);
-        map.put(SimplifiedMusician.EMAIL, null);
-        map.put(SimplifiedMusician.TYPEOFUSER, null);
-        map.put(SimplifiedMusician.BIRTHDAY, null);
-        map.put(SimplifiedMusician.JOINDATE, null);
-        map.put(SimplifiedMusician.LOCATION, null);
+        map.put(Fields.username.toString(), null);
+        map.put(Fields.firstName.toString(), null);
+        map.put(Fields.lastName.toString(), null);
+        map.put(Fields.email.toString(), null);
+        map.put(Fields.typeOfUser.toString(), null);
+        map.put(Fields.birthday.toString(), null);
+        map.put(Fields.joinDate.toString(), null);
+        map.put(Fields.location.toString(), null);
 
         SimplifiedMusician sMusician = new SimplifiedMusician(map);
 
@@ -101,9 +103,9 @@ public class SimplifiedMusicianTest {
         assertEquals("", sMusician.getLastName());
         assertEquals("", sMusician.getEmail());
         assertEquals("", sMusician.getTypeOfUser());
-        assertEquals((Timestamp) map.get(SimplifiedMusician.BIRTHDAY), sMusician.getBirthday());
-        assertEquals((Timestamp) map.get(SimplifiedMusician.JOINDATE), sMusician.getJoinDate());
-        assertEquals((GeoPoint) map.get(SimplifiedMusician.LOCATION), sMusician.getLocation());
+        assertEquals((Timestamp) map.get(Fields.birthday.toString()), sMusician.getBirthday());
+        assertEquals((Timestamp) map.get(Fields.joinDate.toString()), sMusician.getJoinDate());
+        assertEquals((GeoPoint) map.get(Fields.location.toString()), sMusician.getLocation());
     }
 
     @Test
@@ -126,14 +128,14 @@ public class SimplifiedMusicianTest {
         Map<String, Object> map = testMap();
         Map<String, Object> mapClone = (new SimplifiedMusician(map)).toMap();
 
-        assertEquals((String) map.get(SimplifiedMusician.USERNAME), (String) mapClone.get(SimplifiedMusician.USERNAME));
-        assertEquals((String) map.get(SimplifiedMusician.FIRSTNAME), (String) mapClone.get(SimplifiedMusician.FIRSTNAME));
-        assertEquals((String) map.get(SimplifiedMusician.LASTNAME), (String) mapClone.get(SimplifiedMusician.LASTNAME));
-        assertEquals((String) map.get(SimplifiedMusician.EMAIL), (String) mapClone.get(SimplifiedMusician.EMAIL));
-        assertEquals((String) map.get(SimplifiedMusician.TYPEOFUSER), (String) mapClone.get(SimplifiedMusician.TYPEOFUSER));
-        assertEquals((Timestamp) map.get(SimplifiedMusician.BIRTHDAY), new Timestamp((Date) mapClone.get(SimplifiedMusician.BIRTHDAY)));
-        assertEquals((Timestamp) map.get(SimplifiedMusician.JOINDATE), new Timestamp((Date) mapClone.get(SimplifiedMusician.JOINDATE)));
-        assertEquals((GeoPoint) map.get(SimplifiedMusician.LOCATION), (GeoPoint) mapClone.get(SimplifiedMusician.LOCATION));
+        assertEquals((String) map.get(Fields.username.toString()), (String) mapClone.get(Fields.username.toString()));
+        assertEquals((String) map.get(Fields.firstName.toString()), (String) mapClone.get(Fields.firstName.toString()));
+        assertEquals((String) map.get(Fields.lastName.toString()), (String) mapClone.get(Fields.lastName.toString()));
+        assertEquals((String) map.get(Fields.email.toString()), (String) mapClone.get(Fields.email.toString()));
+        assertEquals((String) map.get(Fields.typeOfUser.toString()), (String) mapClone.get(Fields.typeOfUser.toString()));
+        assertEquals((Timestamp) map.get(Fields.birthday.toString()), new Timestamp((Date) mapClone.get(Fields.birthday.toString())));
+        assertEquals((Timestamp) map.get(Fields.joinDate.toString()), new Timestamp((Date) mapClone.get(Fields.joinDate.toString())));
+        assertEquals((GeoPoint) map.get(Fields.location.toString()), (GeoPoint) mapClone.get(Fields.location.toString()));
     }
 
     @Test
@@ -162,8 +164,8 @@ public class SimplifiedMusicianTest {
 
         List<Map<String, String>> l = new ArrayList<>();
         Map<String, String> m2 = new HashMap<>();
-        m2.put(SimplifiedMusician.INSTRUMENT, Instrument.GUITAR.toString());
-        m2.put(SimplifiedMusician.LEVEL, Level.BEGINNER.toString());
+        m2.put(Fields.instrument.toString(), Instrument.GUITAR.toString());
+        m2.put(Fields.level.toString(), Level.BEGINNER.toString());
         l.add(m2);
 
         Musician musician = testMusician1();
@@ -193,14 +195,15 @@ public class SimplifiedMusicianTest {
 
     private Map<String, Object> testMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put(SimplifiedMusician.USERNAME, "username");
-        map.put(SimplifiedMusician.FIRSTNAME, "firstName");
-        map.put(SimplifiedMusician.LASTNAME, "lastName");
-        map.put(SimplifiedMusician.EMAIL, "email@gmail.com");
-        map.put(SimplifiedMusician.TYPEOFUSER, TypeOfUser.Musician.toString());
-        map.put(SimplifiedMusician.BIRTHDAY, new Timestamp(new Date()));
-        map.put(SimplifiedMusician.JOINDATE, new Timestamp(new Date()));
-        map.put(SimplifiedMusician.LOCATION, new GeoPoint(0, 0));
+        map.put(Fields.username.toString(), "username");
+        map.put(Fields.firstName.toString(), "firstName");
+        map.put(Fields.lastName.toString(), "lastName");
+        map.put(Fields.email.toString(), "email@gmail.com");
+        map.put(Fields.typeOfUser.toString(), TypeOfUser.Musician.toString());
+        map.put(Fields.birthday.toString(), new Timestamp(new Date()));
+        map.put(Fields.joinDate.toString(), new Timestamp(new Date()));
+        map.put(Fields.location.toString(), new GeoPoint(0, 0));
+        map.put(Fields.events.toString(), Arrays.asList("event1", "event2"));
         return map;
     }
 }

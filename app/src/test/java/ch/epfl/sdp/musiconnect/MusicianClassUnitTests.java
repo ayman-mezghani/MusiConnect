@@ -316,7 +316,7 @@ public class MusicianClassUnitTests {
 
 
         ArrayList<String> as = new ArrayList<>();
-        Event e = new Event(john, "1");
+        Event e = new Event(john.getEmailAddress(), "1");
 
         as.add(e.getEid());
         john.addEvent(e.getEid());

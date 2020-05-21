@@ -1,5 +1,7 @@
 package ch.epfl.sdp.musiconnect.database;
 
+import com.google.firebase.firestore.GeoPoint;
+
 import java.util.List;
 import java.util.Map;
 
@@ -8,7 +10,7 @@ abstract class Database {
 
     abstract void addDoc(String collection, String docName, SimplifiedDbEntry entry);
 
-    abstract void addDoc(SimplifiedEvent simplifiedEvent, DbUserType userType);
+    abstract void addDoc(SimplifiedEvent simplifiedEvent, DbDataType userType);
 
     abstract void deleteDoc(String collection, String docName);
 
@@ -21,4 +23,6 @@ abstract class Database {
     abstract void docExists(String collection, String docName, DbCallback dbCallback);
 
     abstract void finderQuery(String collection, Map<String, Object> arguments, DbCallback dbCallback);
+
+    abstract void locQuery(String collection, GeoPoint currentLocation, double distance, DbCallback dbCallback);
 }

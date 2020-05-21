@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sdp.musiconnect.database.DbCallback;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
-import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
+import ch.epfl.sdp.musiconnect.database.DbDataType;
 
 public class CurrentUser {
     // static variable single_instance of type Singleton
@@ -49,7 +49,7 @@ public class CurrentUser {
 
     public void setCreatedFlag() {
         this.createdFlag = true;
-        DbGenerator.getDbInstance().read(DbUserType.Musician, email, new DbCallback() {
+        DbSingleton.getDbInstance().read(DbDataType.Musician, email, new DbCallback() {
             @Override
             public void readCallback(User user) {
                 musician = (Musician) user;

@@ -10,11 +10,9 @@ import android.widget.Toast;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
-import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.TypeOfUser;
 import ch.epfl.sdp.musiconnect.User;
-import ch.epfl.sdp.musiconnect.database.DbUserType;
-
+import ch.epfl.sdp.musiconnect.database.DbDataType;
 
 public class MyEventPage extends EventPage {
     private static int LAUNCH_EVENT_EDIT_INTENT = 105;
@@ -39,6 +37,8 @@ public class MyEventPage extends EventPage {
 
         String eid = getIntent().getStringExtra("eid");
         retrieveEventInfo(eid);
+
+        setupMapButton();
     }
 
     @Override
@@ -49,7 +49,6 @@ public class MyEventPage extends EventPage {
             handler.postDelayed(() -> retrieveEventInfo(data.getStringExtra("eid")), 500);
         }
     }
-
 
     private void setupEditButton() {
         Button editEvent = findViewById(R.id.btnEditEvent);
@@ -67,7 +66,6 @@ public class MyEventPage extends EventPage {
         });
     }
 
-
     private void setupDeleteButton() {
         Button deleteEvent = findViewById(R.id.btnDeleteEvent);
         deleteEvent.setOnClickListener(v -> new AlertDialog.Builder(MyEventPage.this)
@@ -83,9 +81,9 @@ public class MyEventPage extends EventPage {
                         m = cu.getBand();
                     }
                     m.removeEvent(event.getEid());
-                    dbAdapter.update(DbUserType.valueOf(typeOfUser.toString()), m);
+                    dbAdapter.update(DbDataType.valueOf(typeOfUser.toString()), m);
 
-                    dbAdapter.delete(DbUserType.Events, event);
+                    dbAdapter.delete(DbDataType.Events, event);
                     Toast.makeText(MyEventPage.this, "Deletion confirmed", Toast.LENGTH_SHORT).show();
                     MyEventPage.this.finish();
                 })
@@ -96,4 +94,6 @@ public class MyEventPage extends EventPage {
                 .create()
                 .show());
     }
+
+
 }
