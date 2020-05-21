@@ -94,7 +94,6 @@ public class StartPage extends Page {
 
         fab_button_2.setOnClickListener(v -> {
             updateCurrentUser(this);
-            Context ctx = this;
             ListView lv = findViewById(R.id.LvEvent);
             ArrayList<String> events = new ArrayList<>();
 
