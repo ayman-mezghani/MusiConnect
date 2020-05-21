@@ -37,10 +37,11 @@ public class MyEventPage extends EventPage {
 
         setupEditButton();
         setupDeleteButton();
-        setupMapButton();
 
         String eid = getIntent().getStringExtra("eid");
         retrieveEventInfo(eid);
+
+        setupMapButton();
     }
 
     @Override

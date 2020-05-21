@@ -20,9 +20,13 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbGenerator;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.location.MapsActivity;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
@@ -107,6 +111,23 @@ public class VisitorEventPageTests {
         eventPageRule.launchActivity(intent);
 
         onView(withId(R.id.title)).check(matches(withText(R.string.event_not_found)));
+    }
+
+    @Test
+    public void testMapButtonGoesToMap(){
+        Event event = md.getDummyEvent(4);
+        Intent intent = new Intent();
+        intent.putExtra("eid", event.getEid());
+        eventPageRule.launchActivity(intent);
+
+        waitSeconds(3);
+
+        onView(withId(R.id.toMap)).perform(click());
+        onView(withId(android.R.id.button1)).perform(click());
+
+        waitSeconds(3);
+
+        intended(hasComponent(MapsActivity.class.getName()));
     }
 
 }
