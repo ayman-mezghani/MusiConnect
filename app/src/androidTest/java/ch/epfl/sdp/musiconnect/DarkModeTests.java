@@ -78,10 +78,10 @@ public class DarkModeTests {
 
     @Test
     public void checkColorChangeWhenSwitchButtonIsToggled() {
-        TextView title = startPageRule.getActivity().findViewById(R.id.welcomeText);
         UiObject2 toggle = device.findObject(By.checked(false));
         toggle.click();
 
+        TextView title = startPageRule.getActivity().findViewById(R.id.welcomeText);
         assertThat(title.getCurrentTextColor(), is(ContextCompat.getColor(startPageRule.getActivity().getApplicationContext(), R.color.text_grey)));
     }
 }
