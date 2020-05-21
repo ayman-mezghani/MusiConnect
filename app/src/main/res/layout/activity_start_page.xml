@@ -32,7 +32,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/welcome_message"
                     android:textAlignment="center"
-                    android:textSize="30dp"/>
+                    android:textSize="30sp"/>
 
                 <TextView
                     android:id="@+id/infoMessage"
@@ -41,7 +41,17 @@
                     android:layout_marginTop="15dp"
                     android:text="@string/info_message"
                     android:textAlignment="center"
-                    android:textSize="20dp"/>
+                    android:textSize="20sp"/>
+
+                <Switch
+                    android:id="@+id/darkModeSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="240dp"
+                    android:text="@string/dark_mode"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -178,7 +188,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/bottom_navigation_menu"
             app:menu="@menu/bottom_navigation_menu"
-            android:layout_alignParentBottom="true"
             app:labelVisibilityMode="labeled"/>
 
     </LinearLayout>
