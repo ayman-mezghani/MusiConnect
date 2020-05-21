@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ch.epfl.sdp.musiconnect.Band;
@@ -81,6 +82,18 @@ public class SimplifiedBandTest {
         assertEquals((String) map.get(Fields.bandName.toString()), (String) mapClone.get(Fields.bandName.toString()));
         assertEquals(map.get(Fields.members.toString()), mapClone.get(Fields.members.toString()));
         assertEquals(map.get(Fields.events.toString()), mapClone.get(Fields.events.toString()));
+    }
+
+    @Test
+    public void toBandTest() {
+        Map<String, Object> map = testMap();
+
+        Band b = (new SimplifiedBand(map)).toBand();
+
+        assertEquals((String) map.get(Fields.leader.toString()), b.getEmailAddress());
+        assertEquals((String) map.get(Fields.bandName.toString()), b.getName());
+        assertEquals((List<String>) map.get(Fields.members.toString()), b.getMusiciansEmailsAdress());
+        assertEquals((List<String>) map.get(Fields.events.toString()), b.getEvents());
     }
 
     @Test

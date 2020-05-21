@@ -6,6 +6,7 @@ import com.google.firebase.firestore.GeoPoint;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -80,6 +81,7 @@ public class SimplifiedMusicianTest {
         assertEquals(((Timestamp) map.get(Fields.birthday.toString())).toDate(), sMusician.getBirthday());
         assertEquals(((Timestamp) map.get(Fields.joinDate.toString())).toDate(), sMusician.getJoinDate());
         assertEquals((GeoPoint) map.get(Fields.location.toString()), sMusician.getLocation());
+        assertEquals((List<String>) map.get(Fields.events.toString()), sMusician.getEvents());
     }
 
     @Test
@@ -201,6 +203,7 @@ public class SimplifiedMusicianTest {
         map.put(Fields.birthday.toString(), new Timestamp(new Date()));
         map.put(Fields.joinDate.toString(), new Timestamp(new Date()));
         map.put(Fields.location.toString(), new GeoPoint(0, 0));
+        map.put(Fields.events.toString(), Arrays.asList("event1", "event2"));
         return map;
     }
 }
