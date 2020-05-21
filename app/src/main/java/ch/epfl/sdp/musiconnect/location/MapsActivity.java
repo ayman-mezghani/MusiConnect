@@ -111,6 +111,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private List<Event> events = new ArrayList<>();
     private List<Event> eventNear = new ArrayList<>();
     private List<Marker> eventMarkers = new ArrayList<>();           //markers on the map associated to events
+    private Event shownEvent = null;                                //event to be shown on map, when accessed from event pages
+
+    private boolean updateCamera = true;
 
     private Marker marker;                                      //main user's marker
 
@@ -259,6 +262,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         CustomInfoWindowGoogleMap customInfoWindow = new CustomInfoWindowGoogleMap(this);
         mMap.setInfoWindowAdapter(customInfoWindow);
 
+        //check if there's an event to be shown to the user
+        if(getIntent().hasExtra("Event")){
+            getShownEvent(getIntent().getStringExtra("Event"));
+        }
         //place users' markers
         updateProfileList();
         loadProfilesMarker();
@@ -360,8 +367,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .position(latLng)
                     .title(markerName)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
+            if(updateCamera) {
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
+            }
             circle.setCenter(latLng);
         }
 
@@ -474,6 +483,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
 
+        if(shownEvent != null){
+            eventNear.add(shownEvent);
+        }
+
         loadEventMarkers();
     }
 
@@ -512,6 +525,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             marker.setTag(e);
             eventMarkers.add(marker);
         }
+    }
+
+    private void getShownEvent(String eid){
+        Adb.read(DbUserType.Events, eid, new DbCallback() {
+            @Override
+            public void readCallback(Event e) {
+                shownEvent = e;
+                updateCamera = false;
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(shownEvent.getLocation().getLatitude(), shownEvent.getLocation().getLongitude())));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
+            }});
     }
 
     @Override

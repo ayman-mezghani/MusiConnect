@@ -14,6 +14,7 @@ import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.TypeOfUser;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.location.MapsActivity;
 
 
 public class MyEventPage extends EventPage {
@@ -36,6 +37,7 @@ public class MyEventPage extends EventPage {
 
         setupEditButton();
         setupDeleteButton();
+        setupMapButton();
 
         String eid = getIntent().getStringExtra("eid");
         retrieveEventInfo(eid);
@@ -91,6 +93,22 @@ public class MyEventPage extends EventPage {
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> {
                     Toast.makeText(MyEventPage.this, "Deletion cancelled", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                })
+                .create()
+                .show());
+    }
+
+    private void setupMapButton(){
+        Button toMap = findViewById(R.id.toMap);
+        toMap.setOnClickListener(v -> new AlertDialog.Builder(MyEventPage.this)
+                .setMessage("Show the event's location on the map?")
+                .setPositiveButton("Yes", (dialogInterface, i) -> {
+                    Intent mapIntent = new Intent(MyEventPage.this,MapsActivity.class);
+                    mapIntent.putExtra("Event",event.getEid());
+                    this.startActivity(mapIntent);
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> {
                     dialog.dismiss();
                 })
                 .create()

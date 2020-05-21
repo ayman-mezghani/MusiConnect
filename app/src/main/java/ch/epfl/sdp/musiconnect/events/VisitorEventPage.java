@@ -1,9 +1,13 @@
 package ch.epfl.sdp.musiconnect.events;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.location.MapsActivity;
 
 public class VisitorEventPage extends EventPage {
 
@@ -21,6 +25,8 @@ public class VisitorEventPage extends EventPage {
 
         String eid = getIntent().getStringExtra("eid");
         retrieveEventInfo(eid);
+
+        setupMapButton();
     }
 
     @Override
@@ -30,6 +36,22 @@ public class VisitorEventPage extends EventPage {
         } else {
             loadPrivateEventPage();
         }
+    }
+
+    private void setupMapButton(){
+        Button toMap = findViewById(R.id.toMap);
+        toMap.setOnClickListener(v -> new AlertDialog.Builder(VisitorEventPage.this)
+                .setMessage("Show the event's location on the map?")
+                .setPositiveButton("Yes", (dialogInterface, i) -> {
+                    Intent mapIntent = new Intent(VisitorEventPage.this, MapsActivity.class);
+                    mapIntent.putExtra("Event",event.getEid());
+                    this.startActivity(mapIntent);
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .create()
+                .show());
     }
 
     private void loadPrivateEventPage() {
