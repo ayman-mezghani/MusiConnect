@@ -16,5 +16,7 @@ public interface DbCallback {
 
     default void queryCallback(List<User> userList) {}
 
+    default void queryCallbackEvent(List<Event> eventList) {}
+
     default void queryBandIfMemberCallback(List<User> userList) {}
 }

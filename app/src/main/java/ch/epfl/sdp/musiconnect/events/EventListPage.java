@@ -65,7 +65,6 @@ public class EventListPage extends Page {
         if (isVisitor) {
             userEmail = intent.getStringExtra("UserEmail");
 
-            // TODO get actual usertype from user
             dbAdapter.read(DbUserType.Musician, userEmail, new DbCallback() {
                 @Override
                 public void readCallback(User user) {

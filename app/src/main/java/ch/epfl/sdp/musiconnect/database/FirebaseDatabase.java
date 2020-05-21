@@ -145,6 +145,12 @@ public class FirebaseDatabase extends Database {
                                     dbCallback.readCallback(e);
                                 }
                             });
+
+                            // DO NOT DELETE THIS
+                            /*
+                            SimplifiedEvent e = new SimplifiedEvent(data);
+                            dbCallback.readCallback(e.toEvent());
+                             */
                         }
 
                         else {
@@ -185,21 +191,38 @@ public class FirebaseDatabase extends Database {
     void finderQuery(String collection, Map<String, Object> arguments, DbCallback dbCallback) {
         CollectionReference ref = db.collection(collection);
         Task<QuerySnapshot> t = DatabaseQueryHelpers.unpack(ref, arguments).get();
+
         t.addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                List<User> queryResult = new ArrayList<>();
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    Map<String, Object> data = document.getData();
-                    Log.d("checkcheck", document.getId() + " => " + data);
-                    if (collection.equals(DbUserType.Musician.toString())) {
-                        SimplifiedMusician m = new SimplifiedMusician(document.getData());
-                        queryResult.add(m.toMusician());
-                    } else if (collection.equals((DbUserType.Band.toString()))) {
-                        SimplifiedBand sb = new SimplifiedBand(document.getData());
-                        queryResult.add(sb.toBand());
+                if (collection.equals(DbUserType.Events.toString())) {
+                    List<Event> queryResult = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Map<String, Object> data = document.getData();
+                        Log.d("checkcheck", document.getId() + " => " + data);
+
+
+                        SimplifiedEvent se = new SimplifiedEvent(document.getData());
+                        queryResult.add(se.toEvent());
                     }
+
+                    dbCallback.queryCallbackEvent(queryResult);
                 }
-                dbCallback.queryCallback(queryResult);
+
+                else {
+                    List<User> queryResult = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Map<String, Object> data = document.getData();
+                        Log.d("checkcheck", document.getId() + " => " + data);
+                        if (collection.equals(DbUserType.Musician.toString())) {
+                            SimplifiedMusician m = new SimplifiedMusician(document.getData());
+                            queryResult.add(m.toMusician());
+                        } else if (collection.equals((DbUserType.Band.toString()))) {
+                            SimplifiedBand sb = new SimplifiedBand(document.getData());
+                            queryResult.add(sb.toBand());
+                        }
+                    }
+                    dbCallback.queryCallback(queryResult);
+                }
             } else {
                 Log.d("checkcheck", "Error getting documents: ", task.getException());
             }
