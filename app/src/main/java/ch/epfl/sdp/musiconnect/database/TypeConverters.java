@@ -11,6 +11,8 @@ final class TypeConverters {
     private static final int YEAR_BIAS = 1900;
     private static final int MONTH_BIAS = 1;
 
+    private TypeConverters() {};
+
     static Date myDateToDate(MyDate myDate) {
         return new Date(myDate.getYear() - YEAR_BIAS, myDate.getMonth() - MONTH_BIAS, myDate.getDate(), myDate.getHours(), myDate.getMinutes());
     }

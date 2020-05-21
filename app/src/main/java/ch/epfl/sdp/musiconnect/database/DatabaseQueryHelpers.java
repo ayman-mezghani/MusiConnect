@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
-abstract class DatabaseQueryHelpers {
+final class DatabaseQueryHelpers {
+    private DatabaseQueryHelpers() {}
     private static boolean isFieldsArray(String field) {
         ArrayList<String> arrayFields = new ArrayList<>();
         arrayFields.add("members");
