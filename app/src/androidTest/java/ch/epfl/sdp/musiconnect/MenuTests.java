@@ -27,6 +27,7 @@ import ch.epfl.sdp.musiconnect.location.MapsLocationFunctions;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -106,7 +107,7 @@ public class MenuTests {
     }
 
     private void clickOnMenuId(int id) {
-        onView(withId(id)).perform(click());
+        onView(withId(id)).perform(scrollTo(), click());
     }
 
     @Test

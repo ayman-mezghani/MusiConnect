@@ -103,14 +103,6 @@ public class VisitorProfileTest {
     }
 
     @Test
-    public void loadNoProfile() {
-        Intent intent = new Intent();
-        visitorActivityTestRule.launchActivity(intent);
-
-        onView(withId(R.id.visitorProfileTitle)).check(matches(withText("Profile not found...")));
-    }
-
-    @Test
     public void loadNullProfile() {
         Intent intent = new Intent();
         intent.putExtra("Username", (String) null);
