@@ -97,6 +97,7 @@ public class Event {
         }
 
         participants.remove(user);
+        emails
     }
 
     public boolean containsParticipant(String email) {

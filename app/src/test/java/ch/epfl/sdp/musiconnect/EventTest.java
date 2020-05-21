@@ -29,20 +29,20 @@ public class EventTest {
         final String NEW_MESSAGE = "New Event Message";
         final String ADDRESS = "Lausanne";
 
-        Event e = new Event(m, "0");
+        Event e = new Event(m.getEmailAddress(), "0");
 
-        assertEquals(m.getFirstName(), ((Musician)e.getHostEmailAddress()).getFirstName());
+        assertEquals(m.getEmailAddress(), e.getHostEmailAddress());
 
         assertEquals("0", e.getEid());
         e.setEid("1");
         assertEquals("1", e.getEid());
 
-        e.register(n);
-        assertTrue(e.getParticipants().contains(n));
+        e.register(n.getEmailAddress());
+        assertTrue(e.getParticipants().contains(n.getEmailAddress()));
         assertTrue(e.containsParticipant(n.getEmailAddress()));
 
         e.unregister(n);
-        assertFalse(e.getParticipants().contains(n));
+        assertFalse(e.getParticipants().contains(n.getEmailAddress()));
         assertFalse(e.containsParticipant(n.getEmailAddress()));
 
         e.setLocation(0, 0);
@@ -73,23 +73,23 @@ public class EventTest {
         Musician m = new Musician("firstName", "lastName", "username", "email@gmail.com", new MyDate(2000, 1, 1));
         Band b = new Band("test", m.getEmailAddress());
         Band b1 = new Band("Another test", m.getEmailAddress());
-        Event e = new Event(b, "0");
+        Event e = new Event(b.getEmailAddress(), "0");
 
-        assertEquals(b.getName(), e.getHostEmailAddress().getName());
-        assertEquals(b.getName(), e.getParticipants().get(0).getName());
+        assertEquals(b.getEmailAddress(), e.getHostEmailAddress());
+        assertEquals(b.getEmailAddress(), e.getParticipants().get(0));
 
-        e.register(b1);
-        assertTrue(e.getParticipants().contains(b1));
+        e.register(b1.getEmailAddress());
+        assertTrue(e.getParticipants().contains(b1.getEmailAddress()));
 
-        e.unregister(b1);
-        assertFalse(e.getParticipants().contains(b1));
+        e.unregister(b1.getEmailAddress());
+        assertFalse(e.getParticipants().contains(b1.getEmailAddress()));
 
     }
 
     @Test
     public void eventCreationThrowsIllegalArgumentExceptionTests() {
         Musician m = new Musician("firstName", "lastName", "username", "email@gmail.com", new MyDate(2000, 1, 1));
-        Event e = new Event(m, "0");
+        Event e = new Event(m.getEmailAddress(), "0");
 
         assertThrows(IllegalArgumentException.class, () -> new Event(null, "0"));
         assertThrows(IllegalArgumentException.class, () -> new Event(null, "0"));
@@ -108,19 +108,19 @@ public class EventTest {
     public void getterSetter() {
         Musician m = new Musician("firstName", "lastName", "username", "email@gmail.com", new MyDate(2000, 1, 1));
         Musician m2 = new Musician("firstName2", "lastName2", "username2", "email2@gmail.com", new MyDate(2000, 1, 1));
-        Event e = new Event(m, "0");
+        Event e = new Event(m.getEmailAddress(), "0");
 
-        List<User> lu = new ArrayList<>();
-        lu.add(m);
-        lu.add(m2);
+        List<String> lu = new ArrayList<>();
+        lu.add(m.getEmailAddress());
+        lu.add(m2.getEmailAddress());
 
         e.setEid("eid");
         assertEquals(e.getEid(), "eid");
 
-        e.register(m2);
+        e.register(m2.getEmailAddress());
         assertEquals(e.getParticipants(), lu);
 
-        e.register(m2);
+        e.register(m2.getEmailAddress());
         assertEquals(e.getParticipants(), lu);
 
         lu.remove(m2);
@@ -154,7 +154,7 @@ public class EventTest {
 
         assertThrows(IllegalArgumentException.class, () -> new Event(null, ""));
 
-        Event e = new Event(m, "0");
+        Event e = new Event(m.getEmailAddress(), "0");
         assertThrows(IllegalArgumentException.class, () -> e.register(null));
         assertThrows(IllegalArgumentException.class, () -> e.unregister(null));
         assertThrows(IllegalArgumentException.class, () -> e.setAddress(null));
