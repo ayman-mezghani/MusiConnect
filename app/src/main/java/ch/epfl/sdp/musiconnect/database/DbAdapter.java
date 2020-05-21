@@ -4,6 +4,7 @@ import java.util.Map;
 
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.MyLocation;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.events.Event;
 
@@ -15,8 +16,8 @@ public class DbAdapter {
         this.db = db;
     }
 
-    public void add(DbUserType userType, User user) {
-        if(userType.equals(DbUserType.Musician)) {
+    public void add(DbDataType userType, User user) {
+        if(userType.equals(DbDataType.Musician)) {
             Musician musician = (Musician) user;
             db.addDoc(userType.toString(), musician.getEmailAddress(), new SimplifiedMusician(musician));
         }
@@ -25,12 +26,13 @@ public class DbAdapter {
             db.addDoc(userType.toString(), band.getEmailAddress(), new SimplifiedBand(band));
         }
     }
-    public void add(Event e, DbUserType userType) {
+
+    public void add(DbDataType userType, Event e) {
         db.addDoc(new SimplifiedEvent(e), userType);
     }
 
-    public void delete(DbUserType userType, User user) {
-        if(userType.equals(DbUserType.Musician)) {
+    public void delete(DbDataType userType, User user) {
+        if(userType.equals(DbDataType.Musician)) {
             Musician musician = (Musician) user;
             db.deleteDoc(userType.toString(), musician.getEmailAddress());
         }
@@ -40,13 +42,13 @@ public class DbAdapter {
         }
     }
 
-    public void delete(DbUserType userType, Event event) {
+    public void delete(DbDataType userType, Event event) {
         db.deleteDoc(userType.toString(), event.getEid());
     }
 
 
-    public void update(DbUserType userType, User user) {
-        if(userType.equals(DbUserType.Musician)) {
+    public void update(DbDataType userType, User user) {
+        if(userType.equals(DbDataType.Musician)) {
             Musician musician = (Musician) user;
             db.updateDoc(userType.toString(), musician.getEmailAddress(), (new SimplifiedMusician(musician)).toMap());
         }
@@ -56,27 +58,23 @@ public class DbAdapter {
         }
     }
 
-    public void update(DbUserType userType, Event e) {
+    public void update(DbDataType userType, Event e) {
         db.updateDoc(userType.toString(), e.getEid(), (new SimplifiedEvent(e)).toMap());
     }
 
-//    public void deleteFieldsInDoc(String docName, List<String> fields) {
-//        Map<String, Object> updates = new HashMap<>();
-//        for (String str : fields) {
-//            updates.put(str, FieldValue.delete());
-//        }
-//        this.updateDoc(docName, updates);
-//    }
-
-    public void read(DbUserType userType, String index, DbCallback dbCallback) {
+    public void read(DbDataType userType, String index, DbCallback dbCallback) {
         db.readDoc(userType.toString(), index, dbCallback);
     }
 
-    public void exists(DbUserType collection, String index, DbCallback dbCallback) {
+    public void exists(DbDataType collection, String index, DbCallback dbCallback) {
         db.docExists(collection.toString(), index, dbCallback);
     }
 
-    public void query(DbUserType collection, Map<String, Object> filters, DbCallback dbCallback) {
+    public void query(DbDataType collection, Map<String, Object> filters, DbCallback dbCallback) {
         db.finderQuery(collection.toString(), filters, dbCallback);
+    }
+
+    public void locationQuery(DbDataType collection, MyLocation currentLocation, double radius, DbCallback dbCallback) {
+        db.locQuery(collection.toString(), TypeConverters.myLocationToGeoPoint(currentLocation), radius, dbCallback);
     }
 }

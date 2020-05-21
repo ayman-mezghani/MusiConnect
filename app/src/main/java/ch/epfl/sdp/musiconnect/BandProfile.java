@@ -14,8 +14,8 @@ import java.util.List;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
-import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
+import ch.epfl.sdp.musiconnect.database.DbDataType;
 
 public class BandProfile extends Page {
 // LeaderMail
@@ -47,7 +47,7 @@ public class BandProfile extends Page {
                     String selected = bandSpinner.getSelectedItem().toString();
                     Toast.makeText(BandProfile.this, selected, Toast.LENGTH_SHORT).show();
 
-                    DbGenerator.getDbInstance().read(DbUserType.Band,
+                    DbSingleton.getDbInstance().read(DbDataType.Band,
                             getBandFromName(CurrentUser.getInstance(BandProfile.this).getBands(), selected).getEmailAddress(), new DbCallback() {
                                 @Override
                                 public void readCallback(User user) {
@@ -91,7 +91,7 @@ public class BandProfile extends Page {
 
     private void loadProfileContent() {
         String leaderEmail = getIntent().getStringExtra("leaderMail");
-        DbGenerator.getDbInstance().read(DbUserType.Band, leaderEmail, new DbCallback() {
+        DbSingleton.getDbInstance().read(DbDataType.Band, leaderEmail, new DbCallback() {
             @Override
             public void readCallback(User user) {
                 displayBandInfo((Band) user);

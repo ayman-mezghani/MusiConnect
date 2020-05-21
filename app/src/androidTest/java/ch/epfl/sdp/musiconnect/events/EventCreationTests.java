@@ -26,9 +26,9 @@ import java.util.Calendar;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.TypeOfUser;
-import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
@@ -66,8 +66,8 @@ public class EventCreationTests {
 
     @BeforeClass
     public static void setMocks() {
-        DbGenerator.setDatabase(new MockDatabase(false));
-        CloudStorageGenerator.setStorage((new MockCloudStorage()));
+        DbSingleton.setDatabase(new MockDatabase(false));
+        CloudStorageSingleton.setStorage((new MockCloudStorage()));
     }
 
     // Before and after methods are used in order to accept tests with intents
@@ -81,7 +81,7 @@ public class EventCreationTests {
 
 
     private void clickButtonWithText(int text) {
-        onView(withText(text)).perform(ViewActions.scrollTo()).perform(click());
+        onView(withText(text)).perform(ViewActions.scrollTo(), click());
     }
 
 

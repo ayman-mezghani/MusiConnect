@@ -21,9 +21,9 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
@@ -81,8 +81,8 @@ public class ProfileModificationTests {
 
     @BeforeClass
     public static void setMocks() {
-        DbGenerator.setDatabase(new MockDatabase(false));
-        CloudStorageGenerator.setStorage((new MockCloudStorage()));
+        DbSingleton.setDatabase(new MockDatabase(false));
+        CloudStorageSingleton.setStorage((new MockCloudStorage()));
     }
     /**
      * Helper method to avoid duplication

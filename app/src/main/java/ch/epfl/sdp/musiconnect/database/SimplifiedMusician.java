@@ -1,7 +1,5 @@
 package ch.epfl.sdp.musiconnect.database;
 
-import android.util.Log;
-
 import androidx.annotation.Nullable;
 
 import com.google.firebase.Timestamp;
@@ -16,21 +14,14 @@ import java.util.Map;
 import ch.epfl.sdp.musiconnect.Instrument;
 import ch.epfl.sdp.musiconnect.Level;
 import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.MyDate;
-import ch.epfl.sdp.musiconnect.MyLocation;
 import ch.epfl.sdp.musiconnect.TypeOfUser;
 
+import static ch.epfl.sdp.musiconnect.database.TypeConverters.dateToMyDate;
+import static ch.epfl.sdp.musiconnect.database.TypeConverters.geoPointToMyLocation;
+import static ch.epfl.sdp.musiconnect.database.TypeConverters.myDateToDate;
+import static ch.epfl.sdp.musiconnect.database.TypeConverters.myLocationToGeoPoint;
+
 public class SimplifiedMusician extends SimplifiedDbEntry {
-//    @TODO use this enum instead of the static fields
-//    public enum Fields {
-//        username, firstName, lastName, email, typeOfUser, birthday, joinDate, location, events;
-//
-//        @NonNull
-//        @Override
-//        public String toString() {
-//            return super.toString().toLowerCase();
-//        }
-//    }
 
     private String username;
     private String firstName;
@@ -42,23 +33,6 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
     private GeoPoint location;
     private List<String> events;
     private List<Map<String, String>> instruments;
-
-    static final String USERNAME = "username";
-    static final String FIRSTNAME = "firstName";
-    static final String LASTNAME = "lastName";
-    static final String EMAIL = "email";
-    static final String TYPEOFUSER = "typeOfUser";
-    static final String BIRTHDAY = "birthday";
-    static final String JOINDATE = "joinDate";
-    static final String LOCATION = "location";
-    static final String EVENTS = "events";
-    static final String INSTRUMENTS = "instruments";
-    static final String INSTRUMENT = "instrument";
-    static final String LEVEL = "level";
-
-
-    private static final int YEAR_BIAS = 1900;
-    private static final int MONTH_BIAS = 1;
 
     public SimplifiedMusician() {
     }
@@ -77,16 +51,16 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
     }
 
     public SimplifiedMusician(Map<String, Object> map) {
-        this.username = map.get(USERNAME) == null ? "" : (String) map.get(USERNAME);
-        this.firstName = map.get(FIRSTNAME) == null ? "" : (String) map.get(FIRSTNAME);
-        this.lastName = map.get(LASTNAME) == null ? "" : (String) map.get(LASTNAME);
-        this.email = map.get(EMAIL) == null ? "" : (String) map.get(EMAIL);
-        this.typeOfUser = map.get(TYPEOFUSER) == null ? "" : (String) map.get(TYPEOFUSER);
-        this.birthday = map.get(BIRTHDAY) == null ? null : ((Timestamp) map.get(BIRTHDAY)).toDate();
-        this.joinDate = map.get(JOINDATE) == null ? null : ((Timestamp) map.get(JOINDATE)).toDate();
-        this.location = map.get(LOCATION) == null ? null : (GeoPoint) map.get(LOCATION);
-        this.events = map.get(EVENTS) == null ? null : (List<String>) map.get(EVENTS);
-        this.instruments = map.get(INSTRUMENTS) == null ? null : (List<Map<String, String>>) map.get(INSTRUMENTS);
+        this.username = map.get(Fields.username.toString()) == null ? "" : (String) map.get(Fields.username.toString());
+        this.firstName = map.get(Fields.firstName.toString()) == null ? "" : (String) map.get(Fields.firstName.toString());
+        this.lastName = map.get(Fields.lastName.toString()) == null ? "" : (String) map.get(Fields.lastName.toString());
+        this.email = map.get(Fields.email.toString()) == null ? "" : (String) map.get(Fields.email.toString());
+        this.typeOfUser = map.get(Fields.typeOfUser.toString()) == null ? "" : (String) map.get(Fields.typeOfUser.toString());
+        this.birthday = map.get(Fields.birthday.toString()) == null ? null : ((Timestamp) map.get(Fields.birthday.toString())).toDate();
+        this.joinDate = map.get(Fields.joinDate.toString()) == null ? null : ((Timestamp) map.get(Fields.joinDate.toString())).toDate();
+        this.location = map.get(Fields.location.toString()) == null ? null : (GeoPoint) map.get(Fields.location.toString());
+        this.events = map.get(Fields.events.toString()) == null ? null : (List<String>) map.get(Fields.events.toString());
+        this.instruments = map.get(Fields.instruments.toString()) == null ? null : (List<Map<String, String>>) map.get(Fields.instruments.toString());
     }
 
     public Musician toMusician() {
@@ -101,42 +75,25 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
 
     public Map<String, Object> toMap() {
         Map<String, Object> res = new HashMap<>();
-        res.put(USERNAME, username);
-        res.put(FIRSTNAME, firstName);
-        res.put(LASTNAME, lastName);
-        res.put(EMAIL, email);
-        res.put(TYPEOFUSER, typeOfUser);
-        res.put(BIRTHDAY, birthday);
-        res.put(JOINDATE, joinDate);
-        res.put(LOCATION, location);
-        res.put(EVENTS, events);
-        res.put(INSTRUMENTS, instruments);
+        res.put(Fields.username.toString(), username);
+        res.put(Fields.firstName.toString(), firstName);
+        res.put(Fields.lastName.toString(), lastName);
+        res.put(Fields.email.toString(), email);
+        res.put(Fields.typeOfUser.toString(), typeOfUser);
+        res.put(Fields.birthday.toString(), birthday);
+        res.put(Fields.joinDate.toString(), joinDate);
+        res.put(Fields.location.toString(), location);
+        res.put(Fields.events.toString(), events);
+        res.put(Fields.instruments.toString(), instruments);
         return res;
-    }
-
-    // TODO Those methods are also in SimplifiedEvent, may need to refactor
-    private Date myDateToDate(MyDate myDate) {
-        return new Date(myDate.getYear() - YEAR_BIAS, myDate.getMonth() - MONTH_BIAS, myDate.getDate(), myDate.getHours(), myDate.getMinutes());
-    }
-
-    private MyDate dateToMyDate(Date date) {
-        return new MyDate(date.getYear() + YEAR_BIAS, date.getMonth() + MONTH_BIAS, date.getDate(), date.getHours(), date.getMinutes());
-    }
-
-    private GeoPoint myLocationToGeoPoint(MyLocation loc) {
-        return new GeoPoint(loc.getLatitude(), loc.getLongitude());
-    }
-
-    private MyLocation geoPointToMyLocation(GeoPoint loc) {
-        return new MyLocation(loc.getLatitude(), loc.getLongitude());
     }
 
     private List<Map<String, String>> instrumentMapToList(Map<Instrument, Level> map) {
         List<Map<String, String>> res = new ArrayList<>();
         for (Map.Entry<Instrument, Level> entry : map.entrySet()) {
             Map<String, String> m = new HashMap<>();
-            m.put(INSTRUMENT, entry.getKey().toString());
-            m.put(LEVEL, entry.getValue().toString());
+            m.put(Fields.instrument.toString(), entry.getKey().toString());
+            m.put(Fields.level.toString(), entry.getValue().toString());
             res.add(m);
         }
         return res;
@@ -145,7 +102,7 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
     private Map<Instrument, Level> instrumentListToMap(List<Map<String, String>> l) {
         Map<Instrument, Level> res = new HashMap<>();
         for (Map<String, String> m : l) {
-            res.put(Instrument.getInstrumentFromValue(m.get(INSTRUMENT)), Level.getLevelFromValue(m.get(LEVEL)));
+            res.put(Instrument.getInstrumentFromValue(m.get(Fields.instrument.toString())), Level.getLevelFromValue(m.get(Fields.level.toString())));
         }
         return res;
     }

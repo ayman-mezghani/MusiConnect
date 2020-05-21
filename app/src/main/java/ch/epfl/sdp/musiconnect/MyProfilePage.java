@@ -9,12 +9,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
 
 public class MyProfilePage extends ProfilePage implements View.OnClickListener {
     private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
@@ -29,7 +28,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dbAdapter = DbGenerator.getDbInstance();
+        dbAdapter = DbSingleton.getDbInstance();
 
         setContentView(R.layout.activity_profile_page);
 

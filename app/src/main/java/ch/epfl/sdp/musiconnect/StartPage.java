@@ -32,8 +32,8 @@ import java.util.ArrayList;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
-import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
+import ch.epfl.sdp.musiconnect.database.DbDataType;
 import ch.epfl.sdp.musiconnect.events.Event;
 import ch.epfl.sdp.musiconnect.location.LocationPermission;
 
@@ -102,7 +102,7 @@ public class StartPage extends Page {
             lv.setAdapter(adapter);
 
             for(String e : CurrentUser.getInstance(this).getBand().getEvents()) {
-                DbGenerator.getDbInstance().read(DbUserType.Events, e.trim(), new DbCallback() {
+                DbSingleton.getDbInstance().read(DbDataType.Events, e.trim(), new DbCallback() {
                     @Override
                     public void readCallback(Event u) {
                         events.add(u.getTitle());
@@ -217,7 +217,7 @@ public class StartPage extends Page {
         User user = CurrentUser.getInstance(this).getMusician();
         if(user != null) {
             user.setLocation(new MyLocation(location.getLatitude(), location.getLongitude()));
-            DbGenerator.getDbInstance().update(DbUserType.Musician, user);
+            DbSingleton.getDbInstance().update(DbDataType.Musician, user);
         }
     }
 

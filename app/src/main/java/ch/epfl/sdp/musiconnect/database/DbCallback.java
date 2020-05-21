@@ -16,5 +16,7 @@ public interface DbCallback {
 
     default void queryCallback(List<User> userList) {}
 
+    default void locationQueryCallback(List queryResult) {}
+
     default void queryBandIfMemberCallback(List<User> userList) {}
 }

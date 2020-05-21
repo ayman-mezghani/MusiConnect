@@ -2,7 +2,7 @@ package ch.epfl.sdp.musiconnect.database;
 
 import androidx.annotation.NonNull;
 
-public enum DbUserType {
+public enum DbDataType {
     Musician, Band, Events;
 
     @NonNull

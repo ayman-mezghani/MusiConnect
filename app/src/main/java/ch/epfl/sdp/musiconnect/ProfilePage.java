@@ -15,10 +15,10 @@ import java.util.concurrent.TimeUnit;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
-import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
-import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.database.DbDataType;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
@@ -56,7 +56,7 @@ public abstract class ProfilePage extends Page {
         }
         // gets profile info from database
         if (checkConnection(ProfilePage.this)) {
-            dbAdapter.read(DbUserType.Musician, userEmail, new DbCallback() {
+            dbAdapter.read(DbDataType.Musician, userEmail, new DbCallback() {
                 @Override
                 public void readCallback(User user) {
                     loadUserProfile(user);
@@ -98,7 +98,7 @@ public abstract class ProfilePage extends Page {
     }
 
     protected void getVideoUri(String s) {
-        CloudStorage storage = CloudStorageGenerator.getCloudInstance(this);
+        CloudStorage storage = CloudStorageSingleton.getCloudInstance(this);
         storage.download(CloudStorage.FileType.video, s, new CloudCallback() {
             @Override
             public void onSuccess(Uri fileUri) {

@@ -20,7 +20,6 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Spinner;
 
 import androidx.annotation.VisibleForTesting;
@@ -44,7 +43,6 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.firestore.GeoPoint;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -67,8 +65,8 @@ import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.VisitorProfilePage;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
-import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
+import ch.epfl.sdp.musiconnect.database.DbDataType;
 import ch.epfl.sdp.musiconnect.events.Event;
 import ch.epfl.sdp.musiconnect.events.EventCreationPage;
 import ch.epfl.sdp.musiconnect.events.MyEventPage;
@@ -90,7 +88,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private NotificationManagerCompat notificationManager;
 
 
-    private DbAdapter Adb = DbGenerator.getDbInstance();
+    private DbAdapter Adb = DbSingleton.getDbInstance();
 
     private AppDatabase localDb;
     private Executor mExecutor = Executors.newSingleThreadExecutor();
@@ -219,7 +217,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void setupEventList(List<String> list) {
         for (String se: list) {
-            DbGenerator.getDbInstance().read(DbUserType.Events, se, new DbCallback() {
+            DbSingleton.getDbInstance().read(DbDataType.Events, se, new DbCallback() {
                 @Override
                 public void readCallback(Event e) {
                     events.add(e);
@@ -377,8 +375,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (CurrentUser.getInstance(this).getCreatedFlag()) {
             Musician current = CurrentUser.getInstance(this).getMusician();
             current.setLocation(new MyLocation(setLoc.getLatitude(), setLoc.getLongitude()));
-            DbAdapter adapter = DbGenerator.getDbInstance();
-            adapter.update(DbUserType.Musician, current);
+            DbAdapter adapter = DbSingleton.getDbInstance();
+            adapter.update(DbDataType.Musician, current);
             notificationManager.cancel(CLOUD_ID);
         } else {
             notificationManager.notify(CLOUD_ID, buildNotification("Error: couldn't update your location to the cloud").build());
@@ -394,7 +392,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         User user = CurrentUser.getInstance(this).getMusician();
 
         user.setLocation(new MyLocation(location.getLatitude(), location.getLongitude()));
-        DbGenerator.getDbInstance().update(DbUserType.Musician, user);
+        DbSingleton.getDbInstance().update(DbDataType.Musician, user);
     }
 
     private void checkLocationPermission() {
@@ -425,7 +423,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         for (Musician m : allUsers) {
-            Adb.read(DbUserType.Musician, m.getEmailAddress(), new DbCallback() {
+            Adb.read(DbDataType.Musician, m.getEmailAddress(), new DbCallback() {
                 @Override
                 public void readCallback(User user) {
                     MyLocation l = user.getLocation();
@@ -477,7 +475,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // Show event if event is in threshold, public or created by "this" user
                 // TODO check the 2 last conditions when fetching from database directly
                 if (setLoc.distanceTo(l) <= threshold && (e.isVisible()
-                        || e.getCreator().getEmailAddress().equals(CurrentUser.getInstance(this).email))) {
+                        || e.getHostEmailAddress().equals(CurrentUser.getInstance(this).email))) {
                     eventNear.add(e);
                 }
             }
@@ -528,7 +526,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void getShownEvent(String eid){
-        Adb.read(DbUserType.Events, eid, new DbCallback() {
+        Adb.read(DbDataType.Events, eid, new DbCallback() {
             @Override
             public void readCallback(Event e) {
                 shownEvent = e;

@@ -29,8 +29,8 @@ import java.util.Map;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
-import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
+import ch.epfl.sdp.musiconnect.database.DbDataType;
 import ch.epfl.sdp.musiconnect.events.EventCreationPage;
 import ch.epfl.sdp.musiconnect.events.EventListPage;
 import ch.epfl.sdp.musiconnect.finder.FinderPage;
@@ -226,13 +226,13 @@ public abstract class Page extends AppCompatActivity {
     }
 
     public void updateCurrentUser(Context ctx) {
-        DbAdapter db = DbGenerator.getDbInstance();
-        db.read(DbUserType.Musician, CurrentUser.getInstance(ctx).email, new DbCallback() {
+        DbAdapter db = DbSingleton.getDbInstance();
+        db.read(DbDataType.Musician, CurrentUser.getInstance(ctx).email, new DbCallback() {
             @Override
             public void readCallback(User user) {
                 CurrentUser.getInstance(ctx).setMusician((Musician) user);
                 if(((Musician) user).getTypeOfUser() == TypeOfUser.Band) {
-                    db.read(DbUserType.Band, CurrentUser.getInstance(ctx).email, new DbCallback() {
+                    db.read(DbDataType.Band, CurrentUser.getInstance(ctx).email, new DbCallback() {
                         @Override
                         public void readCallback(User u) {
                         CurrentUser.getInstance(ctx).setBand((Band) u);
@@ -247,7 +247,7 @@ public abstract class Page extends AppCompatActivity {
     public void getBandIfMember() {
         HashMap<String, Object> h = new HashMap<>();
         h.put("members", CurrentUser.getInstance(this).getMusician().getEmailAddress());
-        DbGenerator.getDbInstance().query(DbUserType.Band, h, new DbCallback() {
+        DbSingleton.getDbInstance().query(DbDataType.Band, h, new DbCallback() {
             @Override
             public void queryCallback(List<User> userList) {
                 List<Band> b = new ArrayList<>();

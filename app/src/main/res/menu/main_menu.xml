@@ -13,6 +13,7 @@
     <item
         android:id="@+id/my_profileBand"
         android:title="@string/my_bands"
+        android:visible="false"
         app:showAsAction="never"/>
 
     <item
