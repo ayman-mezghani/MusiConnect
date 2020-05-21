@@ -105,7 +105,7 @@ public class EventListPage extends Page {
             public void readCallback(User user) {
                 loadIds(user.getEvents(), dbDataType);
 
-                dbAdapter.query(DbDataType.Events, );
+
             }
         });
     }
