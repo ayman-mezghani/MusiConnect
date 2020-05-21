@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidx.core.content.ContextCompat;
+import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -21,8 +22,16 @@ import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject2;
 import ch.epfl.sdp.R;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sdp.musiconnect.testsFunctions.childAtPosition;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -79,8 +88,14 @@ public class DarkModeTests {
 
     @Test
     public void checkColorChangeWhenSwitchButtonIsToggled() {
-        UiObject2 toggle = device.findObject(By.checked(false));
-        toggle.click();
+        ViewInteraction switch_ = onView(
+                allOf(withId(R.id.darkModeSwitch), withText("Dark Mode:"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.widget.LinearLayout")),
+                                        0),
+                                2)));
+        switch_.perform(scrollTo(), click());
 
         Switch darkModeSwitch = startPageRule.getActivity().findViewById(R.id.darkModeSwitch);
         assertTrue(darkModeSwitch.isChecked());
