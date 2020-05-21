@@ -27,6 +27,7 @@ import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.User;
+import ch.epfl.sdp.musiconnect.events.Event;
 
 import static android.location.Location.distanceBetween;
 import static ch.epfl.sdp.musiconnect.database.SimplifiedDbEntry.Fields;
@@ -159,18 +160,29 @@ public class FirebaseDatabase extends Database {
         Task<QuerySnapshot> t = DatabaseQueryHelpers.unpack(ref, arguments).get();
         t.addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                List<User> queryResult = new ArrayList<>();
-                for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-                    Map<String, Object> data = document.getData();
-                    if (collection.equals(DbDataType.Musician.toString())) {
-                        SimplifiedMusician m = new SimplifiedMusician(data);
-                        queryResult.add(m.toMusician());
-                    } else if (collection.equals((DbDataType.Band.toString()))) {
-                        SimplifiedBand sb = new SimplifiedBand(data);
-                        queryResult.add(sb.toBand());
+                if (collection.equals(DbDataType.Events.toString())) {
+                    List<Event> queryResult = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Map<String, Object> data = document.getData();
+                        SimplifiedEvent se = new SimplifiedEvent(data);
+                        queryResult.add(se.toEvent(document.getId()));
                     }
+                    dbCallback.queryCallback(queryResult);
                 }
-                dbCallback.queryCallback(queryResult);
+                else {
+                    List<User> queryResult = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                        Map<String, Object> data = document.getData();
+                        if (collection.equals(DbDataType.Musician.toString())) {
+                            SimplifiedMusician m = new SimplifiedMusician(data);
+                            queryResult.add(m.toMusician());
+                        } else if (collection.equals((DbDataType.Band.toString()))) {
+                            SimplifiedBand sb = new SimplifiedBand(data);
+                            queryResult.add(sb.toBand());
+                        }
+                    }
+                    dbCallback.queryCallback(queryResult);
+                }
             } else {
                 Log.d(TAG, "Failed with: ", task.getException());
             }

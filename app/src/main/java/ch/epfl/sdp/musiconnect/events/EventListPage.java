@@ -157,8 +157,8 @@ public class EventListPage extends Page {
 
         // Show only events that are public or belong to this user or this user is a participant
         if (!containsId(eid) &&
-                (e.isVisible() || e.containsParticipant(CurrentUser.getInstance(this).email)
-                || e.getHostEmailAddress().equals(CurrentUser.getInstance(this).email))) {
+                (e.isVisible() || e.containsParticipant(userEmail)
+                || e.getHostEmailAddress().equals(userEmail))) {
             eventTitlesToShow.add(title);
             eidAndTitles.add(new Pair<>(eid, title));
             EventListPage.this.runOnUiThread(() -> adapter.notifyDataSetChanged());
@@ -185,7 +185,7 @@ public class EventListPage extends Page {
         } else {
             // We have loaded everything from this user, now find all events he/she participates in
             HashMap<String, Object> h = new HashMap<>();
-            h.put("participants", CurrentUser.getInstance(this).getMusician().getEmailAddress());
+            h.put("participants", userEmail);
             DbSingleton.getDbInstance().query(DbDataType.Events, h, new DbCallback() {
                 @Override
                 public void queryCallback(List eventList) {
