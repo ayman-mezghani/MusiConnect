@@ -239,7 +239,7 @@ public abstract class Page extends AppCompatActivity {
             public void readCallback(User user) {
                 CurrentUser.getInstance(ctx).setMusician((Musician) user);
                 if(((Musician) user).getTypeOfUser() == TypeOfUser.Band) {
-                    db.read(DbDataType.Band, CurrentUser.getInstance(ctx).email, new DbCallback() {
+                    db.read(DbDataType.Bands, CurrentUser.getInstance(ctx).email, new DbCallback() {
                         @Override
                         public void readCallback(User u) {
                         CurrentUser.getInstance(ctx).setBand((Band) u);
@@ -254,7 +254,7 @@ public abstract class Page extends AppCompatActivity {
     public void getBandIfMember() {
         HashMap<String, Object> h = new HashMap<>();
         h.put("members", CurrentUser.getInstance(this).getMusician().getEmailAddress());
-        DbSingleton.getDbInstance().query(DbDataType.Band, h, new DbCallback() {
+        DbSingleton.getDbInstance().query(DbDataType.Bands, h, new DbCallback() {
             @Override
             public void queryCallback(List userList) {
                 List<Band> b = new ArrayList<>();

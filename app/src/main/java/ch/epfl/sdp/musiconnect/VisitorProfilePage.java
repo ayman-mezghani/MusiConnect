@@ -98,7 +98,7 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         if (b != null && !b.containsMember(userEmail)) {
             b.addMember(userEmail);
         }
-        (DbSingleton.getDbInstance()).add(DbDataType.Band, b);
+        (DbSingleton.getDbInstance()).add(DbDataType.Bands, b);
     }
 
     @Override

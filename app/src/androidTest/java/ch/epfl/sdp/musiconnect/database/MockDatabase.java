@@ -107,7 +107,7 @@ public class MockDatabase extends Database {
 
     @Override
     void addDoc(String collection, String docName, SimplifiedDbEntry entry) {
-        if(collection.equals(DbDataType.Band.toString())) {
+        if(collection.equals(DbDataType.Bands.toString())) {
             this.b = ((SimplifiedBand)entry).toBand();
         }
     }
@@ -160,7 +160,7 @@ public class MockDatabase extends Database {
             }
         }
 
-        if(collection.equals(DbDataType.Band.toString())) {
+        if(collection.equals(DbDataType.Bands.toString())) {
             if(docName.equals("espresso@gmail.com"))
                 dbCallback.readCallback(new Band("testBand", "espresso@gmail.com"));
             else
@@ -186,7 +186,7 @@ public class MockDatabase extends Database {
                 l.add(defaultSm.toMusician());
             }
             dbCallback.queryCallback(l);
-        } else if(collection.equals(DbDataType.Band.toString())) {
+        } else if(collection.equals(DbDataType.Bands.toString())) {
 
             Band b = new Band("totofire" ,defaultSm.getEmail());
             l.add(b);

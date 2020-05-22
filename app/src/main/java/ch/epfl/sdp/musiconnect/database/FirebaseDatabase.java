@@ -9,7 +9,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
@@ -24,13 +23,9 @@ import java.util.Map;
 import java.util.Objects;
 
 import ch.epfl.sdp.musiconnect.Band;
-import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.events.Event;
-
-import static android.location.Location.distanceBetween;
-import static ch.epfl.sdp.musiconnect.database.SimplifiedDbEntry.Fields;
 
 public class FirebaseDatabase extends Database {
     private static final String TAG = "DataBase";
@@ -58,8 +53,8 @@ public class FirebaseDatabase extends Database {
     void addDoc(SimplifiedEvent simplifiedEvent, DbDataType hostUserType) {
         db.collection("events").add(simplifiedEvent)
                 .addOnSuccessListener(documentReference -> {
-                    if (hostUserType == DbDataType.Band) {
-                        DbSingleton.getDbInstance().read(DbDataType.Band, simplifiedEvent.getHost(), new DbCallback() {
+                    if (hostUserType == DbDataType.Bands) {
+                        DbSingleton.getDbInstance().read(DbDataType.Bands, simplifiedEvent.getHost(), new DbCallback() {
                             @Override
                             public void readCallback(User u) {
                                 Band b = (Band) u;
@@ -114,7 +109,7 @@ public class FirebaseDatabase extends Database {
                     Map<String, Object> data = documentSnapshot.getData();
 
                     if (data != null && data.size() > 0) {
-                        if (collection.equals((DbDataType.Band.toString()))) {
+                        if (collection.equals((DbDataType.Bands.toString()))) {
                             SimplifiedBand sb = new SimplifiedBand(data);
                             dbCallback.readCallback(sb.toBand());
                         } else if (collection.equals(DbDataType.Events.toString())) {
@@ -176,7 +171,7 @@ public class FirebaseDatabase extends Database {
                         if (collection.equals(DbDataType.Musician.toString())) {
                             SimplifiedMusician m = new SimplifiedMusician(data);
                             queryResult.add(m.toMusician());
-                        } else if (collection.equals((DbDataType.Band.toString()))) {
+                        } else if (collection.equals((DbDataType.Bands.toString()))) {
                             SimplifiedBand sb = new SimplifiedBand(data);
                             queryResult.add(sb.toBand());
                         }

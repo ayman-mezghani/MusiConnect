@@ -47,7 +47,7 @@ public class BandProfile extends Page {
                     String selected = bandSpinner.getSelectedItem().toString();
                     Toast.makeText(BandProfile.this, selected, Toast.LENGTH_SHORT).show();
 
-                    DbSingleton.getDbInstance().read(DbDataType.Band,
+                    DbSingleton.getDbInstance().read(DbDataType.Bands,
                             getBandFromName(CurrentUser.getInstance(BandProfile.this).getBands(), selected).getEmailAddress(), new DbCallback() {
                                 @Override
                                 public void readCallback(User user) {
@@ -91,7 +91,7 @@ public class BandProfile extends Page {
 
     private void loadProfileContent() {
         String leaderEmail = getIntent().getStringExtra("leaderMail");
-        DbSingleton.getDbInstance().read(DbDataType.Band, leaderEmail, new DbCallback() {
+        DbSingleton.getDbInstance().read(DbDataType.Bands, leaderEmail, new DbCallback() {
             @Override
             public void readCallback(User user) {
                 displayBandInfo((Band) user);

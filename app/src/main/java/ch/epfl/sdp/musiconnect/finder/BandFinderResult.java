@@ -15,7 +15,6 @@ import java.util.Map;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.BandProfile;
-import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.DbDataType;
@@ -44,7 +43,7 @@ public class BandFinderResult extends AppCompatActivity {
             HashMap<String, Object> innerMap = new HashMap<>();
             innerMap.put(entry.getKey(), (String) entry.getValue());
 
-            DbSingleton.getDbInstance().query(DbDataType.Band, innerMap, new DbCallback() {
+            DbSingleton.getDbInstance().query(DbDataType.Bands, innerMap, new DbCallback() {
                 @Override
                 public void queryCallback(List userList) {
                     for (Object u: userList) {

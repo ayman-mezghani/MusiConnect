@@ -58,9 +58,9 @@ public class DbAdapterTest {
 
     @Test
     public void addBandTest() {
-        DbSingleton.setDatabase(new MockDatabaseForUT(DbDataType.Band.toString(), emailAddress, sb, sb.toMap()));
+        DbSingleton.setDatabase(new MockDatabaseForUT(DbDataType.Bands.toString(), emailAddress, sb, sb.toMap()));
         dbAdapter = DbSingleton.getDbInstance();
-        dbAdapter.add(DbDataType.Band, band);
+        dbAdapter.add(DbDataType.Bands, band);
     }
 
     @Test
@@ -79,9 +79,9 @@ public class DbAdapterTest {
 
     @Test
     public void deleteBandTest() {
-        DbSingleton.setDatabase(new MockDatabaseForUT(DbDataType.Band.toString(), emailAddress, sb, sb.toMap()));
+        DbSingleton.setDatabase(new MockDatabaseForUT(DbDataType.Bands.toString(), emailAddress, sb, sb.toMap()));
         dbAdapter = DbSingleton.getDbInstance();
-        dbAdapter.delete(DbDataType.Band, band);
+        dbAdapter.delete(DbDataType.Bands, band);
     }
 
     @Test
@@ -100,9 +100,9 @@ public class DbAdapterTest {
 
     @Test
     public void updateBandTest() {
-        DbSingleton.setDatabase(new MockDatabaseForUT(DbDataType.Band.toString(), emailAddress, sb, sb.toMap()));
+        DbSingleton.setDatabase(new MockDatabaseForUT(DbDataType.Bands.toString(), emailAddress, sb, sb.toMap()));
         dbAdapter = DbSingleton.getDbInstance();
-        dbAdapter.update(DbDataType.Band, band);
+        dbAdapter.update(DbDataType.Bands, band);
     }
 
     @Test

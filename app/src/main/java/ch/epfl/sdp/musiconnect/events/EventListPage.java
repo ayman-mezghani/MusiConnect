@@ -114,7 +114,7 @@ public class EventListPage extends Page {
 
             @Override
             public void readFailCallback() {
-                checkIfAllEventsAreLoaded(0, 0, DbDataType.Band); // This will trigger the "else" part
+                checkIfAllEventsAreLoaded(0, 0, DbDataType.Bands); // This will trigger the "else" part
             }
         });
     }
@@ -185,7 +185,7 @@ public class EventListPage extends Page {
 
         if (dbDataType.toString().equals("musician") && typeOfUser.toString().equals("Band")) {
             // If we have loaded all events of the musician, we now need to load the events of his band
-            readFromDbAndLoadEvents(DbDataType.Band);
+            readFromDbAndLoadEvents(DbDataType.Bands);
         } else {
             // We have loaded everything from this user, now find all events he/she participates in
             HashMap<String, Object> h = new HashMap<>();
