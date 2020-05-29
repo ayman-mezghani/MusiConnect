@@ -2,6 +2,19 @@
 
 <resources>
 
+    <color name="background">#F5F5F5</color>
+    <color name="accent_red">#FC5185</color>
+
+    <!-- DARK THEME COLORS -->
+    <color name="maintheme_blue">#364F6B</color>
+    <color name="maintheme_darkblue">#112D4E</color>
+    <color name="text_grey">#F5F5F5</color>
+
+    <!-- LIGHT THEME COLORS -->
+    <color name="maintheme_light">#6B778D</color>
+    <color name="maintheme_darklight">#263859</color>
+    <color name="text_black">#313131</color>
+
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="red">#FF0000</color>
@@ -18,11 +31,4 @@
     <color name="purple">#800080</color>
     <color name="teal">#008080</color>
     <color name="navy">#000080</color>
-    <color name="maintheme_blue">#364F6B</color>
-    <color name="maintheme_darkblue">#112D4E</color>
-    <color name="accent_red">#FC5185</color>
-    <color name="text_grey">#F5F5F5</color>
-
-    <color name="background">#F5F5F5</color>
-
 </resources>

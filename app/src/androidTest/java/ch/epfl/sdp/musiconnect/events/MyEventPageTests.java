@@ -20,10 +20,11 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.location.MapsActivity;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -34,9 +35,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
-public class EventPageTests {
+public class MyEventPageTests {
     @Rule
     public final ActivityTestRule<MyEventPage> eventPageRule =
             new ActivityTestRule<>(MyEventPage.class, true, false);
@@ -46,8 +48,8 @@ public class EventPageTests {
     @BeforeClass
     public static void setMocks() {
         md = new MockDatabase(false);
-        DbGenerator.setDatabase(md);
-        CloudStorageGenerator.setStorage((new MockCloudStorage()));
+        DbSingleton.setDatabase(md);
+        CloudStorageSingleton.setStorage((new MockCloudStorage()));
     }
 
     @Before
@@ -63,31 +65,24 @@ public class EventPageTests {
         Musician m1 = md.getDummyMusician(1);
         Musician m2 = md.getDummyMusician(3);
 
-        Event event = md.getDummyEvent(0);
+        Event event = md.getDummyEvent(1);
 
-        String s = m1.getName() + System.lineSeparator() + m2.getName() + System.lineSeparator();
+        String s = m1.getEmailAddress() + System.lineSeparator() + m2.getEmailAddress() + System.lineSeparator();
 
         Intent intent = new Intent();
-        intent.putExtra("eid", "1");
+        intent.putExtra("eid", event.getEid());
         eventPageRule.launchActivity(intent);
 
         waitSeconds(3);
 
         onView(withId(R.id.eventTitle)).check(matches(withText(event.getTitle())));
-        onView(withId(R.id.eventCreatorField)).check(matches(withText(event.getCreator().getName())));
+        onView(withId(R.id.eventCreatorField)).check(matches(withText(event.getHostEmailAddress())));
         onView(withId(R.id.eventAddressField)).check(matches(withText(event.getAddress())));
         onView(withId(R.id.eventTimeField)).check(matches(withText(event.getDateTime().toString())));
         onView(withId(R.id.eventParticipantsField)).check(matches(withText(s)));
         onView(withId(R.id.eventDescriptionField)).check(matches(withText(event.getDescription())));
     }
 
-    @Test
-    public void loadNullEvent() {
-        Intent intent = new Intent();
-        eventPageRule.launchActivity(intent);
-
-        onView(withId(R.id.title)).check(matches(withText(R.string.event_not_found)));
-    }
 
     @Test
     public void testEditButtonClick() {
@@ -127,7 +122,7 @@ public class EventPageTests {
     @Test
     public void testDeleteYesButtonClick() {
         Musician m = md.getDummyMusician(1);
-        Event e = md.getDummyEvent(0);
+        Event e = md.getDummyEvent(1);
         assertEquals(e.getEid(), m.getEvents().get(0));
 
         Intent intent = new Intent();
@@ -137,12 +132,23 @@ public class EventPageTests {
 
         clickOnAlert("YES");
 
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
+        assertTrue(eventPageRule.getActivity().isFinishing());
+    }
 
-        m = (Musician)e.getCreator();
+    @Test
+    public void testMapButtonGoesToMap(){
+        Event event = md.getDummyEvent(4);
+        Intent intent = new Intent();
+        intent.putExtra("eid", event.getEid());
+        eventPageRule.launchActivity(intent);
+
+        waitSeconds(3);
+
+        onView(withId(R.id.toMap)).perform(click());
+        onView(withId(android.R.id.button1)).perform(click());
+
+        waitSeconds(3);
+
+        intended(hasComponent(MapsActivity.class.getName()));
     }
 }

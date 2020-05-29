@@ -29,7 +29,7 @@ public class EventManagerClassUnitTests {
 
         String eventName = "On the rooftop";
 
-        assertThrows(Error.class, () -> brian.getEventName());
+        assertThrows(Error.class, brian::getEventName);
         brian.setEventName(eventName);
         assertEquals(eventName, brian.getEventName());
     }
@@ -79,7 +79,7 @@ public class EventManagerClassUnitTests {
         MyDate johnBirthday = new MyDate(1940, 10, 9);
         Musician john = new Musician(johnFirstName, johnLastName, johnUserName, johnEmailAddress, johnBirthday);
 
-        Set<Musician> musicians = new HashSet<Musician>();
+        Set<Musician> musicians = new HashSet<>();
 
         assertEquals(musicians, brian.setOfMusicians());
 
@@ -140,7 +140,7 @@ public class EventManagerClassUnitTests {
 
         brian.addMusician(john);
 
-        Set<Musician> musicians = new HashSet<Musician>();
+        Set<Musician> musicians = new HashSet<>();
         musicians.add(john);
 
         assertEquals(musicians, brian.setOfMusicians());
@@ -196,7 +196,7 @@ public class EventManagerClassUnitTests {
         brian.addMusician(john);
         brian.addMusician(paul);
 
-        Set<Musician> musicians = new HashSet<Musician>();
+        Set<Musician> musicians = new HashSet<>();
 
         brian.removeAllMusicians();
         assertEquals(musicians, brian.setOfMusicians());
@@ -328,7 +328,7 @@ public class EventManagerClassUnitTests {
         String bandName = "The Beatles";
         Band beatles = new Band(bandName, john.getEmailAddress());
 
-        Set<Band> bands = new HashSet<Band>();
+        Set<Band> bands = new HashSet<>();
 
         assertEquals(bands, brian.setOfBands());
 
@@ -395,7 +395,7 @@ public class EventManagerClassUnitTests {
 
         brian.addBand(beatles);
 
-        Set<Band> bands = new HashSet<Band>();
+        Set<Band> bands = new HashSet<>();
         bands.add(beatles);
 
         assertEquals(bands, brian.setOfBands());
@@ -449,7 +449,7 @@ public class EventManagerClassUnitTests {
 
         brian.addBand(beatles);
 
-        Set<Band> bands = new HashSet<Band>();
+        Set<Band> bands = new HashSet<>();
 
         brian.removeAllBands();
         assertEquals(bands, brian.setOfBands());
@@ -582,7 +582,7 @@ public class EventManagerClassUnitTests {
 
 
         ArrayList<String> as = new ArrayList<>();
-        Event e = new Event(john, "1");
+        Event e = new Event(john.getEmailAddress(), "1");
 
             as.add(e.getEid());
             john.addEvent(e.getEid());

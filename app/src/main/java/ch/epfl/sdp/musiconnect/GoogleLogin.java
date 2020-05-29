@@ -18,8 +18,8 @@ import com.google.android.gms.tasks.Task;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
-import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
+import ch.epfl.sdp.musiconnect.database.DbDataType;
 
 public class GoogleLogin extends AppCompatActivity {
     private static String collection = "newtest";
@@ -60,13 +60,13 @@ public class GoogleLogin extends AppCompatActivity {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
         if (account != null) {
-            DbAdapter db = DbGenerator.getDbInstance();
+            DbAdapter db = DbSingleton.getDbInstance();
             Context ctx = this;
 
-            db.exists(DbUserType.Musician, account.getEmail(), new DbCallback() {
+            db.exists(DbDataType.Musician, account.getEmail(), new DbCallback() {
                 @Override
                 public void existsCallback(boolean exists) {
-                db.read(DbUserType.Musician, account.getEmail(), new DbCallback() {
+                db.read(DbDataType.Musician, account.getEmail(), new DbCallback() {
                 @Override
                 public void readCallback(User user) {
                     CurrentUser.getInstance(ctx).setTypeOfUser(((Musician) user).getTypeOfUser());
@@ -108,12 +108,12 @@ public class GoogleLogin extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
-            DbAdapter db = DbGenerator.getDbInstance();
+            DbAdapter db = DbSingleton.getDbInstance();
             Context ctx = this;
-            db.exists(DbUserType.Musician, account.getEmail(), new DbCallback() {
+            db.exists(DbDataType.Musician, account.getEmail(), new DbCallback() {
                 @Override
                 public void existsCallback(boolean exists) {
-                    db.read(DbUserType.Musician, account.getEmail(), new DbCallback() {
+                    db.read(DbDataType.Musician, account.getEmail(), new DbCallback() {
                         @Override
                         public void readCallback(User user) {
                             CurrentUser.getInstance(ctx).setTypeOfUser(((Musician) user).getTypeOfUser());

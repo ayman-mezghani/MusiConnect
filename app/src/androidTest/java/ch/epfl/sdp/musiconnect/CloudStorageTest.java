@@ -6,7 +6,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
-import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.FirebaseCloudStorage;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 
@@ -19,15 +19,15 @@ public class CloudStorageTest {
 
     @Test
     public void prodInstantiationTest() {
-        CloudStorageGenerator.flush();
-        CloudStorage cs = CloudStorageGenerator.getCloudInstance(mActivityTestRule.getActivity());
+        CloudStorageSingleton.flush();
+        CloudStorage cs = CloudStorageSingleton.getCloudInstance(mActivityTestRule.getActivity());
         assertEquals(FirebaseCloudStorage.class.getName(), cs.getClass().getName());
     }
 
     @Test
     public void mockInstantiationTest() {
-        CloudStorageGenerator.setStorage(new MockCloudStorage());
-        CloudStorage cs = CloudStorageGenerator.getCloudInstance(mActivityTestRule.getActivity());
+        CloudStorageSingleton.setStorage(new MockCloudStorage());
+        CloudStorage cs = CloudStorageSingleton.getCloudInstance(mActivityTestRule.getActivity());
         assertEquals(MockCloudStorage.class.getName(), cs.getClass().getName());
     }
 }

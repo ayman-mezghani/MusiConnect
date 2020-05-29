@@ -6,12 +6,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
-import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
+import ch.epfl.sdp.musiconnect.database.DbDataType;
 import ch.epfl.sdp.musiconnect.events.EventListPage;
 
 public class VisitorProfilePage extends ProfilePage implements DbCallback {
@@ -19,11 +20,16 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
     private Button contactButton;
     private Button eventListButton;
 
+    private TextView instrument;
+    private TextView selectedInstrument;
+    private TextView level;
+    private TextView selectedLevel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dbAdapter = DbGenerator.getDbInstance();
+        dbAdapter = DbSingleton.getDbInstance();
 
         setContentView(R.layout.activity_visitor_profile_page);
         mVideoView = findViewById(R.id.videoView);
@@ -59,6 +65,13 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         setupEventListButton();
 
         contactButton.setOnClickListener(view -> sendEmail(userEmail, getResources().getString(R.string.musiconnect_contact_mail)));
+
+        instrument = findViewById(R.id.visitorProfileInstrument);
+        selectedInstrument = findViewById(R.id.visitorProfileSelectedInstrument);
+        level = findViewById(R.id.visitorProfileLevel);
+        selectedLevel = findViewById(R.id.visitorProfileSelectedLevel);
+      
+        contactButton.setOnClickListener(view -> sendEmail(userEmail, getResources().getString(R.string.musiconnect_contact_mail)));
     }
 
     // Some of this method code is inspired from stackoverflow.com
@@ -85,7 +98,7 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         if (b != null && !b.containsMember(userEmail)) {
             b.addMember(userEmail);
         }
-        (DbGenerator.getDbInstance()).add(DbUserType.Band, b);
+        (DbSingleton.getDbInstance()).add(DbDataType.Band, b);
     }
 
     @Override

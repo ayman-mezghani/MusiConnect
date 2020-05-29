@@ -34,7 +34,11 @@ public class FinderPage extends Page implements View.OnClickListener {
         // If the button findBand is pressed, then the method openBandFinderPage() is executed
         findBand = findViewById(R.id.findBandButtonID);
         findBand.setOnClickListener(view -> openBandFinderPage());
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
         bottomNavigationView.setSelectedItemId(R.id.search);
         bottomNavigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);

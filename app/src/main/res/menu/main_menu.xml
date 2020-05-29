@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_menu"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/home"
+        android:title="@string/navigation_home"
+        app:showAsAction="never"/>
     
-    <item  android:id="@+id/my_profileBand"
+    <item
+        android:id="@+id/my_profileBand"
         android:title="@string/my_bands"
         android:visible="false"
-        app:showAsAction="never"/>
-
-    <item android:id="@+id/home"
-        android:title="@string/navigation_home"
         app:showAsAction="never"/>
 
     <item
@@ -19,7 +23,6 @@
 
     <item
         android:id="@+id/help"
-        android:icon="@android:drawable/ic_menu_help"
         android:title="@string/help"
         app:showAsAction="never"/>
 

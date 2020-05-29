@@ -8,21 +8,27 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
 
 public class MyProfilePage extends ProfilePage implements View.OnClickListener {
     private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
+
+    private TextView instrument;
+    private TextView selectedInstrument;
+    private TextView level;
+    private TextView selectedLevel;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dbAdapter = DbGenerator.getDbInstance();
+        dbAdapter = DbSingleton.getDbInstance();
 
         setContentView(R.layout.activity_profile_page);
 
@@ -40,13 +46,20 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             Intent profileModificationIntent = new Intent(this, ProfileModification.class);
             sendInformation(profileModificationIntent);
             // Permits sending information from child to parent activity
-            startActivityForResult(profileModificationIntent, LAUNCH_PROFILE_MODIF_INTENT);
-
-        });
+            startActivityForResult(profileModificationIntent, LAUNCH_PROFILE_MODIF_INTENT); });
 
         loadProfileContent();
         getVideoUri(userEmail);
 
+        instrument = findViewById(R.id.myProfileInstrument);
+        selectedInstrument = findViewById(R.id.myProfileSelectedInstrument);
+        level = findViewById(R.id.myProfileLevel);
+        selectedLevel = findViewById(R.id.myProfileSelectedLevel);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
         bottomNavigationView.setSelectedItemId(R.id.my_profile);
         bottomNavigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);

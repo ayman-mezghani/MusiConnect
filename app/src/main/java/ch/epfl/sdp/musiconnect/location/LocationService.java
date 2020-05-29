@@ -43,6 +43,8 @@ public class LocationService extends Service {
 
             if (lastLocation == null || location.distanceTo(lastLocation) > THRESHOLD) {
                 Log.d(TAG, "LocationService sent a message containing location ");
+
+
                 lastLocation = location;
                 sendMessageToActivity(location);
             }
@@ -52,6 +54,7 @@ public class LocationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(TAG, "LocationService created");
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
     }

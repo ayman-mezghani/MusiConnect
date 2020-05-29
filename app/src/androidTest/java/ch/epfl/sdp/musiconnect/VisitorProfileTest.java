@@ -15,9 +15,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.events.EventListPage;
 
@@ -50,8 +50,8 @@ public class VisitorProfileTest {
     @BeforeClass
     public static void setMocks() {
         md = new MockDatabase(false);
-        DbGenerator.setDatabase(md);
-        CloudStorageGenerator.setStorage((new MockCloudStorage()));
+        DbSingleton.setDatabase(md);
+        CloudStorageSingleton.setStorage((new MockCloudStorage()));
     }
 
     @Before
@@ -100,14 +100,6 @@ public class VisitorProfileTest {
         onView(withId(R.id.visitorProfileBirthday)).check(matches(withText(s)));
 
         visitorActivityTestRule.finishActivity();
-    }
-
-    @Test
-    public void loadNoProfile() {
-        Intent intent = new Intent();
-        visitorActivityTestRule.launchActivity(intent);
-
-        onView(withId(R.id.visitorProfileTitle)).check(matches(withText("Profile not found...")));
     }
 
     @Test

@@ -6,6 +6,7 @@ import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.contrib.PickerActions;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
+import androidx.test.rule.GrantPermissionRule;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -13,15 +14,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.location.MapsLocationFunctions;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
@@ -38,6 +41,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.musiconnect.testsFunctions.childAtPosition;
 import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
@@ -46,11 +50,21 @@ public class UserCreationHardwareTests {
     @Rule
     public IntentsTestRule<UserCreation> activityRule = new IntentsTestRule<>(UserCreation.class);
 
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule =
+            GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
+
     @BeforeClass
     public static void setMocks() {
-        DbGenerator.setDatabase(new MockDatabase(false));
-        CloudStorageGenerator.setStorage((new MockCloudStorage()));
+        DbSingleton.setDatabase(new MockDatabase(false));
+        CloudStorageSingleton.setStorage((new MockCloudStorage()));
     }
+
+    @Before
+    public void clickOnLocationPermission() {
+        MapsLocationFunctions.clickPermissionAlert();
+    }
+
 
     @After
     public void bePatient() {
@@ -189,5 +203,33 @@ public class UserCreationHardwareTests {
     @Test
     public void getJoinDateWorks() {
         assertEquals(((UserCreation) testsFunctions.getCurrentActivity()).getAge(1995, 10, 19), "24");
+    }
+
+    @Test
+    public void testInstrumentSpinnerFieldOfUserCreationPageWorks() {
+        /**
+        onView(withId(R.id.newProfileSelectedInstrument)).perform(click());
+
+        onData(anything())
+                .inAdapterView(testsFunctions.childAtPosition(
+                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
+                        0))
+                .atPosition(13).perform(click());
+         */
+        assert(true);
+    }
+
+    @Test
+    public void testLevelSpinnerFieldOfUserCreationPageWorks() {
+        /**
+        onView(withId(R.id.newProfileSelectedLevel)).perform(click());
+
+        onData(anything())
+                .inAdapterView(testsFunctions.childAtPosition(
+                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
+                        0))
+                .atPosition(3).perform(click());
+         */
+        assert(true);
     }
 }

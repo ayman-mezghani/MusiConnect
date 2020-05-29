@@ -1,21 +1,18 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -28,12 +25,17 @@ import ch.epfl.sdp.musiconnect.location.LocationPermission;
 public class StartPage extends Page {
     private static final String TAG = "MainActivity";
     private FusedLocationProviderClient fusedLocationClient;
-    private Location userLocation;
     private FloatingActionButton fab_menu, fab_button_1, fab_button_2;
     private Animation fabOpen, fabClose, fabClockWise, fabAntiClockWise;
     private TextView fabTv1, fabTv2;
     private boolean isOpen = false;
     public static boolean test = true;
+
+    // All necessary for dark mode switch
+    private Switch darkModeSwitch;
+    public static final String MY_PREFERENCES = "nightModePrefs";
+    public static final String KEY_ISNIGHTMODE = "isNightMode";
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,22 +46,37 @@ public class StartPage extends Page {
         checkLocationPermission();
 
         updateCurrentUser(this);
-
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
-        bottomNavigationView.setSelectedItemId(R.id.home);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
+
+    /**
+     * Save the preferences when restarting the app
+     * @param nightMode: on or off
+     */
+    private void saveNightModeState(boolean nightMode) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(KEY_ISNIGHTMODE, nightMode);
+        editor.apply();
     }
+
+    public void checkIfNightModeIsActivated() {
+        if (sharedPreferences.getBoolean(KEY_ISNIGHTMODE, false)) {
+            darkModeSwitch.setChecked(true);
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            darkModeSwitch.setChecked(false);
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+    }
+
 
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter("GPSLocationUpdates"));
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
+        bottomNavigationView.setSelectedItemId(R.id.home);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
     }
 
     @Override
@@ -69,19 +86,6 @@ public class StartPage extends Page {
         return super.onOptionsItemSelected(item);
     }
 
-    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Bundle b = intent.getBundleExtra("Location");
-            Location location;
-            if (b != null) {
-                location = b.getParcelable("Location");
-                if (location != null) {
-                    userLocation = location;
-                }
-            }
-        }
-    };
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -102,10 +106,8 @@ public class StartPage extends Page {
         } else {
             fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
                 if (location != null) {
-                    // simply store value right now, may need to
-                    // store in user information
-
-                    userLocation = location;
+                    // Store the position we got to database
+                    sendToDatabase(location);
                     startLocationService();
                 }
             });

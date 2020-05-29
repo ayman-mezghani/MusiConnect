@@ -16,11 +16,6 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
     private List<String> members;
     private List<String> events;
 
-    static final String LEADER = "leader";
-    static final String BANDNAME = "bandName";
-    static final String MEMBERS = "members";
-    static final String EVENTS = "events";
-
     public SimplifiedBand() {
     }
 
@@ -32,19 +27,19 @@ public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
     }
 
     public SimplifiedBand(Map<String, Object> map) {
-        this.leader = map.get(LEADER) == null ? "" : (String) map.get(LEADER);
-        this.bandName = map.get(BANDNAME) == null ? "" : (String) map.get(BANDNAME);
+        this.leader = map.get(Fields.leader.toString()) == null ? "" : (String) map.get(Fields.leader.toString());
+        this.bandName = map.get(Fields.bandName.toString()) == null ? "" : (String) map.get(Fields.bandName.toString());
         this.members = new ArrayList<>();
-        this.members = map.get(MEMBERS) == null ? null : (ArrayList<String>) map.get(MEMBERS);
-        this.events = map.get(EVENTS) == null ? null : (ArrayList<String>) map.get(EVENTS);
+        this.members = map.get(Fields.members.toString()) == null ? null : (ArrayList<String>) map.get(Fields.members.toString());
+        this.events = map.get(Fields.events.toString()) == null ? null : (ArrayList<String>) map.get(Fields.events.toString());
     }
 
     public Map<String, Object> toMap() {
         Map<String, Object> res = new HashMap<>();
-        res.put(LEADER, leader);
-        res.put(BANDNAME, bandName);
-        res.put(MEMBERS, members);
-        res.put(EVENTS, events);
+        res.put(Fields.leader.toString(), leader);
+        res.put(Fields.bandName.toString(), bandName);
+        res.put(Fields.members.toString(), members);
+        res.put(Fields.events.toString(), events);
         return res;
     }
 

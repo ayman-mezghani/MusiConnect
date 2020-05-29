@@ -19,9 +19,9 @@ import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.TypeOfUser;
-import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -30,9 +30,11 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 
 @RunWith(AndroidJUnit4.class)
 public class EventListTests {
@@ -47,8 +49,8 @@ public class EventListTests {
     @BeforeClass
     public static void setMocks() {
         md = new MockDatabase(false);
-        DbGenerator.setDatabase(md);
-        CloudStorageGenerator.setStorage((new MockCloudStorage()));
+        DbSingleton.setDatabase(md);
+        CloudStorageSingleton.setStorage((new MockCloudStorage()));
     }
 
 
@@ -100,8 +102,20 @@ public class EventListTests {
         onView(withId(R.id.eventListTitle)).check(matches(withText(m.getName() + "'s events")));
     }
 
+    @Test
+    public void testClickEventShouldLoadPage() {
+        CurrentUser.getInstance(eventListRule.getActivity()).setTypeOfUser(TypeOfUser.Musician);
 
+        Event e = md.getDummyEvent(0);
 
+        Intent intent = new Intent();
+        eventListRule.launchActivity(intent);
+
+        waitSeconds(3);
+
+        onView(withText(e.getTitle())).perform(ViewActions.scrollTo()).perform(click());
+        intended(hasComponent(MyEventPage.class.getName()));
+    }
 
     @Test
     public void testClickOthersEventShouldLoadPage() {
@@ -112,13 +126,26 @@ public class EventListTests {
         intent.putExtra("UserEmail", m.getEmailAddress());
         eventListRule.launchActivity(intent);
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
+        waitSeconds(3);
 
         onView(withText(e.getTitle())).perform(ViewActions.scrollTo()).perform(click());
         intended(hasComponent(VisitorEventPage.class.getName()));
+    }
+
+
+    @Test
+    public void testListShouldOnlyShowPublicOrParticipant() {
+        Event e3 = md.getDummyEvent(2);
+        Event e5 = md.getDummyEvent(4);
+        Musician m = md.getDummyMusician(2);
+
+        Intent intent = new Intent();
+        intent.putExtra("UserEmail", m.getEmailAddress());
+        eventListRule.launchActivity(intent);
+
+        waitSeconds(3);
+
+        onView(withText(e3.getTitle())).check(matches(isDisplayed()));
+        onView(withText(e5.getTitle())).check(matches(isDisplayed()));
     }
 }

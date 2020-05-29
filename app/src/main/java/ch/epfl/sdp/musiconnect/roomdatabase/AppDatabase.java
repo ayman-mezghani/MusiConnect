@@ -10,7 +10,7 @@ import androidx.room.TypeConverters;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.events.Event;
 
-@Database(entities = {Musician.class, Event.class}, version = 2)
+@Database(entities = {Musician.class, Event.class}, version = 3)
 @TypeConverters({InstrumentConverter.class,MyDateConverter.class,MyLocationConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase sInstance;

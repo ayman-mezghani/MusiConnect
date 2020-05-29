@@ -73,7 +73,6 @@ dependencies {
     // Need this for intent tests
     androidTestImplementation("com.android.support.test.espresso:espresso-intents:3.2.0")
 
-
     // Need this for datepicker tests
     androidTestImplementation('com.android.support.test.espresso:espresso-contrib:3.0.2') {
         exclude group: 'com.android.support', module: 'appcompat'

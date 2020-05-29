@@ -286,7 +286,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/bottom_navigation_menu"
             app:menu="@menu/bottom_navigation_menu"
-            android:layout_alignParentBottom="true"/>
+            android:layout_alignParentBottom="true"
+            app:labelVisibilityMode="labeled"/>
 
     </LinearLayout>
 </ScrollView>

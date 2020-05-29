@@ -8,7 +8,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
-import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.database.DbDataType;
 
 public class EventCreationPage extends EventModificationPage {
 
@@ -19,6 +19,9 @@ public class EventCreationPage extends EventModificationPage {
 
         eventTitleView = findViewById(R.id.eventCreationNewEventTitle);
         eventAddressView = findViewById(R.id.eventCreationNewEventAddress);
+        if(getIntent().hasExtra("Address")){
+            eventAddressView.setText(getIntent().getExtras().getString("Address"));
+        }
         eventDescriptionView = findViewById(R.id.eventCreationNewEventDescription);
         eventParticipantView = findViewById(R.id.eventCreationNewParticipant);
 
@@ -35,8 +38,18 @@ public class EventCreationPage extends EventModificationPage {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
         bottomNavigationView.setSelectedItemId(R.id.my_events);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> super.onOptionsItemSelected(item));
+        bottomNavigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
     }
+
+    /**
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_menu);
+        bottomNavigationView.setSelectedItemId(R.id.my_events);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this::onOptionsItemSelected);
+    }
+     */
 
     @Override
     void setupSaveButton() {
@@ -52,6 +65,6 @@ public class EventCreationPage extends EventModificationPage {
 
     @Override
     void updateDatabase(Event event) {
-        dbAdapter.add(event, DbUserType.valueOf(CurrentUser.getInstance(this).getTypeOfUser().toString()));
+        dbAdapter.add(DbDataType.valueOf(CurrentUser.getInstance(this).getTypeOfUser().toString()), event);
     }
 }

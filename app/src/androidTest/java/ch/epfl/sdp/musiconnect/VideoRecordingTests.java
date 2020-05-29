@@ -11,9 +11,9 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.cloud.CloudStorageGenerator;
+import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.location.MapsLocationFunctions;
 
@@ -53,13 +53,13 @@ public class VideoRecordingTests {
 
     @BeforeClass
     public static void setMocks() {
-        DbGenerator.setDatabase(new MockDatabase(false));
-        CloudStorageGenerator.setStorage((new MockCloudStorage()));
+        DbSingleton.setDatabase(new MockDatabase(false));
+        CloudStorageSingleton.setStorage((new MockCloudStorage()));
     }
 
     @Test
     public void videoRecordingTests() {
-        onView(withId(R.id.my_profile)).perform(click());
+        onView(withId(R.id.my_profile)).perform(scrollTo(), click());
 
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.btnEditProfile), withText("Edit profile"),

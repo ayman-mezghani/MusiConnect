@@ -17,8 +17,8 @@ import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.BandProfile;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
-import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
+import ch.epfl.sdp.musiconnect.database.DbDataType;
 
 public class BandFinderResult extends AppCompatActivity {
     List<Band> listBand = new ArrayList<>();
@@ -44,12 +44,12 @@ public class BandFinderResult extends AppCompatActivity {
             HashMap<String, Object> innerMap = new HashMap<>();
             innerMap.put(entry.getKey(), (String) entry.getValue());
 
-            DbGenerator.getDbInstance().query(DbUserType.Band, innerMap, new DbCallback() {
+            DbSingleton.getDbInstance().query(DbDataType.Band, innerMap, new DbCallback() {
                 @Override
-                public void queryCallback(List<User> userList) {
-                    for (User u: userList) {
-                        if(!listBandShow.contains((String) u.getEmailAddress())) {
-                            listBandShow.add(u.getName());
+                public void queryCallback(List userList) {
+                    for (Object u: userList) {
+                        if(!listBandShow.contains(((Band) u).getEmailAddress())) {
+                            listBandShow.add(((Band) u).getName());
                             listBand.add((Band) u);
                         }
                     }

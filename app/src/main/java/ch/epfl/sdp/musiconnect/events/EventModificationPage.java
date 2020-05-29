@@ -31,8 +31,8 @@ import ch.epfl.sdp.musiconnect.Page;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
-import ch.epfl.sdp.musiconnect.database.DbGenerator;
-import ch.epfl.sdp.musiconnect.database.DbUserType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
+import ch.epfl.sdp.musiconnect.database.DbDataType;
 
 public abstract class EventModificationPage extends Page {
 
@@ -49,17 +49,15 @@ public abstract class EventModificationPage extends Page {
     List<User> participants;
     ArrayList<String> emails; // emails is an ArrayList to be able to put it in an intent
 
-
     abstract void setupSaveButton();
 
     abstract void updateDatabase(Event event);
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dbAdapter = DbGenerator.getDbInstance();
+        dbAdapter = DbSingleton.getDbInstance();
         participants = new ArrayList<>();
         emails = new ArrayList<>();
 
@@ -97,7 +95,7 @@ public abstract class EventModificationPage extends Page {
                     (timePicker, hour, minute) -> {
                         timeView.setText(String.format(Locale.FRANCE, "%d:%d", hour, minute));
                         calendar.set(year, month, dayOfMonth, hour, minute);
-                    }, hour, minute,  DateFormat.is24HourFormat(this));
+                    }, hour, minute, DateFormat.is24HourFormat(this));
 
             timePickerDialog.show();
         });
@@ -111,17 +109,11 @@ public abstract class EventModificationPage extends Page {
 
             if (email.equals("")) {
                 showToastWithText("Please add an email");
-            }
-
-            else if (email.equals(CurrentUser.getInstance(this).email)) {
+            } else if (email.equals(CurrentUser.getInstance(this).email)) {
                 showToastWithText("You are already a participant!");
-            }
-
-            else if (emails.contains(email)) {
+            } else if (emails.contains(email)) {
                 showToastWithText("This user is already in the participants list");
-            }
-
-            else {
+            } else {
                 addEmailAndUser(email); // too many lines for code climate...
             }
         });
@@ -131,10 +123,10 @@ public abstract class EventModificationPage extends Page {
 
     private void addEmailAndUser(String email) {
         emails.add(email);
-        dbAdapter.read(DbUserType.Musician, email, new DbCallback() {
+        dbAdapter.read(DbDataType.Musician, email, new DbCallback() {
             @Override
             public void readCallback(User user) {
-                participants.add((Musician)user);
+                participants.add((Musician) user);
                 updateParticipants();
             }
 
@@ -145,7 +137,6 @@ public abstract class EventModificationPage extends Page {
         });
     }
 
-
     private void setupRemoveButton() {
         Button removeParticipant = findViewById(R.id.eventRemoveParticipants);
         removeParticipant.setOnClickListener(v -> {
@@ -153,23 +144,17 @@ public abstract class EventModificationPage extends Page {
 
             if (email.equals("")) {
                 showToastWithText("Please add an email");
-            }
-
-            else if (email.equals(CurrentUser.getInstance(this).email)) {
+            } else if (email.equals(CurrentUser.getInstance(this).email)) {
                 showToastWithText("You cannot remove yourself!");
-            }
-
-            else if (emails.contains(email)) {
+            } else if (emails.contains(email)) {
                 emails.remove(email);
-                for (User m: participants) {
+                for (User m : participants) {
                     if (m.getEmailAddress().equals(email)) {
                         participants.remove(m);
                         updateParticipants();
                     }
                 }
-            }
-
-            else {
+            } else {
                 showToastWithText("This user is not in the participants list");
             }
         });
@@ -185,11 +170,9 @@ public abstract class EventModificationPage extends Page {
         setupSaveButton();
     }
 
-
     void showToastWithText(String string) {
         Toast.makeText(EventModificationPage.this, string, Toast.LENGTH_LONG).show();
     }
-
 
     void updateParticipants() {
         eventParticipantView.getText().clear();
@@ -205,25 +188,25 @@ public abstract class EventModificationPage extends Page {
 
     void sendToDatabase() {
         Context ctx = this;
-        dbAdapter.read(DbUserType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
+        dbAdapter.read(DbDataType.Musician, CurrentUser.getInstance(this).email, new DbCallback() {
             @Override
             public void readCallback(User user) {
-                Event event = new Event(user, "0");
+                Event event = new Event(user.getEmailAddress(), "0");
                 event.setTitle(eventTitleView.getText().toString());
                 event.setAddress(eventAddressView.getText().toString());
                 event.setDescription(eventDescriptionView.getText().toString());
 
                 event.setDateTime(setEventDateAndTime());
 
-                for (User musician: participants) {
-                    event.register(musician);
+                for (User musician : participants) {
+                    event.register(musician.getEmailAddress());
                 }
 
                 event.setVisible(rdg.getCheckedRadioButtonId() == R.id.visible);
 
                 GeoPoint p1 = getLocationFromAddress(event.getAddress());
 
-                if(p1 == null) {
+                if (p1 == null) {
                     event.setLocation(0, 0);
                     Toast.makeText(ctx, R.string.unable_to_resolve_address, Toast.LENGTH_SHORT).show();
                 } else {
@@ -246,21 +229,21 @@ public abstract class EventModificationPage extends Page {
                 Integer.parseInt(hourMin[0]), Integer.parseInt(hourMin[1]));
     }
 
-    public GeoPoint getLocationFromAddress(String strAddress){
+    public GeoPoint getLocationFromAddress(String strAddress) {
         Geocoder coder = new Geocoder(this);
         List<Address> address = null;
         GeoPoint p1 = null;
 
         try {
             try {
-                address = coder.getFromLocationName(strAddress,5);
+                address = coder.getFromLocationName(strAddress, 5);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if (address==null || address.isEmpty()) {
+            if (address == null || address.isEmpty()) {
                 return null;
             }
-            Address location=address.get(0);
+            Address location = address.get(0);
             location.getLatitude();
             location.getLongitude();
 
