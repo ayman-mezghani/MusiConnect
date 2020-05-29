@@ -1,13 +1,13 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.animation.Animation;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatDelegate;
