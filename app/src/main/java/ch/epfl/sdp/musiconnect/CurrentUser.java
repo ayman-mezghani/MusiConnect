@@ -99,7 +99,9 @@ public class CurrentUser {
 
 
     public void setLocation(Location location) {
-        musician.setLocation(new MyLocation(location.getLatitude(), location.getLongitude()));
+        if (musician != null) {
+            musician.setLocation(new MyLocation(location.getLatitude(), location.getLongitude()));
+        }
     }
 
     public Location getLocation() {
@@ -111,7 +113,9 @@ public class CurrentUser {
 
 
     public Band getBand() {
-        if(this.getTypeOfUser() == TypeOfUser.Band) return this.band.get(0);
+        if(this.getTypeOfUser() == TypeOfUser.Band && band != null) {
+            return this.band.get(0);
+        }
         return null;
     }
 

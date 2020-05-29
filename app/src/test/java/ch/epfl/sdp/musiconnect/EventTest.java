@@ -30,7 +30,6 @@ public class EventTest {
         final String ADDRESS = "Lausanne";
 
         Event e = new Event(m.getEmailAddress(), "0");
-
         assertEquals(m.getEmailAddress(), e.getHostEmailAddress());
 
         assertEquals("0", e.getEid());
@@ -150,7 +149,6 @@ public class EventTest {
     @Test
     public void exceptions() {
         Musician m = new Musician("firstName", "lastName", "username", "email@gmail.com", new MyDate(2000, 1, 1));
-        Musician m2 = new Musician("firstName2", "lastName2", "username2", "email2@gmail.com", new MyDate(2000, 1, 1));
 
         assertThrows(IllegalArgumentException.class, () -> new Event(null, ""));
 

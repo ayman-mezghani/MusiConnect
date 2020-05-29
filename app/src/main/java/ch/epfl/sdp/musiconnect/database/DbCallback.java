@@ -14,7 +14,9 @@ public interface DbCallback {
 
     default void existsCallback(boolean exists) {}
 
-    default void queryCallback(List<User> userList) {}
+    default void queryCallback(List list) {}
+
+    default void queryFailCallback() {}
 
     default void locationQueryCallback(List queryResult) {}
 

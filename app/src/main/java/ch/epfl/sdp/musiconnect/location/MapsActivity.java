@@ -47,7 +47,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
@@ -56,10 +55,7 @@ import java.util.regex.Pattern;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.CustomInfoWindowGoogleMap;
-import ch.epfl.sdp.musiconnect.Instrument;
-import ch.epfl.sdp.musiconnect.Level;
 import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.MyLocation;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.VisitorProfilePage;
@@ -88,7 +84,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private NotificationManagerCompat notificationManager;
 
 
-    private DbAdapter Adb = DbSingleton.getDbInstance();
+    private DbAdapter dbAdapter = DbSingleton.getDbInstance();
 
     private AppDatabase localDb;
     private Executor mExecutor = Executors.newSingleThreadExecutor();
@@ -118,6 +114,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Circle circle;
 
     private int threshold = 50; // meters
+    private static final int MAX_THRESHOLD = 10000; // 10km
 
     private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
@@ -241,7 +238,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //If there's a connection, fetch Users in the general area; else, load them from cache
         if (checkConnection(MapsActivity.this)) {
-            createPlaceHolderUsers();
+            fetchUsersFromDb();
             clearCache();
         } else {
             loadCache();
@@ -265,20 +262,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             getShownEvent(getIntent().getStringExtra("Event"));
         }
         //place users' markers
-        updateProfileList();
-        loadProfilesMarker();
 
-        updateEvents();
-        loadEventMarkers();
+        fetchEventsFromDb();
 
         //sets listeners on map markers and user click
         mMap.setOnInfoWindowClickListener(this);
-        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener(){
-            @Override
-            public void onMapLongClick(LatLng latlng){
-                createAlert(latlng);
-            }
-        });
+        mMap.setOnMapLongClickListener(this::createAlert);
 
         //Handler that updates users list
         Handler handler = new Handler();
@@ -423,7 +412,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         for (Musician m : allUsers) {
-            Adb.read(DbDataType.Musician, m.getEmailAddress(), new DbCallback() {
+            dbAdapter.read(DbDataType.Musician, m.getEmailAddress(), new DbCallback() {
                 @Override
                 public void readCallback(User user) {
                     MyLocation l = user.getLocation();
@@ -444,11 +433,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         profiles.clear();
+
+        for (Musician m: allUsers) {
+            if (m.getEmailAddress().equals(CurrentUser.getInstance(getApplicationContext()).email)) {
+                allUsers.remove(m);
+                break;
+            }
+        }
+
+
         for (Musician m : allUsers) {
-            Location l = new Location("");
-            l.setLatitude(m.getLocation().getLatitude());
-            l.setLongitude(m.getLocation().getLongitude());
-            if (setLoc.distanceTo(l) <= threshold) {
+            if (setLoc.distanceTo(LocationConverter.myLocationToLocation(m.getLocation())) <= threshold) {
                 profiles.add(m);
             }
         }
@@ -468,14 +463,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         for (Event e : events) {
             MyLocation ml = e.getLocation();
             if (ml != null || (ml.getLatitude() != 0 && ml.getLongitude() != 0)) {
-                Location l = new Location("");
-                l.setLatitude(e.getLocation().getLatitude());
-                l.setLongitude(e.getLocation().getLongitude());
-
-                // Show event if event is in threshold, public or created by "this" user
-                // TODO check the 2 last conditions when fetching from database directly
-                if (setLoc.distanceTo(l) <= threshold && (e.isVisible()
-                        || e.getHostEmailAddress().equals(CurrentUser.getInstance(this).email))) {
+                // Show event if event is in threshold, public or created by "this" user or participates in
+                if (setLoc.distanceTo(LocationConverter.myLocationToLocation(ml)) <= threshold) {
                     eventNear.add(e);
                 }
             }
@@ -526,7 +515,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void getShownEvent(String eid){
-        Adb.read(DbDataType.Events, eid, new DbCallback() {
+        dbAdapter.read(DbDataType.Events, eid, new DbCallback() {
             @Override
             public void readCallback(Event e) {
                 shownEvent = e;
@@ -636,6 +625,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             List<Musician> currentUser = musicianDao.loadAllByIds(new String[]{CurrentUser.getInstance(MapsActivity.this).email});
             allUsers.removeAll(currentUser);
             events = eventDao.getAll();
+            updateProfileList();
+            loadProfilesMarker();
         });
 
 
@@ -653,35 +644,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     // TODO Should be replaced by a function that fetch user from the database; right now it generates 3 fixed users
-    private void createPlaceHolderUsers() {
-        Random random = new Random();
-
-        double r1 = ((double) random.nextInt(5) - 2.5) / 200;
-        double r2 = ((double) random.nextInt(5) - 2.5) / 200;
-        double r3 = ((double) random.nextInt(5) - 2.5) / 200;
-
-
-        Musician person1 = new Musician("Peter", "Alpha", "PAlpha", "palpha@gmail.com", new MyDate(1990, 10, 25));
-        Musician person2 = new Musician("Alice", "Bardon", "Alyx", "aymanmezghani97@gmail.com", new MyDate(1992, 9, 20));
-        Musician person3 = new Musician("Carson", "Calme", "CallmeCarson", "callmecarson41@gmail.com", new MyDate(1995, 4, 1));
-
-        person3.addInstrument(Instrument.BANJO, Level.PROFESSIONAL);
-        person3.addInstrument(Instrument.CLARINET,Level.BEGINNER);
-
-        person1.setLocation(new MyLocation(46.52 + r1, 6.52 + r1));
-        person2.setLocation(new MyLocation(46.51 + r2, 6.45 + r2));
-        person3.setLocation(new MyLocation(46.519 + r3, 6.57 + r3));
-
-        allUsers.add(person1);
-        allUsers.add(person2);
-        allUsers.add(person3);
+    private void fetchUsersFromDb() {
+        dbAdapter.locationQuery(DbDataType.Musician, LocationConverter.locationToMyLocation(CurrentUser.getInstance(this).getLocation()), MAX_THRESHOLD / 1000,
+                new DbCallback() {
+                    @Override
+                    public void locationQueryCallback(List list) {
+                        for (Object m : list) {
+                            allUsers.add((Musician) m);
+                        }
+                        updateProfileList();
+                        loadProfilesMarker();
+                    }
+                });
+    }
 
 
-        /*
-        Adb.add(DbUserType.Musician, person1);
-        Adb.add(DbUserType.Musician, person2);
-        Adb.add(DbUserType.Musician, person3);
-         */
+    private void fetchEventsFromDb() {
+        dbAdapter.locationQuery(DbDataType.Events, LocationConverter.locationToMyLocation(CurrentUser.getInstance(getApplicationContext()).getLocation()), MAX_THRESHOLD / 1000,
+                new DbCallback() {
+                    @Override
+                    public void locationQueryCallback(List list) {
+                        for (Object e : list) {
+                            if (((Event) e).isVisible() || ((Event) e).containsParticipant(CurrentUser.getInstance(getApplicationContext()).email)
+                                    || ((Event) e).getHostEmailAddress().equals(CurrentUser.getInstance(getApplicationContext()).email)) {
+
+                                events.add((Event) e);
+                            }
+                        }
+                        updateProfileList();
+                        loadProfilesMarker();
+                    }
+                });
     }
 
     //==============================================================================================

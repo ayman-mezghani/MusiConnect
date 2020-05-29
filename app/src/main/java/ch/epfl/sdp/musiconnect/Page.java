@@ -113,12 +113,19 @@ public abstract class Page extends AppCompatActivity {
             if (b != null) {
                 location = b.getParcelable("Location");
                 if (location != null) {
+                    sendToDatabase(location);
                     if (!test && isUserClose(location))
                         sendNotificationToMusician(Notifications.MUSICIAN_CHANNEL, NotificationCompat.PRIORITY_DEFAULT);
                 }
             }
         }
     };
+
+    protected void sendToDatabase(Location location) {
+        CurrentUser.getInstance(getApplicationContext()).setLocation(location);
+        DbSingleton.getDbInstance().update(DbDataType.Musician, CurrentUser.getInstance(getApplicationContext()).getMusician());
+    }
+
 
     public boolean isUserClose(Location loc) {
         helper();
@@ -249,9 +256,9 @@ public abstract class Page extends AppCompatActivity {
         h.put("members", CurrentUser.getInstance(this).getMusician().getEmailAddress());
         DbSingleton.getDbInstance().query(DbDataType.Band, h, new DbCallback() {
             @Override
-            public void queryCallback(List<User> userList) {
+            public void queryCallback(List userList) {
                 List<Band> b = new ArrayList<>();
-                for (User u: userList) {
+                for (Object u: userList) {
                     b.add((Band) u);
                 }
                 CurrentUser.getInstance(Page.this).setBands(b);

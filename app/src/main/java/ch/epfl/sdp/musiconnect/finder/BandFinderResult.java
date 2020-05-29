@@ -46,10 +46,10 @@ public class BandFinderResult extends AppCompatActivity {
 
             DbSingleton.getDbInstance().query(DbDataType.Band, innerMap, new DbCallback() {
                 @Override
-                public void queryCallback(List<User> userList) {
-                    for (User u: userList) {
-                        if(!listBandShow.contains((String) u.getEmailAddress())) {
-                            listBandShow.add(u.getName());
+                public void queryCallback(List userList) {
+                    for (Object u: userList) {
+                        if(!listBandShow.contains(((Band) u).getEmailAddress())) {
+                            listBandShow.add(((Band) u).getName());
                             listBand.add((Band) u);
                         }
                     }

@@ -50,7 +50,7 @@ public class MusicianFinderResult extends AppCompatActivity {
 
             DbSingleton.getDbInstance().query(DbDataType.Musician, innerMap, new DbCallback() {
                 @Override
-                public void queryCallback(List<User> userList) {
+                public void queryCallback(List userList) {
                     queryFunction(userList, (ArrayList<Musician>) listMusician, (ArrayList<String>) listMusiciaEmails, adapter);
                 }
             });
@@ -75,15 +75,15 @@ public class MusicianFinderResult extends AppCompatActivity {
         return listViewItem.split("\n")[1].trim();
     }
 
-    private void queryFunction(List<User> userList, ArrayList<Musician> lm, ArrayList<String> lme, ArrayAdapter<String> adapter) {
+    private void queryFunction(List userList, ArrayList<Musician> lm, ArrayList<String> lme, ArrayAdapter<String> adapter) {
 
         Location userLoc = CurrentUser.getInstance(MusicianFinderResult.this).getLocation();
-        for (User u: userList) {
-            if(!lme.contains((String) u.getEmailAddress())) {
-                lme.add(u.getEmailAddress());
+        for (Object u: userList) {
+            if(!lme.contains(((Musician) u).getEmailAddress())) {
+                lme.add(((Musician) u).getEmailAddress());
                 Location uLoc = new Location("");
-                uLoc.setLatitude(u.getLocation().getLatitude());
-                uLoc.setLongitude(u.getLocation().getLongitude());
+                uLoc.setLatitude(((Musician) u).getLocation().getLatitude());
+                uLoc.setLongitude(((Musician) u).getLocation().getLongitude());
                 ((Musician) u).setDistanceToCurrentUser(userLoc.distanceTo(uLoc));
                 lm.add((Musician) u);
             }

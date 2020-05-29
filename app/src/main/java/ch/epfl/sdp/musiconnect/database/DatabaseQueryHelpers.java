@@ -11,7 +11,7 @@ abstract class DatabaseQueryHelpers {
     private static boolean isFieldsArray(String field) {
         ArrayList<String> arrayFields = new ArrayList<>();
         arrayFields.add("members");
-
+        arrayFields.add("participants");
         return arrayFields.contains(field);
     }
     static Query unpack(Query collectionRef, Map<String, Object> args) {
