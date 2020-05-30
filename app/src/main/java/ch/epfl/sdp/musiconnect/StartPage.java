@@ -39,7 +39,7 @@ public class StartPage extends Page {
     private Animation fabOpen, fabClose, fabClockWise, fabAntiClockWise;
     private TextView fabTv1, fabTv2;
     private boolean isOpen = false;
-    public static boolean test = true;
+    public static boolean test = false;
 
     // All necessary for dark mode switch
     private Switch darkModeSwitch;
