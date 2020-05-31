@@ -26,6 +26,10 @@ import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
 
 public abstract class ProfilePage extends Page {
     protected TextView titleView, firstNameView, lastNameView, usernameView, emailView, birthdayView;
+    protected TextView instrument;
+    protected TextView selectedInstrument;
+    protected TextView level;
+    protected TextView selectedLevel;
     protected Uri videoUri = null;
     protected VideoView mVideoView;
     protected ImageView imgVw;

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,11 +20,6 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
 
     private Button contactButton;
     private Button eventListButton;
-
-    private TextView instrument;
-    private TextView selectedInstrument;
-    private TextView level;
-    private TextView selectedLevel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +114,18 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         emailView.setText(userEmail);
 
         addFirstNameToContactButtonText(m.getFirstName());
+
+        if (!m.getInstruments().isEmpty()) {
+            Instrument instr = (Instrument) m.getInstruments().keySet().toArray()[0];
+            Log.d("Instrumentcheck", instr.toString());
+            String i = instr.toString().substring(0, 1).toUpperCase() + instr.toString().substring(1);
+            selectedInstrument.setText(i);
+
+            Level lvl = m.getInstruments().get(instr);
+            Log.d("Instrumentcheck", lvl.toString());
+            String l = lvl.toString().substring(0, 1).toUpperCase() + lvl.toString().substring(1);
+            selectedLevel.setText(l);
+        }
     }
 
     private void setupEventListButton() {

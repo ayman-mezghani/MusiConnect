@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,9 +24,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import java.util.Calendar;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.database.DbSingleton;
-import ch.epfl.sdp.musiconnect.database.DbDataType;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
+import ch.epfl.sdp.musiconnect.database.DbDataType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
 
 public class UserCreation extends Page {
     //public static Musician mainUser;
@@ -104,7 +103,7 @@ public class UserCreation extends Page {
                     String instr = selectedInstrument.getSelectedItem().toString();
                     String lvl = selectedLevel.getSelectedItem().toString();
                     musician.addInstrument(Instrument.getInstrumentFromValue(instr), Level.getLevelFromValue(lvl));
-                    
+
                     db.add(DbDataType.Musician, musician);
 
                     CurrentUser.getInstance(this).setCreatedFlag();

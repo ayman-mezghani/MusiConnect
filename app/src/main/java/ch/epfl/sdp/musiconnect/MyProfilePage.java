@@ -5,10 +5,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -17,11 +17,6 @@ import ch.epfl.sdp.musiconnect.database.DbSingleton;
 
 public class MyProfilePage extends ProfilePage implements View.OnClickListener {
     private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
-
-    private TextView instrument;
-    private TextView selectedInstrument;
-    private TextView level;
-    private TextView selectedLevel;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -46,7 +41,8 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             Intent profileModificationIntent = new Intent(this, ProfileModification.class);
             sendInformation(profileModificationIntent);
             // Permits sending information from child to parent activity
-            startActivityForResult(profileModificationIntent, LAUNCH_PROFILE_MODIF_INTENT); });
+            startActivityForResult(profileModificationIntent, LAUNCH_PROFILE_MODIF_INTENT);
+        });
 
         loadProfileContent();
         getVideoUri(userEmail);
@@ -85,6 +81,18 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         birthdayView.setText(s);
 
         emailView.setText(m.getEmailAddress());
+
+        if (!m.getInstruments().isEmpty()) {
+            Instrument instr = (Instrument) m.getInstruments().keySet().toArray()[0];
+            Log.d("Instrumentcheck", instr.toString());
+            String i = instr.toString().substring(0, 1).toUpperCase() + instr.toString().substring(1);
+            selectedInstrument.setText(i);
+
+            Level lvl = m.getInstruments().get(instr);
+            Log.d("Instrumentcheck", lvl.toString());
+            String l = lvl.toString().substring(0, 1).toUpperCase() + lvl.toString().substring(1);
+            selectedLevel.setText(l);
+        }
     }
 
     @Override
