@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -57,7 +58,7 @@ public class UserCreation extends Page {
 
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
+        month = calendar.get(Calendar.MONTH) + 1;
         dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
         date.setOnClickListener(v -> {
@@ -67,7 +68,7 @@ public class UserCreation extends Page {
                         this.year = year;
                         this.month = month + 1;
                         this.dayOfMonth = day;
-                    }, year, month, dayOfMonth);
+                    }, this.year, this.month - 1, this.dayOfMonth);
             datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
             datePickerDialog.show();
         });
@@ -100,6 +101,10 @@ public class UserCreation extends Page {
                     musician.setLocation(new MyLocation(0, 0));
                     musician.setTypeOfUser(TypeOfUser.valueOf(rdb.getText().toString()));
 
+                    String instr = selectedInstrument.getSelectedItem().toString();
+                    String lvl = selectedLevel.getSelectedItem().toString();
+                    musician.addInstrument(Instrument.getInstrumentFromValue(instr), Level.getLevelFromValue(lvl));
+                    
                     db.add(DbDataType.Musician, musician);
 
                     CurrentUser.getInstance(this).setCreatedFlag();
