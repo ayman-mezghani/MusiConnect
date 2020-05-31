@@ -101,8 +101,12 @@ public class UserCreation extends Page {
                     musician.setTypeOfUser(TypeOfUser.valueOf(rdb.getText().toString()));
 
                     String instr = selectedInstrument.getSelectedItem().toString();
+                    String[] instrArray = getResources().getStringArray(R.array.instruments_array);
                     String lvl = selectedLevel.getSelectedItem().toString();
-                    musician.addInstrument(Instrument.getInstrumentFromValue(instr), Level.getLevelFromValue(lvl));
+                    String[] lvlArray = getResources().getStringArray(R.array.levels_array);
+
+                    if (!(lvl.equals(lvlArray[0]) || instr.equals(instrArray[0])))
+                        musician.addInstrument(Instrument.getInstrumentFromValue(instr), Level.getLevelFromValue(lvl));
 
                     db.add(DbDataType.Musician, musician);
 

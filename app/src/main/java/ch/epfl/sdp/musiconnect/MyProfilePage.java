@@ -84,12 +84,10 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
 
         if (!m.getInstruments().isEmpty()) {
             Instrument instr = (Instrument) m.getInstruments().keySet().toArray()[0];
-            Log.d("Instrumentcheck", instr.toString());
             String i = instr.toString().substring(0, 1).toUpperCase() + instr.toString().substring(1);
             selectedInstrument.setText(i);
 
             Level lvl = m.getInstruments().get(instr);
-            Log.d("Instrumentcheck", lvl.toString());
             String l = lvl.toString().substring(0, 1).toUpperCase() + lvl.toString().substring(1);
             selectedLevel.setText(l);
         }
@@ -139,5 +137,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         intent.putExtra("USERNAME", usernameView.getText().toString());
         intent.putExtra("MAIL", emailView.getText().toString());
         intent.putExtra("BIRTHDAY", birthdayView.getText().toString());
+        intent.putExtra("INSTRUMENT", selectedInstrument.getText().toString());
+        intent.putExtra("LEVEL", selectedLevel.getText().toString());
     }
 }
