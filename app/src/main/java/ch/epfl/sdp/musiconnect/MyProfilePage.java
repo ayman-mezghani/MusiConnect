@@ -110,6 +110,21 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             emailView.setText(newFields[3]);
             birthdayView.setText(newFields[4]);
 
+
+
+            String i = data.getStringExtra("INSTRUMENT");
+            String l = data.getStringExtra("LEVEL");
+            String[] instrArray = getResources().getStringArray(R.array.instruments_array);
+            String[] lvlArray = getResources().getStringArray(R.array.levels_array);
+
+            if(!(l.equals(lvlArray[0]) || i.equals(instrArray[0]))) {
+                selectedInstrument.setText(i);
+                selectedLevel.setText(l);
+            } else {
+                selectedInstrument.setText("");
+                selectedLevel.setText("");
+            }
+            
             String videoUriString = data.getStringExtra("videoUri");
 
             if (videoUriString != null) {

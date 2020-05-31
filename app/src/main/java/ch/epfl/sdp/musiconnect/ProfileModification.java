@@ -7,12 +7,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -31,8 +29,8 @@ import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
-import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.DbDataType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
@@ -233,9 +231,20 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
 
         currentCachedMusician.setTypeOfUser(CurrentUser.getInstance(this).getTypeOfUser());
         currentCachedMusician.removeAllInstruments();
-        Instrument i = Instrument.getInstrumentFromValue(selectedInstrumentSpinner.getSelectedItem().toString());
-        Level l = Level.getLevelFromValue(selectedLevelSpinner.getSelectedItem().toString());
-        currentCachedMusician.addInstrument(i, l);
+
+        String instr = selectedInstrumentSpinner.getSelectedItem().toString();
+        String[] instrArray = getResources().getStringArray(R.array.instruments_array);
+        String lvl = selectedLevelSpinner.getSelectedItem().toString();
+        String[] lvlArray = getResources().getStringArray(R.array.levels_array);
+
+        returnIntent.putExtra("INSTRUMENT", instr);
+        returnIntent.putExtra("LEVEL", lvl);
+
+        if (!(lvl.equals(lvlArray[0]) || instr.equals(instrArray[0]))) {
+            Instrument i = Instrument.getInstrumentFromValue(instr);
+            Level l = Level.getLevelFromValue(lvl);
+            currentCachedMusician.addInstrument(i, l);
+        }
 
         //launches the update to the database on another thread, so that it doesn't hang up the app if not connected to internet
         mExecutor.execute(() -> {
