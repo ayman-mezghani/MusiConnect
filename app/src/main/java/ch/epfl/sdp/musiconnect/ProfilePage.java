@@ -1,7 +1,6 @@
 package ch.epfl.sdp.musiconnect;
 
 import android.net.Uri;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -113,7 +112,6 @@ public abstract class ProfilePage extends Page {
             @Override
             public void onFailure() {
                 videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.minion);
-                Log.d("profilevideo", getPackageName());
                 showVideo();
             }
         });

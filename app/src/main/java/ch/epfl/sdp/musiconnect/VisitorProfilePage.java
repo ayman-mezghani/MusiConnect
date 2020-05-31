@@ -4,16 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
-import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.DbDataType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.events.EventListPage;
 
 public class VisitorProfilePage extends ProfilePage implements DbCallback {
@@ -66,7 +64,7 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         selectedInstrument = findViewById(R.id.visitorProfileSelectedInstrument);
         level = findViewById(R.id.visitorProfileLevel);
         selectedLevel = findViewById(R.id.visitorProfileSelectedLevel);
-      
+
         contactButton.setOnClickListener(view -> sendEmail(userEmail, getResources().getString(R.string.musiconnect_contact_mail)));
     }
 
@@ -117,12 +115,10 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
 
         if (!m.getInstruments().isEmpty()) {
             Instrument instr = (Instrument) m.getInstruments().keySet().toArray()[0];
-            Log.d("Instrumentcheck", instr.toString());
             String i = instr.toString().substring(0, 1).toUpperCase() + instr.toString().substring(1);
             selectedInstrument.setText(i);
 
             Level lvl = m.getInstruments().get(instr);
-            Log.d("Instrumentcheck", lvl.toString());
             String l = lvl.toString().substring(0, 1).toUpperCase() + lvl.toString().substring(1);
             selectedLevel.setText(l);
         }

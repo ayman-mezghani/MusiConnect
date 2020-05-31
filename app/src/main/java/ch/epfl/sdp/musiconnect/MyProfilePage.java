@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -110,21 +109,8 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             emailView.setText(newFields[3]);
             birthdayView.setText(newFields[4]);
 
+            setInstrumentRelatedViews(data);
 
-
-            String i = data.getStringExtra("INSTRUMENT");
-            String l = data.getStringExtra("LEVEL");
-            String[] instrArray = getResources().getStringArray(R.array.instruments_array);
-            String[] lvlArray = getResources().getStringArray(R.array.levels_array);
-
-            if(!(l.equals(lvlArray[0]) || i.equals(instrArray[0]))) {
-                selectedInstrument.setText(i);
-                selectedLevel.setText(l);
-            } else {
-                selectedInstrument.setText("");
-                selectedLevel.setText("");
-            }
-            
             String videoUriString = data.getStringExtra("videoUri");
 
             if (videoUriString != null) {
@@ -133,6 +119,21 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             } else {
                 getVideoUri(userEmail);
             }
+        }
+    }
+
+    private void setInstrumentRelatedViews(Intent data) {
+        String i = data.getStringExtra("INSTRUMENT");
+        String l = data.getStringExtra("LEVEL");
+        String[] instrArray = getResources().getStringArray(R.array.instruments_array);
+        String[] lvlArray = getResources().getStringArray(R.array.levels_array);
+
+        if (!(l.equals(lvlArray[0]) || i.equals(instrArray[0]))) {
+            selectedInstrument.setText(i);
+            selectedLevel.setText(l);
+        } else {
+            selectedInstrument.setText("");
+            selectedLevel.setText("");
         }
     }
 
