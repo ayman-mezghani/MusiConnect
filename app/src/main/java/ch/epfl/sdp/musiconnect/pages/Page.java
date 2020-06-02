@@ -53,8 +53,8 @@ public abstract class Page extends AppCompatActivity {
     // NOTIFICATION HELPER VARIABLES
     private Notifications notifications;
     private String notificationMessage;
-    protected static int DISTANCE_LIMIT = 200;
-    protected Map<String, Location> userLocations;
+    public static int DISTANCE_LIMIT = 200;
+    public Map<String, Location> userLocations;
     public static List<String> notificationMessages;
     Location l1, l2;
     Menu main_menu;
