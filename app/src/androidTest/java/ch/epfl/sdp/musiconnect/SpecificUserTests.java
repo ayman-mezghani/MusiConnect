@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect.pages;
+package ch.epfl.sdp.musiconnect;
 
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 
@@ -9,18 +9,16 @@ import org.junit.Test;
 
 import java.util.Objects;
 
-import ch.epfl.sdp.musiconnect.CurrentUser;
-import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.TypeOfUser;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.pages.StartPage;
 
 import static ch.epfl.sdp.musiconnect.testsFunctions.getCurrentActivity;
 import static org.junit.Assert.assertEquals;
 
-public class StartPageTests {
+public class SpecificUserTests {
     @Rule
     public IntentsTestRule<StartPage> activityRule = new IntentsTestRule<>(StartPage.class);
 
