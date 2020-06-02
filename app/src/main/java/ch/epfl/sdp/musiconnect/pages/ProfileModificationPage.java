@@ -55,7 +55,7 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
     private boolean videoRecorded = false;
 
     private List<Musician> result; //used to fetch from room database
-    public static boolean changeStaged = false;    //indicates if there are changes not commited to online database yet
+    public static boolean changeStaged = false;    //indicates if there are changes not committed to online database yet
 
     private TextView instrument;
     private Spinner selectedInstrument;
