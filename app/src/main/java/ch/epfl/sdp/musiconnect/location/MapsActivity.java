@@ -99,7 +99,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private UiSettings mUiSettings;
 
     private int delay;                                          //delay to updating the users list in ms
-    private List<Musician> allUsers = new ArrayList<>();        //all users "near" the current user's position
+    @VisibleForTesting
+    protected List<Musician> allUsers = new ArrayList<>();        //all users "near" the current user's position
     private List<Musician> profiles = new ArrayList<>();        //all users within the radius set by the user in the app
     private List<Marker> markers = new ArrayList<>();           //markers on the map associated to profiles
     private List<Event> events = new ArrayList<>();
@@ -643,9 +644,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-
-    // TODO Should be replaced by a function that fetch user from the database; right now it generates 3 fixed users
-    private void fetchUsersFromDb() {
+    @VisibleForTesting
+    protected void fetchUsersFromDb() {
         dbAdapter.locationQuery(DbDataType.Musician, LocationConverter.locationToMyLocation(CurrentUser.getInstance(this).getLocation()), MAX_THRESHOLD / 1000,
                 new DbCallback() {
                     @Override

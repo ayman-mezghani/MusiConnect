@@ -35,6 +35,7 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -147,6 +148,13 @@ public class MapsActivityTest {
             }
         }
         return false;
+    }
+
+    @Test
+    public void checkDb(){
+        mapsActivityRule.getActivity().fetchUsersFromDb();
+        waitSeconds(1);
+        assertTrue(!mapsActivityRule.getActivity().allUsers.isEmpty());
     }
 
 }
