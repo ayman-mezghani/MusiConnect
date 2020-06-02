@@ -200,6 +200,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 spinner.setSelection(position);
 
+                circle.setRadius(threshold);
+
                 updateProfileList();
                 loadProfilesMarker();
 
@@ -453,7 +455,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
 
-        circle.setRadius(threshold);
 
         loadProfilesMarker();
     }
