@@ -105,9 +105,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected List<Musician> profiles = new ArrayList<>();        //all users within the radius set by the user in the app
     @VisibleForTesting
     protected List<Marker> markers = new ArrayList<>();           //markers on the map associated to profiles
-    private List<Event> events = new ArrayList<>();
-    private List<Event> eventNear = new ArrayList<>();
-    private List<Marker> eventMarkers = new ArrayList<>();           //markers on the map associated to events
+    @VisibleForTesting
+    protected List<Event> events = new ArrayList<>();
+    @VisibleForTesting
+    protected List<Event> eventNear = new ArrayList<>();
+    @VisibleForTesting
+    protected List<Marker> eventMarkers = new ArrayList<>();           //markers on the map associated to events
     private Event shownEvent = null;                                //event to be shown on map, when accessed from event pages
 
     private boolean updateCamera = true;

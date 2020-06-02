@@ -26,6 +26,7 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.events.Event;
 import ch.epfl.sdp.musiconnect.events.EventCreationPage;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -166,4 +167,16 @@ public class MapsActivityTest {
         assertTrue(mapsActivityRule.getActivity().profiles.isEmpty());
     }
 
+    @Test
+    public void testUpdateEventList(){
+        Location l = new Location("test");
+        l.setLongitude(26);
+        l.setLatitude(15);
+        mapsActivityRule.getActivity().setLocation(l);
+        Event e = new Event("host@gmail.com","jej");
+        mapsActivityRule.getActivity().events.add(e);
+        mapsActivityRule.getActivity().updateEvents();
+        assertTrue(mapsActivityRule.getActivity().eventNear.isEmpty());
+        assertTrue(mapsActivityRule.getActivity().eventMarkers.isEmpty());
+    }
 }
