@@ -9,10 +9,11 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.FirebaseCloudStorage;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
+import ch.epfl.sdp.musiconnect.pages.StartPage;
 
 import static org.junit.Assert.assertEquals;
 
-public class CloudStorageTest {
+public class CloudStorageTests {
     @Rule
     public final ActivityTestRule<StartPage> mActivityTestRule =
             new ActivityTestRule<>(StartPage.class);

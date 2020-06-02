@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.pages;
 
 import android.content.Intent;
 
@@ -15,11 +15,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.events.EventListPage;
+import ch.epfl.sdp.musiconnect.pages.VisitorProfilePage;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -34,7 +37,7 @@ import static org.hamcrest.Matchers.allOf;
 
 
 @RunWith(AndroidJUnit4.class)
-public class VisitorProfileTest {
+public class VisitorProfilePageTests {
 
     private static MockDatabase md;
 

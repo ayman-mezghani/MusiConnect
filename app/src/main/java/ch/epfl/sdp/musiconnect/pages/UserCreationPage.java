@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.pages;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
@@ -24,11 +24,18 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import java.util.Calendar;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.Instrument;
+import ch.epfl.sdp.musiconnect.Level;
+import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.MyDate;
+import ch.epfl.sdp.musiconnect.MyLocation;
+import ch.epfl.sdp.musiconnect.TypeOfUser;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbDataType;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 
-public class UserCreation extends Page {
+public class UserCreationPage extends Page {
     //public static Musician mainUser;
     private static String collection = "newtest";
     private static final int GALLERY_REQUEST_CODE = 123;
@@ -37,7 +44,10 @@ public class UserCreation extends Page {
     DatePickerDialog datePickerDialog;
     int year, month, dayOfMonth;
     Calendar calendar;
-    protected EditText etFirstName, etLastName, etUserName, etMail;
+    protected EditText etFirstName;
+    protected EditText etLastName;
+    public EditText etUserName;
+    protected EditText etMail;
     private RadioGroup rdg;
 
     private TextView instrument;
@@ -61,7 +71,7 @@ public class UserCreation extends Page {
         dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
         date.setOnClickListener(v -> {
-            datePickerDialog = new DatePickerDialog(UserCreation.this,
+            datePickerDialog = new DatePickerDialog(UserCreationPage.this,
                     (datePicker, year, month, day) -> {
                         date.setText(day + "/" + (month + 1) + "/" + year + " (" + getAge(year, month, day) + " years)");
                         this.year = year;
@@ -115,14 +125,14 @@ public class UserCreation extends Page {
 
                     switch (CurrentUser.getInstance(this).getMusician().getTypeOfUser()) {
                         case Band:
-                            StartActivityAndFinish(new Intent(UserCreation.this, BandCreation.class));
+                            StartActivityAndFinish(new Intent(UserCreationPage.this, BandCreationPage.class));
                             break;
                         case Musician:
-                            StartActivityAndFinish(new Intent(UserCreation.this, StartPage.class));
+                            StartActivityAndFinish(new Intent(UserCreationPage.this, StartPage.class));
                             break;
                     }
 
-                    GoogleLogin.finishActivity();
+                    GoogleLoginPage.finishActivity();
                     finish();
                 } else {
                     Toast.makeText(this, "Select a date of birth", Toast.LENGTH_LONG).show();

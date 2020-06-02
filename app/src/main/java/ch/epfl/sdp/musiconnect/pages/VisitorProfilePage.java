@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.pages;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -9,6 +9,12 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.Band;
+import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.MyDate;
+import ch.epfl.sdp.musiconnect.TypeOfUser;
+import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbDataType;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;

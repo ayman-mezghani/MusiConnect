@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.pages;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -12,6 +12,10 @@ import android.widget.Button;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.MyDate;
+import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 
 public class MyProfilePage extends ProfilePage implements View.OnClickListener {
@@ -37,7 +41,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
 
         Button editProfile = findViewById(R.id.btnEditProfile);
         editProfile.setOnClickListener(v -> {
-            Intent profileModificationIntent = new Intent(this, ProfileModification.class);
+            Intent profileModificationIntent = new Intent(this, ProfileModificationPage.class);
             sendInformation(profileModificationIntent);
             // Permits sending information from child to parent activity
             startActivityForResult(profileModificationIntent, LAUNCH_PROFILE_MODIF_INTENT);

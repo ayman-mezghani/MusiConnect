@@ -16,6 +16,8 @@ import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.finder.MusicianFinderPage;
 import ch.epfl.sdp.musiconnect.finder.MusicianFinderResult;
+import ch.epfl.sdp.musiconnect.pages.MyProfilePage;
+import ch.epfl.sdp.musiconnect.pages.VisitorProfilePage;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;

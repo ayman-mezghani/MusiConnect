@@ -13,6 +13,6 @@ public class MyLocationConverter {
     @TypeConverter
     public static MyLocation strToMyLocation(String location){
         String[] latlon = location.split(",");
-        return new MyLocation(Double.valueOf(latlon[0]),Double.valueOf(latlon[1]));
+        return new MyLocation(Double.parseDouble(latlon[0]),Double.parseDouble(latlon[1]));
     }
 }

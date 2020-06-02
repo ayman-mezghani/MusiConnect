@@ -27,7 +27,7 @@ import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
-import ch.epfl.sdp.musiconnect.Page;
+import ch.epfl.sdp.musiconnect.pages.Page;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;

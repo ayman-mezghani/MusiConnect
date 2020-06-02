@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.pages;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -26,6 +26,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.MyDate;
+import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
@@ -37,7 +41,7 @@ import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
 import static ch.epfl.sdp.musiconnect.roomdatabase.MyDateConverter.dateToMyDate;
 
-public class ProfileModification extends ProfilePage implements View.OnClickListener {
+public class ProfileModificationPage extends ProfilePage implements View.OnClickListener {
 
     String firstName, lastName, username, mail, birthday, inst, lvl;
     EditText[] editFields;
@@ -138,7 +142,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
      * @return true if age >= 13
      */
     private boolean isInputDateValid() {
-        UserCreation uc = new UserCreation();
+        UserCreationPage uc = new UserCreationPage();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -159,7 +163,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
      * @param modCurrent: profile of current user that has been modified
      */
     private void updateDatabaseFields(Musician modCurrent) {
-        while (!checkConnection(ProfileModification.this)) { //semi-busy waiting for the connection to be back up
+        while (!checkConnection(ProfileModificationPage.this)) { //semi-busy waiting for the connection to be back up
             try {
                 TimeUnit.SECONDS.sleep(20);
             } catch (InterruptedException e) {
@@ -200,7 +204,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
             }
         }
         if (result.isEmpty()) {
-            Toast.makeText(ProfileModification.this, "Error: couldn't update profile", Toast.LENGTH_LONG).show();
+            Toast.makeText(ProfileModificationPage.this, "Error: couldn't update profile", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -218,7 +222,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
             cUserBirthday = dateToMyDate(d);
 
         } catch (ParseException e) {
-            Toast.makeText(ProfileModification.this, "Error: couldn't update profile", Toast.LENGTH_LONG).show();
+            Toast.makeText(ProfileModificationPage.this, "Error: couldn't update profile", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -251,7 +255,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
             mdao.updateUsers(new Musician[]{currentCachedMusician});
             updateDatabaseFields(currentCachedMusician);
         });
-        CurrentUser.getInstance(ProfileModification.this).setMusician(currentCachedMusician);
+        CurrentUser.getInstance(ProfileModificationPage.this).setMusician(currentCachedMusician);
 
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
@@ -282,7 +286,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
         calendar.set(Integer.parseInt(bday[2]), Integer.parseInt(bday[1]) - 1, Integer.parseInt(bday[0]));
 
         bdayField.setOnClickListener(v -> new DatePickerDialog(
-                ProfileModification.this, date, calendar.get(Calendar.YEAR),
+                ProfileModificationPage.this, date, calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show());
     }
 
