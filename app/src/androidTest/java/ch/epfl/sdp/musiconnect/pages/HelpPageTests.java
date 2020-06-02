@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.pages;
 
 import android.content.Intent;
 
@@ -30,7 +30,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 @RunWith(AndroidJUnit4.class)
-public class HelpTests {
+public class HelpPageTests {
 
     @Rule
     public final ActivityTestRule<HelpPage> helpPageRule =

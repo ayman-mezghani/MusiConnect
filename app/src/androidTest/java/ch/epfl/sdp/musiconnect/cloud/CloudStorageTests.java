@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.cloud;
 
 import androidx.test.rule.ActivityTestRule;
 
@@ -13,7 +13,7 @@ import ch.epfl.sdp.musiconnect.pages.StartPage;
 
 import static org.junit.Assert.assertEquals;
 
-public class CloudStorageTest {
+public class CloudStorageTests {
     @Rule
     public final ActivityTestRule<StartPage> mActivityTestRule =
             new ActivityTestRule<>(StartPage.class);

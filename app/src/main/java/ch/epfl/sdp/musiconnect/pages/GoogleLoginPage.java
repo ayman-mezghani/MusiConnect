@@ -138,7 +138,7 @@ public class GoogleLoginPage extends AppCompatActivity {
         }
     }
 
-    public void redirect(boolean userExists) {
+    protected void redirect(boolean userExists) {
         if (userExists) {
             CurrentUser.getInstance(GoogleLoginPage.this).setCreatedFlag();
             startActivity(new Intent(GoogleLoginPage.this, StartPage.class));

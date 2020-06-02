@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.pages;
 
 import android.widget.DatePicker;
 
@@ -26,6 +26,7 @@ import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.location.MapsLocationFunctions;
 import ch.epfl.sdp.musiconnect.pages.UserCreationPage;
+import ch.epfl.sdp.musiconnect.testsFunctions;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;

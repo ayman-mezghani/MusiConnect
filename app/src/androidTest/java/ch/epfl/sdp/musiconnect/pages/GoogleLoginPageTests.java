@@ -1,8 +1,10 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.pages;
 
 /**
  * @Author : Antonio Pisanello
  */
+
+import junit.framework.TestCase;
 
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 
@@ -11,6 +13,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
@@ -58,6 +61,6 @@ public class GoogleLoginPageTests {
         // Simulate the on activity result call
         ((GoogleLoginPage) getCurrentActivity()).redirect(true);
         intended(hasComponent(StartPage.class.getName()));
-        assertTrue(CurrentUser.getInstance(activityRule.getActivity()).getCreatedFlag());
+        TestCase.assertTrue(CurrentUser.getInstance(activityRule.getActivity()).getCreatedFlag());
     }
 }

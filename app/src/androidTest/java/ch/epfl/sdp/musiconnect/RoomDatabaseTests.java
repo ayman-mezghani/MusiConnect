@@ -34,7 +34,7 @@ import static org.junit.Assert.assertTrue;
 
 
 @RunWith(AndroidJUnit4.class)
-public class RoomDatabaseTest {
+public class RoomDatabaseTests {
 
     private AppDatabase roomDb;
     private MusicianDao musicianDao;
