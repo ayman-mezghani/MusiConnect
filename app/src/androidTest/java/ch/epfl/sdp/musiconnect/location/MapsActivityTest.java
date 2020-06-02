@@ -126,4 +126,10 @@ public class MapsActivityTest {
 
     }
 
+    @Test
+    public void testGetLastLocation(){
+        mapsActivityRule.getActivity().getLastLocation();
+        assertEquals(true,mapsActivityRule.getActivity().updatePos);
+    }
+
 }

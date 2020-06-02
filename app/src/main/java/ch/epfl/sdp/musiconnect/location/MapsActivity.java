@@ -94,7 +94,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected Location setLoc;
     private Spinner spinner;
 
-    private boolean updatePos = true;
+    @VisibleForTesting
+    protected boolean updatePos = true;
     @VisibleForTesting
     protected GoogleMap mMap;
     private UiSettings mUiSettings;
@@ -309,8 +310,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //========================================================================
     // Location functions
-
-    private void getLastLocation() {
+    @VisibleForTesting
+    protected void getLastLocation() {
         if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
                 if (location != null) {
