@@ -20,6 +20,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
@@ -151,10 +153,17 @@ public class MapsActivityTest {
     }
 
     @Test
-    public void checkDb(){
-        mapsActivityRule.getActivity().fetchUsersFromDb();
-        waitSeconds(1);
-        assertTrue(!mapsActivityRule.getActivity().allUsers.isEmpty());
+    public void testUpdateProfileList(){
+        Location l = new Location("test");
+        l.setLongitude(26);
+        l.setLatitude(15);
+        mapsActivityRule.getActivity().setLocation(l);
+        MyDate birthday = new MyDate(1940, 10, 9);
+        Musician m = new Musician("gg","Grospardieu","h","reeeeee@clubic.com",birthday);
+        mapsActivityRule.getActivity().allUsers.add(m);
+        mapsActivityRule.getActivity().updateProfileList();
+        assertTrue(mapsActivityRule.getActivity().markers.isEmpty());
+        assertTrue(mapsActivityRule.getActivity().profiles.isEmpty());
     }
 
 }

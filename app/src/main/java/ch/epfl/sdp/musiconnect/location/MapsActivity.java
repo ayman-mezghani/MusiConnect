@@ -101,8 +101,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private int delay;                                          //delay to updating the users list in ms
     @VisibleForTesting
     protected List<Musician> allUsers = new ArrayList<>();        //all users "near" the current user's position
-    private List<Musician> profiles = new ArrayList<>();        //all users within the radius set by the user in the app
-    private List<Marker> markers = new ArrayList<>();           //markers on the map associated to profiles
+    @VisibleForTesting
+    protected List<Musician> profiles = new ArrayList<>();        //all users within the radius set by the user in the app
+    @VisibleForTesting
+    protected List<Marker> markers = new ArrayList<>();           //markers on the map associated to profiles
     private List<Event> events = new ArrayList<>();
     private List<Event> eventNear = new ArrayList<>();
     private List<Marker> eventMarkers = new ArrayList<>();           //markers on the map associated to events
@@ -427,7 +429,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     //From the users around the area, picks the ones that are within the threshold distance.
-    private void updateProfileList() {
+    @VisibleForTesting
+    protected void updateProfileList() {
         if (setLoc == null) {             //Might be called before we get the first update to the location;
             return;
         } else {
@@ -456,7 +459,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     //From the events around the area, picks the ones that are within the threshold distance.
-    private void updateEvents() {
+    @VisibleForTesting
+    protected void updateEvents() {
         if (setLoc == null) {            //Might be called before we get the first update to the location;
             return;
         }
@@ -644,8 +648,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    @VisibleForTesting
-    protected void fetchUsersFromDb() {
+    private void fetchUsersFromDb() {
         dbAdapter.locationQuery(DbDataType.Musician, LocationConverter.locationToMyLocation(CurrentUser.getInstance(this).getLocation()), MAX_THRESHOLD / 1000,
                 new DbCallback() {
                     @Override
