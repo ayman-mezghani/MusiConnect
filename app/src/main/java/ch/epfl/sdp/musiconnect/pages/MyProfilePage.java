@@ -8,12 +8,13 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.Instrument;
+import ch.epfl.sdp.musiconnect.Level;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.User;
@@ -21,11 +22,6 @@ import ch.epfl.sdp.musiconnect.database.DbSingleton;
 
 public class MyProfilePage extends ProfilePage implements View.OnClickListener {
     private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
-
-    private TextView instrument;
-    private TextView selectedInstrument;
-    private TextView level;
-    private TextView selectedLevel;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -50,7 +46,8 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             Intent profileModificationIntent = new Intent(this, ProfileModificationPage.class);
             sendInformation(profileModificationIntent);
             // Permits sending information from child to parent activity
-            startActivityForResult(profileModificationIntent, LAUNCH_PROFILE_MODIF_INTENT); });
+            startActivityForResult(profileModificationIntent, LAUNCH_PROFILE_MODIF_INTENT);
+        });
 
         loadProfileContent();
         getVideoUri(userEmail);
@@ -89,6 +86,8 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         birthdayView.setText(s);
 
         emailView.setText(m.getEmailAddress());
+
+        loadInstrument(m);
     }
 
     @Override
@@ -108,6 +107,8 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             emailView.setText(newFields[3]);
             birthdayView.setText(newFields[4]);
 
+            setInstrumentRelatedViews(data);
+
             String videoUriString = data.getStringExtra("videoUri");
 
             if (videoUriString != null) {
@@ -116,6 +117,21 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             } else {
                 getVideoUri(userEmail);
             }
+        }
+    }
+
+    private void setInstrumentRelatedViews(Intent data) {
+        String i = data.getStringExtra("INSTRUMENT");
+        String l = data.getStringExtra("LEVEL");
+        String[] instrArray = getResources().getStringArray(R.array.instruments_array);
+        String[] lvlArray = getResources().getStringArray(R.array.levels_array);
+
+        if (!(l.equals(lvlArray[0]) || i.equals(instrArray[0]))) {
+            selectedInstrument.setText(i);
+            selectedLevel.setText(l);
+        } else {
+            selectedInstrument.setText("");
+            selectedLevel.setText("");
         }
     }
 
@@ -135,5 +151,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         intent.putExtra("USERNAME", usernameView.getText().toString());
         intent.putExtra("MAIL", emailView.getText().toString());
         intent.putExtra("BIRTHDAY", birthdayView.getText().toString());
+        intent.putExtra("INSTRUMENT", selectedInstrument.getText().toString());
+        intent.putExtra("LEVEL", selectedLevel.getText().toString());
     }
 }

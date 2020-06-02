@@ -25,16 +25,17 @@ import java.util.Calendar;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.Instrument;
+import ch.epfl.sdp.musiconnect.Level;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.MyLocation;
 import ch.epfl.sdp.musiconnect.TypeOfUser;
-import ch.epfl.sdp.musiconnect.database.DbSingleton;
-import ch.epfl.sdp.musiconnect.database.DbDataType;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
+import ch.epfl.sdp.musiconnect.database.DbDataType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
 
 public class UserCreationPage extends Page {
-    //public static Musician mainUser;
     private static String collection = "newtest";
     private static final int GALLERY_REQUEST_CODE = 123;
     private ImageView profilePicture;
@@ -65,7 +66,7 @@ public class UserCreationPage extends Page {
 
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
+        month = calendar.get(Calendar.MONTH) + 1;
         dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
         date.setOnClickListener(v -> {
@@ -75,7 +76,7 @@ public class UserCreationPage extends Page {
                         this.year = year;
                         this.month = month + 1;
                         this.dayOfMonth = day;
-                    }, year, month, dayOfMonth);
+                    }, this.year, this.month - 1, this.dayOfMonth);
             datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
             datePickerDialog.show();
         });
@@ -107,6 +108,14 @@ public class UserCreationPage extends Page {
                     Musician musician = new Musician(firstname, lastname, username, email, d);
                     musician.setLocation(new MyLocation(0, 0));
                     musician.setTypeOfUser(TypeOfUser.valueOf(rdb.getText().toString()));
+
+                    String instr = selectedInstrument.getSelectedItem().toString();
+                    String[] instrArray = getResources().getStringArray(R.array.instruments_array);
+                    String lvl = selectedLevel.getSelectedItem().toString();
+                    String[] lvlArray = getResources().getStringArray(R.array.levels_array);
+
+                    if (!(lvl.equals(lvlArray[0]) || instr.equals(instrArray[0])))
+                        musician.addInstrument(Instrument.getInstrumentFromValue(instr), Level.getLevelFromValue(lvl));
 
                     db.add(DbDataType.Musician, musician);
 
