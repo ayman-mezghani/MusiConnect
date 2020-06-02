@@ -9,7 +9,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
@@ -24,13 +23,9 @@ import java.util.Map;
 import java.util.Objects;
 
 import ch.epfl.sdp.musiconnect.Band;
-import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.events.Event;
-
-import static android.location.Location.distanceBetween;
-import static ch.epfl.sdp.musiconnect.database.SimplifiedDbEntry.Fields;
 
 public class FirebaseDatabase extends Database {
     private static final String TAG = "DataBase";
@@ -82,7 +77,6 @@ public class FirebaseDatabase extends Database {
                 })
                 .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
     }
-
 
     @Override
     void deleteDoc(String collection, String docName) {
@@ -168,8 +162,7 @@ public class FirebaseDatabase extends Database {
                         queryResult.add(se.toEvent(document.getId()));
                     }
                     dbCallback.queryCallback(queryResult);
-                }
-                else {
+                } else {
                     List<User> queryResult = new ArrayList<>();
                     for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                         Map<String, Object> data = document.getData();
@@ -222,10 +215,10 @@ public class FirebaseDatabase extends Database {
     }
 
     private boolean isWithin(GeoPoint currentLocation, GeoPoint resultLocation, double distance) {
-        Location start =  new Location("");
+        Location start = new Location("");
         start.setLongitude(currentLocation.getLongitude());
         start.setLatitude(currentLocation.getLatitude());
-        Location dest =  new Location("");
+        Location dest = new Location("");
         dest.setLongitude(resultLocation.getLongitude());
         dest.setLatitude(resultLocation.getLatitude());
         return start.distanceTo(dest) / 1000f <= distance;

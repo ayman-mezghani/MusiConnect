@@ -81,7 +81,6 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
 
         try {
             startActivity(Intent.createChooser(emailIntent, "Sending mail..."));
-            finish();
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
         }
