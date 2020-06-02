@@ -57,4 +57,15 @@ public class BandFinderTests {
         String minionMail = ((Musician)(new MockDatabase(false)).getDummyMusician(0)).getEmailAddress();
         onView(allOf(withText(minionMail), withParent(withId(R.id.LvBandResult))));
     }
+
+    @Test
+    public void testBandFinderResultClickShouldDisplayBandProfile() {
+        onView(withId(R.id.myBandFinderBandNameID)).perform(scrollTo(), typeText("totofire"));
+        onView(withId(R.id.bandFinderButtonID)).perform(scrollTo(), click());
+        intended(hasComponent(BandFinderResult.class.getName()));
+
+        onView(withText("totofire")).perform(scrollTo(), click());
+
+        intended(hasComponent(BandProfile.class.getName()));
+    }
 }

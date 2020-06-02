@@ -7,12 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
@@ -21,9 +16,6 @@ import androidx.core.content.ContextCompat;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.ArrayList;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
@@ -36,10 +28,6 @@ import ch.epfl.sdp.musiconnect.location.LocationPermission;
 public class StartPage extends Page {
     private static final String TAG = "MainActivity";
     private FusedLocationProviderClient fusedLocationClient;
-    private FloatingActionButton fab_menu, fab_button_1, fab_button_2;
-    private Animation fabOpen, fabClose, fabClockWise, fabAntiClockWise;
-    private TextView fabTv1, fabTv2;
-    private boolean isOpen = false;
     public static boolean test = true;
 
     // All necessary for dark mode switch
@@ -70,41 +58,6 @@ public class StartPage extends Page {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 saveNightModeState(false);
                 recreate();
-            }
-        });
-
-        fab_menu = findViewById(R.id.fab_menu);
-        fab_button_1 = findViewById(R.id.fab_button_1);
-        fab_button_2 = findViewById(R.id.fab_button_2);
-
-        fabTv1 = findViewById(R.id.fab_tv_1);
-        fabTv2 = findViewById(R.id.fab_tv_2);
-
-        fabOpen = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
-        fabClose = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
-        fabClockWise = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_clockwise);
-        fabAntiClockWise = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_anti_clockwise);
-
-        fab_menu.setOnClickListener(v -> fabMenuClick());
-        fab_button_1.setOnClickListener(v -> button1Click());
-
-        fab_button_2.setOnClickListener(v -> {
-            updateCurrentUser(this);
-            ListView lv = findViewById(R.id.LvEvent);
-            ArrayList<String> events = new ArrayList<>();
-
-            final ArrayAdapter<String> adapter = new ArrayAdapter<>
-                    (StartPage.this, android.R.layout.simple_list_item_1, events);
-            lv.setAdapter(adapter);
-
-            for(String e : CurrentUser.getInstance(this).getBand().getEvents()) {
-                DbSingleton.getDbInstance().read(DbDataType.Events, e.trim(), new DbCallback() {
-                    @Override
-                    public void readCallback(Event u) {
-                        events.add(u.getTitle());
-                        adapter.notifyDataSetChanged();
-                    }
-                });
             }
         });
 
@@ -185,45 +138,5 @@ public class StartPage extends Page {
         else {
             getLastLocation();
         }
-    }
-
-
-
-
-    protected void button1Click() {
-        getBandIfMember();
-
-
-
-    }
-
-    protected void fabMenuClick() {
-        if(isOpen){
-            fab_button_2.startAnimation(fabClose);
-            fabTv2.startAnimation(fabClose);
-            fab_button_1.startAnimation(fabClose);
-            fabTv1.startAnimation(fabClose);
-            fab_menu.startAnimation(fabAntiClockWise);
-
-            fab_button_2.setClickable(false);
-            fab_button_1.setClickable(false);
-
-            fab_button_2.setFocusable(false);
-            fab_button_1.setFocusable(false);
-        } else {
-            fab_button_2.startAnimation(fabOpen);
-            fabTv2.startAnimation(fabOpen);
-            fab_button_1.startAnimation(fabOpen);
-            fabTv1.startAnimation(fabOpen);
-            fab_menu.startAnimation(fabClockWise);
-
-            fab_button_2.setClickable(true);
-            fab_button_1.setClickable(true);
-
-            fab_button_2.setFocusable(true);
-            fab_button_1.setFocusable(true);
-        }
-
-        isOpen = !isOpen;
     }
 }
