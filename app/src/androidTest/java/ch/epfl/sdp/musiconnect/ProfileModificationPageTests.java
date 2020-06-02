@@ -25,6 +25,8 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.pages.MyProfilePage;
+import ch.epfl.sdp.musiconnect.pages.ProfileModificationPage;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
@@ -49,7 +51,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 @RunWith(AndroidJUnit4.class)
-public class ProfileModificationTests {
+public class ProfileModificationPageTests {
 
     private AppDatabase roomDb;
     private MusicianDao musicianDao;
@@ -94,12 +96,12 @@ public class ProfileModificationTests {
 
     @Test
     public void testEditProfileAndDoNotSaveShouldDoNothing() {
-        assertFalse(ProfileModification.changeStaged);
+        assertFalse(ProfileModificationPage.changeStaged);
         clickButtonWithText(R.string.edit_profile_button_text);
         onView(withId(R.id.newFirstName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Damien"));
         clickButtonWithText(R.string.do_not_save);
         onView(withId(R.id.myFirstname)).check(matches(not(withText("Damien"))));
-        assertFalse(ProfileModification.changeStaged);
+        assertFalse(ProfileModificationPage.changeStaged);
     }
 
     @Test

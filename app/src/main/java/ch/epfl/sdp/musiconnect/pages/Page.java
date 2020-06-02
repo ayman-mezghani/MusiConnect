@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.pages;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -27,6 +27,13 @@ import java.util.List;
 import java.util.Map;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.Band;
+import ch.epfl.sdp.musiconnect.BandProfile;
+import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.Notifications;
+import ch.epfl.sdp.musiconnect.TypeOfUser;
+import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
@@ -36,7 +43,7 @@ import ch.epfl.sdp.musiconnect.events.EventListPage;
 import ch.epfl.sdp.musiconnect.finder.FinderPage;
 import ch.epfl.sdp.musiconnect.location.MapsActivity;
 
-import static ch.epfl.sdp.musiconnect.StartPage.test;
+import static ch.epfl.sdp.musiconnect.pages.StartPage.test;
 
 public abstract class Page extends AppCompatActivity {
 
@@ -46,8 +53,8 @@ public abstract class Page extends AppCompatActivity {
     // NOTIFICATION HELPER VARIABLES
     private Notifications notifications;
     private String notificationMessage;
-    protected static int DISTANCE_LIMIT = 200;
-    protected Map<String, Location> userLocations;
+    public static int DISTANCE_LIMIT = 200;
+    public Map<String, Location> userLocations;
     public static List<String> notificationMessages;
     Location l1, l2;
     Menu main_menu;
@@ -82,8 +89,8 @@ public abstract class Page extends AppCompatActivity {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
         if (!test) {
-            if (!CurrentUser.getInstance(this).getCreatedFlag() && this.getClass() != UserCreation.class) {
-                startActivity(new Intent(this, GoogleLogin.class));
+            if (!CurrentUser.getInstance(this).getCreatedFlag() && this.getClass() != UserCreationPage.class) {
+                startActivity(new Intent(this, GoogleLoginPage.class));
             }
         }
     }
@@ -135,7 +142,7 @@ public abstract class Page extends AppCompatActivity {
         return false;
     }
 
-    protected void sendNotificationToMusician(String channel, int priority) {
+    public void sendNotificationToMusician(String channel, int priority) {
         if (!notificationMessages.contains(notificationMessage)) {
             notifications.sendNotification(channel, getApplicationContext(), notificationMessage, priority);
             notificationMessages.add(notificationMessage);
@@ -145,7 +152,7 @@ public abstract class Page extends AppCompatActivity {
     /**
      * Helper method to provide temporary dummy user locations
      */
-    protected void helper() {
+    public void helper() {
         l1 = new Location("User A");
         l1.setLatitude(46.517084);
         l1.setLongitude(6.565630);
@@ -226,7 +233,7 @@ public abstract class Page extends AppCompatActivity {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, task -> {
                     CurrentUser.flush();
-                    Intent loginIntent = new Intent(this, GoogleLogin.class);
+                    Intent loginIntent = new Intent(this, GoogleLoginPage.class);
                     this.startActivity(loginIntent);
                     finish();
                 });

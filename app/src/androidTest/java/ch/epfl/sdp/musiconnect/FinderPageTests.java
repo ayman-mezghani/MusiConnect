@@ -16,6 +16,7 @@ import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.finder.BandFinderPage;
 import ch.epfl.sdp.musiconnect.finder.FinderPage;
 import ch.epfl.sdp.musiconnect.finder.MusicianFinderPage;
+import ch.epfl.sdp.musiconnect.pages.StartPage;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;

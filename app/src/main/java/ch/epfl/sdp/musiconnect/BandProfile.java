@@ -16,6 +16,7 @@ import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.DbDataType;
+import ch.epfl.sdp.musiconnect.pages.Page;
 
 public class BandProfile extends Page {
 // LeaderMail

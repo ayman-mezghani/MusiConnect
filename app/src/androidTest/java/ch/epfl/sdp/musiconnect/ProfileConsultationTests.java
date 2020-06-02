@@ -20,6 +20,8 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.pages.MyProfilePage;
+import ch.epfl.sdp.musiconnect.pages.ProfileModificationPage;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
@@ -57,7 +59,7 @@ public class ProfileConsultationTests {
     @Test
     public void testEditButtonShouldStartNewIntent() {
         onView(withText(R.string.edit_profile_button_text)).perform(click());
-        intended(hasComponent(ProfileModification.class.getName()));
+        intended(hasComponent(ProfileModificationPage.class.getName()));
     }
 
     @Test

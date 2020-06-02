@@ -58,7 +58,7 @@ import ch.epfl.sdp.musiconnect.CustomInfoWindowGoogleMap;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyLocation;
 import ch.epfl.sdp.musiconnect.User;
-import ch.epfl.sdp.musiconnect.VisitorProfilePage;
+import ch.epfl.sdp.musiconnect.pages.VisitorProfilePage;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;

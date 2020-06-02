@@ -9,6 +9,7 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.FirebaseCloudStorage;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
+import ch.epfl.sdp.musiconnect.pages.StartPage;
 
 import static org.junit.Assert.assertEquals;
 

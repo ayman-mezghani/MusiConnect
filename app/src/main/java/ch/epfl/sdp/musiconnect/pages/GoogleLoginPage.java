@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.pages;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,17 +16,20 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.DbDataType;
 
-public class GoogleLogin extends AppCompatActivity {
+public class GoogleLoginPage extends AppCompatActivity {
     private static String collection = "newtest";
 
     private static final int RC_SIGN_IN = 0;
     private static final String TAG = "Error";
-    private static GoogleLogin thisActivity;
+    private static GoogleLoginPage thisActivity;
 
     private GoogleSignInClient mGoogleSignInClient;
     private SignInButton signin;
@@ -135,13 +138,13 @@ public class GoogleLogin extends AppCompatActivity {
         }
     }
 
-    protected void redirect(boolean userExists) {
+    public void redirect(boolean userExists) {
         if (userExists) {
-            CurrentUser.getInstance(GoogleLogin.this).setCreatedFlag();
-            startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.StartPage.class));
+            CurrentUser.getInstance(GoogleLoginPage.this).setCreatedFlag();
+            startActivity(new Intent(GoogleLoginPage.this, StartPage.class));
             finish();
         } else {
-            startActivity(new Intent(GoogleLogin.this, ch.epfl.sdp.musiconnect.UserCreation.class));
+            startActivity(new Intent(GoogleLoginPage.this, UserCreationPage.class));
         }
     }
 }
