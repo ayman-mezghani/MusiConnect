@@ -377,7 +377,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LocationPermission.startLocationService(this);
     }
 
-    private void sendToDatabase(Location location) {
+    @VisibleForTesting
+    protected void sendToDatabase(Location location) {
         User user = CurrentUser.getInstance(this).getMusician();
 
         user.setLocation(new MyLocation(location.getLatitude(), location.getLongitude()));
