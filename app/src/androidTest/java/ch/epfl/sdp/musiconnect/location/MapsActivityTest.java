@@ -103,4 +103,14 @@ public class MapsActivityTest {
         intended(hasComponent(EventCreationPage.class.getName()));
     }
 
+    @Test
+    public void locationIsUpdatedToDb(){
+
+    }
+
+    @Test
+    public void testLocationServices(){
+        assertEquals(true,mapsActivityRule.getActivity().checkLocationServices());
+    }
+
 }
