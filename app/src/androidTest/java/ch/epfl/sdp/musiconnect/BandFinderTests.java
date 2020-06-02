@@ -64,10 +64,8 @@ public class BandFinderTests {
         onView(withId(R.id.bandFinderButtonID)).perform(scrollTo(), click());
         intended(hasComponent(BandFinderResult.class.getName()));
 
-        String minionMail = ((Musician)(new MockDatabase(false)).getDummyMusician(0)).getEmailAddress();
         onView(withText("totofire")).perform(scrollTo(), click());
 
         intended(hasComponent(BandProfile.class.getName()));
-        //onView(withId(R.id.etBandName)).perform(scrollTo()).check(matches(withText("totofire")));
     }
 }
