@@ -20,7 +20,6 @@ import androidx.test.rule.ActivityTestRule;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.pages.StartPage;
 
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sdp.musiconnect.pages.StartPage.KEY_ISNIGHTMODE;
 import static ch.epfl.sdp.musiconnect.pages.StartPage.MY_PREFERENCES;
 import static junit.framework.TestCase.assertFalse;
@@ -70,43 +69,4 @@ public class DarkModeTests {
 
         assertFalse(sp.getBoolean(KEY_ISNIGHTMODE, false));
     }
-    /*
-    public static ViewAction setChecked(final boolean checked) {
-        return new ViewAction() {
-            @Override
-            public BaseMatcher<View> getConstraints() {
-                return new BaseMatcher<View>() {
-                    @Override
-                    public boolean matches(Object item) {
-                        return isA(Checkable.class).matches(item);
-                    }
-
-                    @Override
-                    public void describeMismatch(Object item, Description mismatchDescription) {}
-
-                    @Override
-                    public void describeTo(Description description) {}
-                };
-            }
-
-            @Override
-            public String getDescription() {
-                return null;
-            }
-
-            @Override
-            public void perform(UiController uiController, View view) {
-                Checkable checkableView = (Checkable) view;
-                checkableView.setChecked(checked);
-            }
-        };
-    }
-
-    @Test
-    public void testNightModeStateChangeDoesChange() {
-        onView(withId(R.id.darkModeSwitch)).perform(scrollTo(), setChecked(true));
-
-        TextView title = startPageRule.getActivity().findViewById(R.id.welcomeText);
-        assertThat(title.getCurrentTextColor(), is(ContextCompat.getColor(startPageRule.getActivity().getApplicationContext(), R.color.text_grey)));
-    }*/
 }

@@ -214,13 +214,11 @@ public abstract class Page extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if(Build.VERSION.SDK_INT > 11) {
-            invalidateOptionsMenu();
-            if(CurrentUser.getInstance(this).getBands() != null) {      // if user is member of a band
-                MenuItem bandItem = menu.findItem(R.id.my_profileBand); // then show a menu item to bands profile
-                if(bandItem != null)
-                    bandItem.setVisible(true);
-            }
+        invalidateOptionsMenu();
+        if(CurrentUser.getInstance(this).getBands() != null) {      // if user is member of a band
+            MenuItem bandItem = menu.findItem(R.id.my_profileBand); // then show a menu item to bands profile
+            if(bandItem != null)
+                bandItem.setVisible(true);
         }
         return super.onPrepareOptionsMenu(menu);
     }

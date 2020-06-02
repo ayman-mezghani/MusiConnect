@@ -18,7 +18,6 @@ public class CustomInfoWindowGoogleMap implements GoogleMap.InfoWindowAdapter {
 
     private Context context;
 
-
     public CustomInfoWindowGoogleMap(Context ctx){
         context = ctx;
     }
@@ -64,8 +63,6 @@ public class CustomInfoWindowGoogleMap implements GoogleMap.InfoWindowAdapter {
                 details_tv.setText(details);
                 break;
             default:
-
-
         }
         return view;
     }

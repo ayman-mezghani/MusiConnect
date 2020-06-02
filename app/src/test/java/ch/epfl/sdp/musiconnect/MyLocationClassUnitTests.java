@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -98,7 +99,7 @@ public class MyLocationClassUnitTests {
         double longitude = 0.0;
         MyLocation location = new MyLocation(latitude, longitude);
 
-        assertTrue(location.equals(location));
+        assertEquals(location, location);
     }
 
     @Test
@@ -109,7 +110,7 @@ public class MyLocationClassUnitTests {
 
         MyLocation thatLocation = new MyLocation(location);
 
-        assertTrue(location.equals(thatLocation));
+        assertEquals(location, thatLocation);
     }
 
     @Test
@@ -120,7 +121,7 @@ public class MyLocationClassUnitTests {
         MyLocation firstLocation = new MyLocation(firstLatitude, longitude);
         MyLocation secondLocation = new MyLocation(secondLatitude, longitude);
 
-        assertFalse(firstLocation.equals(secondLocation));
+        assertNotEquals(firstLocation, secondLocation);
     }
 
     @Test
@@ -131,7 +132,7 @@ public class MyLocationClassUnitTests {
         MyLocation firstLocation = new MyLocation(latitude, firstLongitude);
         MyLocation secondLocation = new MyLocation(latitude, secondLongitude);
 
-        assertFalse(firstLocation.equals(secondLocation));
+        assertNotEquals(firstLocation, secondLocation);
     }
 
     @Test
@@ -144,7 +145,7 @@ public class MyLocationClassUnitTests {
         double secondLongitude = 100.0;
         MyLocation secondLocation = new MyLocation(secondLatitude, secondLongitude);
 
-        assertFalse(firstLocation.equals(secondLocation));
+        assertNotEquals(firstLocation, secondLocation);
     }
 
     @Test
@@ -160,7 +161,7 @@ public class MyLocationClassUnitTests {
         int minutes = 20;
         MyDate day = new MyDate(year, month, date, hours, minutes);
 
-        assertFalse(location.equals(day));
+        assertNotEquals(location, day);
     }
 
     @Test

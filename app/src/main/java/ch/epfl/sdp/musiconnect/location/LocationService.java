@@ -59,16 +59,12 @@ public class LocationService extends Service {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
-
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand: called.");
         updateLocation();
         return START_NOT_STICKY;
     }
-
-
 
     @Nullable
     @Override
@@ -102,7 +98,4 @@ public class LocationService extends Service {
         intent.putExtra("Location", b);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
-
-
-
 }

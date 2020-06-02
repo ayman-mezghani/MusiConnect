@@ -1,5 +1,7 @@
 package ch.epfl.sdp.musiconnect;
 
+import android.annotation.SuppressLint;
+
 import java.util.Date;
 
 /**
@@ -187,6 +189,7 @@ public class MyDate {
         return new Date(this.year - YEAR_BIAS, this.month - MONTH_BIAS, this.getDate(), this.getHours(), this.getMinutes());
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public String toString() {
         return String.format("%02d", date) + "/" + String.format("%02d", month) + "/" + String.format("%04d", year) + "    " + String.format("%02d", hours) + ":" + String.format("%02d", minutes) + "\n";

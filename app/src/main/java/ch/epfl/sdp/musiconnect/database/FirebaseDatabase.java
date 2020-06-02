@@ -9,7 +9,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
@@ -24,13 +23,9 @@ import java.util.Map;
 import java.util.Objects;
 
 import ch.epfl.sdp.musiconnect.Band;
-import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.events.Event;
-
-import static android.location.Location.distanceBetween;
-import static ch.epfl.sdp.musiconnect.database.SimplifiedDbEntry.Fields;
 
 public class FirebaseDatabase extends Database {
     private static final String TAG = "DataBase";

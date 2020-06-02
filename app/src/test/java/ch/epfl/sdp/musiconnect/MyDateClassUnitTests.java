@@ -6,6 +6,7 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -319,7 +320,7 @@ public class MyDateClassUnitTests {
         int minutes = 20;
         MyDate day = new MyDate(year, month, date, hours, minutes);
 
-        assertTrue(day.equals(day));
+        assertEquals(day, day);
     }
 
     @Test
@@ -333,7 +334,7 @@ public class MyDateClassUnitTests {
 
         MyDate thatDay = new MyDate(day);
 
-        assertTrue(day.equals(thatDay));
+        assertEquals(day, thatDay);
     }
 
     @Test
@@ -352,7 +353,7 @@ public class MyDateClassUnitTests {
         int secondMinutes = 19;
         MyDate secondDay = new MyDate(secondYear, secondMonth, secondDate, secondHours, secondMinutes);
 
-        assertFalse(firstDay.equals(secondDay));
+        assertNotEquals(firstDay, secondDay);
     }
 
     @Test
@@ -368,7 +369,7 @@ public class MyDateClassUnitTests {
         double longitude = 0.0;
         MyLocation location = new MyLocation(latitude, longitude);
 
-        assertFalse(day.equals(location));
+        assertNotEquals(day, location);
     }
 
     @Test

@@ -26,6 +26,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.musiconnect.testsFunctions.childAtPosition;
 import static ch.epfl.sdp.musiconnect.testsFunctions.getCurrentActivity;
 import static org.hamcrest.Matchers.allOf;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class StartPageTests {
@@ -52,7 +53,7 @@ public class StartPageTests {
         Musician musiConnect = md.getDummyMusician(4);
         CurrentUser.getInstance(activityRule.getActivity()).setMusician(musiConnect);
         ((StartPage) getCurrentActivity()).updateCurrentUser(activityRule.getActivity());
-        assertTrue(CurrentUser.getInstance(activityRule.getActivity()).getBand().getName().equals(md.getBand().getName()));
+        assertEquals(CurrentUser.getInstance(activityRule.getActivity()).getBand().getName(), md.getBand().getName());
     }
 
     //@Test

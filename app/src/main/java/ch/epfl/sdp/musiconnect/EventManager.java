@@ -20,8 +20,8 @@ public class EventManager extends Person {
         super(firstName, lastName, userName, emailAddress, birthday);
         setEventName(eventName);
         setEventDate(eventDate);
-        musicians = new HashSet<Musician>();
-        bands = new HashSet<Band>();
+        musicians = new HashSet<>();
+        bands = new HashSet<>();
     }
 
     public EventManager(String firstName, String lastName, String userName, String emailAddress, MyDate birthday) {
@@ -88,7 +88,7 @@ public class EventManager extends Person {
     }
 
     public Set<Musician> setOfMusicians() {
-        return new HashSet<Musician>(musicians);
+        return new HashSet<>(musicians);
     }
 
     public void addBand(Band band) {
@@ -126,7 +126,7 @@ public class EventManager extends Person {
     }
 
     public Set<Band> setOfBands() {
-        return new HashSet<Band>(bands);
+        return new HashSet<>(bands);
     }
 
 
