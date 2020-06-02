@@ -158,13 +158,4 @@ public class MenuTests {
         startPageRule.launchActivity(myEventsIntent);
         intended(hasComponent(EventListPage.class.getName()));
     }
-
-    @Test
-    public void testSignOutClickFromBottomMenuShouldStartNewIntent() {
-        openActionsMenu(R.string.signout);
-
-        Intent googleLoginIntent = new Intent();
-        startPageRule.launchActivity(googleLoginIntent);
-        intended(hasComponent(GoogleLoginPage.class.getName()));
-    }
 }
