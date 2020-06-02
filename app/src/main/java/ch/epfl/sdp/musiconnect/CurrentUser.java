@@ -14,6 +14,7 @@ import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.DbDataType;
 
 public class CurrentUser {
+
     // static variable single_instance of type Singleton
     private static CurrentUser single_instance = null;
     public final String email;
@@ -24,8 +25,6 @@ public class CurrentUser {
     private List<Band> band;
     private GoogleSignInAccount acct;
     private TypeOfUser type;
-
-
 
     // private constructor restricted to this class itself
     private CurrentUser(Context context) {

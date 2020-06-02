@@ -18,9 +18,10 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.pages.StartPage;
 
-import static ch.epfl.sdp.musiconnect.StartPage.KEY_ISNIGHTMODE;
-import static ch.epfl.sdp.musiconnect.StartPage.MY_PREFERENCES;
+import static ch.epfl.sdp.musiconnect.pages.StartPage.KEY_ISNIGHTMODE;
+import static ch.epfl.sdp.musiconnect.pages.StartPage.MY_PREFERENCES;
 import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;

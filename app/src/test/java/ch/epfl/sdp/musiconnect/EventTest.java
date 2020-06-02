@@ -126,17 +126,6 @@ public class EventTest {
         e.unregister(m2.getEmailAddress());
         assertEquals(e.getParticipants(), lu);
 
-        /*
-        e.setLocation(46.17, 6.17);
-        Location l = e.getLocation();
-        assertEquals(l.getLatitude(), 0);
-        assertEquals(l.getLongitude(), 0);
-
-        e.setLocation(l);
-        assertEquals(l.getLatitude(), 0);
-        assertEquals(l.getLongitude(), 0);
-         */
-
         e.setLocation(46.17, 6.17);
         GeoPoint p = e.getGeoPoint();
         assertEquals(p.getLatitude(), 46.17);

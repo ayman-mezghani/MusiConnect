@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.pages;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -27,20 +26,26 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.Instrument;
+import ch.epfl.sdp.musiconnect.Level;
+import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.MyDate;
+import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
-import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.DbDataType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
 import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
 import static ch.epfl.sdp.musiconnect.roomdatabase.MyDateConverter.dateToMyDate;
 
-public class ProfileModification extends ProfilePage implements View.OnClickListener {
+public class ProfileModificationPage extends ProfilePage implements View.OnClickListener {
 
-    String firstName, lastName, username, mail, birthday;
+    String firstName, lastName, username, mail, birthday, inst, lvl;
     EditText[] editFields;
     final Calendar calendar = Calendar.getInstance();
 
@@ -53,17 +58,16 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
     private List<Musician> result; //used to fetch from room database
     public static boolean changeStaged = false;    //indicates if there are changes not commited to online database yet
 
-    private TextView instrument;
-    private Spinner selectedInstrument;
-    private TextView level;
-    private Spinner selectedLevel;
+    private Spinner selectedInstrumentSpinner;
+    private Spinner selectedLevelSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_modification);
 
-        editFields = new EditText[]{findViewById(R.id.newFirstName), findViewById(R.id.newLastName), findViewById(R.id.newUsername), findViewById(R.id.newEmailAddress), findViewById(R.id.newBirthday)};
+        editFields = new EditText[]{findViewById(R.id.newFirstName), findViewById(R.id.newLastName),
+                findViewById(R.id.newUsername), findViewById(R.id.newEmailAddress), findViewById(R.id.newBirthday)};
 
         onCreateGetIntentsFields();
 
@@ -81,22 +85,24 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
         getVideoUri(userEmail);
 
         instrument = findViewById(R.id.editProfileInstrument);
-        selectedInstrument = findViewById(R.id.editProfileSelectedInstrument);
+        selectedInstrumentSpinner = findViewById(R.id.editProfileSelectedInstrument);
         // Create an ArrayAdapter using the string array instruments_array and a default spinner layout
         ArrayAdapter<CharSequence> instrumentsAdapter = ArrayAdapter.createFromResource(this, R.array.instruments_array, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         instrumentsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the musicianInstruments spinner
-        selectedInstrument.setAdapter(instrumentsAdapter);
+        selectedInstrumentSpinner.setAdapter(instrumentsAdapter);
+        selectedInstrumentSpinner.setSelection(instrumentsAdapter.getPosition(this.inst));
 
         level = findViewById(R.id.editProfileLevel);
-        selectedLevel = findViewById(R.id.editProfileSelectedLevel);
+        selectedLevelSpinner = findViewById(R.id.editProfileSelectedLevel);
         // Create an ArrayAdapter using the string array levels_array and a default spinner layout
         ArrayAdapter<CharSequence> levelsAdapter = ArrayAdapter.createFromResource(this, R.array.levels_array, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         levelsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the musicianLevels spinner
-        selectedLevel.setAdapter(levelsAdapter);
+        selectedLevelSpinner.setAdapter(levelsAdapter);
+        selectedLevelSpinner.setSelection(levelsAdapter.getPosition(this.lvl));
     }
 
     private void onCreateGetIntentsFields() {
@@ -105,6 +111,8 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
         username = getIntent().getStringExtra("USERNAME");
         mail = getIntent().getStringExtra("MAIL");
         birthday = getIntent().getStringExtra("BIRTHDAY");
+        inst = getIntent().getStringExtra("INSTRUMENT");
+        lvl = getIntent().getStringExtra("LEVEL");
     }
 
     @Override
@@ -135,7 +143,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
      * @return true if age >= 13
      */
     private boolean isInputDateValid() {
-        UserCreation uc = new UserCreation();
+        UserCreationPage uc = new UserCreationPage();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -156,7 +164,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
      * @param modCurrent: profile of current user that has been modified
      */
     private void updateDatabaseFields(Musician modCurrent) {
-        while (!checkConnection(ProfileModification.this)) { //semi-busy waiting for the connection to be back up
+        while (!checkConnection(ProfileModificationPage.this)) { //semi-busy waiting for the connection to be back up
             try {
                 TimeUnit.SECONDS.sleep(20);
             } catch (InterruptedException e) {
@@ -197,7 +205,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
             }
         }
         if (result.isEmpty()) {
-            Toast.makeText(ProfileModification.this, "Error: couldn't update profile", Toast.LENGTH_LONG).show();
+            Toast.makeText(ProfileModificationPage.this, "Error: couldn't update profile", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -215,7 +223,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
             cUserBirthday = dateToMyDate(d);
 
         } catch (ParseException e) {
-            Toast.makeText(ProfileModification.this, "Error: couldn't update profile", Toast.LENGTH_LONG).show();
+            Toast.makeText(ProfileModificationPage.this, "Error: couldn't update profile", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -227,13 +235,28 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
         }
 
         currentCachedMusician.setTypeOfUser(CurrentUser.getInstance(this).getTypeOfUser());
+        currentCachedMusician.removeAllInstruments();
+
+        String instr = selectedInstrumentSpinner.getSelectedItem().toString();
+        String[] instrArray = getResources().getStringArray(R.array.instruments_array);
+        String lvl = selectedLevelSpinner.getSelectedItem().toString();
+        String[] lvlArray = getResources().getStringArray(R.array.levels_array);
+
+        returnIntent.putExtra("INSTRUMENT", instr);
+        returnIntent.putExtra("LEVEL", lvl);
+
+        if (!(lvl.equals(lvlArray[0]) || instr.equals(instrArray[0]))) {
+            Instrument i = Instrument.getInstrumentFromValue(instr);
+            Level l = Level.getLevelFromValue(lvl);
+            currentCachedMusician.addInstrument(i, l);
+        }
 
         //launches the update to the database on another thread, so that it doesn't hang up the app if not connected to internet
         mExecutor.execute(() -> {
             mdao.updateUsers(new Musician[]{currentCachedMusician});
             updateDatabaseFields(currentCachedMusician);
         });
-        CurrentUser.getInstance(ProfileModification.this).setMusician(currentCachedMusician);
+        CurrentUser.getInstance(ProfileModificationPage.this).setMusician(currentCachedMusician);
 
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
@@ -264,7 +287,7 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
         calendar.set(Integer.parseInt(bday[2]), Integer.parseInt(bday[1]) - 1, Integer.parseInt(bday[0]));
 
         bdayField.setOnClickListener(v -> new DatePickerDialog(
-                ProfileModification.this, date, calendar.get(Calendar.YEAR),
+                ProfileModificationPage.this, date, calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show());
     }
 
@@ -300,6 +323,5 @@ public class ProfileModification extends ProfilePage implements View.OnClickList
 
     @Override
     protected void loadUserProfile(User user) {
-
     }
 }

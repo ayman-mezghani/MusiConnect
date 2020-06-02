@@ -1,6 +1,5 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.pages;
 
-import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
@@ -12,7 +11,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.finder.BandFinderPage;
+import ch.epfl.sdp.musiconnect.finder.MusicianFinderPage;
+import ch.epfl.sdp.musiconnect.testsFunctions;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onData;
@@ -22,8 +22,6 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.intent.Intents.intended;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -34,12 +32,10 @@ import static org.hamcrest.Matchers.is;
  * @author Manuel Pellegrini, EPFL
  */
 @RunWith(AndroidJUnit4.class)
-public class BandFinderPageTests {
-
-    private String bandName = "The Beatles";
+public class MusicianFinderPageTests {
 
     @Rule
-    public final ActivityTestRule<BandFinderPage> bandFinderPageRule = new ActivityTestRule<>(BandFinderPage.class);
+    public final ActivityTestRule<MusicianFinderPage> musicianFinderPageRule = new ActivityTestRule<>(MusicianFinderPage.class);
 
 
     // Before and after methods are used in order to accept tests with intents
@@ -52,48 +48,50 @@ public class BandFinderPageTests {
     public void releaseIntents() { Intents.release(); }
 
     @Test
-    public void testEditTextFieldOfBandFinderWorks() {
-        onView(withId(R.id.myBandFinderBandNameID)).perform(ViewActions.scrollTo()).perform(clearText(), typeText(bandName));
+    public void testEditTextFieldsOfMusicianFinderWork() {
+        String firstName = "John";
+        String lastName = "Lennon";
+        String userName = "JohnLennon";
 
-        onView(withId(R.id.myBandFinderBandNameID)).check(matches(withText(bandName)));
+        onView(withId(R.id.myMusicianFinderFirstNameID)).perform(scrollTo()).perform(clearText(), typeText(firstName));
+        onView(withId(R.id.myMusicianFinderLastNameID)).perform(scrollTo()).perform(clearText(), typeText(lastName));
+        onView(withId(R.id.myMusicianFinderUserNameID)).perform(scrollTo()).perform(clearText(), typeText(userName));
+
+        onView(withId(R.id.myMusicianFinderFirstNameID)).check(matches(withText(firstName)));
+        onView(withId(R.id.myMusicianFinderLastNameID)).check(matches(withText(lastName)));
+        onView(withId(R.id.myMusicianFinderUserNameID)).check(matches(withText(userName)));
 
         closeSoftKeyboard();
 
-        onView(withId(R.id.myBandFinderBandNameID)).check(matches(withText(bandName)));
+        onView(withId(R.id.myMusicianFinderFirstNameID)).check(matches(withText(firstName)));
+        onView(withId(R.id.myMusicianFinderLastNameID)).check(matches(withText(lastName)));
+        onView(withId(R.id.myMusicianFinderUserNameID)).check(matches(withText(userName)));
     }
 
     @Test
-    public void testInstrumentSpinnerFieldOfBandFinderWorks() {
-        onView(withId(R.id.myBandFinderInstrumentsID)).perform(scrollTo(), click());
+    public void testInstrumentSpinnerFieldOfMusicianFinderWorks() {
+        onView(withId(R.id.myMusicianFinderInstrumentsID)).perform(click());
 
         onData(anything())
                 .inAdapterView(testsFunctions.childAtPosition(
                         withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
                         0))
                 .atPosition(13).perform(click());
-
-        assert(true);
     }
 
     @Test
-    public void testLevelSpinnerFieldOfBandFinderWorks() {
-        onView(withId(R.id.myBandFinderLevelsID)).perform(scrollTo(), click());
+    public void testLevelSpinnerFieldOfMusicianFinderWorks() {
+        onView(withId(R.id.myMusicianFinderLevelsID)).perform(click());
 
         onData(anything())
                 .inAdapterView(testsFunctions.childAtPosition(
                         withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
                         0))
                 .atPosition(3).perform(click());
-
-        assert(true);
     }
 
     @Test
-    public void testFindBandButtonWorks() {
-        onView(withId(R.id.bandFinderButtonID)).perform(scrollTo(), click());
-
-        intended(hasComponent(BandFinderPage.class.getName()));
-
+    public void testFindMusicianButtonWorks() {
+        onView(withId(R.id.musicianFinderButtonID)).perform(click());
     }
-
 }

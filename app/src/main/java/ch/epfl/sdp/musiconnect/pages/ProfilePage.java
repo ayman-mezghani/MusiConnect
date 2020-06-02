@@ -1,7 +1,6 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.pages;
 
 import android.net.Uri;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,6 +12,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.Instrument;
+import ch.epfl.sdp.musiconnect.Level;
+import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
@@ -26,7 +29,11 @@ import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
 
 public abstract class ProfilePage extends Page {
     protected TextView titleView, firstNameView, lastNameView, usernameView, emailView, birthdayView;
-    protected Uri videoUri = null;
+    protected TextView instrument;
+    protected TextView selectedInstrument;
+    protected TextView level;
+    protected TextView selectedLevel;
+    public Uri videoUri = null;
     protected VideoView mVideoView;
     protected ImageView imgVw;
     protected String userEmail;
@@ -61,7 +68,7 @@ public abstract class ProfilePage extends Page {
                 public void readCallback(User user) {
                     loadUserProfile(user);
                     // if user profile isn't cached,cache it
-                    if (currentCachedUser == null || !ProfileModification.changeStaged) {
+                    if (currentCachedUser == null || !ProfileModificationPage.changeStaged) {
                         mExecutor.execute(() -> {
                             mdao.insertAll((Musician) user);
                         });
@@ -84,6 +91,19 @@ public abstract class ProfilePage extends Page {
     }
 
     protected abstract void loadUserProfile(User user);
+
+    protected void loadInstrument(User user) {
+        Musician m = (Musician) user;
+        if (!m.getInstruments().isEmpty()) {
+            Instrument instr = (Instrument) m.getInstruments().keySet().toArray()[0];
+            String i = instr.toString().substring(0, 1).toUpperCase() + instr.toString().substring(1);
+            selectedInstrument.setText(i);
+
+            Level lvl = m.getInstruments().get(instr);
+            String l = lvl.toString().substring(0, 1).toUpperCase() + lvl.toString().substring(1);
+            selectedLevel.setText(l);
+        }
+    }
 
     private void loadNullProfile() {
         setContentView(R.layout.activity_visitor_profile_page_null);
@@ -109,7 +129,6 @@ public abstract class ProfilePage extends Page {
             @Override
             public void onFailure() {
                 videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.minion);
-                Log.d("profilevideo", getPackageName());
                 showVideo();
             }
         });

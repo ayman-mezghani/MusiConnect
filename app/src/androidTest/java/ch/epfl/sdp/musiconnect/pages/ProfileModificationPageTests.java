@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.pages;
 
 import android.widget.DatePicker;
 
@@ -21,14 +21,19 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.pages.MyProfilePage;
+import ch.epfl.sdp.musiconnect.pages.ProfileModificationPage;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -39,22 +44,25 @@ import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.musiconnect.testsFunctions.childAtPosition;
 import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 @RunWith(AndroidJUnit4.class)
-public class ProfileModificationTests {
+public class ProfileModificationPageTests {
 
     private AppDatabase roomDb;
     private MusicianDao musicianDao;
     private Executor mExecutor = Executors.newSingleThreadExecutor();
-    private Musician defuser = new Musician("bob","minion","bobminion","bobminion@gmail.com",new MyDate(2000,1,1));
+    private Musician defuser = new Musician("bob", "minion", "bobminion", "bobminion@gmail.com", new MyDate(2000, 1, 1));
     private List<Musician> result;          //to fetch from database
 
     @Rule
@@ -62,7 +70,7 @@ public class ProfileModificationTests {
             new ActivityTestRule<>(MyProfilePage.class);
 
     @Before
-    public void waitAndCleanDB(){
+    public void waitAndCleanDB() {
         roomDb = AppDatabase.getInstance(profilePageRule.getActivity().getApplicationContext());
         musicianDao = roomDb.musicianDao();
         mExecutor.execute(() -> {
@@ -84,8 +92,10 @@ public class ProfileModificationTests {
         DbSingleton.setDatabase(new MockDatabase(false));
         CloudStorageSingleton.setStorage((new MockCloudStorage()));
     }
+
     /**
      * Helper method to avoid duplication
+     *
      * @param text: text to recognize on the clickable object
      */
     private void clickButtonWithText(int text) {
@@ -93,13 +103,13 @@ public class ProfileModificationTests {
     }
 
     @Test
-    public void testEditProfileAndDoNotSaveShouldDoNothing() {
-        assertFalse(ProfileModification.changeStaged);
+    public void testEditProfileAndNotSaveShouldDoNothing() {
+        assertFalse(ProfileModificationPage.changeStaged);
         clickButtonWithText(R.string.edit_profile_button_text);
         onView(withId(R.id.newFirstName)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Damien"));
         clickButtonWithText(R.string.do_not_save);
         onView(withId(R.id.myFirstname)).check(matches(not(withText("Damien"))));
-        assertFalse(ProfileModification.changeStaged);
+        assertFalse(ProfileModificationPage.changeStaged);
     }
 
     @Test
@@ -117,6 +127,8 @@ public class ProfileModificationTests {
         String firstName = "Espresso";
         String lastName = "Tests";
         String userName = "testsEspresso";
+        String instrument = "Bass";
+        String level = "Beginner";
         MyDate birthday = new MyDate(1940, 10, 9);
 
         clickButtonWithText(R.string.edit_profile_button_text);
@@ -126,8 +138,17 @@ public class ProfileModificationTests {
         closeSoftKeyboard();
 
         onView(withId(R.id.newBirthday)).perform(ViewActions.scrollTo()).perform(click());
-        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(birthday.getYear(),birthday.getMonth(),birthday.getDate()));
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(birthday.getYear(), birthday.getMonth(), birthday.getDate()));
         onView(withText("OK")).perform(click());
+
+        onView(withId(R.id.editProfileSelectedInstrument)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is(instrument))).perform(click());
+        onView(withId(R.id.editProfileSelectedInstrument)).check(matches(withSpinnerText(containsString(instrument))));
+
+        onView(withId(R.id.editProfileSelectedLevel)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is(level))).perform(click());
+        onView(withId(R.id.editProfileSelectedLevel)).check(matches(withSpinnerText(containsString(level))));
+
         ViewInteraction appCompatButton4 = onView(
                 allOf(withId(R.id.btnSaveProfile), withText("Save"),
                         childAtPosition(
@@ -140,6 +161,8 @@ public class ProfileModificationTests {
         onView(withId(R.id.myLastname)).check(matches(withText(lastName)));
         onView(withId(R.id.myUsername)).check(matches(withText(userName)));
         onView(withId(R.id.myBirthday)).check(matches(withText("09/10/1940")));
+        onView(withId(R.id.myProfileSelectedInstrument)).check(matches(withText(instrument)));
+        onView(withId(R.id.myProfileSelectedLevel)).check(matches(withText(level)));
     }
 
     @Test
@@ -156,7 +179,7 @@ public class ProfileModificationTests {
         closeSoftKeyboard();
 
         onView(withId(R.id.newBirthday)).perform(ViewActions.scrollTo()).perform(click());
-        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(birthday.getYear(),birthday.getMonth(),birthday.getDate()));
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(birthday.getYear(), birthday.getMonth(), birthday.getDate()));
         onView(withText("OK")).perform(click());
 
         clickButtonWithText(R.string.save);
@@ -170,38 +193,9 @@ public class ProfileModificationTests {
         waitSeconds(2);
         assertFalse(result.isEmpty());
         Musician bob = result.get(0);
-        assertEquals(firstName,bob.getFirstName());
-        assertEquals(lastName,bob.getLastName());
-        assertEquals(userName,bob.getUserName());
-        assertEquals(birthday,bob.getBirthday());
-
-    }
-
-    @Test
-    public void testInstrumentSpinnerFieldOfProfileModificationPageWorks() {
-        /**
-        onView(withId(R.id.editProfileSelectedInstrument)).perform(click());
-
-        onData(anything())
-                .inAdapterView(testsFunctions.childAtPosition(
-                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
-                        0))
-                .atPosition(13).perform(click());
-         */
-        assert(true);
-    }
-
-    @Test
-    public void testLevelSpinnerFieldOfProfileModificationPageWorks() {
-        /**
-        onView(withId(R.id.editProfileSelectedLevel)).perform(click());
-
-        onData(anything())
-                .inAdapterView(testsFunctions.childAtPosition(
-                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
-                        0))
-                .atPosition(3).perform(click());
-         */
-        assert(true);
+        assertEquals(firstName, bob.getFirstName());
+        assertEquals(lastName, bob.getLastName());
+        assertEquals(userName, bob.getUserName());
+        assertEquals(birthday, bob.getBirthday());
     }
 }

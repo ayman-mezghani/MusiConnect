@@ -24,7 +24,7 @@ public class Musician extends Person {
     public Musician(String firstName, String lastName, String userName, String emailAddress, MyDate birthday) {
         super(firstName, lastName, userName, emailAddress, birthday);
         videoURL = "";
-        instruments = new HashMap<Instrument, Level>();
+        instruments = new HashMap<>();
     }
 
     public Map<Instrument,Level> getInstruments(){

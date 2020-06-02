@@ -57,7 +57,7 @@ public abstract class User {
     public void setEvents(List<String> e) {
         this.events = new ArrayList<>();
 
-        if(e != null)
+        if (e != null)
             this.events = e;
     }
 }

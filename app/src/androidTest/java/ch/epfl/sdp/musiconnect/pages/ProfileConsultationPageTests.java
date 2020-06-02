@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.pages;
 
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -16,10 +16,13 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.pages.MyProfilePage;
+import ch.epfl.sdp.musiconnect.pages.ProfileModificationPage;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
@@ -34,7 +37,7 @@ import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
-public class ProfileConsultationTests {
+public class ProfileConsultationPageTests {
     List<Musician> result;      //used to fetch data from room database
 
     @Rule
@@ -57,7 +60,7 @@ public class ProfileConsultationTests {
     @Test
     public void testEditButtonShouldStartNewIntent() {
         onView(withText(R.string.edit_profile_button_text)).perform(click());
-        intended(hasComponent(ProfileModification.class.getName()));
+        intended(hasComponent(ProfileModificationPage.class.getName()));
     }
 
     @Test

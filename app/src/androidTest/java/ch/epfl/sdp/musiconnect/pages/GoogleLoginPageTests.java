@@ -1,8 +1,10 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.pages;
 
 /**
  * @Author : Antonio Pisanello
  */
+
+import junit.framework.TestCase;
 
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 
@@ -11,10 +13,13 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.pages.GoogleLoginPage;
+import ch.epfl.sdp.musiconnect.pages.StartPage;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -25,12 +30,11 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sdp.musiconnect.testsFunctions.getCurrentActivity;
 import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
-import static junit.framework.TestCase.assertTrue;
 
-public class GoogleLoginTests {
+public class GoogleLoginPageTests {
 
     @Rule
-    public IntentsTestRule<GoogleLogin> activityRule = new IntentsTestRule<>(GoogleLogin.class);
+    public IntentsTestRule<GoogleLoginPage> activityRule = new IntentsTestRule<>(GoogleLoginPage.class);
 
     @BeforeClass
     public static void setMocks() {
@@ -48,14 +52,14 @@ public class GoogleLoginTests {
     @Test
     public void onActivityResult() {
         // Simulate the on activity result call
-        ((GoogleLogin) getCurrentActivity()).onActivityResult(0, 0, null);
+        ((GoogleLoginPage) getCurrentActivity()).onActivityResult(0, 0, null);
     }
 
     @Test
     public void redirectTestsTrue() {
         // Simulate the on activity result call
-        ((GoogleLogin) getCurrentActivity()).redirect(true);
+        ((GoogleLoginPage) getCurrentActivity()).redirect(true);
         intended(hasComponent(StartPage.class.getName()));
-        assertTrue(CurrentUser.getInstance(activityRule.getActivity()).getCreatedFlag());
+        TestCase.assertTrue(CurrentUser.getInstance(activityRule.getActivity()).getCreatedFlag());
     }
 }
