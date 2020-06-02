@@ -1,5 +1,7 @@
 package ch.epfl.sdp.musiconnect;
 
+import android.location.Location;
+
 import com.google.firebase.firestore.GeoPoint;
 
 import org.junit.Test;
@@ -149,5 +151,32 @@ public class EventTest {
         assertThrows(IllegalArgumentException.class, () -> e.setDateTime(null));
         assertThrows(IllegalArgumentException.class, () -> e.setTitle(null));
         assertThrows(IllegalArgumentException.class, () -> e.setDescription(null));
+    }
+
+    @Test
+    public void testRoomConstructor() {
+        Event e = new Event();
+        assertEquals(e.getLocation(), new MyLocation(0, 0));
+        assertEquals(e.getDateTime(), new MyDate());
+        assertEquals(e.isVisible(), false);
+        assertEquals(e.getTitle(), "Event");
+        assertEquals(e.getDescription(), "Come watch and play!");
+        assertEquals(e.getAddress(), "");
+
+    }
+
+    @Test
+    public void setLocationObject() {
+        Event e = new Event();
+
+        Location l = new Location("");
+        assertThrows(IllegalArgumentException.class, () ->e.setLocation(344444, 34444));
+
+        MyLocation ml = new MyLocation(46, 6);
+
+        e.setLocation(46, 6);
+
+        assertEquals(e.getLocation(), ml);
+
     }
 }
