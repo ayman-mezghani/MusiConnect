@@ -1,6 +1,8 @@
 package ch.epfl.sdp.musiconnect.location;
 
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.location.Location;
 
 import androidx.core.app.NotificationCompat;
@@ -35,6 +37,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 public class MapsActivityTest {
@@ -128,8 +131,22 @@ public class MapsActivityTest {
 
     @Test
     public void testGetLastLocation(){
+
         mapsActivityRule.getActivity().getLastLocation();
         assertEquals(true,mapsActivityRule.getActivity().updatePos);
+        assertTrue(mapsActivityRule.getActivity().setLoc != null);
+        assertTrue(isLocServiceRunning(mapsActivityRule.getActivity().getApplicationContext()));
+    }
+
+    private boolean isLocServiceRunning(Context context){
+        Class<?> serviceClass = LocationService.class;
+        ActivityManager manager = (ActivityManager) context. getSystemService(Context.ACTIVITY_SERVICE);
+        for(ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
+            if(serviceClass.getName().equals(service.service.getClassName())){
+                return true;
+            }
+        }
+        return false;
     }
 
 }
