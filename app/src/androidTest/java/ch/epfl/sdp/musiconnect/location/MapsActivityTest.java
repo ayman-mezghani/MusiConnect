@@ -159,7 +159,7 @@ public class MapsActivityTest {
         l.setLatitude(15);
         mapsActivityRule.getActivity().setLocation(l);
         MyDate birthday = new MyDate(1940, 10, 9);
-        Musician m = new Musician("gg","Grospardieu","h","reeeeee@clubic.com",birthday);
+        Musician m = new Musician("gg","Grospardieu","h","reeeeee@gmail.com",birthday);
         mapsActivityRule.getActivity().allUsers.add(m);
         mapsActivityRule.getActivity().updateProfileList();
         assertTrue(mapsActivityRule.getActivity().markers.isEmpty());
