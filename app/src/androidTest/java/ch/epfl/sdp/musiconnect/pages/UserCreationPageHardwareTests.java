@@ -225,6 +225,38 @@ public class UserCreationPageHardwareTests {
     }
 
     @Test
+    public void successfulBandCreationTest() {
+        ViewInteraction appCompatRadioButton = onView(allOf(withId(R.id.rbBand), withText("Band"),
+                childAtPosition(allOf(withId(R.id.rdg), childAtPosition(
+                        withClassName(is("android.widget.LinearLayout")),0)),1)));
+        appCompatRadioButton.perform(ViewActions.scrollTo(), click());
+
+        onView(withId(R.id.etFirstname)).perform(ViewActions.scrollTo(), clearText(), typeText("Bob"));
+        closeSoftKeyboard();
+        onView(withId(R.id.etLastName)).perform(ViewActions.scrollTo(), clearText(), typeText("bernard"));
+        closeSoftKeyboard();
+        onView(withId(R.id.etUsername)).perform(ViewActions.scrollTo(), clearText(), typeText("Bobbeber"));
+        closeSoftKeyboard();
+        onView(withId(R.id.etMail)).perform(ViewActions.scrollTo(), clearText(), typeText("Bob@gmail.com"));
+        closeSoftKeyboard();
+        onView(withId(R.id.etDate)).perform(ViewActions.scrollTo()).perform(click());
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2000, 1, 1));
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo(), click());
+
+        ViewInteraction appCompatButton3 = onView(
+                allOf(withId(R.id.btnBandCreationCreate), withText("Start using application"),childAtPosition(childAtPosition(
+                        withClassName(is("android.widget.LinearLayout")),0),1)));
+
+        onView(withId(R.id.etBandName)).perform(ViewActions.scrollTo(), clearText(), typeText("bob's band"));
+        closeSoftKeyboard();
+
+        appCompatButton3.perform(scrollTo(), click());
+
+        intended(hasComponent(StartPage.class.getName()));
+    }
+
+    @Test
     public void helpButtonTest() {
         onView(withId(R.id.help)).perform(click());
         intended(hasComponent(HelpPage.class.getName()));
