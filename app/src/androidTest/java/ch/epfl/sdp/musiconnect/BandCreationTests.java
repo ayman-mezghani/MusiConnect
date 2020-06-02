@@ -12,7 +12,8 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
-import ch.epfl.sdp.musiconnect.events.EventCreationPage;
+import ch.epfl.sdp.musiconnect.pages.BandCreationPage;
+import ch.epfl.sdp.musiconnect.pages.StartPage;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -24,7 +25,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 public class BandCreationTests {
     @Rule
-    public IntentsTestRule<BandCreation> activityRule = new IntentsTestRule<>(BandCreation.class);
+    public IntentsTestRule<BandCreationPage> activityRule = new IntentsTestRule<>(BandCreationPage.class);
 
     private static MockDatabase md;
 
