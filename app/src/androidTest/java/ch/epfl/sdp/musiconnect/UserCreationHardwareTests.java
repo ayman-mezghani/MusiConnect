@@ -27,6 +27,7 @@ import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.location.MapsLocationFunctions;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -37,11 +38,14 @@ import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.musiconnect.testsFunctions.childAtPosition;
 import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
@@ -154,6 +158,8 @@ public class UserCreationHardwareTests {
 
     @Test
     public void allInputsSet() {
+        String instrument = "Bass";
+        String level = "Beginner";
 
         onView(withId(R.id.etFirstname)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("Bob"));
         closeSoftKeyboard();
@@ -166,6 +172,14 @@ public class UserCreationHardwareTests {
         onView(withId(R.id.etDate)).perform(ViewActions.scrollTo()).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2000, 1, 1));
         onView(withText("OK")).perform(click());
+
+        onView(withId(R.id.newProfileSelectedInstrument)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is(instrument))).perform(click());
+        onView(withId(R.id.newProfileSelectedInstrument)).check(matches(withSpinnerText(containsString(instrument))));
+
+        onView(withId(R.id.newProfileSelectedLevel)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is(level))).perform(click());
+        onView(withId(R.id.newProfileSelectedLevel)).check(matches(withSpinnerText(containsString(level))));
 
         onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo()).perform(click());
     }
@@ -203,33 +217,5 @@ public class UserCreationHardwareTests {
     @Test
     public void getJoinDateWorks() {
         assertEquals(((UserCreation) testsFunctions.getCurrentActivity()).getAge(1995, 10, 19), "24");
-    }
-
-    @Test
-    public void testInstrumentSpinnerFieldOfUserCreationPageWorks() {
-        /**
-        onView(withId(R.id.newProfileSelectedInstrument)).perform(click());
-
-        onData(anything())
-                .inAdapterView(testsFunctions.childAtPosition(
-                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
-                        0))
-                .atPosition(13).perform(click());
-         */
-        assert(true);
-    }
-
-    @Test
-    public void testLevelSpinnerFieldOfUserCreationPageWorks() {
-        /**
-        onView(withId(R.id.newProfileSelectedLevel)).perform(click());
-
-        onData(anything())
-                .inAdapterView(testsFunctions.childAtPosition(
-                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
-                        0))
-                .atPosition(3).perform(click());
-         */
-        assert(true);
     }
 }
