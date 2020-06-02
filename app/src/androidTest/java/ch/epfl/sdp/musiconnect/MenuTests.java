@@ -90,7 +90,7 @@ public class MenuTests {
         intended(hasComponent(EventCreationPage.class.getName()));
     }
 
-    //@Test
+    @Test
     public void testBandProfileClickShouldStartNewIntent() {
         CurrentUser.getInstance(startPageRule.getActivity()).setTypeOfUser(TypeOfUser.Band);
         openActionsMenu(R.string.my_bands);

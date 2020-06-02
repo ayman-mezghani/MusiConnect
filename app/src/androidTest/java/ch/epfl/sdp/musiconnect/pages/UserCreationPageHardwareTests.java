@@ -261,10 +261,4 @@ public class UserCreationPageHardwareTests {
         onView(withId(R.id.help)).perform(click());
         intended(hasComponent(HelpPage.class.getName()));
     }
-
-//    @Test
-//    public void signOutButtonTest() {
-//        onView(withId(R.id.signout)).perform(click());
-//        intended(hasComponent(GoogleLoginPage.class.getName()));
-//    }
 }
