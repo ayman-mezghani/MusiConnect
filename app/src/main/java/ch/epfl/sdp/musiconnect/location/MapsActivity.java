@@ -209,8 +209,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 updateEvents();
                 loadEventMarkers();
-
-                circle.setRadius(threshold);
             }
 
             @Override
@@ -308,6 +306,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     updateUsers();
                     clearCache();
                     saveToCache();
+                    circle.setRadius(threshold);
                 }
                 handler.postDelayed(this, delay);
             }
