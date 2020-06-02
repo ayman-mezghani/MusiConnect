@@ -20,6 +20,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.MenuTests;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
@@ -36,6 +37,8 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
@@ -219,5 +222,17 @@ public class UserCreationPageHardwareTests {
     @Test
     public void getJoinDateWorks() {
         assertEquals(((UserCreationPage) testsFunctions.getCurrentActivity()).getAge(1995, 10, 19), "24");
+    }
+
+    @Test
+    public void helpButtonTest() {
+        onView(withId(R.id.help)).perform(click());
+        intended(hasComponent(HelpPage.class.getName()));
+    }
+
+    @Test
+    public void signOutButtonTest() {
+        onView(withId(R.id.signout)).perform(click());
+        intended(hasComponent(GoogleLoginPage.class.getName()));
     }
 }
