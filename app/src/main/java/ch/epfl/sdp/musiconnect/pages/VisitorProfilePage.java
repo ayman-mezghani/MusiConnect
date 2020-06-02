@@ -6,30 +6,26 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.Instrument;
+import ch.epfl.sdp.musiconnect.Level;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.TypeOfUser;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
-import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.DbDataType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.events.EventListPage;
 
 public class VisitorProfilePage extends ProfilePage implements DbCallback {
 
     private Button contactButton;
     private Button eventListButton;
-
-    private TextView instrument;
-    private TextView selectedInstrument;
-    private TextView level;
-    private TextView selectedLevel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +72,7 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         selectedInstrument = findViewById(R.id.visitorProfileSelectedInstrument);
         level = findViewById(R.id.visitorProfileLevel);
         selectedLevel = findViewById(R.id.visitorProfileSelectedLevel);
-      
+
         contactButton.setOnClickListener(view -> sendEmail(userEmail, getResources().getString(R.string.musiconnect_contact_mail)));
     }
 
@@ -93,7 +89,6 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
 
         try {
             startActivity(Intent.createChooser(emailIntent, "Sending mail..."));
-            finish();
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
         }
@@ -124,6 +119,8 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         emailView.setText(userEmail);
 
         addFirstNameToContactButtonText(m.getFirstName());
+
+        loadInstrument(m);
     }
 
     private void setupEventListButton() {

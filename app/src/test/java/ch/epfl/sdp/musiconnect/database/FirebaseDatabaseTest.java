@@ -54,7 +54,13 @@ public class FirebaseDatabaseTest {
     SimplifiedDbEntry entry;
 
     @Mock
+    SimplifiedEvent event;
+
+    @Mock
     Task<Void> voidTask;
+
+    @Mock
+    Task<DocumentReference> docRefTask;
 
     @Mock
     Task<DocumentSnapshot> docSnapTask;
@@ -74,6 +80,7 @@ public class FirebaseDatabaseTest {
         when(colRef.document(anyString())).thenReturn(docRef);
 
         when(docRef.set(any(), any())).thenReturn(voidTask);
+        when(colRef.add(any())).thenReturn(docRefTask);
         when(docRef.delete()).thenReturn(voidTask);
         when(docRef.update(any(Map.class))).thenReturn(voidTask);
         when(docRef.get()).thenReturn(docSnapTask);
@@ -83,9 +90,13 @@ public class FirebaseDatabaseTest {
         when(docSnapTask.getResult()).thenReturn(docSnap);
         when(docSnap.exists()).thenReturn(true);
 
+        when(docRefTask.addOnSuccessListener(any(OnSuccessListener.class))).thenReturn(docRefTask);
+        when(docRefTask.addOnFailureListener(any(OnFailureListener.class))).thenReturn(docRefTask);
+
         when(voidTask.addOnSuccessListener(any(OnSuccessListener.class))).thenReturn(voidTask);
         when(voidTask.addOnFailureListener(any(OnFailureListener.class))).thenReturn(voidTask);
-//        when(docSnapTask.addOnCompleteListener(any(OnCompleteListener.class))).thenReturn(docSnapTask);
+        when(docSnapTask.addOnSuccessListener(any(OnSuccessListener.class))).thenReturn(docSnapTask);
+        when(docSnapTask.addOnFailureListener(any(OnFailureListener.class))).thenReturn(docSnapTask);
         when(querySnapTask.addOnCompleteListener(any(OnCompleteListener.class))).thenReturn(querySnapTask);
 
     }
@@ -106,6 +117,21 @@ public class FirebaseDatabaseTest {
         verify(voidTask, times(1)).addOnSuccessListener(any());
         verify(voidTask, times(1)).addOnFailureListener(any());
         verifyNoMoreInteractions(voidTask);
+    }
+
+    @Test
+    public void addDocEventTest() {
+        database.addDoc(event, DbDataType.Musician);
+
+        verify(instance, times(1)).collection(eq("events"));
+        verifyNoMoreInteractions(instance);
+
+        verify(colRef, times(1)).add(eq(event));
+        verifyNoMoreInteractions(colRef);
+
+        verify(docRefTask, times(1)).addOnSuccessListener(any());
+        verify(docRefTask, times(1)).addOnFailureListener(any());
+        verifyNoMoreInteractions(docRefTask);
     }
 
     @Test
@@ -160,6 +186,25 @@ public class FirebaseDatabaseTest {
         verify(voidTask, times(1)).addOnSuccessListener(any());
         verify(voidTask, times(1)).addOnFailureListener(any());
         verifyNoMoreInteractions(voidTask);
+    }
+
+    @Test
+    public void readDocTest() {
+        database.readDoc(collection, docName, new DbCallback() {
+        });
+
+        verify(instance, times(1)).collection(eq(collection));
+        verifyNoMoreInteractions(instance);
+
+        verify(colRef, times(1)).document(eq(docName));
+        verifyNoMoreInteractions(colRef);
+
+        verify(docRef, times(1)).get();
+        verifyNoMoreInteractions(docRef);
+
+        verify(docSnapTask, times(1)).addOnSuccessListener(any());
+        verify(docSnapTask, times(1)).addOnFailureListener(any());
+        verifyNoMoreInteractions(docSnapTask);
     }
 
     @Test

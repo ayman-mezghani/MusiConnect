@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -28,14 +27,16 @@ import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.Instrument;
+import ch.epfl.sdp.musiconnect.Level;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
-import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.DbDataType;
+import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
@@ -44,7 +45,7 @@ import static ch.epfl.sdp.musiconnect.roomdatabase.MyDateConverter.dateToMyDate;
 
 public class ProfileModificationPage extends ProfilePage implements View.OnClickListener {
 
-    String firstName, lastName, username, mail, birthday;
+    String firstName, lastName, username, mail, birthday, inst, lvl;
     EditText[] editFields;
     final Calendar calendar = Calendar.getInstance();
 
@@ -57,17 +58,16 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
     private List<Musician> result; //used to fetch from room database
     public static boolean changeStaged = false;    //indicates if there are changes not commited to online database yet
 
-    private TextView instrument;
-    private Spinner selectedInstrument;
-    private TextView level;
-    private Spinner selectedLevel;
+    private Spinner selectedInstrumentSpinner;
+    private Spinner selectedLevelSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_modification);
 
-        editFields = new EditText[]{findViewById(R.id.newFirstName), findViewById(R.id.newLastName), findViewById(R.id.newUsername), findViewById(R.id.newEmailAddress), findViewById(R.id.newBirthday)};
+        editFields = new EditText[]{findViewById(R.id.newFirstName), findViewById(R.id.newLastName),
+                findViewById(R.id.newUsername), findViewById(R.id.newEmailAddress), findViewById(R.id.newBirthday)};
 
         onCreateGetIntentsFields();
 
@@ -85,22 +85,24 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
         getVideoUri(userEmail);
 
         instrument = findViewById(R.id.editProfileInstrument);
-        selectedInstrument = findViewById(R.id.editProfileSelectedInstrument);
+        selectedInstrumentSpinner = findViewById(R.id.editProfileSelectedInstrument);
         // Create an ArrayAdapter using the string array instruments_array and a default spinner layout
         ArrayAdapter<CharSequence> instrumentsAdapter = ArrayAdapter.createFromResource(this, R.array.instruments_array, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         instrumentsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the musicianInstruments spinner
-        selectedInstrument.setAdapter(instrumentsAdapter);
+        selectedInstrumentSpinner.setAdapter(instrumentsAdapter);
+        selectedInstrumentSpinner.setSelection(instrumentsAdapter.getPosition(this.inst));
 
         level = findViewById(R.id.editProfileLevel);
-        selectedLevel = findViewById(R.id.editProfileSelectedLevel);
+        selectedLevelSpinner = findViewById(R.id.editProfileSelectedLevel);
         // Create an ArrayAdapter using the string array levels_array and a default spinner layout
         ArrayAdapter<CharSequence> levelsAdapter = ArrayAdapter.createFromResource(this, R.array.levels_array, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         levelsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the musicianLevels spinner
-        selectedLevel.setAdapter(levelsAdapter);
+        selectedLevelSpinner.setAdapter(levelsAdapter);
+        selectedLevelSpinner.setSelection(levelsAdapter.getPosition(this.lvl));
     }
 
     private void onCreateGetIntentsFields() {
@@ -109,6 +111,8 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
         username = getIntent().getStringExtra("USERNAME");
         mail = getIntent().getStringExtra("MAIL");
         birthday = getIntent().getStringExtra("BIRTHDAY");
+        inst = getIntent().getStringExtra("INSTRUMENT");
+        lvl = getIntent().getStringExtra("LEVEL");
     }
 
     @Override
@@ -231,6 +235,21 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
         }
 
         currentCachedMusician.setTypeOfUser(CurrentUser.getInstance(this).getTypeOfUser());
+        currentCachedMusician.removeAllInstruments();
+
+        String instr = selectedInstrumentSpinner.getSelectedItem().toString();
+        String[] instrArray = getResources().getStringArray(R.array.instruments_array);
+        String lvl = selectedLevelSpinner.getSelectedItem().toString();
+        String[] lvlArray = getResources().getStringArray(R.array.levels_array);
+
+        returnIntent.putExtra("INSTRUMENT", instr);
+        returnIntent.putExtra("LEVEL", lvl);
+
+        if (!(lvl.equals(lvlArray[0]) || instr.equals(instrArray[0]))) {
+            Instrument i = Instrument.getInstrumentFromValue(instr);
+            Level l = Level.getLevelFromValue(lvl);
+            currentCachedMusician.addInstrument(i, l);
+        }
 
         //launches the update to the database on another thread, so that it doesn't hang up the app if not connected to internet
         mExecutor.execute(() -> {
@@ -304,6 +323,5 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
 
     @Override
     protected void loadUserProfile(User user) {
-
     }
 }

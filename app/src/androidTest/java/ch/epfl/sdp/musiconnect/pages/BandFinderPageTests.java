@@ -90,9 +90,6 @@ public class BandFinderPageTests {
     @Test
     public void testFindBandButtonWorks() {
         onView(withId(R.id.bandFinderButtonID)).perform(scrollTo(), click());
-
-        // This button does nothing yet
-        assert(true);
     }
 
 }
