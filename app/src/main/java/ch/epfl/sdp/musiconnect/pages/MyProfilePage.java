@@ -13,6 +13,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.Instrument;
+import ch.epfl.sdp.musiconnect.Level;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.User;
@@ -85,15 +87,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
 
         emailView.setText(m.getEmailAddress());
 
-        if (!m.getInstruments().isEmpty()) {
-            Instrument instr = (Instrument) m.getInstruments().keySet().toArray()[0];
-            String i = instr.toString().substring(0, 1).toUpperCase() + instr.toString().substring(1);
-            selectedInstrument.setText(i);
-
-            Level lvl = m.getInstruments().get(instr);
-            String l = lvl.toString().substring(0, 1).toUpperCase() + lvl.toString().substring(1);
-            selectedLevel.setText(l);
-        }
+        loadInstrument(m);
     }
 
     @Override

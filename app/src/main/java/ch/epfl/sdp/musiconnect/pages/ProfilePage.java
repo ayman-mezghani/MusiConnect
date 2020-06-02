@@ -12,6 +12,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.Instrument;
+import ch.epfl.sdp.musiconnect.Level;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
@@ -89,6 +91,19 @@ public abstract class ProfilePage extends Page {
     }
 
     protected abstract void loadUserProfile(User user);
+
+    protected void loadInstrument(User user) {
+        Musician m = (Musician) user;
+        if (!m.getInstruments().isEmpty()) {
+            Instrument instr = (Instrument) m.getInstruments().keySet().toArray()[0];
+            String i = instr.toString().substring(0, 1).toUpperCase() + instr.toString().substring(1);
+            selectedInstrument.setText(i);
+
+            Level lvl = m.getInstruments().get(instr);
+            String l = lvl.toString().substring(0, 1).toUpperCase() + lvl.toString().substring(1);
+            selectedLevel.setText(l);
+        }
+    }
 
     private void loadNullProfile() {
         setContentView(R.layout.activity_visitor_profile_page_null);

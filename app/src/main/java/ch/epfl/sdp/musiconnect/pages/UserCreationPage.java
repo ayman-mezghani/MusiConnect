@@ -36,7 +36,6 @@ import ch.epfl.sdp.musiconnect.database.DbDataType;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 
 public class UserCreationPage extends Page {
-    //public static Musician mainUser;
     private static String collection = "newtest";
     private static final int GALLERY_REQUEST_CODE = 123;
     private ImageView profilePicture;

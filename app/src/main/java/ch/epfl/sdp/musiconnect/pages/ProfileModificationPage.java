@@ -27,6 +27,8 @@ import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
+import ch.epfl.sdp.musiconnect.Instrument;
+import ch.epfl.sdp.musiconnect.Level;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.User;
@@ -65,8 +67,7 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
         setContentView(R.layout.activity_profile_modification);
 
         editFields = new EditText[]{findViewById(R.id.newFirstName), findViewById(R.id.newLastName),
-                findViewById(R.id.newUsername), findViewById(R.id.newEmailAddress),
-                findViewById(R.id.newBirthday)};
+                findViewById(R.id.newUsername), findViewById(R.id.newEmailAddress), findViewById(R.id.newBirthday)};
 
         onCreateGetIntentsFields();
 
@@ -322,6 +323,5 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
 
     @Override
     protected void loadUserProfile(User user) {
-
     }
 }
