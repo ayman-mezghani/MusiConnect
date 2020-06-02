@@ -24,6 +24,7 @@ import ch.epfl.sdp.musiconnect.events.EventListPage;
 import ch.epfl.sdp.musiconnect.finder.FinderPage;
 import ch.epfl.sdp.musiconnect.location.MapsActivity;
 import ch.epfl.sdp.musiconnect.location.MapsLocationFunctions;
+import ch.epfl.sdp.musiconnect.pages.GoogleLoginPage;
 import ch.epfl.sdp.musiconnect.pages.HelpPage;
 import ch.epfl.sdp.musiconnect.pages.MyProfilePage;
 import ch.epfl.sdp.musiconnect.pages.StartPage;
@@ -156,5 +157,14 @@ public class MenuTests {
         Intent myEventsIntent = new Intent();
         startPageRule.launchActivity(myEventsIntent);
         intended(hasComponent(EventListPage.class.getName()));
+    }
+
+    @Test
+    public void testSignOutClickFromBottomMenuShouldStartNewIntent() {
+        openActionsMenu(R.string.signout);
+
+        Intent googleLoginIntent = new Intent();
+        startPageRule.launchActivity(googleLoginIntent);
+        intended(hasComponent(GoogleLoginPage.class.getName()));
     }
 }
