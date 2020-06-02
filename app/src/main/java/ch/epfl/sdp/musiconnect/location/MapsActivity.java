@@ -90,7 +90,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Executor mExecutor = Executors.newSingleThreadExecutor();
 
     private FusedLocationProviderClient fusedLocationClient;
-    private Location setLoc;
+    @VisibleForTesting
+    protected Location setLoc;
     private Spinner spinner;
 
     private boolean updatePos = true;
@@ -335,8 +336,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-
-    private void setLocation(Location location) {
+    @VisibleForTesting
+    protected void setLocation(Location location) {
         if (!updatePos) {
             return;
         }

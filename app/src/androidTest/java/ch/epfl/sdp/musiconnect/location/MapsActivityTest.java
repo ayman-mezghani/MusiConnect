@@ -1,6 +1,8 @@
 package ch.epfl.sdp.musiconnect.location;
 
 
+import android.location.Location;
+
 import androidx.core.app.NotificationCompat;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -111,6 +113,17 @@ public class MapsActivityTest {
     @Test
     public void testLocationServices(){
         assertEquals(true,mapsActivityRule.getActivity().checkLocationServices());
+    }
+
+    @Test
+    public void testSetLocation(){
+        Location l = new Location("test");
+        l.setLongitude(26);
+        l.setLatitude(15);
+        mapsActivityRule.getActivity().setLocation(l);
+        assertTrue(l.getLatitude() == mapsActivityRule.getActivity().setLoc.getLatitude()
+                && l.getLongitude() == mapsActivityRule.getActivity().setLoc.getLongitude());
+
     }
 
 }
