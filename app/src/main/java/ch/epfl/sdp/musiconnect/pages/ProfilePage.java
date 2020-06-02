@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.pages;
 
 import android.net.Uri;
 import android.util.Log;
@@ -13,6 +13,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
@@ -26,7 +28,7 @@ import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
 
 public abstract class ProfilePage extends Page {
     protected TextView titleView, firstNameView, lastNameView, usernameView, emailView, birthdayView;
-    protected Uri videoUri = null;
+    public Uri videoUri = null;
     protected VideoView mVideoView;
     protected ImageView imgVw;
     protected String userEmail;
@@ -61,7 +63,7 @@ public abstract class ProfilePage extends Page {
                 public void readCallback(User user) {
                     loadUserProfile(user);
                     // if user profile isn't cached,cache it
-                    if (currentCachedUser == null || !ProfileModification.changeStaged) {
+                    if (currentCachedUser == null || !ProfileModificationPage.changeStaged) {
                         mExecutor.execute(() -> {
                             mdao.insertAll((Musician) user);
                         });

@@ -23,6 +23,9 @@ import ch.epfl.sdp.musiconnect.events.EventCreationPage;
 import ch.epfl.sdp.musiconnect.finder.FinderPage;
 import ch.epfl.sdp.musiconnect.location.MapsActivity;
 import ch.epfl.sdp.musiconnect.location.MapsLocationFunctions;
+import ch.epfl.sdp.musiconnect.pages.HelpPage;
+import ch.epfl.sdp.musiconnect.pages.MyProfilePage;
+import ch.epfl.sdp.musiconnect.pages.StartPage;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;

@@ -17,7 +17,7 @@ import java.util.Map;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.Page;
+import ch.epfl.sdp.musiconnect.pages.Page;
 
 /**
  * @author Manuel Pellegrini, EPFL

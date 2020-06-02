@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.pages;
 
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.finder.BandFinderPage;
+import ch.epfl.sdp.musiconnect.testsFunctions;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onData;

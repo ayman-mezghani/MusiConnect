@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.pages;
 
 import android.widget.DatePicker;
 
@@ -25,6 +25,8 @@ import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.location.MapsLocationFunctions;
+import ch.epfl.sdp.musiconnect.pages.UserCreationPage;
+import ch.epfl.sdp.musiconnect.testsFunctions;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
@@ -41,14 +43,13 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.musiconnect.testsFunctions.childAtPosition;
 import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 
-public class UserCreationHardwareTests {
+public class UserCreationPageHardwareTests {
     @Rule
-    public IntentsTestRule<UserCreation> activityRule = new IntentsTestRule<>(UserCreation.class);
+    public IntentsTestRule<UserCreationPage> activityRule = new IntentsTestRule<>(UserCreationPage.class);
 
     @Rule
     public GrantPermissionRule mRuntimePermissionRule =
@@ -73,7 +74,7 @@ public class UserCreationHardwareTests {
 
     @Test
     public void singleInputEmptyTest() {
-        Assert.assertTrue(((UserCreation) testsFunctions.getCurrentActivity()).isEmpty(((UserCreation) testsFunctions.getCurrentActivity()).etUserName));
+        Assert.assertTrue(((UserCreationPage) testsFunctions.getCurrentActivity()).isEmpty(((UserCreationPage) testsFunctions.getCurrentActivity()).etUserName));
     }
 
     @Test
@@ -202,34 +203,6 @@ public class UserCreationHardwareTests {
 
     @Test
     public void getJoinDateWorks() {
-        assertEquals(((UserCreation) testsFunctions.getCurrentActivity()).getAge(1995, 10, 19), "24");
-    }
-
-    @Test
-    public void testInstrumentSpinnerFieldOfUserCreationPageWorks() {
-        /**
-        onView(withId(R.id.newProfileSelectedInstrument)).perform(click());
-
-        onData(anything())
-                .inAdapterView(testsFunctions.childAtPosition(
-                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
-                        0))
-                .atPosition(13).perform(click());
-         */
-        assert(true);
-    }
-
-    @Test
-    public void testLevelSpinnerFieldOfUserCreationPageWorks() {
-        /**
-        onView(withId(R.id.newProfileSelectedLevel)).perform(click());
-
-        onData(anything())
-                .inAdapterView(testsFunctions.childAtPosition(
-                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
-                        0))
-                .atPosition(3).perform(click());
-         */
-        assert(true);
+        assertEquals(((UserCreationPage) testsFunctions.getCurrentActivity()).getAge(1995, 10, 19), "24");
     }
 }

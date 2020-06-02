@@ -58,7 +58,7 @@ import ch.epfl.sdp.musiconnect.CustomInfoWindowGoogleMap;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyLocation;
 import ch.epfl.sdp.musiconnect.User;
-import ch.epfl.sdp.musiconnect.VisitorProfilePage;
+import ch.epfl.sdp.musiconnect.pages.VisitorProfilePage;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
@@ -75,14 +75,12 @@ import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener {
 
-
     private static final String CHANNEL_ID = "1";
     private static final int CONNECTION_ID = 10;
     private static final int LOCATION_ID = 11;
     private static final int INITLOCATION_ID = 12;
     private static final int CLOUD_ID = 13;
     private NotificationManagerCompat notificationManager;
-
 
     private DbAdapter dbAdapter = DbSingleton.getDbInstance();
 

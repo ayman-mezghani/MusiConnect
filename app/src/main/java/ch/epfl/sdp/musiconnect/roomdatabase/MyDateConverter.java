@@ -20,11 +20,11 @@ public class MyDateConverter {
 
     @TypeConverter
     public static MyDate fromTimestamp(Long value){
-        return value == null ? null:dateToMyDate(new Date(value));
+        return value == null ? null : dateToMyDate(new Date(value));
     }
 
     @TypeConverter
     public static Long dateToTimestamp(MyDate date){
-        return date == null?null:myDateToDate(date).getTime();
+        return date == null ? null : myDateToDate(date).getTime();
     }
 }

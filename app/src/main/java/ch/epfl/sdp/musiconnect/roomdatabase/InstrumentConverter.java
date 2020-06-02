@@ -30,9 +30,9 @@ public class InstrumentConverter {
         for (String s : strInstr) {
             String[] entry = s.split("/");
             if (entry.length != 2) {
-                return new HashMap<Instrument, Level>();
+                return new HashMap<>();
             } else if (entry[0].length() == 0 || entry[1].length() == 0) {
-                return new HashMap<Instrument, Level>();
+                return new HashMap<>();
             }
             mapInstr.put(Instrument.getInstrumentFromValue(entry[0]), Level.getLevelFromValue(entry[1]));
         }
