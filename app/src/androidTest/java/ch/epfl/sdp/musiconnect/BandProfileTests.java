@@ -55,11 +55,6 @@ public class BandProfileTests {
     }
 
     @Test
-    public void launchActivityShouldDispalyBand() {
-        onView(withId(R.id.etBandName)).perform(scrollTo()).check(matches(withText(md.getBand().getName())));
-    }
-
-    @Test
     public void changeBandSouldDisplaytestBandName() {
         ViewInteraction appCompatSpinner = onView(
                 allOf(withId(R.id.spinnerBands),
