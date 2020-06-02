@@ -14,6 +14,7 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.pages.GoogleLoginPage;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -21,8 +22,8 @@ import static org.junit.Assert.assertTrue;
 
 public class CurrentUserTest {
     @Rule
-    public final ActivityTestRule<GoogleLogin> pageRule =
-            new ActivityTestRule<>(GoogleLogin.class);
+    public final ActivityTestRule<GoogleLoginPage> pageRule =
+            new ActivityTestRule<>(GoogleLoginPage.class);
 
     @BeforeClass
     public static void setMocks() {
@@ -124,5 +125,4 @@ public class CurrentUserTest {
         CurrentUser.getInstance(pageRule.getActivity()).setTypeOfUser(TypeOfUser.Band);
         assertEquals(TypeOfUser.Band, CurrentUser.getInstance(pageRule.getActivity()).getTypeOfUser());
     }
-
 }

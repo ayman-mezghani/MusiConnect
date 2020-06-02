@@ -9,7 +9,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.Page;
+import ch.epfl.sdp.musiconnect.pages.Page;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbDataType;

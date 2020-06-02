@@ -16,7 +16,7 @@ import ch.epfl.sdp.musiconnect.location.MapsActivity;
 @SuppressLint("Registered")
 public class Notifications {
 
-    static final String MUSICIAN_CHANNEL = "musician_channel";
+    public static final String MUSICIAN_CHANNEL = "musician_channel";
     private static final String MANAGER_CHANNEL = "manager_channel";
     private Context context;
 

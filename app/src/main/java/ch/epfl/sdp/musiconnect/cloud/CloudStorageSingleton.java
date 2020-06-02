@@ -21,7 +21,8 @@ public class CloudStorageSingleton {
 
     // private constructor restricted to this class itself
     private CloudStorageSingleton(Context context) {
-        if(storage == null) storage = new FirebaseCloudStorage(context);
+        if (storage == null)
+            storage = new FirebaseCloudStorage(context);
     }
 
     public static void flush() {

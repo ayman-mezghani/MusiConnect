@@ -31,9 +31,9 @@
         <activity android:name=".musiconnect.finder.MusicianFinderResult" />
         <activity android:name=".musiconnect.BandProfile" />
         <activity android:name=".musiconnect.finder.BandFinderResult" />
-        <activity android:name=".musiconnect.UserCreation" />
-        <activity android:name=".musiconnect.BandCreation" />
-        <activity android:name=".musiconnect.GoogleLogin">
+        <activity android:name=".musiconnect.pages.UserCreationPage" />
+        <activity android:name=".musiconnect.pages.BandCreationPage" />
+        <activity android:name=".musiconnect.pages.GoogleLoginPage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -53,11 +53,11 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".musiconnect.location.MapsActivity" />
-        <activity android:name=".musiconnect.HelpPage" />
-        <activity android:name=".musiconnect.MyProfilePage" />
-        <activity android:name=".musiconnect.ProfileModification" />
-        <activity android:name=".musiconnect.StartPage" />
-        <activity android:name=".musiconnect.VisitorProfilePage" />
+        <activity android:name=".musiconnect.pages.HelpPage" />
+        <activity android:name=".musiconnect.pages.MyProfilePage" />
+        <activity android:name=".musiconnect.pages.ProfileModificationPage" />
+        <activity android:name=".musiconnect.pages.StartPage" />
+        <activity android:name=".musiconnect.pages.VisitorProfilePage" />
         <activity android:name=".musiconnect.finder.FinderPage" />
         <activity android:name=".musiconnect.finder.MusicianFinderPage" />
         <activity android:name=".musiconnect.finder.BandFinderPage" />

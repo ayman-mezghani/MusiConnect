@@ -3,8 +3,6 @@ package ch.epfl.sdp.musiconnect;
 import android.content.Context;
 import android.location.Location;
 
-import junit.framework.TestCase;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,9 +21,10 @@ import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.Until;
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.pages.StartPage;
 
 import static ch.epfl.sdp.musiconnect.Notifications.MUSICIAN_CHANNEL;
-import static ch.epfl.sdp.musiconnect.Page.*;
+import static ch.epfl.sdp.musiconnect.pages.Page.*;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
