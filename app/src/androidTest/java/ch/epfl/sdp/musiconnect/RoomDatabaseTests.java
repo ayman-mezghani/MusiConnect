@@ -32,7 +32,6 @@ import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-
 @RunWith(AndroidJUnit4.class)
 public class RoomDatabaseTests {
 

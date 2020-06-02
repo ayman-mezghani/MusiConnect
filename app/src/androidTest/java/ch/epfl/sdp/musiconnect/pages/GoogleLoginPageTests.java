@@ -30,7 +30,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static ch.epfl.sdp.musiconnect.testsFunctions.getCurrentActivity;
 import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
-import static junit.framework.TestCase.assertTrue;
 
 public class GoogleLoginPageTests {
 

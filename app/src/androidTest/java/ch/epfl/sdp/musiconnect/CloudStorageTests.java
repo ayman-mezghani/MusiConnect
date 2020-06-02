@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect.cloud;
+package ch.epfl.sdp.musiconnect;
 
 import androidx.test.rule.ActivityTestRule;
 

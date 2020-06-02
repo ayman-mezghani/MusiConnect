@@ -125,5 +125,4 @@ public class CurrentUserTest {
         CurrentUser.getInstance(pageRule.getActivity()).setTypeOfUser(TypeOfUser.Band);
         assertEquals(TypeOfUser.Band, CurrentUser.getInstance(pageRule.getActivity()).getTypeOfUser());
     }
-
 }
