@@ -20,13 +20,11 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.MenuTests;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.location.MapsLocationFunctions;
-import ch.epfl.sdp.musiconnect.pages.UserCreationPage;
 import ch.epfl.sdp.musiconnect.testsFunctions;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
@@ -48,7 +46,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.musiconnect.testsFunctions.childAtPosition;
 import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
