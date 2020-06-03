@@ -196,8 +196,10 @@ public class MapsActivityTest {
     public void testsaveUserToCache(){
         MyDate birthday = new MyDate(1940, 10, 9);
         Musician m = new Musician("gg","Grospardieu","h","reeeeee@gmail.com",birthday);
+        mapsActivityRule.getActivity().allUsers.clear();
         mapsActivityRule.getActivity().allUsers.add(m);
         Event e = new Event("host@gmail.com","jej");
+        mapsActivityRule.getActivity().eventNear.clear();
         mapsActivityRule.getActivity().eventNear.add(e);
         mapsActivityRule.getActivity().saveToCache();
         waitSeconds(1);
