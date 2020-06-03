@@ -3,8 +3,8 @@ package ch.epfl.sdp.musiconnect.pages;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -13,8 +13,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
-import ch.epfl.sdp.musiconnect.Instrument;
-import ch.epfl.sdp.musiconnect.Level;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.User;
@@ -50,7 +48,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         });
 
         loadProfileContent();
-        getVideoUri(userEmail);
 
         instrument = findViewById(R.id.myProfileInstrument);
         selectedInstrument = findViewById(R.id.myProfileSelectedInstrument);
@@ -93,6 +90,8 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
+        Log.d("videoDebug", "show from on start");
+        getVideoUri(userEmail);
     }
 
     @SuppressLint("MissingSuperCall")
@@ -108,15 +107,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             birthdayView.setText(newFields[4]);
 
             setInstrumentRelatedViews(data);
-
-            String videoUriString = data.getStringExtra("videoUri");
-
-            if (videoUriString != null) {
-                videoUri = Uri.parse(videoUriString);
-                showVideo();
-            } else {
-                getVideoUri(userEmail);
-            }
         }
     }
 
@@ -138,7 +128,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
     public void onClick(View view) {
         super.displayNotFinishedFunctionalityMessage();
     }
-
 
     /**
      * Automatically fill the edit texts of profile modification page with actual string values

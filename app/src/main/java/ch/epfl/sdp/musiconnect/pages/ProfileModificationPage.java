@@ -51,7 +51,7 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
 
     protected static int VIDEO_REQUEST = 101;
 
-    protected Uri videoUri = null;
+    private Uri newVideoUri = null;
     private CloudStorage storage;
     private boolean videoRecorded = false;
 
@@ -103,6 +103,12 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
         // Apply the adapter to the musicianLevels spinner
         selectedLevelSpinner.setAdapter(levelsAdapter);
         selectedLevelSpinner.setSelection(levelsAdapter.getPosition(this.lvl));
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        showVideo(newVideoUri == null ? videoUri : newVideoUri);
     }
 
     private void onCreateGetIntentsFields() {
@@ -176,7 +182,7 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
         if (videoRecorded) {
             storage = CloudStorageSingleton.getCloudInstance(this);
             try {
-                storage.upload(CloudStorage.FileType.video, userEmail, videoUri);
+                storage.upload(CloudStorage.FileType.video, userEmail, newVideoUri);
             } catch (IOException e) {
                 Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
             }
@@ -231,7 +237,7 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
 
         // Upload video to cloud storage
         if (videoRecorded) {
-            returnIntent.putExtra("videoUri", videoUri.toString());
+            Toast.makeText(this, "New video will be updated as soon as it uploads and profile reloads", Toast.LENGTH_SHORT).show();
         }
 
         currentCachedMusician.setTypeOfUser(CurrentUser.getInstance(this).getTypeOfUser());
@@ -310,15 +316,11 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK) {
-            videoUri = data.getData();
+            newVideoUri = data.getData();
             videoRecorded = true;
         }
 
-        if (videoUri != null) {
-            mVideoView.setVideoURI(videoUri);
-            mVideoView.start();
-            mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
-        }
+        showVideo(newVideoUri);
     }
 
     @Override

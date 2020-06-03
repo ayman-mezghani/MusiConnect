@@ -33,7 +33,7 @@ public abstract class ProfilePage extends Page {
     protected TextView selectedInstrument;
     protected TextView level;
     protected TextView selectedLevel;
-    public Uri videoUri = null;
+    protected Uri videoUri = null;
     protected VideoView mVideoView;
     protected ImageView imgVw;
     protected String userEmail;
@@ -109,9 +109,9 @@ public abstract class ProfilePage extends Page {
         setContentView(R.layout.activity_visitor_profile_page_null);
     }
 
-    protected void showVideo() {
-        if (videoUri != null) {
-            mVideoView.setVideoURI(videoUri);
+    protected void showVideo(Uri uri) {
+        if (uri != null) {
+            mVideoView.setVideoURI(uri);
             mVideoView.start();
             mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
         }
@@ -123,13 +123,13 @@ public abstract class ProfilePage extends Page {
             @Override
             public void onSuccess(Uri fileUri) {
                 videoUri = fileUri;
-                showVideo();
+                showVideo(videoUri);
             }
 
             @Override
             public void onFailure() {
                 videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.minion);
-                showVideo();
+                showVideo(videoUri);
             }
         });
     }
