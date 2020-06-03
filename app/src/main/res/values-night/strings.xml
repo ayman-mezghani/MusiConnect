@@ -172,7 +172,7 @@
     <string name="musicianFinderLevels">Level</string>
     <string name="musicianFinderButton">Find musician</string>
     <string name="you_must_enter_bandname_for_search">You must enter a band name to perform a search</string>
-    <string name="you_must_fill_at_least_one_field">You must fill at least one field to permform a search</string>
+    <string name="you_must_fill_at_least_one_field">You must fill at least one field to perform a search</string>
 
     <string name="bandFinderTitle">Band finder</string>
     <string name="bandFinderBandName">Band name</string>
@@ -221,4 +221,10 @@
         <item>Advanced</item>
         <item>Professional</item>
     </string-array>
+
+    <!-- Toast information -->
+    <string name="video_uploading">New video will be updated as soon as it uploads and profile reloads</string>
+    <string name="error_updating_profile">Error: couldn\'t update profile</string>
+    <string name="no_email_client">There is no email client installed.</string>
+    <string name="unable_to_fetch_info_no_internet">Unable to fetch profile information; please connect to internet</string>
 </resources>

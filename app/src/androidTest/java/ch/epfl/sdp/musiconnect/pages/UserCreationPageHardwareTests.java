@@ -25,7 +25,6 @@ import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.location.MapsLocationFunctions;
-import ch.epfl.sdp.musiconnect.pages.UserCreationPage;
 import ch.epfl.sdp.musiconnect.testsFunctions;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
@@ -36,6 +35,8 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intended;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
@@ -45,7 +46,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.musiconnect.testsFunctions.childAtPosition;
 import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
@@ -219,5 +219,43 @@ public class UserCreationPageHardwareTests {
     @Test
     public void getJoinDateWorks() {
         assertEquals(((UserCreationPage) testsFunctions.getCurrentActivity()).getAge(1995, 10, 19), "24");
+    }
+
+    @Test
+    public void successfulBandCreationTest() {
+        ViewInteraction appCompatRadioButton = onView(allOf(withId(R.id.rbBand), withText("Band"),
+                childAtPosition(allOf(withId(R.id.rdg), childAtPosition(
+                        withClassName(is("android.widget.LinearLayout")),0)),1)));
+        appCompatRadioButton.perform(ViewActions.scrollTo(), click());
+
+        onView(withId(R.id.etFirstname)).perform(ViewActions.scrollTo(), clearText(), typeText("Bob"));
+        closeSoftKeyboard();
+        onView(withId(R.id.etLastName)).perform(ViewActions.scrollTo(), clearText(), typeText("bernard"));
+        closeSoftKeyboard();
+        onView(withId(R.id.etUsername)).perform(ViewActions.scrollTo(), clearText(), typeText("Bobbeber"));
+        closeSoftKeyboard();
+        onView(withId(R.id.etMail)).perform(ViewActions.scrollTo(), clearText(), typeText("Bob@gmail.com"));
+        closeSoftKeyboard();
+        onView(withId(R.id.etDate)).perform(ViewActions.scrollTo()).perform(click());
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2000, 1, 1));
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.btnUserCreationCreate)).perform(ViewActions.scrollTo(), click());
+
+        ViewInteraction appCompatButton3 = onView(
+                allOf(withId(R.id.btnBandCreationCreate), withText("Start using application"),childAtPosition(childAtPosition(
+                        withClassName(is("android.widget.LinearLayout")),0),1)));
+
+        onView(withId(R.id.etBandName)).perform(ViewActions.scrollTo(), clearText(), typeText("bob's band"));
+        closeSoftKeyboard();
+
+        appCompatButton3.perform(scrollTo(), click());
+
+        intended(hasComponent(StartPage.class.getName()));
+    }
+
+    @Test
+    public void helpButtonTest() {
+        onView(withId(R.id.help)).perform(click());
+        intended(hasComponent(HelpPage.class.getName()));
     }
 }

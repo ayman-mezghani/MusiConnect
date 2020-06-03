@@ -51,12 +51,12 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
 
     protected static int VIDEO_REQUEST = 101;
 
-    protected Uri videoUri = null;
+    private Uri newVideoUri = null;
     private CloudStorage storage;
     private boolean videoRecorded = false;
 
     private List<Musician> result; //used to fetch from room database
-    public static boolean changeStaged = false;    //indicates if there are changes not commited to online database yet
+    public static boolean changeStaged = false;    //indicates if there are changes not committed to online database yet
 
     private Spinner selectedInstrumentSpinner;
     private Spinner selectedLevelSpinner;
@@ -103,6 +103,12 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
         // Apply the adapter to the musicianLevels spinner
         selectedLevelSpinner.setAdapter(levelsAdapter);
         selectedLevelSpinner.setSelection(levelsAdapter.getPosition(this.lvl));
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        showVideo(newVideoUri == null ? videoUri : newVideoUri);
     }
 
     private void onCreateGetIntentsFields() {
@@ -176,7 +182,7 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
         if (videoRecorded) {
             storage = CloudStorageSingleton.getCloudInstance(this);
             try {
-                storage.upload(CloudStorage.FileType.video, userEmail, videoUri);
+                storage.upload(CloudStorage.FileType.video, userEmail, newVideoUri);
             } catch (IOException e) {
                 Toast.makeText(this, R.string.cloud_upload_invalid_file_path, Toast.LENGTH_LONG).show();
             }
@@ -205,7 +211,7 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
             }
         }
         if (result.isEmpty()) {
-            Toast.makeText(ProfileModificationPage.this, "Error: couldn't update profile", Toast.LENGTH_LONG).show();
+            Toast.makeText(ProfileModificationPage.this, R.string.error_updating_profile, Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -223,7 +229,7 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
             cUserBirthday = dateToMyDate(d);
 
         } catch (ParseException e) {
-            Toast.makeText(ProfileModificationPage.this, "Error: couldn't update profile", Toast.LENGTH_LONG).show();
+            Toast.makeText(ProfileModificationPage.this, R.string.error_updating_profile, Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -231,7 +237,7 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
 
         // Upload video to cloud storage
         if (videoRecorded) {
-            returnIntent.putExtra("videoUri", videoUri.toString());
+            Toast.makeText(this, R.string.video_uploading, Toast.LENGTH_SHORT).show();
         }
 
         currentCachedMusician.setTypeOfUser(CurrentUser.getInstance(this).getTypeOfUser());
@@ -308,16 +314,9 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK) {
-            videoUri = data.getData();
+            newVideoUri = data.getData();
             videoRecorded = true;
-        }
-
-        if (videoUri != null) {
-            mVideoView.setVideoURI(videoUri);
-            mVideoView.start();
-            mVideoView.setOnCompletionListener(mediaPlayer -> mVideoView.start());
         }
     }
 

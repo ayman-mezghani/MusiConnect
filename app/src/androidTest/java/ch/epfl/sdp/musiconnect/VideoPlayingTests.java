@@ -67,12 +67,7 @@ public class VideoPlayingTests {
 
     @Test
     public void playVideoTest() throws InterruptedException {
-        String packageName = mActivityTestRule.getActivity().getPackageName();
-        String videoSource = "android.resource://"+packageName+"/"+ R.raw.minion;
-
         onView(withId(R.id.my_profile)).perform(scrollTo(), click());
-
-        ((MyProfilePage) Objects.requireNonNull(getCurrentActivity())).videoUri = Uri.parse(videoSource);
 
         onView(allOf(withId(R.id.videoView), childAtPosition(childAtPosition(withClassName(is("android.widget.LinearLayout")),
                 2),0),isDisplayed()));

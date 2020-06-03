@@ -3,24 +3,20 @@ package ch.epfl.sdp.musiconnect.pages;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
-import ch.epfl.sdp.musiconnect.Instrument;
-import ch.epfl.sdp.musiconnect.Level;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 
-public class MyProfilePage extends ProfilePage implements View.OnClickListener {
+public class MyProfilePage extends ProfilePage {
     private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -40,6 +36,10 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         emailView = findViewById(R.id.myMail);
         birthdayView = findViewById(R.id.myBirthday);
         userEmail = CurrentUser.getInstance(this).email;
+        instrument = findViewById(R.id.myProfileInstrument);
+        selectedInstrument = findViewById(R.id.myProfileSelectedInstrument);
+        level = findViewById(R.id.myProfileLevel);
+        selectedLevel = findViewById(R.id.myProfileSelectedLevel);
 
         Button editProfile = findViewById(R.id.btnEditProfile);
         editProfile.setOnClickListener(v -> {
@@ -50,12 +50,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         });
 
         loadProfileContent();
-        getVideoUri(userEmail);
-
-        instrument = findViewById(R.id.myProfileInstrument);
-        selectedInstrument = findViewById(R.id.myProfileSelectedInstrument);
-        level = findViewById(R.id.myProfileLevel);
-        selectedLevel = findViewById(R.id.myProfileSelectedLevel);
     }
 
     @Override
@@ -93,6 +87,7 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
+        getVideoUri(userEmail);
     }
 
     @SuppressLint("MissingSuperCall")
@@ -108,15 +103,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             birthdayView.setText(newFields[4]);
 
             setInstrumentRelatedViews(data);
-
-            String videoUriString = data.getStringExtra("videoUri");
-
-            if (videoUriString != null) {
-                videoUri = Uri.parse(videoUriString);
-                showVideo();
-            } else {
-                getVideoUri(userEmail);
-            }
         }
     }
 
@@ -134,11 +120,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             selectedLevel.setText("");
         }
     }
-
-    public void onClick(View view) {
-        super.displayNotFinishedFunctionalityMessage();
-    }
-
 
     /**
      * Automatically fill the edit texts of profile modification page with actual string values
