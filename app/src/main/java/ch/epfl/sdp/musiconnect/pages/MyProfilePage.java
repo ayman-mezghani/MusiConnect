@@ -38,6 +38,10 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         emailView = findViewById(R.id.myMail);
         birthdayView = findViewById(R.id.myBirthday);
         userEmail = CurrentUser.getInstance(this).email;
+        instrument = findViewById(R.id.myProfileInstrument);
+        selectedInstrument = findViewById(R.id.myProfileSelectedInstrument);
+        level = findViewById(R.id.myProfileLevel);
+        selectedLevel = findViewById(R.id.myProfileSelectedLevel);
 
         Button editProfile = findViewById(R.id.btnEditProfile);
         editProfile.setOnClickListener(v -> {
@@ -48,11 +52,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
         });
 
         loadProfileContent();
-
-        instrument = findViewById(R.id.myProfileInstrument);
-        selectedInstrument = findViewById(R.id.myProfileSelectedInstrument);
-        level = findViewById(R.id.myProfileLevel);
-        selectedLevel = findViewById(R.id.myProfileSelectedLevel);
     }
 
     @Override
