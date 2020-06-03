@@ -314,13 +314,10 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == VIDEO_REQUEST && resultCode == RESULT_OK) {
             newVideoUri = data.getData();
             videoRecorded = true;
         }
-
-        showVideo(newVideoUri);
     }
 
     @Override
