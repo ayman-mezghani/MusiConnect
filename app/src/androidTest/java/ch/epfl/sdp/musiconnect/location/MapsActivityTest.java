@@ -240,4 +240,41 @@ public class MapsActivityTest {
         assertEquals( e.getEid(),
                  events.get(0).getEid());
     }
+
+    @Test
+    public void testloadCache(){
+        MyDate birthday = new MyDate(1940, 10, 9);
+        Musician m = new Musician("gg","Grospardieu","h","reeeeee@gmail.com",birthday);
+        Event e = new Event("host@gmail.com","jej");
+        mExecutor.execute(() -> {
+            musicianDao.insertAll(m);
+            eventDao.insertAll(e);
+        });
+        waitSeconds(1);
+        mapsActivityRule.getActivity().loadCache();
+        waitSeconds(1);
+        assertTrue(!mapsActivityRule.getActivity().events.isEmpty());
+        assertTrue(!mapsActivityRule.getActivity().allUsers.isEmpty());
+    }
+
+    @Test
+    public void testClearCache(){
+        MyDate birthday = new MyDate(1940, 10, 9);
+        Musician m = new Musician("gg","Grospardieu","h","reeeeee@gmail.com",birthday);
+        Event e = new Event("host@gmail.com","jej");
+        mExecutor.execute(() -> {
+            musicianDao.insertAll(m);
+            eventDao.insertAll(e);
+        });
+        waitSeconds(1);
+        mapsActivityRule.getActivity().clearCache();
+        waitSeconds(1);
+        mExecutor.execute(() -> {
+            users = musicianDao.getAll();
+            events = eventDao.getAll();
+        });
+        waitSeconds(1);
+        assertTrue(users.isEmpty());
+        assertTrue(events.isEmpty());
+    }
 }
