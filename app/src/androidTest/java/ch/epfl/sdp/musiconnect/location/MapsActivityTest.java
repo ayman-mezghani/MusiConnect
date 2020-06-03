@@ -213,7 +213,7 @@ public class MapsActivityTest {
     }
 
     @Test
-    public void testsaveUserToCache(){
+    public void testsaveToCache(){
 
         MyDate birthday = new MyDate(1940, 10, 9);
         Musician m = new Musician("gg","Grospardieu","h","reeeeee@gmail.com",birthday);
@@ -237,7 +237,7 @@ public class MapsActivityTest {
         assertEquals(m.getFirstName()+m.getLastName()+m.getEmailAddress()+m.getUserName(),
                 user1.getFirstName()+user1.getLastName()+user1.getEmailAddress()+user1.getUserName());
         assertEquals(1,events.size());
-        assertEquals(e.getHostEmailAddress() + e.getEid(),
-                events.get(0).getHostEmailAddress() + events.get(0).getEid());
+        assertEquals( e.getEid(),
+                 events.get(0).getEid());
     }
 }
