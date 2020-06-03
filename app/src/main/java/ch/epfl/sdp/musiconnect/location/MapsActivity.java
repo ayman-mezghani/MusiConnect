@@ -384,8 +384,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LocationPermission.startLocationService(this);
     }
 
-    @VisibleForTesting
-    protected void sendToDatabase(Location location) {
+    private void sendToDatabase(Location location) {
         User user = CurrentUser.getInstance(this).getMusician();
 
         user.setLocation(new MyLocation(location.getLatitude(), location.getLongitude()));
@@ -594,6 +593,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         adb.show();
     }
 
+    @VisibleForTesting
     protected boolean checkLocationServices() {
         LocationManager lm = (LocationManager) MapsActivity.this.getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;

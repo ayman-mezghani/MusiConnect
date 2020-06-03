@@ -145,11 +145,6 @@ public class MapsActivityTest {
     }
 
     @Test
-    public void locationIsUpdatedToDb(){
-
-    }
-
-    @Test
     public void testLocationServices(){
         assertEquals(true,mapsActivityRule.getActivity().checkLocationServices());
     }
