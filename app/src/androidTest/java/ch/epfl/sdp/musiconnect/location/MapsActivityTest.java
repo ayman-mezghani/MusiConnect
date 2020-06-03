@@ -56,6 +56,11 @@ import static org.junit.Assert.assertThat;
 public class MapsActivityTest {
     private List<Musician> users = new ArrayList<>();
     private List<Event> events = new ArrayList<>();
+    private AppDatabase localDb;
+    private MusicianDao musicianDao;
+    private EventDao eventDao;
+    private Executor mExecutor = Executors.newSingleThreadExecutor();
+
 
     @Rule
     public final ActivityTestRule<MapsActivity> mapsActivityRule =
@@ -74,10 +79,25 @@ public class MapsActivityTest {
     @Before
     public void initIntents() {
         Intents.init();
+        localDb = AppDatabase.getInstance(mapsActivityRule.getActivity().getApplicationContext());
+        musicianDao = localDb.musicianDao();
+        eventDao = localDb.eventDao();
+        mExecutor.execute(() -> {
+            musicianDao.nukeTable();
+            eventDao.nukeTable();
+        });
+        waitSeconds(1);
     }
 
     @After
-    public void releaseIntents() { Intents.release(); }
+    public void releaseIntents() {
+        Intents.release();
+        mExecutor.execute(() -> {
+            musicianDao.nukeTable();
+            eventDao.nukeTable();
+        });
+        waitSeconds(1);
+    }
 
 
     @Test
@@ -194,6 +214,7 @@ public class MapsActivityTest {
 
     @Test
     public void testsaveUserToCache(){
+
         MyDate birthday = new MyDate(1940, 10, 9);
         Musician m = new Musician("gg","Grospardieu","h","reeeeee@gmail.com",birthday);
         mapsActivityRule.getActivity().allUsers.clear();
@@ -203,10 +224,6 @@ public class MapsActivityTest {
         mapsActivityRule.getActivity().eventNear.add(e);
         mapsActivityRule.getActivity().saveToCache();
         waitSeconds(1);
-        AppDatabase localDb = AppDatabase.getInstance(mapsActivityRule.getActivity().getApplicationContext());
-        MusicianDao musicianDao = localDb.musicianDao();
-        EventDao eventDao = localDb.eventDao();
-        Executor mExecutor = Executors.newSingleThreadExecutor();
 
         mExecutor.execute(() -> {
             users = musicianDao.getAll();
