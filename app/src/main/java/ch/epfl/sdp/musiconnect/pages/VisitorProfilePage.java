@@ -44,6 +44,10 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         usernameView = findViewById(R.id.visitorProfileUsername);
         emailView = findViewById(R.id.visitorProfileEmail);
         birthdayView = findViewById(R.id.visitorProfileBirthday);
+        instrument = findViewById(R.id.visitorProfileInstrument);
+        selectedInstrument = findViewById(R.id.visitorProfileSelectedInstrument);
+        level = findViewById(R.id.visitorProfileLevel);
+        selectedLevel = findViewById(R.id.visitorProfileSelectedLevel);
 
         Intent intent = getIntent();
         if (intent.hasExtra("UserEmail")) {
@@ -67,11 +71,6 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         setupEventListButton();
 
         contactButton.setOnClickListener(view -> sendEmail(userEmail, getResources().getString(R.string.musiconnect_contact_mail)));
-
-        instrument = findViewById(R.id.visitorProfileInstrument);
-        selectedInstrument = findViewById(R.id.visitorProfileSelectedInstrument);
-        level = findViewById(R.id.visitorProfileLevel);
-        selectedLevel = findViewById(R.id.visitorProfileSelectedLevel);
 
         contactButton.setOnClickListener(view -> sendEmail(userEmail, getResources().getString(R.string.musiconnect_contact_mail)));
     }
