@@ -22,8 +22,8 @@ public abstract class AppDatabase extends RoomDatabase {
             synchronized (AppDatabase.class){
                 if (sInstance == null){
                     if(checkTest()) {
-                        sInstance = Room.databaseBuilder(context.getApplicationContext(),
-                                AppDatabase.class, "test-database-name")
+                        sInstance = Room.inMemoryDatabaseBuilder(context.getApplicationContext(),
+                                AppDatabase.class)
                                 .fallbackToDestructiveMigration()
                                 .build();
                     } else {

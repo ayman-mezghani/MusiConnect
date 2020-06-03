@@ -306,7 +306,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     updateUsers();
                     clearCache();
                     saveToCache();
-                    circle.setRadius(threshold);
                 }
                 handler.postDelayed(this, delay);
             }
@@ -457,8 +456,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 profiles.add(m);
             }
         }
-
-
+        if(circle != null){
+            circle.setRadius(threshold);
+        }
         loadProfilesMarker();
     }
 
@@ -611,8 +611,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-
-    private void saveToCache() {
+    @VisibleForTesting
+    protected void saveToCache() {
 
         MusicianDao musicianDao = localDb.musicianDao();
         EventDao eventDao = localDb.eventDao();
@@ -624,8 +624,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
-
-    private void loadCache() {
+    @VisibleForTesting
+    protected void loadCache() {
 
         MusicianDao musicianDao = localDb.musicianDao();
         EventDao eventDao = localDb.eventDao();
@@ -641,8 +641,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
-
-    private void clearCache() {
+    @VisibleForTesting
+    protected void clearCache() {
         MusicianDao musicianDao = localDb.musicianDao();
         EventDao eventDao = localDb.eventDao();
 

@@ -4,6 +4,7 @@ package ch.epfl.sdp.musiconnect.location;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.location.Location;
+import android.provider.CalendarContract;
 
 import androidx.core.app.NotificationCompat;
 import androidx.test.espresso.intent.Intents;
@@ -20,6 +21,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
@@ -28,6 +34,9 @@ import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.events.Event;
 import ch.epfl.sdp.musiconnect.events.EventCreationPage;
+import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
+import ch.epfl.sdp.musiconnect.roomdatabase.EventDao;
+import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -45,6 +54,9 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 public class MapsActivityTest {
+    private List<Musician> users = new ArrayList<>();
+    private List<Event> events = new ArrayList<>();
+
     @Rule
     public final ActivityTestRule<MapsActivity> mapsActivityRule =
             new ActivityTestRule<>(MapsActivity.class);
@@ -178,5 +190,35 @@ public class MapsActivityTest {
         mapsActivityRule.getActivity().updateEvents();
         assertTrue(mapsActivityRule.getActivity().eventNear.isEmpty());
         assertTrue(mapsActivityRule.getActivity().eventMarkers.isEmpty());
+    }
+
+    @Test
+    public void testsaveUserToCache(){
+        MyDate birthday = new MyDate(1940, 10, 9);
+        Musician m = new Musician("gg","Grospardieu","h","reeeeee@gmail.com",birthday);
+        mapsActivityRule.getActivity().allUsers.add(m);
+        Event e = new Event("host@gmail.com","jej");
+        mapsActivityRule.getActivity().eventNear.add(e);
+        mapsActivityRule.getActivity().saveToCache();
+        waitSeconds(1);
+        AppDatabase localDb = AppDatabase.getInstance(mapsActivityRule.getActivity().getApplicationContext());
+        MusicianDao musicianDao = localDb.musicianDao();
+        EventDao eventDao = localDb.eventDao();
+        Executor mExecutor = Executors.newSingleThreadExecutor();
+
+        mExecutor.execute(() -> {
+            users = musicianDao.getAll();
+            events = eventDao.getAll();
+        });
+
+        waitSeconds(1);
+
+        assertEquals(1,users.size());
+        Musician user1 = users.get(0);
+        assertEquals(m.getFirstName()+m.getLastName()+m.getEmailAddress()+m.getUserName(),
+                user1.getFirstName()+user1.getLastName()+user1.getEmailAddress()+user1.getUserName());
+        assertEquals(1,events.size());
+        assertEquals(e.getHostEmailAddress() + e.getEid(),
+                events.get(0).getHostEmailAddress() + events.get(0).getEid());
     }
 }
