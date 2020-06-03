@@ -4,9 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -89,7 +87,6 @@ public class MyProfilePage extends ProfilePage {
     @Override
     public void onStart() {
         super.onStart();
-        Log.d("videoDebug", "show from on start");
         getVideoUri(userEmail);
     }
 

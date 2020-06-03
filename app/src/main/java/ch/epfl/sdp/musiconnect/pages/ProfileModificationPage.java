@@ -211,7 +211,7 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
             }
         }
         if (result.isEmpty()) {
-            Toast.makeText(ProfileModificationPage.this, "Error: couldn't update profile", Toast.LENGTH_LONG).show();
+            Toast.makeText(ProfileModificationPage.this, R.string.error_updating_profile, Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -229,7 +229,7 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
             cUserBirthday = dateToMyDate(d);
 
         } catch (ParseException e) {
-            Toast.makeText(ProfileModificationPage.this, "Error: couldn't update profile", Toast.LENGTH_LONG).show();
+            Toast.makeText(ProfileModificationPage.this, R.string.error_updating_profile, Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -237,7 +237,7 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
 
         // Upload video to cloud storage
         if (videoRecorded) {
-            Toast.makeText(this, "New video will be updated as soon as it uploads and profile reloads", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.video_uploading, Toast.LENGTH_SHORT).show();
         }
 
         currentCachedMusician.setTypeOfUser(CurrentUser.getInstance(this).getTypeOfUser());

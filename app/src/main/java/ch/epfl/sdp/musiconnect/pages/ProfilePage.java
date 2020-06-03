@@ -83,7 +83,7 @@ public abstract class ProfilePage extends Page {
 
         } else {
             if (currentCachedUser == null) {
-                Toast.makeText(this, "Unable to fetch profile information; please connect to internet", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.unable_to_fetch_info_no_internet, Toast.LENGTH_LONG).show();
             } else { // set profile info based on cache
                 loadUserProfile(currentCachedUser);
             }

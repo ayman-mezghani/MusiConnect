@@ -11,8 +11,6 @@ import android.widget.Toast;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.Band;
 import ch.epfl.sdp.musiconnect.CurrentUser;
-import ch.epfl.sdp.musiconnect.Instrument;
-import ch.epfl.sdp.musiconnect.Level;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.TypeOfUser;
@@ -89,7 +87,7 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         try {
             startActivity(Intent.createChooser(emailIntent, "Sending mail..."));
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.no_email_client, Toast.LENGTH_SHORT).show();
         }
     }
 
