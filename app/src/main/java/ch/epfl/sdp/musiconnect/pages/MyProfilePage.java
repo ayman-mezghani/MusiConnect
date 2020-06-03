@@ -18,7 +18,7 @@ import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 
-public class MyProfilePage extends ProfilePage implements View.OnClickListener {
+public class MyProfilePage extends ProfilePage {
     private static int LAUNCH_PROFILE_MODIF_INTENT = 102;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -122,10 +122,6 @@ public class MyProfilePage extends ProfilePage implements View.OnClickListener {
             selectedInstrument.setText("");
             selectedLevel.setText("");
         }
-    }
-
-    public void onClick(View view) {
-        super.displayNotFinishedFunctionalityMessage();
     }
 
     /**
