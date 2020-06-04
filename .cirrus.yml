@@ -35,10 +35,6 @@ connected_check_task:
     - ./cc-test-reporter upload-coverage
   assemble_script:
     ./gradlew assembleDebug
-    artifacts:
-      name: release_APK
-      paths:
-        - ./app/build/outputs/apk/release/*.apk
 
 android_lint_task:
   container:
