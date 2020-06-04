@@ -17,6 +17,7 @@ import ch.epfl.sdp.musiconnect.User;
 import ch.epfl.sdp.musiconnect.events.Event;
 
 public class MockDatabase extends Database {
+    private final static String failCallback = "FailCallback";
 
     private final static String firstName = "bob";
     private final static String lastName = "minion";
@@ -83,6 +84,7 @@ public class MockDatabase extends Database {
         listOfEvent.add(createEvent(getDummyMusician(1), "2", "Event at Big Ben!", true));
         listOfEvent.add(createEvent(getDummyMusician(2), "3", "Public Event at Big Ben!", true));
         listOfEvent.add(createEvent(getDummyMusician(2), "4", "Private event at Big Ben!", false));
+        listOfEvent.add(createEvent(getDummyMusician(2), "3", "This Event is exclusive to the other event with the same id", true));
     }
 
     public Musician getDummyMusician(int index) {
@@ -144,6 +146,11 @@ public class MockDatabase extends Database {
 
     @Override
     void readDoc(String collection, String docName, DbCallback dbCallback) {
+        if (docName.equals(failCallback)) {
+            dbCallback.readFailCallback();
+            return;
+        }
+
         if(collection.equals(DbDataType.Events.toString())) {
             for (Event e : listOfEvent) {
                 if (docName.equals(e.getEid())) {
@@ -151,7 +158,7 @@ public class MockDatabase extends Database {
                     return;
                 }
             }
-
+            dbCallback.readFailCallback();
         }
 
         if (collection.equals(DbDataType.Musician.toString())) {
@@ -183,19 +190,30 @@ public class MockDatabase extends Database {
     public void finderQuery(String collection, Map<String, Object> arguments, DbCallback dbCallback) {
         List<User> l = new ArrayList<>();
         if(collection.equals(DbDataType.Musician.toString())) {
-                if(((String)arguments.get("firstName")) != null && ((String)arguments.get("firstName")).equals("musicConnect")) {
+            if(arguments.get("firstName") != null && arguments.get("firstName").equals("musicConnect")) {
                 l.add(this.getDummyMusician(1));
             } else {
                 l.add(defaultSm.toMusician());
             }
             dbCallback.queryCallback(l);
-        } else if(collection.equals(DbDataType.Band.toString())) {
+        }
 
+        else if(collection.equals(DbDataType.Band.toString())) {
             Band b = new Band("totofire" ,defaultSm.getEmail());
             l.add(b);
             Band b2 = new Band("testBand", "espresso@gmail.com");
             l.add(b2);
             dbCallback.queryCallback(l);
+        }
+
+        else if (collection.equals(DbDataType.Events.toString())) {
+            if (arguments.get("participants").equals(defaultSm.getEmail())) {
+                List<Event> el = new ArrayList<>();
+                el.add(getDummyEvent(5));
+                dbCallback.queryCallback(el);
+            }
+            dbCallback.queryFailCallback();
+
         }
     }
 

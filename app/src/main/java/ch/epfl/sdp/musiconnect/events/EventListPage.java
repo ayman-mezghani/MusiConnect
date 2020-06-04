@@ -119,13 +119,6 @@ public class EventListPage extends Page {
         });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == R.id.my_events)
-            return true;
-        return super.onOptionsItemSelected(item);
-    }
-
 
     private void loadIds(List<String> eventIds, DbDataType dbDataType) {
         final int[] counter = {0};
@@ -144,8 +137,7 @@ public class EventListPage extends Page {
                     @Override
                     public void readFailCallback() {
                         counter[0]++;
-                        // error: the event does not exist, so the entry in the database should be deleted
-                        // Update only if user is on his own list (and after all callbacks have returned)
+                        // the event does not exist
                         checkIfAllEventsAreLoaded(counter[0], eventIds.size(), dbDataType);
                     }
                 });
@@ -158,11 +150,12 @@ public class EventListPage extends Page {
     private void showEvent(Event e) {
         String eid = e.getEid();
         String title = e.getTitle();
+        String thisUser = CurrentUser.getInstance(this).getMusician().getEmailAddress();
 
         // Show only events that are public or belong to this user or this user is a participant
-        if (!containsId(eid) &&
-                (e.isVisible() || e.containsParticipant(userEmail)
-                || e.getHostEmailAddress().equals(userEmail))) {
+        if (!containsId(eid) && (e.isVisible()
+                || e.getHostEmailAddress().equals(thisUser)
+                || e.containsParticipant(thisUser))) {
             eventTitlesToShow.add(title);
             eidAndTitles.add(new Pair<>(eid, title));
             EventListPage.this.runOnUiThread(() -> adapter.notifyDataSetChanged());
@@ -190,7 +183,7 @@ public class EventListPage extends Page {
             // We have loaded everything from this user, now find all events he/she participates in
             HashMap<String, Object> h = new HashMap<>();
             h.put("participants", userEmail);
-            DbSingleton.getDbInstance().query(DbDataType.Events, h, new DbCallback() {
+            dbAdapter.query(DbDataType.Events, h, new DbCallback() {
                 @Override
                 public void queryCallback(List eventList) {
                     for (Object e: eventList) {
