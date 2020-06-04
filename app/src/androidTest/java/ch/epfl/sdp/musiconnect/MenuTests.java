@@ -20,9 +20,11 @@ import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.events.EventCreationPage;
+import ch.epfl.sdp.musiconnect.events.EventListPage;
 import ch.epfl.sdp.musiconnect.finder.FinderPage;
 import ch.epfl.sdp.musiconnect.location.MapsActivity;
 import ch.epfl.sdp.musiconnect.location.MapsLocationFunctions;
+import ch.epfl.sdp.musiconnect.pages.GoogleLoginPage;
 import ch.epfl.sdp.musiconnect.pages.HelpPage;
 import ch.epfl.sdp.musiconnect.pages.MyProfilePage;
 import ch.epfl.sdp.musiconnect.pages.StartPage;
@@ -65,10 +67,13 @@ public class MenuTests {
     }
 
     @After
-    public void releaseIntents() { Intents.release(); }
+    public void releaseIntents() {
+        Intents.release();
+    }
 
     /**
      * Helper method to avoid duplicate code
+     *
      * @param stringId
      */
     private void openActionsMenu(int stringId) {
@@ -90,7 +95,7 @@ public class MenuTests {
         intended(hasComponent(EventCreationPage.class.getName()));
     }
 
-    //@Test
+    @Test
     public void testBandProfileClickShouldStartNewIntent() {
         CurrentUser.getInstance(startPageRule.getActivity()).setTypeOfUser(TypeOfUser.Band);
         openActionsMenu(R.string.my_bands);
@@ -143,5 +148,14 @@ public class MenuTests {
         Intent searchIntent = new Intent();
         startPageRule.launchActivity(searchIntent);
         intended(hasComponent(FinderPage.class.getName()));
+    }
+
+    @Test
+    public void testMyEventsClickFromBottomMenuShouldStartNewIntent() {
+        clickOnMenuId(R.id.my_events);
+
+        Intent myEventsIntent = new Intent();
+        startPageRule.launchActivity(myEventsIntent);
+        intended(hasComponent(EventListPage.class.getName()));
     }
 }

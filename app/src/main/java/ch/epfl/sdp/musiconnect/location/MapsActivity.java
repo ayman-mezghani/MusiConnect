@@ -88,21 +88,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Executor mExecutor = Executors.newSingleThreadExecutor();
 
     private FusedLocationProviderClient fusedLocationClient;
-    private Location setLoc;
+    @VisibleForTesting
+    protected Location setLoc;
     private Spinner spinner;
 
-    private boolean updatePos = true;
+    @VisibleForTesting
+    protected boolean updatePos = true;
     @VisibleForTesting
     protected GoogleMap mMap;
     private UiSettings mUiSettings;
 
     private int delay;                                          //delay to updating the users list in ms
-    private List<Musician> allUsers = new ArrayList<>();        //all users "near" the current user's position
-    private List<Musician> profiles = new ArrayList<>();        //all users within the radius set by the user in the app
-    private List<Marker> markers = new ArrayList<>();           //markers on the map associated to profiles
-    private List<Event> events = new ArrayList<>();
-    private List<Event> eventNear = new ArrayList<>();
-    private List<Marker> eventMarkers = new ArrayList<>();           //markers on the map associated to events
+    @VisibleForTesting
+    protected List<Musician> allUsers = new ArrayList<>();        //all users "near" the current user's position
+    @VisibleForTesting
+    protected List<Musician> profiles = new ArrayList<>();        //all users within the radius set by the user in the app
+    @VisibleForTesting
+    protected List<Marker> markers = new ArrayList<>();           //markers on the map associated to profiles
+    @VisibleForTesting
+    protected List<Event> events = new ArrayList<>();
+    @VisibleForTesting
+    protected List<Event> eventNear = new ArrayList<>();
+    @VisibleForTesting
+    protected List<Marker> eventMarkers = new ArrayList<>();           //markers on the map associated to events
     private Event shownEvent = null;                                //event to be shown on map, when accessed from event pages
 
     private boolean updateCamera = true;
@@ -194,6 +202,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
 
                 spinner.setSelection(position);
+
 
                 updateProfileList();
                 loadProfilesMarker();
@@ -306,8 +315,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //========================================================================
     // Location functions
-
-    private void getLastLocation() {
+    @VisibleForTesting
+    protected void getLastLocation() {
         if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
                 if (location != null) {
@@ -333,8 +342,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-
-    private void setLocation(Location location) {
+    @VisibleForTesting
+    protected void setLocation(Location location) {
         if (!updatePos) {
             return;
         }
@@ -423,7 +432,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     //From the users around the area, picks the ones that are within the threshold distance.
-    private void updateProfileList() {
+    @VisibleForTesting
+    protected void updateProfileList() {
         if (setLoc == null) {             //Might be called before we get the first update to the location;
             return;
         } else {
@@ -445,14 +455,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 profiles.add(m);
             }
         }
-
-        circle.setRadius(threshold);
-
+        if(circle != null){
+            circle.setRadius(threshold);
+        }
         loadProfilesMarker();
     }
 
     //From the events around the area, picks the ones that are within the threshold distance.
-    private void updateEvents() {
+    @VisibleForTesting
+    protected void updateEvents() {
         if (setLoc == null) {            //Might be called before we get the first update to the location;
             return;
         }
@@ -582,6 +593,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         adb.show();
     }
 
+    @VisibleForTesting
     protected boolean checkLocationServices() {
         LocationManager lm = (LocationManager) MapsActivity.this.getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
@@ -599,8 +611,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-
-    private void saveToCache() {
+    @VisibleForTesting
+    protected void saveToCache() {
 
         MusicianDao musicianDao = localDb.musicianDao();
         EventDao eventDao = localDb.eventDao();
@@ -612,8 +624,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
-
-    private void loadCache() {
+    @VisibleForTesting
+    protected void loadCache() {
 
         MusicianDao musicianDao = localDb.musicianDao();
         EventDao eventDao = localDb.eventDao();
@@ -629,8 +641,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
-
-    private void clearCache() {
+    @VisibleForTesting
+    protected void clearCache() {
         MusicianDao musicianDao = localDb.musicianDao();
         EventDao eventDao = localDb.eventDao();
 
@@ -640,8 +652,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-
-    // TODO Should be replaced by a function that fetch user from the database; right now it generates 3 fixed users
     private void fetchUsersFromDb() {
         dbAdapter.locationQuery(DbDataType.Musician, LocationConverter.locationToMyLocation(CurrentUser.getInstance(this).getLocation()), MAX_THRESHOLD / 1000,
                 new DbCallback() {

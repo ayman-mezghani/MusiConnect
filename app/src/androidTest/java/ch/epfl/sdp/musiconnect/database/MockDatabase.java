@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import ch.epfl.sdp.musiconnect.Band;
+import ch.epfl.sdp.musiconnect.Instrument;
+import ch.epfl.sdp.musiconnect.Level;
 import ch.epfl.sdp.musiconnect.Musician;
 import ch.epfl.sdp.musiconnect.MyDate;
 import ch.epfl.sdp.musiconnect.TypeOfUser;
@@ -42,6 +44,7 @@ public class MockDatabase extends Database {
         } else {
             m.setTypeOfUser(TypeOfUser.Musician);
         }
+        m.addInstrument(Instrument.FLUTE, Level.BEGINNER);
         defaultSm = new SimplifiedMusician(m);
         listOfMusicians.add(defaultSm);
 

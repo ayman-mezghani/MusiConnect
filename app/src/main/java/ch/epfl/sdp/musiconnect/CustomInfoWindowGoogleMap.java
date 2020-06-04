@@ -38,8 +38,6 @@ public class CustomInfoWindowGoogleMap implements GoogleMap.InfoWindowAdapter {
 
         name_tv.setText(marker.getTitle());
         String type = marker.getSnippet();
-        if(type == null)
-            return view;
         switch(type) {
             case "Musician":
                 Musician m = (Musician) marker.getTag();
