@@ -23,7 +23,7 @@ import androidx.test.uiautomator.Until;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.pages.StartPage;
 
-import static ch.epfl.sdp.musiconnect.Notifications.MUSICIAN_CHANNEL;
+import static ch.epfl.sdp.musiconnect.functionnalities.Notifications.MUSICIAN_CHANNEL;
 import static ch.epfl.sdp.musiconnect.pages.Page.*;
 
 import static junit.framework.TestCase.assertTrue;

@@ -29,9 +29,9 @@ import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.Instrument;
 import ch.epfl.sdp.musiconnect.Level;
-import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.MyDate;
-import ch.epfl.sdp.musiconnect.User;
+import ch.epfl.sdp.musiconnect.users.Musician;
+import ch.epfl.sdp.musiconnect.functionnalities.MyDate;
+import ch.epfl.sdp.musiconnect.users.User;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
@@ -40,7 +40,7 @@ import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
-import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
+import static ch.epfl.sdp.musiconnect.functionnalities.ConnectionCheck.checkConnection;
 import static ch.epfl.sdp.musiconnect.roomdatabase.MyDateConverter.dateToMyDate;
 
 public class ProfileModificationPage extends ProfilePage implements View.OnClickListener {
@@ -240,7 +240,7 @@ public class ProfileModificationPage extends ProfilePage implements View.OnClick
             Toast.makeText(this, R.string.video_uploading, Toast.LENGTH_SHORT).show();
         }
 
-        currentCachedMusician.setTypeOfUser(CurrentUser.getInstance(this).getTypeOfUser());
+        currentCachedMusician.setUserType(CurrentUser.getInstance(this).getTypeOfUser());
         currentCachedMusician.removeAllInstruments();
 
         String instr = selectedInstrumentSpinner.getSelectedItem().toString();

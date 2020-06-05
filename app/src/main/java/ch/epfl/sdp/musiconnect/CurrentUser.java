@@ -12,6 +12,10 @@ import java.util.List;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.DbDataType;
+import ch.epfl.sdp.musiconnect.functionnalities.MyLocation;
+import ch.epfl.sdp.musiconnect.users.Band;
+import ch.epfl.sdp.musiconnect.users.Musician;
+import ch.epfl.sdp.musiconnect.users.User;
 
 public class CurrentUser {
 
@@ -24,7 +28,7 @@ public class CurrentUser {
     private Musician musician;
     private List<Band> band;
     private GoogleSignInAccount acct;
-    private TypeOfUser type;
+    private UserType type;
 
     // private constructor restricted to this class itself
     private CurrentUser(Context context) {
@@ -65,7 +69,7 @@ public class CurrentUser {
     }
 
     public void setBandName(String bandName) {
-        if (this.musician.getTypeOfUser() == TypeOfUser.Band)
+        if (this.musician.getUserType() == UserType.Band)
             this.bandName = bandName;
         else
             throw new IllegalArgumentException("You can only set a band name if you are a band");
@@ -85,7 +89,7 @@ public class CurrentUser {
 
     public void setMusician(Musician m) {
         this.musician = m;
-        this.type = m.getTypeOfUser();
+        this.type = m.getUserType();
     }
 
     public Musician getMusician() {
@@ -112,7 +116,7 @@ public class CurrentUser {
 
 
     public Band getBand() {
-        if(this.getTypeOfUser() == TypeOfUser.Band && band != null) {
+        if(this.getTypeOfUser() == UserType.Band && band != null) {
             return this.band.get(0);
         }
         return null;
@@ -132,11 +136,11 @@ public class CurrentUser {
             this.band = b;
     }
 
-    public TypeOfUser getTypeOfUser() {
+    public UserType getTypeOfUser() {
         return this.type;
     }
 
-    public void setTypeOfUser(TypeOfUser t) {
+    public void setTypeOfUser(UserType t) {
         this.type = t;
     }
 }

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import ch.epfl.sdp.musiconnect.User;
+import ch.epfl.sdp.musiconnect.users.User;
 
 import static org.junit.Assert.assertEquals;
 

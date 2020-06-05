@@ -66,7 +66,7 @@
 
 
     <!-- Event related messages -->
-    <string name="your_nexts_events">Your nexts events</string>
+    <string name="your_nexts_events">Your next events</string>
     <string name="create_an_event">Create an event</string>
     <string name="my_events">My events</string>
 
@@ -100,7 +100,7 @@
     <string name="sign_in_welcome_message">Welcome to MusiConnect!</string>
     <string name="sign_in_introduction_message">Please sign in with your Google account.</string>
     <string name="info_message">Please navigate the app using the menu.</string>
-    <string name="help_message">Help is on the way !</string>
+    <string name="help_message">Help is still on the way !</string>
     <string name="settings_message">Settings to come…</string>
     <string name="in_construction">Still under construction…</string>
     <string name="not_yet_done">This functionality is not yet part of the application. Please be patient.</string>

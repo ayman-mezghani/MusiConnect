@@ -33,6 +33,8 @@ connected_check_task:
     - export JACOCO_SOURCE_PATH=app/src/main/java/
     - ./cc-test-reporter format-coverage ./app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml --input-type jacoco
     - ./cc-test-reporter upload-coverage
+  assemble_script:
+    ./gradlew assembleDebug
 
 android_lint_task:
   container:

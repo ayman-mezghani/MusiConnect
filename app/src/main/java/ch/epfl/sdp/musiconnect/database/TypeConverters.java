@@ -4,8 +4,8 @@ import com.google.firebase.firestore.GeoPoint;
 
 import java.util.Date;
 
-import ch.epfl.sdp.musiconnect.MyDate;
-import ch.epfl.sdp.musiconnect.MyLocation;
+import ch.epfl.sdp.musiconnect.functionnalities.MyDate;
+import ch.epfl.sdp.musiconnect.functionnalities.MyLocation;
 
 final class TypeConverters {
     private static final int YEAR_BIAS = 1900;

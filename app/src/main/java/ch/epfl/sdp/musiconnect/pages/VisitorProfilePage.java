@@ -9,12 +9,12 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.Band;
+import ch.epfl.sdp.musiconnect.users.Band;
 import ch.epfl.sdp.musiconnect.CurrentUser;
-import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.MyDate;
-import ch.epfl.sdp.musiconnect.TypeOfUser;
-import ch.epfl.sdp.musiconnect.User;
+import ch.epfl.sdp.musiconnect.users.Musician;
+import ch.epfl.sdp.musiconnect.functionnalities.MyDate;
+import ch.epfl.sdp.musiconnect.UserType;
+import ch.epfl.sdp.musiconnect.users.User;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbDataType;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
@@ -56,7 +56,7 @@ public class VisitorProfilePage extends ProfilePage implements DbCallback {
         contactButton = findViewById(R.id.btnContactMusician);
 
         Button addUserToBand = findViewById(R.id.add_user_to_band);
-        if (CurrentUser.getInstance(this).getTypeOfUser() == TypeOfUser.Band) {
+        if (CurrentUser.getInstance(this).getTypeOfUser() == UserType.Band) {
             addUserToBand.setVisibility(View.VISIBLE);
             addUserToBand.setFocusable(true);
             addUserToBand.setClickable(true);

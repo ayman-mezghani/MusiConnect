@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import ch.epfl.sdp.musiconnect.Band;
-import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.User;
+import ch.epfl.sdp.musiconnect.users.Band;
+import ch.epfl.sdp.musiconnect.users.Musician;
+import ch.epfl.sdp.musiconnect.users.User;
 import ch.epfl.sdp.musiconnect.events.Event;
 
 public class FirebaseDatabase extends Database {

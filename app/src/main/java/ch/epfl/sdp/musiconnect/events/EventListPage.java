@@ -16,10 +16,10 @@ import java.util.List;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
-import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.users.Musician;
 import ch.epfl.sdp.musiconnect.pages.Page;
-import ch.epfl.sdp.musiconnect.TypeOfUser;
-import ch.epfl.sdp.musiconnect.User;
+import ch.epfl.sdp.musiconnect.UserType;
+import ch.epfl.sdp.musiconnect.users.User;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbDataType;
@@ -30,7 +30,7 @@ public class EventListPage extends Page {
     private DbAdapter dbAdapter;
     private String userEmail;
     private String visitorName;
-    private TypeOfUser typeOfUser;
+    private UserType userType;
 
 
     private List<String> eventTitlesToShow;
@@ -79,13 +79,13 @@ public class EventListPage extends Page {
                 @Override
                 public void readCallback(User user) {
                     visitorName = user.getName();
-                    typeOfUser = ((Musician) user).getTypeOfUser();
+                    userType = ((Musician) user).getUserType();
                     eventListTitle.setText(String.format("%s's events", visitorName));
                 }
             });
         } else {
             userEmail = CurrentUser.getInstance(this).email;
-            typeOfUser = CurrentUser.getInstance(this).getTypeOfUser();
+            userType = CurrentUser.getInstance(this).getTypeOfUser();
             eventListTitle.setText(R.string.your_events);
         }
     }
@@ -183,7 +183,7 @@ public class EventListPage extends Page {
             return;
         }
 
-        if (dbDataType.toString().equals("musician") && typeOfUser.toString().equals("Band")) {
+        if (dbDataType.toString().equals("musician") && userType.toString().equals("Band")) {
             // If we have loaded all events of the musician, we now need to load the events of his band
             readFromDbAndLoadEvents(DbDataType.Band);
         } else {

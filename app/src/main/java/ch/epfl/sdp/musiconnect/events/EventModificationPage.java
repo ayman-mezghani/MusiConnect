@@ -25,10 +25,10 @@ import java.util.Locale;
 import ch.epfl.sdp.R;
 
 import ch.epfl.sdp.musiconnect.CurrentUser;
-import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.MyDate;
+import ch.epfl.sdp.musiconnect.users.Musician;
+import ch.epfl.sdp.musiconnect.functionnalities.MyDate;
 import ch.epfl.sdp.musiconnect.pages.Page;
-import ch.epfl.sdp.musiconnect.User;
+import ch.epfl.sdp.musiconnect.users.User;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;

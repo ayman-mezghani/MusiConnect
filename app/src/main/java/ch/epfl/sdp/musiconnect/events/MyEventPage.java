@@ -10,8 +10,8 @@ import android.widget.Toast;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
-import ch.epfl.sdp.musiconnect.TypeOfUser;
-import ch.epfl.sdp.musiconnect.User;
+import ch.epfl.sdp.musiconnect.UserType;
+import ch.epfl.sdp.musiconnect.users.User;
 import ch.epfl.sdp.musiconnect.database.DbDataType;
 
 public class MyEventPage extends EventPage {
@@ -72,16 +72,16 @@ public class MyEventPage extends EventPage {
                 .setMessage("Do you really want to delete this event?")
                 .setPositiveButton("Yes", (dialogInterface, i) -> {
                     CurrentUser cu = CurrentUser.getInstance(this);
-                    TypeOfUser typeOfUser = cu.getTypeOfUser();
+                    UserType userType = cu.getTypeOfUser();
                     User m;
 
-                    if (typeOfUser.toString().equals("Musician")) {
+                    if (userType.toString().equals("Musician")) {
                         m = cu.getMusician();
                     } else {
                         m = cu.getBand();
                     }
                     m.removeEvent(event.getEid());
-                    dbAdapter.update(DbDataType.valueOf(typeOfUser.toString()), m);
+                    dbAdapter.update(DbDataType.valueOf(userType.toString()), m);
 
                     dbAdapter.delete(DbDataType.Events, event);
                     Toast.makeText(MyEventPage.this, "Deletion confirmed", Toast.LENGTH_SHORT).show();

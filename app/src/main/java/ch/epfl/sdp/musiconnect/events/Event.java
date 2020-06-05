@@ -12,8 +12,8 @@ import com.google.firebase.firestore.GeoPoint;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.epfl.sdp.musiconnect.MyDate;
-import ch.epfl.sdp.musiconnect.MyLocation;
+import ch.epfl.sdp.musiconnect.functionnalities.MyDate;
+import ch.epfl.sdp.musiconnect.functionnalities.MyLocation;
 
 @Entity
 public class Event {

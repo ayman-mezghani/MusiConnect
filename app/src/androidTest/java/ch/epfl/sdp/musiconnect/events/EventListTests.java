@@ -17,8 +17,8 @@ import org.junit.runner.RunWith;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
-import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.TypeOfUser;
+import ch.epfl.sdp.musiconnect.users.Musician;
+import ch.epfl.sdp.musiconnect.UserType;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
@@ -58,7 +58,7 @@ public class EventListTests {
     @Before
     public void initIntents() {
         Intents.init();
-        CurrentUser.getInstance(eventListRule.getActivity()).setTypeOfUser(TypeOfUser.Musician);
+        CurrentUser.getInstance(eventListRule.getActivity()).setTypeOfUser(UserType.Musician);
     }
 
     @After
@@ -83,7 +83,7 @@ public class EventListTests {
 
     @Test
     public void testEventListTitle() {
-        CurrentUser.getInstance(eventListRule.getActivity()).setTypeOfUser(TypeOfUser.Musician);
+        CurrentUser.getInstance(eventListRule.getActivity()).setTypeOfUser(UserType.Musician);
 
         Intent intent = new Intent();
         eventListRule.launchActivity(intent);
@@ -104,7 +104,7 @@ public class EventListTests {
 
     @Test
     public void testClickEventShouldLoadPage() {
-        CurrentUser.getInstance(eventListRule.getActivity()).setTypeOfUser(TypeOfUser.Musician);
+        CurrentUser.getInstance(eventListRule.getActivity()).setTypeOfUser(UserType.Musician);
 
         Event e = md.getDummyEvent(0);
 

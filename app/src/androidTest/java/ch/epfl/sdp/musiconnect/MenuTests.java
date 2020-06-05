@@ -24,7 +24,7 @@ import ch.epfl.sdp.musiconnect.events.EventListPage;
 import ch.epfl.sdp.musiconnect.finder.FinderPage;
 import ch.epfl.sdp.musiconnect.location.MapsActivity;
 import ch.epfl.sdp.musiconnect.location.MapsLocationFunctions;
-import ch.epfl.sdp.musiconnect.pages.GoogleLoginPage;
+import ch.epfl.sdp.musiconnect.pages.BandProfile;
 import ch.epfl.sdp.musiconnect.pages.HelpPage;
 import ch.epfl.sdp.musiconnect.pages.MyProfilePage;
 import ch.epfl.sdp.musiconnect.pages.StartPage;
@@ -97,7 +97,7 @@ public class MenuTests {
 
     @Test
     public void testBandProfileClickShouldStartNewIntent() {
-        CurrentUser.getInstance(startPageRule.getActivity()).setTypeOfUser(TypeOfUser.Band);
+        CurrentUser.getInstance(startPageRule.getActivity()).setTypeOfUser(UserType.Band);
         openActionsMenu(R.string.my_bands);
 
         Intent settingsIntent = new Intent();
