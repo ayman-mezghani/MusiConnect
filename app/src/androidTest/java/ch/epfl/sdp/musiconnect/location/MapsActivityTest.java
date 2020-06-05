@@ -49,7 +49,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 public class MapsActivityTest {

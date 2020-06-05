@@ -72,7 +72,7 @@ public class VisitorEventPageTests {
         Musician m1 = md.getDummyMusician(2);
         Musician m2 = md.getDummyMusician(3);
         String s = m1.getEmailAddress() + System.lineSeparator() + m2.getEmailAddress() + System.lineSeparator() + current.getEmailAddress() + System.lineSeparator();
-        Event event = md.getDummyEvent(4);
+        Event event = md.getDummyEvent(2);
 
         testMatchInfoOnView(event, s);
     }

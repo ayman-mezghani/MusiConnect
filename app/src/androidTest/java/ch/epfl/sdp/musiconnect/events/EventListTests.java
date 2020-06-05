@@ -25,7 +25,6 @@ import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
@@ -33,11 +32,12 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 
 @RunWith(AndroidJUnit4.class)
 public class EventListTests {
+    private final static String failCallback = "FailCallback";
+
 
     @Rule
     public final ActivityTestRule<EventListPage> eventListRule =
@@ -63,23 +63,6 @@ public class EventListTests {
 
     @After
     public void releaseIntents() { Intents.release(); }
-
-
-    private void openActionsMenu(int stringId) {
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-        onView(withText(stringId)).perform(click());
-    }
-
-    /**
-    @Test
-    public void testMyEventClickShouldDoNothing() {
-        Intent intent = new Intent();
-        eventListRule.launchActivity(intent);
-        openActionsMenu(R.string.my_events);
-
-        intended(hasComponent(EventListPage.class.getName()));
-    }
-     */
 
     @Test
     public void testEventListTitle() {
@@ -118,6 +101,31 @@ public class EventListTests {
     }
 
     @Test
+    public void testNoEventsToShow() {
+        Intent intent = new Intent();
+        intent.putExtra("UserEmail", failCallback);
+        eventListRule.launchActivity(intent);
+        waitSeconds(3);
+        onView(withId(R.id.eventListNone)).check(matches(withText("This user has no events to show...")));
+    }
+
+    @Test
+    public void testEventListContent() {
+        CurrentUser.getInstance(eventListRule.getActivity()).setTypeOfUser(UserType.Musician);
+
+        Intent intent = new Intent();
+        eventListRule.launchActivity(intent);
+
+        waitSeconds(3);
+
+        Event e1 = md.getDummyEvent(0);
+        Event e6 = md.getDummyEvent(5);
+
+        onView(withText(e1.getTitle())).check(matches(isDisplayed()));
+        onView(withText(e6.getTitle())).check(matches(isDisplayed()));
+    }
+
+    @Test
     public void testClickOthersEventShouldLoadPage() {
         Event e = md.getDummyEvent(1);
         Musician m = md.getDummyMusician(1);
@@ -135,8 +143,9 @@ public class EventListTests {
 
     @Test
     public void testListShouldOnlyShowPublicOrParticipant() {
+        CurrentUser.getInstance(eventListRule.getActivity()).setTypeOfUser(UserType.Musician);
         Event e3 = md.getDummyEvent(2);
-        Event e5 = md.getDummyEvent(4);
+        Event e6 = md.getDummyEvent(5);
         Musician m = md.getDummyMusician(2);
 
         Intent intent = new Intent();
@@ -146,6 +155,6 @@ public class EventListTests {
         waitSeconds(3);
 
         onView(withText(e3.getTitle())).check(matches(isDisplayed()));
-        onView(withText(e5.getTitle())).check(matches(isDisplayed()));
+        onView(withText(e6.getTitle())).check(matches(isDisplayed()));
     }
 }
