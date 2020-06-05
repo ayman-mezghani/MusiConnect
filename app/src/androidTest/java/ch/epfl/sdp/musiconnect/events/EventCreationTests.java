@@ -25,7 +25,7 @@ import java.util.Calendar;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
-import ch.epfl.sdp.musiconnect.TypeOfUser;
+import ch.epfl.sdp.musiconnect.UserType;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
@@ -154,7 +154,7 @@ public class EventCreationTests {
 
     @Test
     public void testCorrectInputsAndDoNotFinishIfEmptyField() {
-        CurrentUser.getInstance(eventCreationRule.getActivity()).setTypeOfUser(TypeOfUser.Musician);
+        CurrentUser.getInstance(eventCreationRule.getActivity()).setTypeOfUser(UserType.Musician);
 
         checkIfNotFinishing();
         onView(withId(R.id.eventCreationNewEventTitle)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestTitle"));
@@ -227,7 +227,7 @@ public class EventCreationTests {
     }
 
     private void writeTestValuesWithCustomAddress(String address) {
-        CurrentUser.getInstance(eventCreationRule.getActivity()).setTypeOfUser(TypeOfUser.Musician);
+        CurrentUser.getInstance(eventCreationRule.getActivity()).setTypeOfUser(UserType.Musician);
 
         onView(withId(R.id.eventCreationNewEventTitle)).perform(ViewActions.scrollTo()).perform(clearText(), typeText("TestTitle"));
         onView(withId(R.id.eventCreationNewEventAddress)).perform(ViewActions.scrollTo()).perform(clearText(), typeText(address));

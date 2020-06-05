@@ -7,13 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ch.epfl.sdp.musiconnect.Band;
+import ch.epfl.sdp.musiconnect.users.Band;
 import ch.epfl.sdp.musiconnect.Instrument;
 import ch.epfl.sdp.musiconnect.Level;
-import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.MyDate;
-import ch.epfl.sdp.musiconnect.TypeOfUser;
-import ch.epfl.sdp.musiconnect.User;
+import ch.epfl.sdp.musiconnect.users.Musician;
+import ch.epfl.sdp.musiconnect.functionnalities.MyDate;
+import ch.epfl.sdp.musiconnect.UserType;
+import ch.epfl.sdp.musiconnect.users.User;
 import ch.epfl.sdp.musiconnect.events.Event;
 
 public class MockDatabase extends Database {
@@ -41,16 +41,16 @@ public class MockDatabase extends Database {
         Musician m = new Musician(firstName, lastName, username, email, birthday);
         m.addEvent("1");
         if(addBandUser) {
-            m.setTypeOfUser(TypeOfUser.Band);
+            m.setUserType(UserType.Band);
         } else {
-            m.setTypeOfUser(TypeOfUser.Musician);
+            m.setUserType(UserType.Musician);
         }
         m.addInstrument(Instrument.FLUTE, Level.BEGINNER);
         defaultSm = new SimplifiedMusician(m);
         listOfMusicians.add(defaultSm);
 
         Musician musiConnect = new Musician("MusiConnect", "SDP", "musiConnect", "musiconnectsdp@gmail.com", new MyDate(1992, 9, 20));
-        musiConnect.setTypeOfUser(TypeOfUser.Band);
+        musiConnect.setUserType(UserType.Band);
 
         b = new Band("totofire", m.getEmailAddress());
         b.addMember(musiConnect .getEmailAddress());

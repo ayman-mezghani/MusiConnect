@@ -18,6 +18,7 @@ import ch.epfl.sdp.musiconnect.finder.MusicianFinderPage;
 import ch.epfl.sdp.musiconnect.finder.MusicianFinderResult;
 import ch.epfl.sdp.musiconnect.pages.MyProfilePage;
 import ch.epfl.sdp.musiconnect.pages.VisitorProfilePage;
+import ch.epfl.sdp.musiconnect.users.Musician;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;

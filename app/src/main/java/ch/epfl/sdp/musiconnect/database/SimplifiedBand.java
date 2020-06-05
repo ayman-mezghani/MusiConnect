@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ch.epfl.sdp.musiconnect.Band;
+import ch.epfl.sdp.musiconnect.users.Band;
 
 public class SimplifiedBand extends SimplifiedDbEntry implements Serializable {
     private String leader;

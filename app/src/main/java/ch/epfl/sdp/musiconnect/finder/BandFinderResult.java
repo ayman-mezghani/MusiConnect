@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.Band;
-import ch.epfl.sdp.musiconnect.BandProfile;
+import ch.epfl.sdp.musiconnect.users.Band;
+import ch.epfl.sdp.musiconnect.pages.BandProfile;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.DbDataType;

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.User;
+import ch.epfl.sdp.musiconnect.users.User;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbDataType;
 
