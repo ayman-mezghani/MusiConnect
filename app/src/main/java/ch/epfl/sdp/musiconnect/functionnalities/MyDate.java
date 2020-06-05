@@ -79,7 +79,7 @@ public class MyDate {
         return month;
     }
 
-    protected boolean isLeapYear() {
+    public boolean isLeapYear() {
         if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0) {
             return true;
         } else {
@@ -87,7 +87,7 @@ public class MyDate {
         }
     }
 
-    protected int getMaxDateOfMonth() {
+    public int getMaxDateOfMonth() {
         switch (month) {
             case 1:
             case 3:
