@@ -2,7 +2,7 @@ package ch.epfl.sdp.musiconnect.roomdatabase;
 
 import androidx.room.TypeConverter;
 
-import ch.epfl.sdp.musiconnect.MyLocation;
+import ch.epfl.sdp.musiconnect.functionnalities.MyLocation;
 
 public class MyLocationConverter {
     @TypeConverter

@@ -14,7 +14,10 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.functionnalities.MyDate;
 import ch.epfl.sdp.musiconnect.pages.GoogleLoginPage;
+import ch.epfl.sdp.musiconnect.users.Band;
+import ch.epfl.sdp.musiconnect.users.Musician;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -78,7 +81,7 @@ public class CurrentUserTest {
         String emailAddress = "espressotests@gmail.com";
         MyDate birthday = new MyDate(1940, 10, 9);
         Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
-        john.setTypeOfUser(TypeOfUser.Band);
+        john.setUserType(UserType.Band);
         CurrentUser.getInstance(pageRule.getActivity()).setMusician(john);
         CurrentUser.getInstance(pageRule.getActivity()).setBandName("bandName");
         assertEquals("bandName", CurrentUser.getInstance(pageRule.getActivity()).getBandName());
@@ -92,7 +95,7 @@ public class CurrentUserTest {
         String emailAddress = "espressotests@gmail.com";
         MyDate birthday = new MyDate(1940, 10, 9);
         Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
-        john.setTypeOfUser(TypeOfUser.Musician);
+        john.setUserType(UserType.Musician);
         CurrentUser.getInstance(pageRule.getActivity()).setMusician(john);
         try
         {
@@ -113,7 +116,7 @@ public class CurrentUserTest {
         String emailAddress = "espressotests@gmail.com";
         MyDate birthday = new MyDate(1940, 10, 9);
         Musician john = new Musician(firstName, lastName, userName, emailAddress, birthday);
-        john.setTypeOfUser(TypeOfUser.Musician);
+        john.setUserType(UserType.Musician);
         CurrentUser.getInstance(pageRule.getActivity()).setMusician(john);
         Band b = new Band("bandName", john.getEmailAddress());
         CurrentUser.getInstance(pageRule.getActivity()).setBand(b);
@@ -122,7 +125,7 @@ public class CurrentUserTest {
 
     @Test
     public void CurrentUserSetAndGetTypeOfUser() {
-        CurrentUser.getInstance(pageRule.getActivity()).setTypeOfUser(TypeOfUser.Band);
-        assertEquals(TypeOfUser.Band, CurrentUser.getInstance(pageRule.getActivity()).getTypeOfUser());
+        CurrentUser.getInstance(pageRule.getActivity()).setTypeOfUser(UserType.Band);
+        assertEquals(UserType.Band, CurrentUser.getInstance(pageRule.getActivity()).getTypeOfUser());
     }
 }

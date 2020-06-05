@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.sdp.musiconnect.events.Event;
+import ch.epfl.sdp.musiconnect.functionnalities.MyDate;
+import ch.epfl.sdp.musiconnect.users.Band;
+import ch.epfl.sdp.musiconnect.users.Musician;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

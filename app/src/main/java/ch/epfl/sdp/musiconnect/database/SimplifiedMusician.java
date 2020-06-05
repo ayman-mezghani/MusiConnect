@@ -13,8 +13,8 @@ import java.util.Map;
 
 import ch.epfl.sdp.musiconnect.Instrument;
 import ch.epfl.sdp.musiconnect.Level;
-import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.TypeOfUser;
+import ch.epfl.sdp.musiconnect.users.Musician;
+import ch.epfl.sdp.musiconnect.UserType;
 
 import static ch.epfl.sdp.musiconnect.database.TypeConverters.dateToMyDate;
 import static ch.epfl.sdp.musiconnect.database.TypeConverters.geoPointToMyLocation;
@@ -42,7 +42,7 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
         this.firstName = musician.getFirstName();
         this.lastName = musician.getLastName();
         this.email = musician.getEmailAddress();
-        this.typeOfUser = musician.getTypeOfUser().toString();
+        this.typeOfUser = musician.getUserType().toString();
         this.birthday = myDateToDate(musician.getBirthday());
         this.joinDate = myDateToDate(musician.getJoinDate());
         this.location = myLocationToGeoPoint(musician.getLocation());
@@ -66,7 +66,7 @@ public class SimplifiedMusician extends SimplifiedDbEntry {
     public Musician toMusician() {
         Musician musician = new Musician(firstName, lastName, username, email, dateToMyDate(birthday));
         musician.setLocation(geoPointToMyLocation(location));
-        musician.setTypeOfUser(TypeOfUser.valueOf(typeOfUser));
+        musician.setUserType(UserType.valueOf(typeOfUser));
         musician.setEvents(events);
         if (instruments != null)
             musician.setInstruments(instrumentListToMap(instruments));

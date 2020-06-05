@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.functionnalities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,7 +12,10 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import ch.epfl.sdp.R;
+import ch.epfl.sdp.musiconnect.Instrument;
+import ch.epfl.sdp.musiconnect.Level;
 import ch.epfl.sdp.musiconnect.events.Event;
+import ch.epfl.sdp.musiconnect.users.Musician;
 
 public class CustomInfoWindowGoogleMap implements GoogleMap.InfoWindowAdapter {
 

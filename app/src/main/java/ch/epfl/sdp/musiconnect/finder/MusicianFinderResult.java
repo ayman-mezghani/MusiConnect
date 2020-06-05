@@ -17,7 +17,7 @@ import java.util.Map;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
-import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.users.Musician;
 import ch.epfl.sdp.musiconnect.pages.MyProfilePage;
 import ch.epfl.sdp.musiconnect.pages.VisitorProfilePage;
 import ch.epfl.sdp.musiconnect.database.DbCallback;

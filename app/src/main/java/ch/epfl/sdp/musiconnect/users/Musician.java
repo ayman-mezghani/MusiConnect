@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.users;
 
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -6,6 +6,11 @@ import androidx.room.Ignore;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import ch.epfl.sdp.musiconnect.Instrument;
+import ch.epfl.sdp.musiconnect.Level;
+import ch.epfl.sdp.musiconnect.functionnalities.MyDate;
+import ch.epfl.sdp.musiconnect.UserType;
 
 /**
  * @author Manuel Pellegrini, EPFL
@@ -16,7 +21,7 @@ public class Musician extends Person {
     private String videoURL;
     private Map<Instrument, Level> instruments;
     @Ignore
-    private TypeOfUser typeOfUser = TypeOfUser.Musician;
+    private UserType userType = UserType.Musician;
     private Float distanceToCurrentUser = null;
 
     private static final int MAX_VIDEO_URL_LENGTH = 2048;
@@ -102,9 +107,9 @@ public class Musician extends Person {
         return instruments.keySet();
     }
 
-    public void setTypeOfUser(TypeOfUser t) { this.typeOfUser = t; }
+    public void setUserType(UserType t) { this.userType = t; }
 
-    public TypeOfUser getTypeOfUser() { return this.typeOfUser; }
+    public UserType getUserType() { return this.userType; }
 
 
     @Override

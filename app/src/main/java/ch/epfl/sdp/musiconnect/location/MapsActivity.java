@@ -54,10 +54,10 @@ import java.util.regex.Pattern;
 
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
-import ch.epfl.sdp.musiconnect.CustomInfoWindowGoogleMap;
-import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.MyLocation;
-import ch.epfl.sdp.musiconnect.User;
+import ch.epfl.sdp.musiconnect.functionnalities.CustomInfoWindowGoogleMap;
+import ch.epfl.sdp.musiconnect.users.Musician;
+import ch.epfl.sdp.musiconnect.functionnalities.MyLocation;
+import ch.epfl.sdp.musiconnect.users.User;
 import ch.epfl.sdp.musiconnect.pages.VisitorProfilePage;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
@@ -70,7 +70,7 @@ import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.EventDao;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
-import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
+import static ch.epfl.sdp.musiconnect.functionnalities.ConnectionCheck.checkConnection;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener {

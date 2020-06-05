@@ -7,7 +7,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.users.Musician;
 import ch.epfl.sdp.musiconnect.events.Event;
 
 @Database(entities = {Musician.class, Event.class}, version = 3)

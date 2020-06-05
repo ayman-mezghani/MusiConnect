@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.functionnalities;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

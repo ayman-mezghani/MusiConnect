@@ -1,13 +1,13 @@
 package ch.epfl.sdp.musiconnect;
 
-public enum TypeOfUser {
+public enum UserType {
     Band("Band"),
     Musician("Musician"),
     EventManager("Event Manager");
 
     private final String name;
 
-    TypeOfUser(String musician) {
+    UserType(String musician) {
         this.name = musician;
     }
 

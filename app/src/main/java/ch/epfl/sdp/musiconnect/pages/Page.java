@@ -26,13 +26,12 @@ import java.util.List;
 import java.util.Map;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.Band;
-import ch.epfl.sdp.musiconnect.BandProfile;
+import ch.epfl.sdp.musiconnect.users.Band;
 import ch.epfl.sdp.musiconnect.CurrentUser;
-import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.Notifications;
-import ch.epfl.sdp.musiconnect.TypeOfUser;
-import ch.epfl.sdp.musiconnect.User;
+import ch.epfl.sdp.musiconnect.users.Musician;
+import ch.epfl.sdp.musiconnect.functionnalities.Notifications;
+import ch.epfl.sdp.musiconnect.UserType;
+import ch.epfl.sdp.musiconnect.users.User;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbCallback;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
@@ -242,7 +241,7 @@ public abstract class Page extends AppCompatActivity {
             @Override
             public void readCallback(User user) {
                 CurrentUser.getInstance(ctx).setMusician((Musician) user);
-                if(((Musician) user).getTypeOfUser() == TypeOfUser.Band) {
+                if(((Musician) user).getUserType() == UserType.Band) {
                     db.read(DbDataType.Band, CurrentUser.getInstance(ctx).email, new DbCallback() {
                         @Override
                         public void readCallback(User u) {

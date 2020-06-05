@@ -20,6 +20,8 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.functionnalities.MyDate;
+import ch.epfl.sdp.musiconnect.functionnalities.MyLocation;
 import ch.epfl.sdp.musiconnect.pages.StartPage;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.EventDao;
@@ -27,6 +29,7 @@ import ch.epfl.sdp.musiconnect.roomdatabase.InstrumentConverter;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 import ch.epfl.sdp.musiconnect.roomdatabase.MyDateConverter;
 import ch.epfl.sdp.musiconnect.roomdatabase.MyLocationConverter;
+import ch.epfl.sdp.musiconnect.users.Musician;
 
 import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static org.junit.Assert.assertEquals;

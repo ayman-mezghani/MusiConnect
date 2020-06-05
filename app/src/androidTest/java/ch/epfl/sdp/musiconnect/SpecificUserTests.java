@@ -14,6 +14,7 @@ import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
 import ch.epfl.sdp.musiconnect.pages.StartPage;
+import ch.epfl.sdp.musiconnect.users.Musician;
 
 import static ch.epfl.sdp.musiconnect.testsFunctions.getCurrentActivity;
 import static org.junit.Assert.assertEquals;
@@ -33,7 +34,7 @@ public class SpecificUserTests {
 
     @Before
     public void setCurrentUser() {
-        CurrentUser.getInstance(activityRule.getActivity()).setTypeOfUser(TypeOfUser.Band);
+        CurrentUser.getInstance(activityRule.getActivity()).setTypeOfUser(UserType.Band);
         CurrentUser.getInstance(activityRule.getActivity()).setBand(md.getBand());
     }
 

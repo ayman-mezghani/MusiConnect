@@ -29,7 +29,7 @@
         <activity android:name=".musiconnect.events.MyEventPage" />
 
         <activity android:name=".musiconnect.finder.MusicianFinderResult" />
-        <activity android:name=".musiconnect.BandProfile" />
+        <activity android:name=".musiconnect.pages.BandProfile" />
         <activity android:name=".musiconnect.finder.BandFinderResult" />
         <activity android:name=".musiconnect.pages.UserCreationPage" />
         <activity android:name=".musiconnect.pages.BandCreationPage" />

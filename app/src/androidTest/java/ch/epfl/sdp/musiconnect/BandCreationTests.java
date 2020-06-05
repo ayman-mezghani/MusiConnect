@@ -38,7 +38,7 @@ public class BandCreationTests {
 
     @Before
     public void currentUserInit() {
-        CurrentUser.getInstance(activityRule.getActivity()).setTypeOfUser(TypeOfUser.Band);
+        CurrentUser.getInstance(activityRule.getActivity()).setTypeOfUser(UserType.Band);
     }
 
     @Test

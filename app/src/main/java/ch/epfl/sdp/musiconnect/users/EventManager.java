@@ -1,7 +1,9 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.users;
 
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
+
+import ch.epfl.sdp.musiconnect.functionnalities.MyDate;
 
 /**
  * @author Manuel Pellegrini, EPFL

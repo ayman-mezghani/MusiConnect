@@ -4,7 +4,7 @@ import androidx.room.TypeConverter;
 
 import java.util.Date;
 
-import ch.epfl.sdp.musiconnect.MyDate;
+import ch.epfl.sdp.musiconnect.functionnalities.MyDate;
 
 public class MyDateConverter {
     private static final int YEAR_BIAS = 1900;

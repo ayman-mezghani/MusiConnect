@@ -1,4 +1,4 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.functionnalities;
 
 /**
  * @author Manuel Pellegrini, EPFL

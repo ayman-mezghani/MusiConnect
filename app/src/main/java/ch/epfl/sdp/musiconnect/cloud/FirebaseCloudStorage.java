@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.TimeZone;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.ConnectionCheck;
+import ch.epfl.sdp.musiconnect.functionnalities.ConnectionCheck;
 
 public class FirebaseCloudStorage implements CloudStorage {
 

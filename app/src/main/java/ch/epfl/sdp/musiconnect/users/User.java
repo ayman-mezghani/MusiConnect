@@ -1,9 +1,12 @@
-package ch.epfl.sdp.musiconnect;
+package ch.epfl.sdp.musiconnect.users;
 
 import androidx.room.Ignore;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ch.epfl.sdp.musiconnect.functionnalities.MyDate;
+import ch.epfl.sdp.musiconnect.functionnalities.MyLocation;
 
 /**
  * @author Manuel Pellegrini, EPFL
