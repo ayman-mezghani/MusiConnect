@@ -7,6 +7,14 @@ jacoco {
 }
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('/Users/antonio/Documents/school/EPFL/CS306-SOFTWARE_DEVELOPMENT_PROJECT/MusiConnect/app/musiComnectKey.jks')
+            storePassword 'mcSDP2k20'
+            keyAlias = 'release'
+            keyPassword 'MCsdp2k20'
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
     defaultConfig {
