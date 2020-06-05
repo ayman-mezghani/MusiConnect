@@ -111,7 +111,7 @@ public class EventListTests {
 
     @Test
     public void testEventListContent() {
-        CurrentUser.getInstance(eventListRule.getActivity()).setTypeOfUser(TypeOfUser.Musician);
+        CurrentUser.getInstance(eventListRule.getActivity()).setTypeOfUser(UserType.Musician);
 
         Intent intent = new Intent();
         eventListRule.launchActivity(intent);
@@ -143,7 +143,7 @@ public class EventListTests {
 
     @Test
     public void testListShouldOnlyShowPublicOrParticipant() {
-        CurrentUser.getInstance(eventListRule.getActivity()).setTypeOfUser(TypeOfUser.Musician);
+        CurrentUser.getInstance(eventListRule.getActivity()).setTypeOfUser(UserType.Musician);
         Event e3 = md.getDummyEvent(2);
         Event e6 = md.getDummyEvent(5);
         Musician m = md.getDummyMusician(2);
