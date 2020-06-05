@@ -82,7 +82,9 @@ public class MockDatabase extends Database {
     private void createAndAddDummyEvents() {
         listOfEvent.add(createEvent(getDummyMusician(0), "1", "Event at Big Ben!", true));
         listOfEvent.add(createEvent(getDummyMusician(1), "2", "Event at Big Ben!", true));
-        listOfEvent.add(createEvent(getDummyMusician(2), "3", "Public Event at Big Ben!", true));
+        Event e2 = createEvent(getDummyMusician(2), "3", "Public Event at Big Ben!", true);
+        e2.register(email);
+        listOfEvent.add(e2);
         listOfEvent.add(createEvent(getDummyMusician(2), "4", "Private event at Big Ben!", false));
         listOfEvent.add(createEvent(getDummyMusician(2), "3", "This Event is exclusive to the other event with the same id", true));
     }

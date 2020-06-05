@@ -370,7 +370,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if (CurrentUser.getInstance(this).getCreatedFlag()) {
             Musician current = CurrentUser.getInstance(this).getMusician();
-            current.setLocation(new MyLocation(setLoc.getLatitude(), setLoc.getLongitude()));
+            current.setLocation(LocationConverter.locationToMyLocation(setLoc));
             DbAdapter adapter = DbSingleton.getDbInstance();
             adapter.update(DbDataType.Musician, current);
             notificationManager.cancel(CLOUD_ID);
@@ -387,7 +387,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void sendToDatabase(Location location) {
         User user = CurrentUser.getInstance(this).getMusician();
 
-        user.setLocation(new MyLocation(location.getLatitude(), location.getLongitude()));
+        user.setLocation(LocationConverter.locationToMyLocation(location));
         DbSingleton.getDbInstance().update(DbDataType.Musician, user);
     }
 

@@ -222,7 +222,7 @@ public class EventCreationTests {
 
     @Test
     public void geocoderWillReturnNullValue() {
-        GeoPoint p1 = ((GeoPoint)((EventCreationPage) getCurrentActivity()).getLocationFromAddress(""));
+        GeoPoint p1 = ((EventCreationPage) getCurrentActivity()).getLocationFromAddress("");
         assertNull(p1);
     }
 

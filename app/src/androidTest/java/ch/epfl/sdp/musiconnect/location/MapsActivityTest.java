@@ -4,7 +4,6 @@ package ch.epfl.sdp.musiconnect.location;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.location.Location;
-import android.provider.CalendarContract;
 
 import androidx.core.app.NotificationCompat;
 import androidx.test.espresso.intent.Intents;
@@ -50,7 +49,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static ch.epfl.sdp.musiconnect.testsFunctions.waitSeconds;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 public class MapsActivityTest {
