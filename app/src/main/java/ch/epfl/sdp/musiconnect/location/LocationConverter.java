@@ -2,7 +2,7 @@ package ch.epfl.sdp.musiconnect.location;
 
 import android.location.Location;
 
-import ch.epfl.sdp.musiconnect.MyLocation;
+import ch.epfl.sdp.musiconnect.functionnalities.MyLocation;
 
 public abstract class LocationConverter {
 

@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ch.epfl.sdp.musiconnect.Band;
-import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.MyDate;
+import ch.epfl.sdp.musiconnect.users.Band;
+import ch.epfl.sdp.musiconnect.users.Musician;
+import ch.epfl.sdp.musiconnect.functionnalities.MyDate;
 
 import static ch.epfl.sdp.musiconnect.database.SimplifiedMusicianTest.testMusician1;
 import static org.junit.jupiter.api.Assertions.assertEquals;

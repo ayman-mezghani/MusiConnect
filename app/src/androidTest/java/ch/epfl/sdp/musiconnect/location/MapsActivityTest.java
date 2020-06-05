@@ -4,7 +4,6 @@ package ch.epfl.sdp.musiconnect.location;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.location.Location;
-import android.provider.CalendarContract;
 
 import androidx.core.app.NotificationCompat;
 import androidx.test.espresso.intent.Intents;
@@ -26,8 +25,8 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.MyDate;
+import ch.epfl.sdp.musiconnect.users.Musician;
+import ch.epfl.sdp.musiconnect.functionnalities.MyDate;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;

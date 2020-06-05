@@ -9,7 +9,7 @@ import androidx.room.Update;
 
 import java.util.List;
 
-import ch.epfl.sdp.musiconnect.Musician;
+import ch.epfl.sdp.musiconnect.users.Musician;
 
 @Dao
 public interface MusicianDao {

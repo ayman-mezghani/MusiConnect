@@ -14,10 +14,10 @@ import java.util.Map;
 
 import ch.epfl.sdp.musiconnect.Instrument;
 import ch.epfl.sdp.musiconnect.Level;
-import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.MyDate;
-import ch.epfl.sdp.musiconnect.MyLocation;
-import ch.epfl.sdp.musiconnect.TypeOfUser;
+import ch.epfl.sdp.musiconnect.users.Musician;
+import ch.epfl.sdp.musiconnect.functionnalities.MyDate;
+import ch.epfl.sdp.musiconnect.functionnalities.MyLocation;
+import ch.epfl.sdp.musiconnect.UserType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -61,10 +61,10 @@ public class SimplifiedMusicianTest {
         assertEquals(loc.getLatitude(), sloc.getLatitude());
         assertEquals(loc.getLongitude(), sloc.getLongitude());
 
-        TypeOfUser t = musician.getTypeOfUser();
+        UserType t = musician.getUserType();
         String t2 = sMusician.getTypeOfUser();
 
-        assertEquals(t, TypeOfUser.valueOf(t2));
+        assertEquals(t, UserType.valueOf(t2));
     }
 
     @Test
@@ -117,7 +117,7 @@ public class SimplifiedMusicianTest {
         assertEquals(musician.getFirstName(), musicianClone.getFirstName());
         assertEquals(musician.getLastName(), musicianClone.getLastName());
         assertEquals(musician.getEmailAddress(), musicianClone.getEmailAddress());
-        assertEquals(musician.getTypeOfUser(), musicianClone.getTypeOfUser());
+        assertEquals(musician.getUserType(), musicianClone.getUserType());
         assertEquals(musician.getBirthday(), musicianClone.getBirthday());
         assertEquals(musician.getJoinDate(), musicianClone.getJoinDate());
         assertEquals(musician.getLocation(), musicianClone.getLocation());
@@ -183,13 +183,13 @@ public class SimplifiedMusicianTest {
 
     static Musician testMusician1() {
         Musician m = new Musician("firstName", "lastName", "username", "email@gmail.com", new MyDate(2000, 1, 1));
-        m.setTypeOfUser(TypeOfUser.Musician);
+        m.setUserType(UserType.Musician);
         return m;
     }
 
     static Musician testMusician2() {
         Musician m = new Musician("first", "last", "user", "mail@gmail.com", new MyDate(2001, 1, 1));
-        m.setTypeOfUser(TypeOfUser.Musician);
+        m.setUserType(UserType.Musician);
         return m;
     }
 
@@ -199,7 +199,7 @@ public class SimplifiedMusicianTest {
         map.put(Fields.firstName.toString(), "firstName");
         map.put(Fields.lastName.toString(), "lastName");
         map.put(Fields.email.toString(), "email@gmail.com");
-        map.put(Fields.typeOfUser.toString(), TypeOfUser.Musician.toString());
+        map.put(Fields.typeOfUser.toString(), UserType.Musician.toString());
         map.put(Fields.birthday.toString(), new Timestamp(new Date()));
         map.put(Fields.joinDate.toString(), new Timestamp(new Date()));
         map.put(Fields.location.toString(), new GeoPoint(0, 0));

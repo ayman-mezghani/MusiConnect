@@ -27,10 +27,10 @@ import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.Instrument;
 import ch.epfl.sdp.musiconnect.Level;
-import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.MyDate;
-import ch.epfl.sdp.musiconnect.MyLocation;
-import ch.epfl.sdp.musiconnect.TypeOfUser;
+import ch.epfl.sdp.musiconnect.users.Musician;
+import ch.epfl.sdp.musiconnect.functionnalities.MyDate;
+import ch.epfl.sdp.musiconnect.functionnalities.MyLocation;
+import ch.epfl.sdp.musiconnect.UserType;
 import ch.epfl.sdp.musiconnect.database.DbAdapter;
 import ch.epfl.sdp.musiconnect.database.DbDataType;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
@@ -107,7 +107,7 @@ public class UserCreationPage extends Page {
 
                     Musician musician = new Musician(firstname, lastname, username, email, d);
                     musician.setLocation(new MyLocation(0, 0));
-                    musician.setTypeOfUser(TypeOfUser.valueOf(rdb.getText().toString()));
+                    musician.setUserType(UserType.valueOf(rdb.getText().toString()));
 
                     String instr = selectedInstrument.getSelectedItem().toString();
                     String[] instrArray = getResources().getStringArray(R.array.instruments_array);
@@ -122,7 +122,7 @@ public class UserCreationPage extends Page {
                     CurrentUser.getInstance(this).setCreatedFlag();
                     CurrentUser.getInstance(this).setMusician(musician);
 
-                    switch (CurrentUser.getInstance(this).getMusician().getTypeOfUser()) {
+                    switch (CurrentUser.getInstance(this).getMusician().getUserType()) {
                         case Band:
                             StartActivityAndFinish(new Intent(UserCreationPage.this, BandCreationPage.class));
                             break;

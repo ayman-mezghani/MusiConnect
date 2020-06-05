@@ -6,7 +6,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import ch.epfl.sdp.R;
-import ch.epfl.sdp.musiconnect.Band;
+import ch.epfl.sdp.musiconnect.users.Band;
 import ch.epfl.sdp.musiconnect.CurrentUser;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.DbDataType;

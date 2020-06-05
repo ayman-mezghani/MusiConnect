@@ -17,7 +17,9 @@ import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
 import ch.epfl.sdp.musiconnect.cloud.MockCloudStorage;
 import ch.epfl.sdp.musiconnect.database.DbSingleton;
 import ch.epfl.sdp.musiconnect.database.MockDatabase;
+import ch.epfl.sdp.musiconnect.functionnalities.MyDate;
 import ch.epfl.sdp.musiconnect.pages.VisitorProfilePage;
+import ch.epfl.sdp.musiconnect.users.Musician;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -48,14 +50,14 @@ public class BandAddUsersTests {
 
     @Before
     public void setCurrentUser() {
-        CurrentUser.getInstance(mActivityTestRule.getActivity()).setTypeOfUser(TypeOfUser.Band);
+        CurrentUser.getInstance(mActivityTestRule.getActivity()).setTypeOfUser(UserType.Band);
         CurrentUser.getInstance(mActivityTestRule.getActivity()).setBand(md.getBand());
     }
 
     @Test
     public void addUserToBandTest() {
         Musician m = new Musician("Alice", "Bardon", "Alyx", "aymanmezghani97@gmail.com", new MyDate(1992, 9, 20));
-        m.setTypeOfUser(TypeOfUser.Band);
+        m.setUserType(UserType.Band);
         Intent intent = new Intent();
         intent.putExtra("UserEmail", m.getEmailAddress());
         mActivityTestRule.launchActivity(intent);

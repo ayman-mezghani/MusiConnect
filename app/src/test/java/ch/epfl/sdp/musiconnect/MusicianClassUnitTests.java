@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import ch.epfl.sdp.musiconnect.events.Event;
+import ch.epfl.sdp.musiconnect.functionnalities.MyDate;
+import ch.epfl.sdp.musiconnect.users.Musician;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -302,11 +304,11 @@ public class MusicianClassUnitTests {
     public void musicianTypeOfUserTests() {
         Musician john = new Musician("John", "Lennon", "JohnLennon", "john.lennon@gmail.com", new MyDate(1940, 10, 9));
 
-        assertEquals(TypeOfUser.Musician, john.getTypeOfUser());
+        assertEquals(UserType.Musician, john.getUserType());
 
-        john.setTypeOfUser(TypeOfUser.Band);
+        john.setUserType(UserType.Band);
 
-        assertEquals(TypeOfUser.Band, john.getTypeOfUser());
+        assertEquals(UserType.Band, john.getUserType());
 
     }
 

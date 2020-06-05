@@ -14,8 +14,8 @@ import java.util.concurrent.TimeUnit;
 import ch.epfl.sdp.R;
 import ch.epfl.sdp.musiconnect.Instrument;
 import ch.epfl.sdp.musiconnect.Level;
-import ch.epfl.sdp.musiconnect.Musician;
-import ch.epfl.sdp.musiconnect.User;
+import ch.epfl.sdp.musiconnect.users.Musician;
+import ch.epfl.sdp.musiconnect.users.User;
 import ch.epfl.sdp.musiconnect.cloud.CloudCallback;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorage;
 import ch.epfl.sdp.musiconnect.cloud.CloudStorageSingleton;
@@ -25,7 +25,7 @@ import ch.epfl.sdp.musiconnect.database.DbDataType;
 import ch.epfl.sdp.musiconnect.roomdatabase.AppDatabase;
 import ch.epfl.sdp.musiconnect.roomdatabase.MusicianDao;
 
-import static ch.epfl.sdp.musiconnect.ConnectionCheck.checkConnection;
+import static ch.epfl.sdp.musiconnect.functionnalities.ConnectionCheck.checkConnection;
 
 public abstract class ProfilePage extends Page {
     protected TextView titleView, firstNameView, lastNameView, usernameView, emailView, birthdayView;
